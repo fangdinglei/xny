@@ -16,10 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.UseMyGrpc("2432114474");
 //添加工具类
 builder.Services.TryAddSingleton<MyUtility.IRandomUtility, MyUtility.RandomUtility>();
 builder.Services.TryAddSingleton<MyUtility.ITimeUtility, MyUtility.TimeUtility>();
+builder.Services.UseMyGrpc("2432114474");
 
 #region 禁用模型校验
 
@@ -89,9 +89,9 @@ else
     //app.UseHsts();
 }
 
-
+app.RegistMyGrpc();
 //app.UseHttpsRedirection();
-app.UseStaticFiles();
+//app.UseStaticFiles();
 
 app.UseRouting();
 
@@ -102,7 +102,7 @@ app.MapControllerRoute(
     pattern: "pg/{controller=Home}/{action=Index}/{id?}");
 //app.MapGrpcService<AdminGrpcController >();
 #if DEBUG
-//app.Urls.Add("http://localhost:5008");
+app.Urls.Add("http://localhost:5008");
 #else
 app.Urls.Add("http://*:9000");
 #endif

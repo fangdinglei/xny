@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.Common";
+package GrpcMain.Common ;
+ 
+message CommonResponse{
+	bool Success=1;
+	optional string Message=2;
+}
+ 

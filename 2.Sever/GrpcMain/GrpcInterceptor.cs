@@ -11,13 +11,6 @@ using System.Reflection;
 namespace GrpcMain
 {
     /// <summary>
-    /// GRPC服务的鉴权\日志等处理器
-    /// </summary>
-    public interface IGrpcHandle {
-        public bool Authorize(ServerCallContext context, GrpcRequireAuthorityAttribute att,out string error);
-        public void OnError(Exception e);
-    }
-    /// <summary>
     /// GRPC方法权限
     /// </summary>
     [AttributeUsage( AttributeTargets.Method,AllowMultiple =false)] 

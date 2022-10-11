@@ -1,0 +1,75 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.Account";
+package GrpcMain.Account;
+import "Common/CommonResponse.proto";
+service AccountService {
+    //登陆
+    rpc LoginByUserName(AccountServiceTypes.Request_LoginByUserName)
+        returns (AccountServiceTypes.Response_LoginByUserName);
+    //新建用户
+    rpc CreatUser(AccountServiceTypes.Request_CreatUser)
+        returns (AccountServiceTypes.Response_CreatUser);
+    //修改密码
+    rpc ChangePassWord(AccountServiceTypes.Request_ChangePassWord)
+        returns (GrpcMain.Common.CommonResponse);
+    //删除用户
+    rpc DeletUser(AccountServiceTypes.Request_DeletUser)
+        returns (GrpcMain.Common.CommonResponse);
+    //获取用户信息
+    rpc GetUserInfo(AccountServiceTypes.Request_GetUserInfo)
+        returns (AccountServiceTypes.Response_GetUserInfo);
+    //修改用户信息
+    rpc UpdateUserInfo(AccountServiceTypes.Request_UpdateUserInfo)
+        returns (GrpcMain.Common.CommonResponse);
+}
+
+
+message AccountServiceTypes
+{  
+    message Request_LoginByUserName{
+        string UserName=1;
+        string PassWord=2;
+    }  
+    message Response_LoginByUserName{
+        optional string Token=1;
+    }
+
+    message Request_DeletUser{
+        int64 UserId=1;
+    }  
+    message Request_ChangePassWord{
+        //当自己改自己时需要
+        optional string Old=1;
+        optional int64 Uid=2;
+        string New=3;
+
+    }   
+    message Request_CreatUser{
+        string uname=1;
+        string pass=2;
+        string phone = 3;
+    }  
+    message Response_CreatUser{
+        int64 UserId=1;
+    }
+
+    message UserInfo{
+        int64 ID=1;
+        optional string UserName=2;
+        optional string Phone=3;
+        optional int64 Father=4;        
+    }
+    message Request_GetUserInfo{
+        bool SubUser=1;
+    }  
+    message Response_GetUserInfo{
+        repeated UserInfo UserInfo=1;
+    } 
+
+    message Request_UpdateUserInfo{
+        UserInfo UserInfo=1;
+    }
+    
+}
+ 

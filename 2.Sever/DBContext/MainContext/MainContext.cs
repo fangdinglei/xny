@@ -15,7 +15,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MyDBContext.Main
 {
     public class User { 
-        public int Id { get; set; }
+        public long Id { get; set; }
         public String Name { get; set; }
         public string Pass { get; set; }
         public string Phone { get; set; }
@@ -29,11 +29,15 @@ namespace MyDBContext.Main
 
     }
     public class User_Login_History {
+        public long Id { get; set; }
         public string Ip;
         public long Time;
         public bool Success; 
     }
     public class User_SF {
+
+        public long SonId { get; set; }
+        public long FatherId { get; set; }
         public virtual User Son { get; set; }
         public virtual User Father { get; set; }
     }

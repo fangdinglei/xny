@@ -19,19 +19,35 @@ namespace MyJwtHelper
             encoder = new JwtEncoder(algorithm, serializer, urlEncoder);
             decoder = new JwtDecoder(serializer, urlEncoder);
         }
-        public string Get(Dictionary<string, string> pars, string key)
+        public string Get(Dictionary<string, object> pars, string key, long exptime = -1)
         {
+            if (exptime>0&&!pars.ContainsKey("exp"))
+            {
+                pars["exp"] = exptime ;
+            }
             return encoder.Encode(pars, key);
         }
 
         public T Get<T>(string str)
         {
             return decoder.DecodeToObject<T>(str);
-        }
+        } 
     }
     public interface IJwtHelper
     {
-        public string Get(Dictionary<string, string> pars, string key);
+        /// <summary>
+        /// 进行jwt加密
+        /// </summary>
+        /// <param name="pars"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public string Get(Dictionary<string, object> pars, string key,long exptime=-1);
+        /// <summary>
+        /// 获取jwt对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public T Get<T>(string str);
     }
 }

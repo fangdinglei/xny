@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using GrpcMain;
+using GrpcMain.Account;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using MyJwtHelper;
@@ -21,18 +22,29 @@ namespace PgGrpcMain
                 op.Interceptors.Add<GrpcInterceptor>();
                 op.EnableDetailedErrors = true;
             });
+            services.AddGrpcClient<AccountServiceImp>();
         }
+        /// <summary>
+        /// 注册grpc服务到路由
+        /// </summary>
+        /// <param name="app"></param>
+        static public void RegistMyGrpc(this WebApplication app) { 
+            app.MapGrpcService<AccountServiceImp>();
+        }
+
 
         internal class MyGrpcHandle : IGrpcHandle
         {
             MyGrpcHandleCongig _config;
-            public MyGrpcHandle(IOptions<MyGrpcHandleCongig> op)
+            IJwtHelper _jwtHelper;
+            public MyGrpcHandle(IOptions<MyGrpcHandleCongig> op,IJwtHelper helper)
             {
                 _config=op.Value;
                 if (string.IsNullOrWhiteSpace(_config.JwtKey))
                 {
                     _config.JwtKey = "2432114474";
                 }
+                _jwtHelper = helper;
             }
 
             public bool Authorize(ServerCallContext context, GrpcRequireAuthorityAttribute att, out string error)
@@ -48,6 +60,11 @@ namespace PgGrpcMain
                 var canvisit = false;
                 error = "";
                 return canvisit;
+            }
+
+            public string GetToken(Dictionary<string, object> kvs)
+            {
+               return _jwtHelper.Get(kvs, _config.JwtKey);
             }
 
             public void OnError(Exception e)

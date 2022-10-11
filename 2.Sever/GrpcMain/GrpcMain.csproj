@@ -12,8 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="GrpcProto\Goods\AdminInfo.proto" />
-	  <None Remove="GrpcProto\Goods\IGoodsQRService.proto" />
+	  <None Remove="GrpcProto\Account\AccountService.proto" />
 	</ItemGroup>
 
   <ItemGroup>
@@ -25,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\1.Utility\MyJwtHelper\MyJwtHelper.csproj" />
+    <ProjectReference Include="..\..\1.Utility\MyUtility\MyUtility.csproj" />
     <ProjectReference Include="..\DBContext\MyDBContext.csproj" />
   </ItemGroup>
  
