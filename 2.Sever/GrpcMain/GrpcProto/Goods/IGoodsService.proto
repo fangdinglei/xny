@@ -1,0 +1,37 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "pg.GrpcController.Admin.Goods";
+package pg.GrpcController.Admin.Goods;
+import "Common/AdminInfo.proto";
+
+service IGoodsService { 
+      
+    rpc CreatGoodsBatch(GoodsServiceTypes.CreatGoodsBatch_Request) 
+        returns (GoodsServiceTypes.CreatGoodsBatch_Response );
+    
+}
+message GoodsServiceTypes
+{
+    message CreatGoodsBatch_Request
+    {
+        AdminInfo AdminInfo = 1;
+        string Appid = 2;
+        string BatchName = 3;
+        string GoodsName = 4;
+        int32 Count = 5;
+        optional int32 CreatTime = 7;
+        optional int32 StartTime = 8;
+        optional int32 ExpirationTime = 9;
+        int32 GoodsType = 10;
+        string Remark = 11;
+        bool UseQR = 12;
+    }
+
+    message CreatGoodsBatch_Response
+    {
+        int64 EventId = 1;
+        bool Ok = 2;
+        optional string Message=3;
+    }
+
+}

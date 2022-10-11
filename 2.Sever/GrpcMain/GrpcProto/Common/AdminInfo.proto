@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "pg.GrpcController.Admin ";
+package pg.GrpcController.Admin ;
+ 
+message AdminInfo{
+    string Name=1;
+    string Pass=2; 
+}
+ 
