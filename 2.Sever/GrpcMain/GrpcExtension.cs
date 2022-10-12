@@ -71,7 +71,7 @@ namespace PgGrpcMain
                     return false;
                 }
 
-                context.UserState["UserId"] = jwt.Id;
+                context.UserState["CreatorId"] = jwt.Id;
                 error = "";
                 return true;
             }
@@ -90,7 +90,7 @@ namespace PgGrpcMain
                 where TRequest : class
                 where TResponse : class
             {
-                long Sponsorid = (long)context.UserState["UserId"];
+                long Sponsorid = (long)context.UserState["CreatorId"];
                 long AuditorId = (long)context.UserState["AuditorId"];
                 using (MainContext ct = new MainContext())
                 {

@@ -14,11 +14,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 //
 namespace MyDBContext.Main
 {
-    public interface IHasCreator {
-        long Id { get;  }
-        User Creator { get;  }
-        long CreatorId { get;  }
-    }
 
     public class User: IHasCreator
     { 
@@ -43,16 +38,6 @@ namespace MyDBContext.Main
         public string Ip;
         public long Time;
         public bool Success; 
-    }
-    /// <summary>
-    /// 记录用户父子映射 也包含自己和自己
-    /// </summary>
-    public class User_SF {
-
-        public long SonId { get; set; }
-        public long FatherId { get; set; }
-        public virtual User Son { get; set; }
-        public virtual User Father { get; set; }
     }
     public class Device_Type : IHasCreator
     {
@@ -83,13 +68,6 @@ namespace MyDBContext.Main
         public long UserId  { get; set; }
         public User User { get; set; }
 
-    }
-    public class User_Device_Group { 
-        public long Id { get; set; }
-        public string Name { get; set; }
-
-        public long UserId { get; set; }
-        public virtual User User { get; set; }
     }
     public class User_Device {
         public long UserId { get; set; }
@@ -190,11 +168,11 @@ namespace MyDBContext.Main
         {
             base.OnModelCreating(modelBuilder);
             new BaseValueBuilder().OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>().HasMany(it => it.Devices).WithMany(it => it.Users).
-                UsingEntity<User_Device>( 
-                it=> it.HasOne(it => it.Device).WithMany(it=>it.User_Devices),
-                 it => it.HasOne(it => it.User).WithMany(it => it.User_Devices)
-                );
+            //modelBuilder.Entity<User>().HasMany(it => it.Devices).WithMany(it => it.Creator).
+            //    UsingEntity<User_Device>( 
+            //    it=> it.HasOne(it => it.Device).WithMany(it=>it.User_Devices),
+            //     it => it.HasOne(it => it.User).WithMany(it => it.User_Devices)
+            //    );
         }
     }
 

@@ -510,7 +510,7 @@ namespace WebSocketSharp.Net {
 			case HttpRequestHeader.Translate:
 				return "Translate";
 			case HttpRequestHeader.UserAgent:
-				return "User-Agent";
+				return "Creator-Agent";
 			default:
 				throw new InvalidOperationException ();
 			}

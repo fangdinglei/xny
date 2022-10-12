@@ -52,9 +52,10 @@ namespace GrpcMain.Account
                 }
             }
             var token = _handle.GetToken(
-                new MyJwtHelper.TokenClass {
+                new MyJwtHelper.TokenClass
+                {
                     Id = user.Id
-                } );
+                });
             return new Response_LoginByUserName()
             {
                 Token = token
@@ -63,7 +64,7 @@ namespace GrpcMain.Account
         [GrpcRequireAuthority]
         public override async Task<CommonResponse?> DeletUser(Request_DeletUser request, ServerCallContext context)
         {
-            long id = (long)context.UserState["UserId"];
+            long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
                 var sf = await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == request.UserId).AsNoTracking().SingleOrDefaultAsync();
@@ -83,7 +84,7 @@ namespace GrpcMain.Account
         [GrpcRequireAuthority]
         public override async Task<CommonResponse?> ChangePassWord(Request_ChangePassWord request, ServerCallContext context)
         {
-            long id = (long)context.UserState["UserId"];
+            long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
                 if (request.HasUid)
@@ -135,7 +136,7 @@ namespace GrpcMain.Account
         [GrpcRequireAuthority]
         public override async Task<Response_CreatUser> CreatUser(Request_CreatUser request, ServerCallContext context)
         {
-            long id = (long)context.UserState["UserId"];
+            long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
                 var trans = await ct.Database.BeginTransactionAsync();
@@ -149,13 +150,22 @@ namespace GrpcMain.Account
                 ct.Add(user);
                 await ct.SaveChangesAsync();
 
+                var users = await ct.User_SFs.Where(it => it.SonId == id).Select(it => it.FatherId). ToListAsync();
+                foreach (var item in users)
+                {
+                    ct.Add(new User_SF()
+                    {
+                        FatherId = item,
+                        SonId = user.Id,
+                    });
+                }
                 ct.Add(new User_SF()
                 {
-                    FatherId = id,
+                    FatherId = user.Id,
                     SonId = user.Id,
                 });
                 await ct.SaveChangesAsync();
-                trans.Commit();
+                await trans.CommitAsync();
                 return new Response_CreatUser()
                 {
                     UserId = user.Id
@@ -167,22 +177,23 @@ namespace GrpcMain.Account
         {
             using (MainContext ct = new MainContext())
             {
-                long id = (long)context.UserState["UserId"];
+                long id = (long)context.UserState["CreatorId"];
                 List<User> list = new List<User>();
 
                 if (request.SubUser)
                 {
                     var r = await ct.Users.Where(it => it.Id == id).AsNoTracking().FirstOrDefaultAsync();
                     list.Add(r);
-                    list.AddRange(await ct.Users.Where(it=>it.CreatorId==id).AsNoTracking().ToListAsync());
+                    list.AddRange(await ct.Users.Where(it => it.CreatorId == id).AsNoTracking().ToListAsync());
                 }
                 else
                 {
-                  var r= await ct.Users.Where(it => it.Id == id).AsNoTracking().FirstOrDefaultAsync();
-                list.Add(r);
+                    var r = await ct.Users.Where(it => it.Id == id).AsNoTracking().FirstOrDefaultAsync();
+                    list.Add(r);
                 }
-                var rsp=new Response_GetUserInfo();
-                rsp.UserInfo.AddRange(list.Select(it => {
+                var rsp = new Response_GetUserInfo();
+                rsp.UserInfo.AddRange(list.Select(it =>
+                {
                     return new UserInfo()
                     {
                         Father = it.CreatorId,
@@ -198,7 +209,7 @@ namespace GrpcMain.Account
         [GrpcRequireAuthority]
         public override async Task<CommonResponse> UpdateUserInfo(Request_UpdateUserInfo request, ServerCallContext context)
         {
-            long id = (long)context.UserState["UserId"];
+            long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
                 User? user;

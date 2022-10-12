@@ -28,7 +28,7 @@ namespace GrpcMain.DeviceType
           
             using (MainContext ct=new MainContext())
             {
-                long id = (long)context.UserState["UserId"];
+                long id = (long)context.UserState["CreatorId"];
                 if (request.Ids.Count==0)
                 {//获取全部
                     int maxcount = 1000 + 1;
@@ -85,7 +85,7 @@ namespace GrpcMain.DeviceType
         [GrpcRequireAuthority(true, "UpdateDeviceTypeInfo")]
         public override async Task<CommonResponse?> UpdateTypeInfo(Request_UpdateTypeInfo request, ServerCallContext context)
         {//需要审计
-            long id = (long)context.UserState["UserId"];
+            long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
                 var type = await ct.Device_Types 
