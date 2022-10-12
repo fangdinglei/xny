@@ -14,7 +14,10 @@ service InternalMailService {
         returns (GrpcMain.Common.CommonResponse);
     //获取站内信
     rpc GetMail(InternalMailTypes.Request_GetMail)
-        returns (InternalMailTypes.Response_GetMail);
+        returns (InternalMailTypes.Response_GetMail); 
+    //发送站外信
+    rpc SendEMail(InternalMailTypes.Request_SendEMail)
+        returns (GrpcMain.Common.CommonResponse);
 }
 
 
@@ -43,6 +46,9 @@ message InternalMailTypes
         repeated InternalMail Mails=2;
     } 
 
+    message Request_SendEMail{
+        int64 MailId=1; 
+    }
 
 }
  

@@ -17,6 +17,7 @@ namespace MyDBContext.Main
         public String Name { get; set; }
         public string Pass { get; set; }
         public string Phone { get; set; }
+        public string EMail { get; set; }
         public byte Status { get; set; }
         public long LastLogin { get; set; }
 

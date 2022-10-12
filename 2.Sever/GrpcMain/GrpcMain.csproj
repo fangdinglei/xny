@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\1.Utility\MyEmailUtility\MyEmailUtility.csproj" />
     <ProjectReference Include="..\..\1.Utility\MyJwtHelper\MyJwtHelper.csproj" />
     <ProjectReference Include="..\..\1.Utility\MyUtility\MyUtility.csproj" />
     <ProjectReference Include="..\DBContext\MyDBContext.csproj" />

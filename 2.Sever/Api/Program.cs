@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using GrpcMain;
 using PgGrpcMain;
+using MyEmailUtility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.TryAddSingleton<MyUtility.IRandomUtility, MyUtility.RandomUtility>();
 builder.Services.TryAddSingleton<MyUtility.ITimeUtility, MyUtility.TimeUtility>();
 builder.Services.UseMyGrpc("2432114474");
+builder.Services.UseMyEmail();
 
 #region 禁用模型校验
 

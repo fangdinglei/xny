@@ -2,23 +2,27 @@
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MyEmailUtility
 {
     public interface IMyEmailUtility
     {
-        bool Send(string toaddress, string title, string context);
+        Task<bool> Send(string toaddress, string title, string context );
     }
-    internal class Imp : IMyEmailUtility
+    public class Imp : IMyEmailUtility
     {
 
         public string FromAddress = "3045034329@qq.com";
         public string Key = "wmdkeipkhuwndghg";
         public string Host = "smtp.qq.com";
-        public bool Send(string toaddress, string title, string context)
+        public async Task<bool> Send(string toaddress, string title, string context )
         {
 
-
+            if (toaddress == null || !Regex.Match(toaddress, @"^.*@.*\.com$").Success)
+            { 
+                return false;
+            }
             //实例化两个必要的
             MailMessage mail = new MailMessage();
             SmtpClient smtp = new SmtpClient();
@@ -47,7 +51,7 @@ namespace MyEmailUtility
             //发件邮箱的服务器地址
             smtp.Host = Host;
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtp.Timeout = 1000000;
+            smtp.Timeout = 5000;
             //设置端口,如果不设置的话,默认端口为25
             // smtp.Port = 465;
             smtp.UseDefaultCredentials = false;
@@ -59,18 +63,18 @@ namespace MyEmailUtility
             try
             {
                 //发送邮件
-                smtp.Send(mail);
+               await smtp.SendMailAsync(mail); 
                 return true;
             }
             catch (Exception e1)
-            {
+            { 
                 return false;
             }
         }
     }
     static public class MyEmailExtension
     {
-        static public void UseMyEmail(this IServiceCollection services, string jwtkey)
+        static public void UseMyEmail(this IServiceCollection services )
         {
             services.TryAddSingleton<IMyEmailUtility,Imp>();
         }  
