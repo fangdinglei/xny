@@ -1,0 +1,56 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.DeviceData";
+package GrpcMain.DeviceData;
+import "google/protobuf/empty.proto";
+import "Common/CommonResponse.proto";
+service DeviceDataService {
+    //获取设备最新的数据
+    rpc GetLatestData(DeviceDataTypes.Request_GetLatestData)
+        returns (DeviceDataTypes.Response_GetLatestData);
+
+    //获取设备数据
+    rpc GetDataPoints(DeviceDataTypes.Request_GetDataPoints)
+        returns (DeviceDataTypes.Response_GetDataPoints);
+
+}
+
+
+message DeviceDataTypes
+{  
+    message DataPoinet{
+        float Dvid=1;
+        int64 Time=2;
+    }
+    message DataStream{
+        int64 StreamId=1;
+        string StreamName=2; 
+        repeated DataPoinet Points=3;
+    } 
+
+    message Request_GetLatestData{
+        int64 Dvid=1;
+    }   
+    message Response_GetLatestData{
+        int64 Dvid=1;
+        repeated DataStream Streams=2;
+    } 
+
+    message Request_GetDataPoints{
+        int64 Dvid=1;
+        int64 Starttime=2;
+        int64 Endtime=3;
+        repeated int64 StreamId=4;
+        int32 MaxCount=5;
+        optional int64 Cursor=6; 
+    }
+    message Response_GetDataPoints{
+        int64 Dvid=1;
+        repeated DataStream Streams=2;
+        //0则后续无数据
+        int64 Cursor=3; 
+    }
+    
+    
+}
+ 

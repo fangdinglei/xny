@@ -3,6 +3,7 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using System.Linq;
 using static GrpcMain.Account.AccountServiceTypes.Types;
 namespace GrpcMain.Account
 {
@@ -15,6 +16,7 @@ namespace GrpcMain.Account
             _handle = handle;
             _timeutility = time;
         }
+
 
         public override async Task<Response_LoginByUserName?>
             LoginByUserName(
@@ -49,15 +51,16 @@ namespace GrpcMain.Account
                     });
                 }
             }
-            var token = _handle.GetToken(new Dictionary<string, object> {
-                    { "UserId",user.Id}
-                });
+            var token = _handle.GetToken(
+                new MyJwtHelper.TokenClass {
+                    Id = user.Id
+                } );
             return new Response_LoginByUserName()
             {
                 Token = token
             };
         }
-
+        [GrpcRequireAuthority]
         public override async Task<CommonResponse?> DeletUser(Request_DeletUser request, ServerCallContext context)
         {
             long id = (long)context.UserState["UserId"];
@@ -77,6 +80,7 @@ namespace GrpcMain.Account
                 Success = true,
             };
         }
+        [GrpcRequireAuthority]
         public override async Task<CommonResponse?> ChangePassWord(Request_ChangePassWord request, ServerCallContext context)
         {
             long id = (long)context.UserState["UserId"];
@@ -128,18 +132,19 @@ namespace GrpcMain.Account
 
             }
         }
-        //todo 事务
+        [GrpcRequireAuthority]
         public override async Task<Response_CreatUser> CreatUser(Request_CreatUser request, ServerCallContext context)
         {
             long id = (long)context.UserState["UserId"];
             using (MainContext ct = new MainContext())
             {
-                var trans=await ct.Database.BeginTransactionAsync();
+                var trans = await ct.Database.BeginTransactionAsync();
                 var user = new User()
                 {
                     Name = request.Uname,
                     Pass = request.Pass,
                     Phone = request.Phone,
+                    FatherId = id,
                 };
                 ct.Add(user);
                 await ct.SaveChangesAsync();
@@ -157,12 +162,40 @@ namespace GrpcMain.Account
                 };
             }
         }
-        public override Task<Response_GetUserInfo> GetUserInfo(Request_GetUserInfo request, ServerCallContext context)
+        [GrpcRequireAuthority]
+        public override async Task<Response_GetUserInfo> GetUserInfo(Request_GetUserInfo request, ServerCallContext context)
         {
-            throw new NotImplementedException();
-            return base.GetUserInfo(request, context);
+            using (MainContext ct = new MainContext())
+            {
+                long id = (long)context.UserState["UserId"];
+                List<User> list = new List<User>();
+
+                if (request.SubUser)
+                {
+                    var r = await ct.Users.Where(it => it.Id == id).AsNoTracking().FirstOrDefaultAsync();
+                    list.Add(r);
+                    list.AddRange(await ct.Users.Where(it=>it.FatherId==id).AsNoTracking().ToListAsync());
+                }
+                else
+                {
+                  var r= await ct.Users.Where(it => it.Id == id).AsNoTracking().FirstOrDefaultAsync();
+                list.Add(r);
+                }
+                var rsp=new Response_GetUserInfo();
+                rsp.UserInfo.AddRange(list.Select(it => {
+                    return new UserInfo()
+                    {
+                        Father = it.FatherId,
+                        ID = it.Id,
+                        Phone = it.Phone,
+                        UserName = it.Name,
+                    };
+                }));
+                return rsp;
+            }
 
         }
+        [GrpcRequireAuthority]
         public override async Task<CommonResponse> UpdateUserInfo(Request_UpdateUserInfo request, ServerCallContext context)
         {
             long id = (long)context.UserState["UserId"];

@@ -7,6 +7,10 @@ using System.Text;
 
 namespace MyJwtHelper 
 {
+    public class TokenClass { 
+        public long Id { get; set; }
+        public long exp { get; set; }
+    }
     public class JwtHelper : IJwtHelper
     {
         IJwtEncoder encoder;
@@ -28,13 +32,27 @@ namespace MyJwtHelper
             return encoder.Encode(pars, key);
         }
 
-        public T Get<T>(string str)
+        public T? Get<T>(string str)  
         {
-            return decoder.DecodeToObject<T>(str);
-        } 
+            try
+            {
+                return decoder.DecodeToObject<T>(str);
+            }
+            catch (Exception)
+            {
+                return  default(T);
+            }
+           
+        }
+
+        public string Get(TokenClass token, string key )
+        { 
+            return encoder.Encode(token, key); 
+        }
     }
     public interface IJwtHelper
     {
+        public string Get(TokenClass token, string key );
         /// <summary>
         /// 进行jwt加密
         /// </summary>
@@ -48,6 +66,6 @@ namespace MyJwtHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="str"></param>
         /// <returns></returns>
-        public T Get<T>(string str);
+        public T? Get<T>(string str);
     }
 }

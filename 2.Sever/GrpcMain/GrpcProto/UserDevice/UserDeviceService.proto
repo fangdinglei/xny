@@ -1,0 +1,100 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.UserDevice";
+package GrpcMain.UserDevice;
+import "google/protobuf/empty.proto";
+import "Common/CommonResponse.proto";
+service UserDeviceService {
+    //添加用户设备
+    rpc AddUserDevice(UserDeviceTypes.Request_AddUserDevice)
+        returns (GrpcMain.Common.CommonResponse);
+
+    //修改设备权限 如果所有权限都false 则删除设备
+    rpc UpdateUserDevice(UserDeviceTypes.Request_UpdateUserDevice)
+        returns (GrpcMain.Common.CommonResponse);
+
+    //获取用户设备分组信息
+    rpc GetGroupInfo(google.protobuf.Empty)
+        returns (GrpcMain.Common.CommonResponse);
+
+    //TODO 获取用户所有设备
+    rpc GetUserAllDeviceInfo(UserDeviceTypes.Request_GetUserAllDeviceInfo)
+        returns (UserDeviceTypes.Response_GetUserAllDeviceInfo);
+
+     //获取用户所有设备的ID
+    rpc GetUserAllDeviceID(UserDeviceTypes.Request_GetUserAllDeviceID)
+        returns (UserDeviceTypes.Response_GetUserAllDeviceID); 
+    
+    //将设备加入分组
+    rpc SetDeviceGroup(UserDeviceTypes.Request_SetDeviceGroup)
+        returns (GrpcMain.Common.CommonResponse); 
+
+    //添加用户设备分组
+    rpc NewGroup(UserDeviceTypes.Request_NewGroup)
+        returns (GrpcMain.Common.CommonResponse); 
+    
+    //修改设备分组信息
+    rpc UpdateGroupInfo(UserDeviceTypes.Request_UpdateGroupInfo)
+        returns (GrpcMain.Common.CommonResponse); 
+}
+
+
+message UserDeviceTypes
+{  
+    message Request_AddUserDevice{
+        repeated int64 Dvids=1;
+        int64 UserId=2;
+        //数据读取权限
+        bool Data=3;
+        //实时状态获取权限
+        bool Status=4;
+        //设备控制权限
+        bool Control=5;
+    }   
+
+
+    message Request_UpdateUserDevice{
+        repeated int64 Dvids=1;
+        int64 UserId=2;
+        //数据读取权限
+        bool Data=3;
+        //实时状态获取权限
+        bool Status=4;
+        //设备控制权限
+        bool Control=5;
+    }
+    message Request_GetUserAllDeviceInfo{
+        optional int64 Cursor=1;
+        //获取子用户时需要
+        optional int64 UserId=2;
+    }  
+    message Response_GetUserAllDeviceInfo{
+        int64 Cursor=1;
+    } 
+
+    message Request_GetUserAllDeviceID{
+        //获取子用户设备时需要
+        optional int64 UserId=1;
+
+    }  
+    message Response_GetUserAllDeviceID{
+        int64 UserId=1;
+        repeated int64 Dvids=2;
+
+    }  
+    
+    message Request_SetDeviceGroup{
+        int64 UserId=1;
+        repeated int64 Dvids=2;
+        int64 GroupId=3;
+    }  
+    message Request_NewGroup{
+        string Name=1;
+    }
+    message Request_UpdateGroupInfo{
+        int64 GroupId=1;
+        string Name=2;
+    } 
+    
+}
+ 

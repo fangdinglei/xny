@@ -22,6 +22,9 @@ namespace MyDBContext.Main
         public byte Status { get; set; }
         public long LastLogin { get; set; }
 
+        public User Father { get; set; }
+        public long FatherId { get; set; }
+
         public virtual ICollection< Device> Devices { get; set; }
         public virtual ICollection<User_Login_History> User_Login_Histories { get; set; }
         public virtual ICollection<User_Device_Group> User_Device_Groups { get; set; }
@@ -34,6 +37,9 @@ namespace MyDBContext.Main
         public long Time;
         public bool Success; 
     }
+    /// <summary>
+    /// 记录用户父子映射 也包含自己和自己
+    /// </summary>
     public class User_SF {
 
         public long SonId { get; set; }
@@ -43,8 +49,14 @@ namespace MyDBContext.Main
     }
     public class Device_Type {
         public long Id { get; set; }
+        public string Name { get; set; }
         public string DataPoints { get; set; }
         public string Script{ get; set; }
+
+        public long CreaterId { get; set; }
+        public virtual User Creater { get;  }
+
+
     }
     public class Device { 
         public long Id { get; set; }
@@ -82,6 +94,36 @@ namespace MyDBContext.Main
         public virtual User_Device_Group User_Device_Group { get; set; }
         //todo
     }
+    /// <summary>
+    /// 用户操作审计
+    /// </summary>
+    public class User_Op_Audit { 
+        public long Id { get; set; }
+        /// <summary>
+        /// 操作名称
+        /// </summary>
+        public string Op { get; set; }
+        /// <summary>
+        /// 操作数据
+        /// </summary>
+        public string Data { get; set; } 
+        /// <summary>
+        /// 操作时间
+        /// </summary>
+        public long Time { get; set; }
+
+        /// <summary>
+        /// 发起人
+        /// </summary>
+        public long SponsorId { get; set; }
+        public virtual User Sponsor { get;   }
+        /// <summary>
+        /// 审计人
+        /// </summary>
+        public long AuditorId { get; set; }
+        public virtual User Auditor { get;  }
+    }
+
 
     /// <summary>
     /// 自动控制服务
@@ -122,7 +164,7 @@ namespace MyDBContext.Main
         public DbSet<User_Device_Group> User_Device_Groups { get; set; }
         public DbSet<User_Device> User_Devices { get; set; }
         public DbSet<Device_AutoControl> Device_AutoControls { get; set; }
-
+        public DbSet<User_Op_Audit> User_Op_Audits { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         { 

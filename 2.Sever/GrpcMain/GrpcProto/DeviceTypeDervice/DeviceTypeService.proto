@@ -1,0 +1,48 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.DeviceType";
+package GrpcMain.DeviceType;
+import "google/protobuf/empty.proto";
+import "Common/CommonResponse.proto";
+
+//TODO
+service DeviceTypeService {
+
+    //获取设备类型信息
+    rpc GetTypeInfos(DeviceTypeTypes.Request_GetTypeInfos)
+        returns (DeviceTypeTypes.Response_GetTypeInfos); 
+
+    //更新设备类型信息
+    rpc UpdateTypeInfo(DeviceTypeTypes.Request_UpdateTypeInfo)
+        returns (GrpcMain.Common.CommonResponse);
+
+}
+
+
+message DeviceTypeTypes
+{   
+    message TypeInfo{
+        int64 Id=1;
+        optional string Name=2;
+        optional string DataPoints=3;
+        optional string Script=4;
+    }
+    message Request_GetTypeInfos{ 
+        //当不指定Ids才使用Cursor
+       optional int64 Cursor=1; 
+       //如果没有指定则获取全部
+       repeated  int64 Ids=2;
+    }   
+    message Response_GetTypeInfos{
+        //0则后续无数据 当不指定Ids才使用Cursor
+        int64 Cursor=1; 
+        repeated TypeInfo TypeInfos=2;
+    } 
+
+    message Request_UpdateTypeInfo{ 
+        TypeInfo Info=1;
+    } 
+    
+    
+}
+ 

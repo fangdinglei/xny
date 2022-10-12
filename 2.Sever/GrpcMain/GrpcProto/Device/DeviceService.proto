@@ -1,0 +1,55 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.Device";
+package GrpcMain.Device;
+import "google/protobuf/empty.proto";
+import "Common/CommonResponse.proto";
+service DeviceService {
+
+    
+    //发送命令
+    rpc SendCMD(DeviceTypes.Request_SendCMD)
+        returns (GrpcMain.Common.CommonResponse);
+
+    //删除设备
+    rpc DeletDevice(DeviceTypes.Request_DeletDevice)
+        returns (GrpcMain.Common.CommonResponse);
+
+    //修改设备信息
+    rpc UpdateDeviceInfo(DeviceTypes.Request_UpdateDeviceInfo)
+        returns (GrpcMain.Common.CommonResponse);
+    //获取全部设备状态
+    rpc GetAllDeviceStatus(DeviceTypes.Request_GetAllDeviceStatus)
+        returns (DeviceTypes.Response_GetAllDeviceStatus);
+
+}
+
+
+message DeviceTypes
+{  
+    message Request_SendCMD{
+        repeated int64 Dvids=1;
+        string Cmd=2;
+    }   
+
+
+    message Request_DeletDevice{
+        repeated int64 Dvids=1;
+        optional string Reason=2;
+    }
+    message Request_UpdateDeviceInfo{
+        repeated int64 Dvids=1;
+    }
+    
+    message Request_GetAllDeviceStatus{
+        optional int64 Cursor=1;
+
+    }
+    message Response_GetAllDeviceStatus{
+        //0则无后续数据
+        int64 Cursor=1; 
+        repeated int64 Dvids=2;
+        repeated int32 Status=3;
+    }
+}
+ 
