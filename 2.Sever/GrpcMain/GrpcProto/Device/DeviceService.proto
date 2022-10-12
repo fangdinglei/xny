@@ -27,6 +27,14 @@ service DeviceService {
 
 message DeviceTypes
 {  
+    message Device{
+        string Name=1;
+        int64 DeviceTypeId=2;
+        optional string LatestData=3;
+        optional int32 Status=4;
+        optional string LocationStr=5;
+    }
+
     message Request_SendCMD{
         repeated int64 Dvids=1;
         string Cmd=2;
@@ -37,8 +45,9 @@ message DeviceTypes
         repeated int64 Dvids=1;
         optional string Reason=2;
     }
+
     message Request_UpdateDeviceInfo{
-        repeated int64 Dvids=1;
+        repeated Device Devices=1;
     }
     
     message Request_GetAllDeviceStatus{

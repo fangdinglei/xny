@@ -16,19 +16,17 @@ namespace GrpcMain.UserDevice
             _timeutility = time;
         }
         [GrpcRequireAuthority]
-        public override async Task<CommonResponse> UpdateUserDevice(Request_UpdateUserDevice request, ServerCallContext context)
-        {//需要审计
-            long id = (long)context.UserState["CreatorId"];
+        public override async Task<CommonResponse?> UpdateUserDevice(Request_UpdateUserDevice request, ServerCallContext context)
+        { 
+            long id = (long)context.UserState["CreatorId"]; 
+           
             using (MainContext ct = new MainContext())
             {
-                if (request.UserId == id ||
-                      await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == request.UserId).CountAsync() == 0)
+                if (request.UserDevice.UserId == id ||
+                                    await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == request.UserId).CountAsync() == 0)
                 {
-                    return new CommonResponse()
-                    {
-                        Success = false,
-                        Message = "指定了无效的接收用户",
-                    };
+                    context.Status = new Status(StatusCode.PermissionDenied, "指定了无效的接收用户");
+                                       return null;
                 }
                 //TODO 优化
                 var count = await ct.Devices.Join(ct.User_Devices, it => it.Id, it => it.DeviceId, (dv, udv) => new { dv, udv })
@@ -48,12 +46,13 @@ namespace GrpcMain.UserDevice
                         DeviceId = item,
                         UserId = request.UserId,
                         User_Device_GroupId = 0,
-                        Status = request.Status,
-                        Data = request.Data,
-                        Control = request.Control,
+                        PStatus = request.UserDevice.PStatus,
+                        PData = request.UserDevice.PData,
+                        PControl = request.UserDevice.PControl,
                     });
                 }
                 await ct.SaveChangesAsync();
+
             }
             return new CommonResponse() { Success = true };
         }
@@ -163,10 +162,58 @@ namespace GrpcMain.UserDevice
         }
 
         [GrpcRequireAuthority]
-        public override Task<Response_GetUserAllDeviceInfo> GetUserAllDeviceInfo(Request_GetUserAllDeviceInfo request, ServerCallContext context)
+        public override async Task<Response_GetUserDevices> GetUserDevices(Request_GetUserDevices request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            int maxcount = 1000 + 1;
+            long id = (long)context.UserState["CreatorId"];
+            long qid = id;
+            if (request.HasUserId)
+                id = request.UserId;
+            using (MainContext ct = new MainContext())
+            {
+                IQueryable<User_Device> bd;
+                if (qid != id)
+                {
+                    var count = await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == qid).CountAsync();
+                    if (count == 0)
+                    {
+                        context.Status = new Status(StatusCode.PermissionDenied, "只能查询自己和子用户");
+                        return null;
+                    }
+                }
+                bd = ct.User_Devices.Where(it => it.UserId == request.UserId);
+                if (request.HasCursor)
+                {
+                    bd = bd.Where(it => it.DeviceId >= request.Cursor)
+                        .Take(maxcount);
+                }
+                var r = await bd.AsNoTracking() .ToListAsync();
+                var res = new Response_GetUserDevices()
+                {
+                    UserId = request.UserId,
+                };
+                if (request.HasCursor && maxcount == r.Count) {
+                    res.Cursor = r.Last().DeviceId;
+                }
+                else
+                {
+                    res.Cursor = 0; 
+                }
+                res.UserDevices.AddRange(r.Select(it => {
+                    return new UserDeviceTypes.Types.UserDevice()
+                    {
+                        PControl = it.PControl,
+                        PData = it.PData,
+                        Dvid=it.DeviceId,
+                        PStatus = it.PStatus,
+                        UserId=it.UserId, 
+                    };
+                }));
+                return res;
+            }
         }
+      
+        
 
     }
 }

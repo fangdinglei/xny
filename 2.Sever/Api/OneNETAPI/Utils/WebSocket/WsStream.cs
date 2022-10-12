@@ -114,7 +114,7 @@ namespace WebSocketSharp
             var readLen = _innerStream.Read(buffer, offset, size);
             if (readLen < size)
             {
-                var msg = String.Format("Data can not be read from {0}.", _innerStream.GetType().Name);
+                var msg = String.Format("PData can not be read from {0}.", _innerStream.GetType().Name);
                 throw new IOException(msg);
             }
 

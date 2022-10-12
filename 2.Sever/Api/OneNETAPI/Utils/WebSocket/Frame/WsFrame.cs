@@ -384,7 +384,7 @@ namespace WebSocketSharp.Frame
  FIN={0}, RSV1={1}, RSV2={2}, RSV3={3}, Opcode={4},
  MASK={5}, Payload Len={6}, Extended Payload Len={7},
  Masking Key ={8},
- Payload Data={9}";
+ Payload PData={9}";
 
             buffer = ToBytes();
             count = (long)(Length / 4);

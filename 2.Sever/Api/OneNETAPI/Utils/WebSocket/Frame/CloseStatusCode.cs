@@ -33,9 +33,9 @@ namespace WebSocketSharp.Frame
   public enum CloseStatusCode : ushort
   {
     /*
-     * Close Status Code
+     * Close PStatus Code
      *
-     * Defined Status Codes: http://tools.ietf.org/html/rfc6455#section-7.4.1
+     * Defined PStatus Codes: http://tools.ietf.org/html/rfc6455#section-7.4.1
      *
      * "Reserved value" MUST NOT be set as a status code in a Close control frame by an endpoint.
      * It is designated for use in applications expecting a status code to indicate that connection

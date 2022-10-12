@@ -37,7 +37,7 @@ namespace XNYAPI.AutoControl
                 double 温度 = data.Datas_double["Temperature"].Avg();
                 double 二氧化碳 = data.Datas_double["eCO2"].Avg();
 
-                Logger.Log("LED-Data-1", new Dictionary<string, object>{
+                Logger.Log("LED-PData-1", new Dictionary<string, object>{
                     { "光照强度", 光照强度 } ,   { "湿度", 湿度 } ,
                     { "温度", 温度 } , { "二氧化碳", 二氧化碳 }
                 });
@@ -51,7 +51,7 @@ namespace XNYAPI.AutoControl
                 double 开灯电量 = -0.6 * Math.Atan((补光效果 - 1) / 0.08) + 0.15;
                 double 关灯电量 = -0.6 * Math.Atan((补光效果 - 1) / 0.18) + 0.1;
 
-                Logger.Log("LED-Data-2", new Dictionary<string, object>{
+                Logger.Log("LED-PData-2", new Dictionary<string, object>{
                     { "二氧化碳得分",二氧化碳得分 } ,   { "温度得分", 温度得分 } ,
                     { "湿度优化", 湿度优化 } , { "净光合速率", 净光合速率 },
                       { "与极限转化率比值",与极限转化率比值 } ,   { "补光效果", 补光效果 } ,
@@ -68,7 +68,7 @@ namespace XNYAPI.AutoControl
                 else
                     re = open;
 
-                Logger.Log("LED-Data-3", new Dictionary<string, object> { { "开关", re } });
+                Logger.Log("LED-PData-3", new Dictionary<string, object> { { "开关", re } });
                 return re;
             }
             catch (Exception e)
