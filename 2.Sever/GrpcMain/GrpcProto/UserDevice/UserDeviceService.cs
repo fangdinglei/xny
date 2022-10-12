@@ -142,5 +142,25 @@ namespace GrpcMain.UserDevice
                 return new CommonResponse() { Success = true };
             }  
         }
+
+        public override async Task<CommonResponse?> UpdateGroupInfo(Request_UpdateGroupInfo request, ServerCallContext context)
+        {
+
+            long id = (long)context.UserState["CreatorId"];
+            using (MainContext ct = new MainContext())
+            {
+                var gp = await ct.User_Device_Groups.Where(it => it.CreatorId == id).FirstOrDefaultAsync();
+                if (gp==null)
+                {
+                    context.Status = new Status(StatusCode.PermissionDenied, "用户无该分组");
+                    return null;
+                }
+                gp.Name = request.Name;
+                await ct.SaveChangesAsync();
+                return new CommonResponse() { Success = true };
+            }
+        }
+   
+        
     }
 }
