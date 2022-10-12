@@ -34,7 +34,7 @@ namespace XNYAPI.Controllers
             var script = "IyMjCjMwCmRhdGEgCiMjIwoxMjAKb25saW5lCmRhdGFyZWFkIFRlbXBlcmF0dXJlLDEwLDEwLGRvdWJsZQpkYXRhcmVhZCBMdW1pbmF0aW9uLDEwLDEwLGRvdWJsZQpkYXRhcmVhZCBIdW1pZGl0eSwxMCwxMCxkb3VibGUKZGF0YXJlYWQgZUNPMiwxMCwxMCxkb3VibGUKcG93ZXIgY2FsLDEwLDExMDU5MjAKbGVk";
 
             return
-                "INSERT INTO user(ID,Name,Pass,Phone,Father)VALUES" +
+                "INSERT INTO user(ID,Name,Pass,Phone,Creator)VALUES" +
                 "(1,'admin','','',0),(2,'system','p1','',1);" +
 
                 "INSERT INTO id_allocator(ID,Name,Min,Max,Current,Comments)VALUES"
@@ -57,13 +57,13 @@ namespace XNYAPI.Controllers
         string InsertTest()
         {
             return
-               "INSERT INTO user(ID,Name,Pass,Phone,Father)VALUES"
+               "INSERT INTO user(ID,Name,Pass,Phone,Creator)VALUES"
                +
                "(3,'fdl','pass','',2)," +
                "(4,'fdl2','pass','',2)," +
                "(5,'fdl3','pass','',3);" +
                "UPDATE id_allocator SET Current=6 WHERE ID=1;" +
-               "INSERT INTO user_sf (Son,Father)VALUES" +
+               "INSERT INTO user_sf (Son,Creator)VALUES" +
                "(3,2)," +
                "(4,2)," +
                "(5,3),(5,2);";

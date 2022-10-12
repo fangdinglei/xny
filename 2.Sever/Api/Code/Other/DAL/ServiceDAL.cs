@@ -21,7 +21,7 @@ namespace XNYAPI.DAL
             var gowner = Convert.ToUInt32(sc);
             if (gowner == userid)
                 return true;
-            cmd.CommandText = $"SELECT 1 FROM user_sf WHERE Son={gowner} AND Father={userid}";
+            cmd.CommandText = $"SELECT 1 FROM user_sf WHERE Son={gowner} AND Creator={userid}";
             sc = cmd.ExecuteScalar();
             return sc != null;
         }

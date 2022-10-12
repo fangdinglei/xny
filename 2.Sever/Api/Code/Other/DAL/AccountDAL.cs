@@ -88,7 +88,7 @@ namespace XNYAPI.DAL
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
-                cmd.CommandText = $"SELECT Name FROM user WHERE Father=1 LIMIT 1";
+                cmd.CommandText = $"SELECT Name FROM user WHERE Creator=1 LIMIT 1";
                 var rd = cmd.ExecuteScalar();
                 if (rd == null)
                     return "";
@@ -105,7 +105,7 @@ namespace XNYAPI.DAL
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
-                cmd.CommandText = $"SELECT ID FROM user WHERE Father=1 LIMIT 1";
+                cmd.CommandText = $"SELECT ID FROM user WHERE Creator=1 LIMIT 1";
                 var rd = cmd.ExecuteScalar();
                 if (rd == null)
                     return 0;
@@ -123,7 +123,7 @@ namespace XNYAPI.DAL
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
-                cmd.CommandText = $"SELECT 1 FROM user WHERE Father=1 AND ID={uid} LIMIT 1";
+                cmd.CommandText = $"SELECT 1 FROM user WHERE Creator=1 AND ID={uid} LIMIT 1";
                 var rd = cmd.ExecuteScalar();
                 if (rd == null)
                     return false;
@@ -150,7 +150,7 @@ namespace XNYAPI.DAL
         static public bool  IsFatherOrFatherFather(uint father, uint son, MySqlCommand cmd)
         {
             cmd.CommandText = $"SELECT 1 FROM user inner join user_sf on user.ID= user_sf.Son " +
-             $"WHERE user.ID={son} AND  user_sf.Father={father}";
+             $"WHERE user.ID={son} AND  user_sf.Creator={father}";
             var sre = cmd.ExecuteScalar();
             if (sre == null)
                 return false;
@@ -174,7 +174,7 @@ namespace XNYAPI.DAL
         }
         static public bool IsFather (uint father, uint son, MySqlCommand cmd)
         {
-            cmd.CommandText = $"SELECT 1 FROM user   WHERE ID={son} AND  Father={father}";
+            cmd.CommandText = $"SELECT 1 FROM user   WHERE ID={son} AND  Creator={father}";
             var sre = cmd.ExecuteScalar();
             if (sre == null)
                 return false;
@@ -241,7 +241,7 @@ namespace XNYAPI.DAL
         static public List<UserBriefInfo>  GetSubUserBriefInfo(uint uid, bool cascade, MySqlCommand cmd)
         {
             List<UserBriefInfo> re = new List<UserBriefInfo>();
-            cmd.CommandText = $"SELECT Name,ID  FROM user WHERE Father={uid}";
+            cmd.CommandText = $"SELECT Name,ID  FROM user WHERE Creator={uid}";
             using (var rd = cmd.ExecuteReader())
                 while (rd.Read())
                     re.Add(new UserBriefInfo(rd.GetUInt32(1), rd.GetString(0)));
@@ -267,7 +267,7 @@ namespace XNYAPI.DAL
         static public List<UserInfo> GetAllSubUserInfo(uint uid,  MySqlCommand cmd)
         {
             List<UserInfo> res = new List<UserInfo>();
-            cmd.CommandText = $"SELECT ID,Name,Phone FROM user WHERE Father={uid}";
+            cmd.CommandText = $"SELECT ID,Name,Phone FROM user WHERE Creator={uid}";
             using (var rd=cmd.ExecuteReader())
             {
                 while (rd.Read())
@@ -294,7 +294,7 @@ namespace XNYAPI.DAL
         }
         static public  UserInfo  GetUserInfo(uint uid,  MySqlCommand cmd)
         { 
-            cmd.CommandText = $"SELECT Name,Phone,Father  FROM user WHERE ID={uid}";
+            cmd.CommandText = $"SELECT Name,Phone,Creator  FROM user WHERE ID={uid}";
             using (var rd = cmd.ExecuteReader())
                if(rd.Read())
                     return new UserInfo(uid,rd.GetString(0), rd.GetString(1),rd.GetUInt32(2)) ;
@@ -311,7 +311,7 @@ namespace XNYAPI.DAL
         static public List<uint> DeletUser(uint deluid, MySqlCommand cmd)
         {
             List<uint> subusers = new List<uint>();
-            cmd.CommandText = $"SELECT Son FROM user_sf WHERE Father={deluid}";
+            cmd.CommandText = $"SELECT Son FROM user_sf WHERE Creator={deluid}";
             using (var rd=cmd.ExecuteReader())
             {
                 while (rd.Read())

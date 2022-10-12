@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 //Add-Migration [--context MainContext]
 //Remove-Migration 取消最近一次迁移
@@ -14,7 +14,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 //
 namespace MyDBContext.Main
 {
-    public class User { 
+    public interface IHasCreator {
+        long Id { get;  }
+        User Creator { get;  }
+        long CreatorId { get;  }
+    }
+
+    public class User: IHasCreator
+    { 
         public long Id { get; set; }
         public String Name { get; set; }
         public string Pass { get; set; }
@@ -22,8 +29,8 @@ namespace MyDBContext.Main
         public byte Status { get; set; }
         public long LastLogin { get; set; }
 
-        public User Father { get; set; }
-        public long FatherId { get; set; }
+        public virtual User Creator { get; set; }
+        public long CreatorId { get; set; }
 
         public virtual ICollection< Device> Devices { get; set; }
         public virtual ICollection<User_Login_History> User_Login_Histories { get; set; }
@@ -47,28 +54,27 @@ namespace MyDBContext.Main
         public virtual User Son { get; set; }
         public virtual User Father { get; set; }
     }
-    public class Device_Type {
+    public class Device_Type : IHasCreator
+    {
         public long Id { get; set; }
         public string Name { get; set; }
         public string DataPoints { get; set; }
         public string Script{ get; set; }
 
-        public long CreaterId { get; set; }
-        public virtual User Creater { get;  }
-
-
-    }
-    public class Device { 
+        public long CreatorId { get; set; }
+        public virtual User Creator { get;  }
+     }
+    public class Device : IHasCreator
+    { 
         public long Id { get; set; }
         public string Name { get; set; }
         public int Device_TypeId  { get; set; }
         public virtual Device_Type DeviceType { get; set; }
 
-        public virtual Device_AutoControl Device_AutoControl { get; set; }
-        public virtual ICollection<User> Users { get; set; }
-        public virtual ICollection<User_Device> User_Devices { get; set; }
-        public virtual ICollection<Device_Cmd_History> Device_Cmd_Historys { get; set; }
-   
+        public virtual User Creator { get;   }
+        public long CreatorId { get; set; } 
+
+        public virtual Device_AutoControl Device_AutoControl { get; set; } 
     } 
     public class Device_Cmd_History { 
         public long Id { get; set; }

@@ -144,7 +144,7 @@ namespace GrpcMain.Account
                     Name = request.Uname,
                     Pass = request.Pass,
                     Phone = request.Phone,
-                    FatherId = id,
+                    CreatorId = id,
                 };
                 ct.Add(user);
                 await ct.SaveChangesAsync();
@@ -174,7 +174,7 @@ namespace GrpcMain.Account
                 {
                     var r = await ct.Users.Where(it => it.Id == id).AsNoTracking().FirstOrDefaultAsync();
                     list.Add(r);
-                    list.AddRange(await ct.Users.Where(it=>it.FatherId==id).AsNoTracking().ToListAsync());
+                    list.AddRange(await ct.Users.Where(it=>it.CreatorId==id).AsNoTracking().ToListAsync());
                 }
                 else
                 {
@@ -185,7 +185,7 @@ namespace GrpcMain.Account
                 rsp.UserInfo.AddRange(list.Select(it => {
                     return new UserInfo()
                     {
-                        Father = it.FatherId,
+                        Father = it.CreatorId,
                         ID = it.Id,
                         Phone = it.Phone,
                         UserName = it.Name,

@@ -62,7 +62,7 @@ namespace XNYAPI.DAL
                     $"WHERE UserID={uid} AND DeviceID={dvid};";
                 //级联删除其子用户的设备
                 cmd.CommandText += $"DELETE FROM userdevice " +
-                 $"WHERE DeviceID={dvid} AND UserID IN( SELECT Son FROM user_sf WHERE Father={uid});";
+                 $"WHERE DeviceID={dvid} AND UserID IN( SELECT Son FROM user_sf WHERE Creator={uid});";
             }
             else
             {
@@ -85,7 +85,7 @@ namespace XNYAPI.DAL
             cmd.CommandText = $"DELETE FROM userdevice_group WHERE UserID={uid};"
                 + $"DELETE FROM userdevice WHERE UserID={uid};";
             cmd.CommandText += $"DELETE FROM userdevice " +
-               $"WHERE  UserID IN( SELECT Son FROM user_sf WHERE Father={uid});";
+               $"WHERE  UserID IN( SELECT Son FROM user_sf WHERE Creator={uid});";
             return cmd.ExecuteNonQuery();
         }
 
