@@ -1,0 +1,48 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.InternalMail";
+package GrpcMain.InternalMail;
+import "google/protobuf/empty.proto";
+import "Common/CommonResponse.proto"; 
+service InternalMailService { 
+
+    //发送站内信
+    rpc SendMail(InternalMailTypes.Request_SendInternalMail)
+        returns (GrpcMain.Common.CommonResponse);
+    //设置站内信已读
+    rpc SetMailReaded(InternalMailTypes.Request_SetMailReaded)
+        returns (GrpcMain.Common.CommonResponse);
+    //获取站内信
+    rpc GetMail(InternalMailTypes.Request_GetMail)
+        returns (InternalMailTypes.Response_GetMail);
+}
+
+
+message InternalMailTypes
+{  
+    message InternalMail{
+        optional int64 Id=1; 
+        string Title =2;
+        string Context =3;
+        optional int64 Time=4;
+        optional bool Readed=5;
+    }
+    message Request_SendInternalMail{ 
+        InternalMail Mail=1;
+    }
+
+    message Request_SetMailReaded{
+        int64 MailId=1; 
+    }
+    message Request_GetMail{
+        optional int64 Cursor=1;
+        optional int32 MaxCount=2;
+    } 
+    message Response_GetMail{
+        optional int64 Cursor=1;
+        repeated InternalMail Mails=2;
+    } 
+
+
+}
+ 

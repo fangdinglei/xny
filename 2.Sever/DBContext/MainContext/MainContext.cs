@@ -13,7 +13,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MyDBContext.Main
 {
 
-
     /// <summary>
     /// 自动控制服务
     /// </summary>
@@ -55,6 +54,7 @@ namespace MyDBContext.Main
         public DbSet<Device_AutoControl> Device_AutoControls { get; set; }
         public DbSet<User_Op_Audit> User_Op_Audits { get; set; }
         public DbSet<Device_DataPoint> Device_DataPoints { get; set; }
+        public DbSet<Internal_Mail> Internal_Mails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

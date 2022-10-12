@@ -47,12 +47,19 @@ namespace GrpcMain.DeviceData
                 bd = bd.Take(maxcount);
                 bd = bd.AsNoTracking();
                 var ls = await bd.ToListAsync();
-                if (maxcount == ls.Count)
+                IEnumerable<Device_DataPoint> lsx;
+                if (maxcount == ls.Count) {
                     res.Cursor = ls.Last().Id;
-                else
-                    res.Cursor = 0; 
+                    lsx = ls.Take(maxcount - 1);
+                }
+
+                else {
+                    res.Cursor = 0;
+                    lsx = ls;
+                }
+                 
                 Dictionary<long, List<DataPoinet>> points = new(); 
-                foreach (var item in ls)
+                foreach (var item in lsx)
                 {
                     if (!points.ContainsKey(item.StreamId))
                     {

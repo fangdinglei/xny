@@ -195,15 +195,18 @@ namespace GrpcMain.UserDevice
                 {
                     UserId = request.UserId,
                 };
-                if (request.HasCursor && maxcount == r.Count)
+                IEnumerable<MyDBContext.Main.User_Device> lsx;
+                if (  maxcount == r.Count)
                 {
                     res.Cursor = r.Last().DeviceId;
+                    lsx = r.Take(maxcount - 1);
                 }
                 else
                 {
                     res.Cursor = 0;
+                    lsx = r;
                 }
-                res.UserDevices.AddRange(r.Select(it =>
+                res.UserDevices.AddRange(lsx.Select(it =>
                 {
                     return new UserDeviceTypes.Types.UserDevice()
                     {
