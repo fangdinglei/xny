@@ -13,8 +13,12 @@ namespace GrpcMain.Device
             _timeutility = time;
         }
 
-    
-        
+        [GrpcRequireAuthority]
+        public override Task<CommonResponse> SendCMD(DeviceTypes.Types.Request_SendCMD request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

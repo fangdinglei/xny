@@ -143,6 +143,7 @@ namespace GrpcMain.UserDevice
             }  
         }
 
+        [GrpcRequireAuthority]
         public override async Task<CommonResponse?> UpdateGroupInfo(Request_UpdateGroupInfo request, ServerCallContext context)
         {
 
@@ -160,7 +161,12 @@ namespace GrpcMain.UserDevice
                 return new CommonResponse() { Success = true };
             }
         }
-   
-        
+
+        [GrpcRequireAuthority]
+        public override Task<Response_GetUserAllDeviceInfo> GetUserAllDeviceInfo(Request_GetUserAllDeviceInfo request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

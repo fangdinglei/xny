@@ -3,7 +3,6 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
-using System.Linq;
 using static GrpcMain.Account.AccountServiceTypes.Types;
 namespace GrpcMain.Account
 {
@@ -29,11 +28,17 @@ namespace GrpcMain.Account
                 && it.Pass == request.PassWord).AsNoTracking().FirstOrDefaultAsync();
                 if (user == null)
                 {//登陆失败
-                    await ct.AddAsync(new User_Login_History()
+                    await ct.AddAsync(new History()
                     {
-                        Success = false,
-                        Ip = context.Peer,
-                        Time = _timeutility.GetTicket()
+                        _Type = HistoryType.Login,
+                        Data = Newtonsoft.Json.JsonConvert.SerializeObject(
+                            new
+                            {
+                                Success = false,
+                                Ip = context.Peer,
+                                Time = _timeutility.GetTicket()
+                            }
+                       )
                     });
                     await ct.SaveChangesAsync();
                     return new Response_LoginByUserName()
@@ -43,12 +48,19 @@ namespace GrpcMain.Account
                 }
                 else
                 {//登陆成功
-                    await ct.AddAsync(new User_Login_History()
+                    await ct.AddAsync(new History()
                     {
-                        Success = true,
-                        Ip = context.Peer,
-                        Time = _timeutility.GetTicket()
+                        _Type = HistoryType.Login,
+                        Data = Newtonsoft.Json.JsonConvert.SerializeObject(
+                           new
+                           {
+                               Success = true,
+                               Ip = context.Peer,
+                               Time = _timeutility.GetTicket()
+                           }
+                      )
                     });
+
                 }
             }
             var token = _handle.GetToken(
@@ -61,6 +73,7 @@ namespace GrpcMain.Account
                 Token = token
             };
         }
+
         [GrpcRequireAuthority]
         public override async Task<CommonResponse?> DeletUser(Request_DeletUser request, ServerCallContext context)
         {
@@ -81,6 +94,7 @@ namespace GrpcMain.Account
                 Success = true,
             };
         }
+
         [GrpcRequireAuthority]
         public override async Task<CommonResponse?> ChangePassWord(Request_ChangePassWord request, ServerCallContext context)
         {
@@ -133,6 +147,7 @@ namespace GrpcMain.Account
 
             }
         }
+
         [GrpcRequireAuthority]
         public override async Task<Response_CreatUser> CreatUser(Request_CreatUser request, ServerCallContext context)
         {
@@ -150,7 +165,7 @@ namespace GrpcMain.Account
                 ct.Add(user);
                 await ct.SaveChangesAsync();
 
-                var users = await ct.User_SFs.Where(it => it.SonId == id).Select(it => it.FatherId). ToListAsync();
+                var users = await ct.User_SFs.Where(it => it.SonId == id).Select(it => it.FatherId).ToListAsync();
                 foreach (var item in users)
                 {
                     ct.Add(new User_SF()
@@ -172,6 +187,7 @@ namespace GrpcMain.Account
                 };
             }
         }
+
         [GrpcRequireAuthority]
         public override async Task<Response_GetUserInfo> GetUserInfo(Request_GetUserInfo request, ServerCallContext context)
         {
@@ -206,6 +222,7 @@ namespace GrpcMain.Account
             }
 
         }
+
         [GrpcRequireAuthority]
         public override async Task<CommonResponse> UpdateUserInfo(Request_UpdateUserInfo request, ServerCallContext context)
         {
