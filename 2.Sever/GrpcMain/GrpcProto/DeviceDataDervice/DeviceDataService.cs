@@ -80,9 +80,31 @@ namespace GrpcMain.DeviceData
         }
 
         [GrpcRequireAuthority]
-        public override Task< Response_GetLatestData> GetLatestData( Request_GetLatestData request, ServerCallContext context)
-        {
-            throw new NotImplementedException();
+        public override async Task<Response_GetLatestData> GetLatestData( Request_GetLatestData request, ServerCallContext context)
+        { 
+            long id = (long)context.UserState["CreatorId"];
+            Response_GetLatestData res = new Response_GetLatestData();
+            using (MainContext ct = new MainContext())
+            {
+                var ud = await ct.User_Devices
+                    .Where(it => it.DeviceId == request.Dvid && it.UserId == id)
+                     .AsNoTracking().FirstOrDefaultAsync();
+                if (ud == null || !ud.PStatus)
+                {
+                    //没有权限
+                    context.Status = new Status(StatusCode.PermissionDenied, "没有数据读取权限");
+                    return null;
+                }
+
+                var dt=await ct.Devices.Where(it => it.Id == request.Dvid)
+                    .Select(it=>it.LatestData)
+                    .FirstOrDefaultAsync();
+                return new Response_GetLatestData() { 
+                    Dvid=request.Dvid,
+                    Streams= dt
+                };
+            }
+            return res;
         }
     }
 }

@@ -34,7 +34,7 @@ message DeviceDataTypes
     }   
     message Response_GetLatestData{
         int64 Dvid=1;
-        repeated DataStream Streams=2;
+        string Streams=2;
     } 
 
     message Request_GetDataPoints{
