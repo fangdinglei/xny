@@ -116,5 +116,65 @@ namespace MyDBContext.Main
             }
             return await bd.ToListAsync();
         }
+
+        /// <summary>
+        /// 获取所有用户可访问的实体
+        /// </summary>
+        /// <returns></returns>
+        static public async Task<int> GetEntityOfAccessibleCount<TEntity>(this DbSet<TEntity> dbset, MainContext ct, long uid
+            , int takecount = -1, long cursor = -1
+            , bool fathervisitson = false, bool sonvisitfather = false, bool trace = false
+            , ICollection<long> wantedids = null) where TEntity : class, IHasCreator
+        {
+            IQueryable<TEntity> bd;
+            if (fathervisitson && sonvisitfather)
+            {
+                var bd1 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.SonId,
+                 (dt, us) => new { us, dt })
+                 .Where(it => it.us.FatherId == uid)
+                 .Select(it => it.dt);
+                var bd2 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.FatherId,
+                   (dt, us) => new { us, dt })
+                   .Where(it => it.us.SonId == uid)
+                   .Select(it => it.dt);
+                bd = bd1.Union(bd2);
+            }
+            else if (fathervisitson)
+            {
+                bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.SonId,
+                   (dt, us) => new { us, dt })
+                   .Where(it => it.us.FatherId == uid)
+                   .Select(it => it.dt);
+            }
+            else if (sonvisitfather)
+            {
+                bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.FatherId,
+                   (dt, us) => new { us, dt })
+                   .Where(it => it.us.SonId == uid)
+                   .Select(it => it.dt);
+            }
+            else
+            {//只获取自己创建的
+                bd = dbset.Where(it => it.CreatorId == uid);
+
+            }
+            if (wantedids != null && wantedids.Count > 0)
+            {
+                bd = bd.Where(it => wantedids.Contains(it.Id));
+            }
+            if (cursor > 0)
+            {
+                bd = bd.Where(it => it.Id >= cursor);
+            }
+            if (takecount > 0)
+            {
+                bd = bd.Take(takecount);
+            }
+            if (!trace)
+            {
+                bd = bd.AsNoTracking();
+            }
+            return await bd.CountAsync() ;
+        }
     }
 }

@@ -95,6 +95,13 @@ namespace MyDBContext.Main
         public long UserId { get; set; }
         public long DeviceId { get; set; }
         public long User_Device_GroupId { get; set; }
+        //数据读取权限
+        public bool Data { get; set; }
+        //实时状态获取权限
+        public bool Status { get; set; }
+        //设备控制权限
+        public bool Control { get; set; }
+
         public virtual User User { get; set; }
         public virtual Device Device { get; set; }
         public virtual User_Device_Group User_Device_Group { get; set; }
