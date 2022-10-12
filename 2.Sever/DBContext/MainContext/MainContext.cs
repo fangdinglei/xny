@@ -54,6 +54,7 @@ namespace MyDBContext.Main
         public DbSet<User_Device> User_Devices { get; set; }
         public DbSet<Device_AutoControl> Device_AutoControls { get; set; }
         public DbSet<User_Op_Audit> User_Op_Audits { get; set; }
+        public DbSet<Device_DataPoint> Device_DataPoints { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

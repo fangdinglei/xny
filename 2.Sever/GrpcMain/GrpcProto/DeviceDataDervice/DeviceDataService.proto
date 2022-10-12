@@ -19,8 +19,9 @@ service DeviceDataService {
 message DeviceDataTypes
 {  
     message DataPoinet{
-        float Dvid=1;
+        int64 Dvid=1;
         int64 Time=2;
+        float Value=3;
     }
     message DataStream{
         int64 StreamId=1;
@@ -38,10 +39,10 @@ message DeviceDataTypes
 
     message Request_GetDataPoints{
         int64 Dvid=1;
-        int64 Starttime=2;
-        int64 Endtime=3;
+        optional int64 Starttime=2;
+        optional int64 Endtime=3;
         repeated int64 StreamId=4;
-        int32 MaxCount=5;
+        optional int32 MaxCount=5;
         optional int64 Cursor=6; 
     }
     message Response_GetDataPoints{

@@ -7,18 +7,14 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
-using System;
 
 namespace MyDBContext.Main
 {
-    public class Device_Type : IHasCreator
-    {
+    public class Device_DataPoint {
         public long Id { get; set; }
-        public string Name { get; set; }
-        public string DataPoints { get; set; }
-        public string Script{ get; set; }
-
-        public long CreatorId { get; set; }
-        public virtual User Creator { get;  }
-     }
+        public long DeviceId { get; set; }
+        public long StreamId { get; set; }
+        public long Time  { get; set; }
+        public float Value  { get; set; }
+    }
 }
