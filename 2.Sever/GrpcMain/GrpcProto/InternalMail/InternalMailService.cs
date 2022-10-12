@@ -95,7 +95,7 @@ namespace GrpcMain.InternalMail
             }
             return res;
         }
-         [GrpcRequireAuthority]
+        [GrpcRequireAuthority]
         public override async Task<CommonResponse> SendEMail(Request_SendEMail request, ServerCallContext context)
         {
 
@@ -103,11 +103,19 @@ namespace GrpcMain.InternalMail
             using (MainContext ct = new MainContext())
             {
                 var mail = await ct.Internal_Mails.Where(it => it.SenderId == id && it.Id == request.MailId)
-                    .AsNoTracking().FirstOrDefaultAsync();
+                    /*.AsNoTracking()*/.FirstOrDefaultAsync();
                 if (mail == null)
                 {
                     context.Status = new Status(StatusCode.PermissionDenied, "没有该信件");
                     return null;
+                }
+                if ((_timeutility.GetTicket() - mail.LastEMailTime)<60)
+                {//上次发是60s内
+                    return new CommonResponse()
+                    {
+                        Success = false,
+                        Message = "发送过于频繁",
+                    };
                 }
                 var user = await ct.Users.Where(it => it.Id == mail.ReceiverId)
                     .AsNoTracking().FirstOrDefaultAsync();
@@ -124,9 +132,11 @@ namespace GrpcMain.InternalMail
                     };
                 }
                     
-                var sendsuc= await myEmailUtility.Send(user.EMail,mail.Title,mail.Context,out _);
+                var sendsuc= await myEmailUtility.Send(user.EMail,mail.Title,mail.Context );
                 if (sendsuc)
                 {
+                    mail.LastEMailTime = _timeutility.GetTicket();
+                    await ct.SaveChangesAsync();
                     return new CommonResponse()
                     {
                         Success = true,

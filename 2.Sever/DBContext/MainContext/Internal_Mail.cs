@@ -18,5 +18,7 @@ namespace MyDBContext.Main
 
         public long SenderId { get; set; }
         public long ReceiverId { get; set; }
+
+        public long LastEMailTime { get; set; }
     }
 }
