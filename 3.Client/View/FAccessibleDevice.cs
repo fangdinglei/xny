@@ -1,34 +1,28 @@
 ﻿
 using FdlWindows.View;
+using GrpcMain.Device;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using XNYAPI.Model.Device;
-using XNYAPI.Model.UserDevice;
-using XNYAPI.Request.Device;
-using XNYAPI.Request.UserDevice;
-using XNYAPI.Response;
+using static GrpcMain.Device.DeviceTypes.Types;
+using static GrpcMain.DeviceType.DeviceTypeTypes.Types;
 
 namespace MyClient.View
 {
     [AutoDetectView("全部设备", "全部设备","",true )]
     public partial class FAccessibleDevice : Form, IView
     {
-        DataTable table;
-        List<DeviceGroup> groupinfo; 
-        List<DeviceInfo> deviceinfos;
-        Dictionary<uint, DeviceTypeInfo> devicetypeinfos=new Dictionary<uint, DeviceTypeInfo> ();
-
         public Control View => this;
+        DataTable? table;
 
-        public FAccessibleDevice()
+        DeviceService.DeviceServiceClient deviceServiceClient ;
+        public FAccessibleDevice(DeviceService.DeviceServiceClient deviceServiceClient)
         {
             InitializeComponent();
-            InitDataTable(); 
+            InitDataTable();
+            this.deviceServiceClient = deviceServiceClient;
         }
         void InitDataTable()
         {
@@ -47,8 +41,7 @@ namespace MyClient.View
 
         private  void brefresh_Click(object sender, EventArgs e)
         {
-            Global.client.ExecAsync(new GetUserAllDeviceInfoRequest());
-            Global.client.ExecAsync(new GetGroupInfoRequest());
+            
         }
 
         void RefreshDeviceInTab()
@@ -117,33 +110,7 @@ namespace MyClient.View
         }
 
 
-        List<DeviceGroup> NewNetGroupInfo;
-        List<DeviceInfo> NewNetDeviceInfo;
-        List<DeviceTypeInfo> NewNetTypeInfos=new List<DeviceTypeInfo>();
-        void OnNetGroupData(object data)
-        {
-            DataListResponse<DeviceGroup> dt = data as DataListResponse<DeviceGroup>;
-            if (dt == null||dt.IsError)
-                return;
-            NewNetGroupInfo = dt.Data;
-        }
-        void OnNetDeviceData(object data)
-        {
-            DataListResponse<DeviceInfo> dt = data as DataListResponse<DeviceInfo>;
-            if (dt == null || dt.IsError) 
-                return;
-            NewNetDeviceInfo = dt.Data;
-        }
-        void OnNetDeviceTypeData(object data)
-        {
-            DataListResponse<DeviceTypeInfo> dt = data as DataListResponse<DeviceTypeInfo>;
-            if (dt == null || dt.IsError)
-                return;
-            lock (this)
-            {
-                NewNetTypeInfos.AddRange(dt.Data);
-            } 
-        }
+     
         public void OnTick()
         {
             if (!Visible)
@@ -191,19 +158,14 @@ namespace MyClient.View
 
         public void PrePare(params object[] par)
         { 
-            Global.client.AddListener(typeof( DataListResponse<DeviceGroup>),OnNetGroupData);
-            Global.client.AddListener(typeof(DataListResponse<DeviceInfo>), OnNetDeviceData);
-            Global.client.AddListener(typeof(DataListResponse<DeviceTypeInfo>), OnNetDeviceTypeData);
-
+          
             brefresh_Click(null, null);
         } 
         public void OnEvent(string name, params object[] pars)
         {
             if (name=="Exit")
             {
-                Global.client.RemoveListener(typeof(DataListResponse<DeviceGroup>), OnNetGroupData);
-                Global.client.RemoveListener(typeof(DataListResponse<DeviceInfo>), OnNetDeviceData);
-                Global.client.RemoveListener(typeof(DataListResponse<DeviceTypeInfo>), OnNetDeviceTypeData);
+               
             }
         }
 

@@ -83,30 +83,42 @@ namespace FdlWindows.View
         IView GetOrCreatView(string name)
         {
             if (Views.ContainsKey(name) && Views[name].Count > 0)
-                return Views[name].Dequeue(); 
-            Form? form =serviceProvider.GetService (ViewClassType[name])  as Form;
-            if (form==null)
+                return Views[name].Dequeue();
+            IView? _interface =serviceProvider.GetService (ViewClassType[name])  as IView;
+            if (_interface == null)
             {
-                throw new Exception($"失败{name} @{ViewClassType[name].FullName}没有注册");
+                throw new Exception($"失败{name} @{ViewClassType[name].FullName}没有注册或者不是合适的界面");
             }
-            if ((form as IView) == null)
-            {
-                throw new Exception($"失败{name} @{ViewClassType[name].FullName}不是合适的界面");
-            }
+            var view = _interface.View ;
+            view.Dock = DockStyle.Fill;
 
-            form.Dock = DockStyle.Fill;
-            form.AutoScroll = true;
-            form.TopLevel = false;
-            form.ControlBox = false;
-            form.FormBorderStyle = FormBorderStyle.None;
-            MainHolder.Controls.Add(form);
+            var type = view.GetType();
+            PropertyInfo? p;
+            if ((p = type.GetProperty("AutoScroll"))!=null)
+            {
+                p.SetValue(view,true); 
+            }
+            if ((p = type.GetProperty("TopLevel")) != null)
+            {
+                p.SetValue(view, false);
+            }
+            if ((p = type.GetProperty("ControlBox")) != null)
+            {
+                p.SetValue(view, false);
+            }
+            if ((p = type.GetProperty("FormBorderStyle")) != null)
+            {
+                p.SetValue(view, FormBorderStyle.None);
+            }   
+
+            MainHolder.Controls.Add(view);
           
             if (!Views.ContainsKey(name))
             {
                 Views.Add(name, new Queue<IView>());
             }
-            NameofViewInstance.Add(form as IView, name);
-            return form as IView;
+            NameofViewInstance.Add(_interface  , name);
+            return _interface  ;
         }
         /// <summary>
         /// 打开指定页面
