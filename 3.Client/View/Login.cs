@@ -33,7 +33,7 @@ namespace MyClient.View
             string pass = tPass.Text.Trim();
             try
             {
-                var a = await client.LoginByUserNameAsync(new AccountServiceTypes.Types.Request_LoginByUserName()
+                var a = await client.LoginByUserNameAsync(new DTODefine.Types.Request_LoginByUserName()
                 {
                     PassWord = pass,
                     UserName = uname,

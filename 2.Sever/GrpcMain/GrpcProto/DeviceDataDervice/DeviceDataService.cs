@@ -4,7 +4,7 @@ using GrpcMain.DeviceData;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
-using static GrpcMain.DeviceData.DeviceDataTypes.Types;
+using static GrpcMain.DeviceData.DTODefine.Types;
 
 namespace GrpcMain.DeviceData
 {

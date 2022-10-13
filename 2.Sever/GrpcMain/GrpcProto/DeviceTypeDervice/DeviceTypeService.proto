@@ -9,17 +9,17 @@ import "Common/CommonResponse.proto";
 service DeviceTypeService {
 
     //获取设备类型信息
-    rpc GetTypeInfos(DeviceTypeTypes.Request_GetTypeInfos)
-        returns (DeviceTypeTypes.Response_GetTypeInfos); 
+    rpc GetTypeInfos(DTODefine.Request_GetTypeInfos)
+        returns (DTODefine.Response_GetTypeInfos); 
 
     //更新设备类型信息
-    rpc UpdateTypeInfo(DeviceTypeTypes.Request_UpdateTypeInfo)
+    rpc UpdateTypeInfo(DTODefine.Request_UpdateTypeInfo)
         returns (GrpcMain.Common.CommonResponse);
 
 }
 
 
-message DeviceTypeTypes
+message DTODefine
 {   
     message TypeInfo{
         int64 Id=1;

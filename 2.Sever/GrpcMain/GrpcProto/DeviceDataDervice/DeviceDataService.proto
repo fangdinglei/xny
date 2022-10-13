@@ -6,17 +6,17 @@ import "google/protobuf/empty.proto";
 import "Common/CommonResponse.proto";
 service DeviceDataService {
     //获取设备最新的数据
-    rpc GetLatestData(DeviceDataTypes.Request_GetLatestData)
-        returns (DeviceDataTypes.Response_GetLatestData);
+    rpc GetLatestData(DTODefine.Request_GetLatestData)
+        returns (DTODefine.Response_GetLatestData);
 
     //获取设备数据
-    rpc GetDataPoints(DeviceDataTypes.Request_GetDataPoints)
-        returns (DeviceDataTypes.Response_GetDataPoints);
+    rpc GetDataPoints(DTODefine.Request_GetDataPoints)
+        returns (DTODefine.Response_GetDataPoints);
 
 }
 
 
-message DeviceDataTypes
+message DTODefine
 {  
     message DataPoinet{
         int64 Dvid=1;

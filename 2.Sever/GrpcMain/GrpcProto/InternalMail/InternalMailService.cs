@@ -5,7 +5,7 @@ using MyDBContext.Main;
 using MyEmailUtility;
 using MyUtility;
 using System.Text.RegularExpressions;
-using static GrpcMain.InternalMail.InternalMailTypes.Types;
+using static GrpcMain.InternalMail.DTODefine.Types;
 
 namespace GrpcMain.InternalMail
 {
@@ -83,7 +83,7 @@ namespace GrpcMain.InternalMail
                         res.Cursor = it==null?0:it.Id;
                     });  
                 res.Mails.AddRange(lsx.Select(
-                    it => new InternalMailTypes.Types.InternalMail()
+                    it => new DTODefine.Types.InternalMail()
                     {
                         Id = it.Id,
                         Context = it.Context,

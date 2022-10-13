@@ -7,21 +7,21 @@ import "Common/CommonResponse.proto";
 service InternalMailService { 
 
     //发送站内信
-    rpc SendMail(InternalMailTypes.Request_SendInternalMail)
+    rpc SendMail(DTODefine.Request_SendInternalMail)
         returns (GrpcMain.Common.CommonResponse);
     //设置站内信已读
-    rpc SetMailReaded(InternalMailTypes.Request_SetMailReaded)
+    rpc SetMailReaded(DTODefine.Request_SetMailReaded)
         returns (GrpcMain.Common.CommonResponse);
     //获取站内信
-    rpc GetMail(InternalMailTypes.Request_GetMail)
-        returns (InternalMailTypes.Response_GetMail); 
+    rpc GetMail(DTODefine.Request_GetMail)
+        returns (DTODefine.Response_GetMail); 
     //发送站外信
-    rpc SendEMail(InternalMailTypes.Request_SendEMail)
+    rpc SendEMail(DTODefine.Request_SendEMail)
         returns (GrpcMain.Common.CommonResponse);
 }
 
 
-message InternalMailTypes
+message DTODefine
 {  
     message InternalMail{
         optional int64 Id=1; 

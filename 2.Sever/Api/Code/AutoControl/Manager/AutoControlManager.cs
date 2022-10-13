@@ -17,7 +17,7 @@ namespace XNYAPI.AutoControl
     public class AutoControlManager
     {
         static int step = -1;//每个step为1秒
-        static public Dictionary<uint, DeviceTypeInfo> DeviceTypes;// = new Dictionary<uint, DeviceTypeInfo>();
+        static public Dictionary<uint, DeviceTypeInfo> DTODefine;// = new Dictionary<uint, DeviceTypeInfo>();
         static public Dictionary<uint, DeviceData> Devices;// = new Dictionary<uint, DeviceData>();
 
         static public bool Inited = false;
@@ -27,7 +27,7 @@ namespace XNYAPI.AutoControl
             {
                 AutoControlScriptManager.RegistServices();
 
-                DeviceTypes = new Dictionary<uint, DeviceTypeInfo>();
+                DTODefine = new Dictionary<uint, DeviceTypeInfo>();
                 Devices = new Dictionary<uint, DeviceData>();
                 using (var cnn = DBCnn.GetCnn())
                 {
@@ -39,7 +39,7 @@ namespace XNYAPI.AutoControl
                             item.Script = null;
                         else
                             item.Script = AutoControlScriptManager.Prase(System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(item.ScriptStringB64)));
-                        DeviceTypes.Add(item.ID, item);
+                        DTODefine.Add(item.ID, item);
                     }
 
                     var devices = DeviceDAL.GetAllDevice_ID_TypeID(cmd);
@@ -84,7 +84,7 @@ namespace XNYAPI.AutoControl
                 foreach (var dv in Devices.Values)
                 {
                     DeviceTypeInfo tinfo;
-                    if (!DeviceTypes.TryGetValue(dv.DeviceTypeID, out tinfo))
+                    if (!DTODefine.TryGetValue(dv.DeviceTypeID, out tinfo))
                     {
                         Logger.Log(Logger.ERROR, $"设备{dv.DeviceID}所属的类型不存在");
                         continue;

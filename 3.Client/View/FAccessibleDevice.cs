@@ -1,13 +1,14 @@
 ﻿
 using FdlWindows.View;
 using GrpcMain.Device;
+using GrpcMain.UserDevice;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.InteropServices;
-using static GrpcMain.Device.DeviceTypes.Types;
-using static GrpcMain.DeviceType.DeviceTypeTypes.Types;
+using static GrpcMain.Device.DTODefine.Types;
+using static GrpcMain.DeviceType.DTODefine.Types;
 
 namespace MyClient.View
 {
@@ -18,11 +19,13 @@ namespace MyClient.View
         DataTable? table;
 
         DeviceService.DeviceServiceClient deviceServiceClient ;
-        public FAccessibleDevice(DeviceService.DeviceServiceClient deviceServiceClient)
+        UserDeviceService.UserDeviceServiceClient userDeviceServiceClient;
+        public FAccessibleDevice(DeviceService.DeviceServiceClient deviceServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient)
         {
             InitializeComponent();
             InitDataTable();
             this.deviceServiceClient = deviceServiceClient;
+            this.userDeviceServiceClient = userDeviceServiceClient;
         }
         void InitDataTable()
         {
@@ -41,7 +44,8 @@ namespace MyClient.View
 
         private  void brefresh_Click(object sender, EventArgs e)
         {
-            
+           var res= userDeviceServiceClient.GetGroupInfos( new Google.Protobuf.WellKnownTypes.Empty()  );
+            res.
         }
 
         void RefreshDeviceInTab()

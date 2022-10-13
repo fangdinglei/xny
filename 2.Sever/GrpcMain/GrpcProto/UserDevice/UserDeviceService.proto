@@ -8,38 +8,47 @@ import "Device/DeviceService.proto";
 service UserDeviceService { 
 
     //修改设备权限 如果所有权限都false 则删除设备
-    rpc UpdateUserDevice(UserDeviceTypes.Request_UpdateUserDevice)
+    rpc UpdateUserDevice(DTODefine.Request_UpdateUserDevice)
         returns (GrpcMain.Common.CommonResponse);
 
     //获取用户设备分组信息
     rpc GetGroupInfos(google.protobuf.Empty)
-        returns (UserDeviceTypes.Response_GetGroupInfos);
+        returns (DTODefine.Response_GetGroupInfos);
+    //更新用户设备分组信息
+    rpc UpdateGroupInfos(DTODefine.Request_UpdateGroupInfos)
+        returns (GrpcMain.Common.CommonResponse);
 
     //TODO 获取用户所有设备
-    rpc GetUserDevices(UserDeviceTypes.Request_GetUserDevices)
-        returns (UserDeviceTypes.Response_GetUserDevices);
+    rpc GetUserDevices(DTODefine.Request_GetUserDevices)
+        returns (DTODefine.Response_GetUserDevices);
 
      //获取用户所有设备的ID
-    rpc GetUserAllDeviceID(UserDeviceTypes.Request_GetUserAllDeviceID)
-        returns (UserDeviceTypes.Response_GetUserAllDeviceID); 
+    rpc GetUserAllDeviceID(DTODefine.Request_GetUserAllDeviceID)
+        returns (DTODefine.Response_GetUserAllDeviceID); 
     
     //将设备加入分组
-    rpc SetDeviceGroup(UserDeviceTypes.Request_SetDeviceGroup)
+    rpc SetDeviceGroup(DTODefine.Request_SetDeviceGroup)
         returns (GrpcMain.Common.CommonResponse); 
 
     //添加用户设备分组
-    rpc NewGroup(UserDeviceTypes.Request_NewGroup)
+    rpc NewGroup(DTODefine.Request_NewGroup)
         returns (GrpcMain.Common.CommonResponse); 
     
     //修改设备分组信息
-    rpc UpdateGroupInfo(UserDeviceTypes.Request_UpdateGroupInfo)
+    rpc UpdateGroupInfo(DTODefine.Request_UpdateGroupInfo)
         returns (GrpcMain.Common.CommonResponse); 
 }
 
 
-message UserDeviceTypes
+message DTODefine
 {  
-    message UserDevice{
+    message User_Device_Group{
+        int64 Id=1;
+        optional string Name=2;
+        //更新时使用,删除数据
+        optional bool Delet=3;
+    }
+    message User_Device{
         //optional int64 Id=1;
         optional int64 Dvid=2;
         int64 UserId=3;
@@ -52,14 +61,18 @@ message UserDeviceTypes
     }
     message Request_UpdateUserDevice{
         repeated int64 Dvids=1; 
-        UserDevice UserDevice=2;  
+        User_Device UserDevice=2;  
         int64 UserId=3;
     }
 
     message Response_GetGroupInfos{
-        repeated int64 GroupId=1;
-        repeated string GroupName=2;
+        repeated  User_Device_Group Groups=1; 
     }
+
+    message Request_UpdateGroupInfos{
+        repeated User_Device_Group Groups=1; 
+    }
+
 
     message Request_GetUserDevices{
         optional int64 Cursor=1;
@@ -71,7 +84,7 @@ message UserDeviceTypes
         int64 Cursor=1;  
         //同传入
         int64 UserId=2;
-        repeated UserDevice UserDevices=3;
+        repeated User_Device UserDevices=3;
     } 
 
     message Request_GetUserAllDeviceID{

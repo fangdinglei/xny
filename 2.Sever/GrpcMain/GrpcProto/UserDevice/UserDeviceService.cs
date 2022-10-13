@@ -4,7 +4,7 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
-using static GrpcMain.UserDevice.UserDeviceTypes.Types;
+using static GrpcMain.UserDevice.DTODefine.Types;
 
 namespace GrpcMain.UserDevice
 {
@@ -208,7 +208,7 @@ namespace GrpcMain.UserDevice
                 }
                 res.UserDevices.AddRange(lsx.Select(it =>
                 {
-                    return new UserDeviceTypes.Types.UserDevice()
+                    return new DTODefine.Types.UserDevice()
                     {
                         PControl = it.PControl,
                         PData = it.PData,

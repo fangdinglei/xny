@@ -1,7 +1,7 @@
 ﻿using Grpc.Core;
 using GrpcMain.Common;
 using MyUtility;
-using static GrpcMain.Device.DeviceTypes.Types;
+using static GrpcMain.Device.DTODefine.Types;
 
 namespace GrpcMain.Device
 {

@@ -6,7 +6,7 @@ using MyDBContext.Main;
 using MyUtility;
 using PgGrpcMain;
 using System.Reflection;
-using static GrpcMain.DeviceType.DeviceTypeTypes.Types;
+using static GrpcMain.DeviceType.DTODefine.Types;
 
 namespace GrpcMain.DeviceType
 {
@@ -37,7 +37,7 @@ namespace GrpcMain.DeviceType
                     {
                         res.Cursor = ls.Last() .Id;
                         res.TypeInfos.AddRange(ls.Take(ls.Count - 1).Select(it => {
-                            return new DeviceTypeTypes.Types.TypeInfo
+                            return new DTODefine.Types.TypeInfo
                             {
                                  DataPoints = it .DataPoints,
                                  Id = it .Id,
@@ -51,7 +51,7 @@ namespace GrpcMain.DeviceType
                     {
                         res.Cursor = 0;
                         res.TypeInfos.AddRange(ls.Select(it => {
-                            return new DeviceTypeTypes.Types.TypeInfo
+                            return new DTODefine.Types.TypeInfo
                             {
                                 DataPoints = it. DataPoints,
                                 Id = it. Id,
@@ -68,7 +68,7 @@ namespace GrpcMain.DeviceType
                     var ls = await ct.Device_Types.GetEntityOfAccessible(ct, id, -1, request.Cursor, true, true, false,request.Ids); 
                     res.Cursor = 0;
                     res.TypeInfos.AddRange(ls.Select(it => {
-                        return new DeviceTypeTypes.Types.TypeInfo
+                        return new DTODefine.Types.TypeInfo
                         {
                             DataPoints = it. DataPoints,
                             Id = it. Id,

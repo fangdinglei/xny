@@ -8,24 +8,24 @@ service DeviceService {
 
     
     //发送命令
-    rpc SendCMD(DeviceTypes.Request_SendCMD)
+    rpc SendCMD(DTODefine.Request_SendCMD)
         returns (GrpcMain.Common.CommonResponse);
 
     //删除设备
-    rpc DeletDevice(DeviceTypes.Request_DeletDevice)
+    rpc DeletDevice(DTODefine.Request_DeletDevice)
         returns (GrpcMain.Common.CommonResponse);
 
     //修改设备信息
-    rpc UpdateDeviceInfo(DeviceTypes.Request_UpdateDeviceInfo)
+    rpc UpdateDeviceInfo(DTODefine.Request_UpdateDeviceInfo)
         returns (GrpcMain.Common.CommonResponse);
     //获取全部设备状态
-    rpc GetAllDeviceStatus(DeviceTypes.Request_GetAllDeviceStatus)
-        returns (DeviceTypes.Response_GetAllDeviceStatus);
+    rpc GetAllDeviceStatus(DTODefine.Request_GetAllDeviceStatus)
+        returns (DTODefine.Response_GetAllDeviceStatus);
 
 }
 
 
-message DeviceTypes
+message DTODefine
 {  
     message Device{
         string Name=1;
