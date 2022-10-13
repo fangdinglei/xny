@@ -59,7 +59,7 @@ namespace MyDBContext.Main
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            string s = "server=fdlmaindb.mysql.rds.aliyuncs.com;database=dbpgv2;user id=fangdinglei;password=FdlMainDB@;port=3306;sslmode=None";
+            string s = "server=fdlmaindb.mysql.rds.aliyuncs.com;database=dbbs;user id=fangdinglei;password=FdlMainDB@;port=3306;sslmode=None";
             optionsBuilder.UseMySql(s,
                   ServerVersion.AutoDetect(s));
         }

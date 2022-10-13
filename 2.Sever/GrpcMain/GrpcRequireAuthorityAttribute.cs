@@ -17,6 +17,11 @@
         {
             NeedLogin = true;
         }
+        public GrpcRequireAuthorityAttribute(params string[] authoritys)
+        {
+            NeedLogin = true;
+            Authoritys = authoritys;
+        }
 
         public GrpcRequireAuthorityAttribute(bool needAudit, string needAudit_OpName)
         {

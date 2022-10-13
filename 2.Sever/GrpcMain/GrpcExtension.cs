@@ -26,8 +26,7 @@ namespace PgGrpcMain
                 //全局错误处理
                 op.Interceptors.Add<GrpcInterceptor>();
                 op.EnableDetailedErrors = true;
-            });
-            services.AddGrpcClient<AccountServiceImp>();
+            }); 
         }
         /// <summary>
         /// 注册grpc服务到路由
