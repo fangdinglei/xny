@@ -1,5 +1,5 @@
-using FdlWindows.View;
-using Grpc.Net.Client;
+using FdlWindows.View; 
+using Microsoft.Extensions.DependencyInjection;
 using MyClient.View;
 
 namespace MyClient
@@ -13,7 +13,7 @@ namespace MyClient
         static void Main()
         {  
             ApplicationConfiguration.Initialize();
-            Application.Run(new FLogin());
+            Application.Run(Global.Provider.GetService<FLogin>());
         }
     }
 }

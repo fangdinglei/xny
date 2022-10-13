@@ -1,32 +1,29 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using System.Windows.Forms;
-using System.Linq;
 
 namespace FdlWindows.View
 {
-    public partial class FMain : Form,IViewHolder
+    public partial class FMain : Form, IViewHolder
     {
+        IServiceProvider serviceProvider;
+        IServiceCollection serviceCollection;
         /// <summary>
         /// 界面缓存最大值
         /// </summary>
-        const int MaxSameViewInstance=3;
+        const int MaxSameViewInstance = 3;
         int __uid;
         /// <summary>
         /// key name value view
         /// </summary>
-        Dictionary<string,Queue<IView>> Views = new  Dictionary<string, Queue<IView>>();
+        Dictionary<string, Queue<IView>> Views = new Dictionary<string, Queue<IView>>();
         /// <summary>
         /// key IView value NameofViewInstance
         /// </summary>
-        Dictionary<IView, string> NameofViewInstance =  new Dictionary<IView, string>();
+        Dictionary<IView, string> NameofViewInstance = new Dictionary<IView, string>();
         /// <summary>
         /// key name value classpath
         /// </summary>
-        Dictionary<string, string> ViewClassPaths = new Dictionary<string, string>();
+        Dictionary<string, Type> ViewClassType = new  ();
         /// <summary>
         /// key name value menupath
         /// </summary>
@@ -34,7 +31,7 @@ namespace FdlWindows.View
         /// <summary>
         /// key name value treenode
         /// </summary>
-        Dictionary<string,TreeNode> ViewNodes = new Dictionary<string,TreeNode>();
+        Dictionary<string, TreeNode> ViewNodes = new Dictionary<string, TreeNode>();
 
         Stack<IView> Windows = new Stack<IView>();
 
@@ -42,13 +39,15 @@ namespace FdlWindows.View
 
         public int Uid => __uid;
         Action? _closecall;
-        public FMain(int uid,string title,Action? closecall)
-        { 
-            Text=title;
-            InitializeComponent(); 
-            InitViews(); 
-            this.ClientSize = new  Size(1200, 650); 
-            _closecall = closecall;
+        public FMain(FMainOption op, IServiceProvider serviceProvider, IServiceCollection serviceCollection)
+        {
+            Text = op.Title;
+            InitializeComponent();
+            InitViews();
+            this.ClientSize = new Size(1200, 650);
+            _closecall = op.CloseCall;
+            this.serviceProvider = serviceProvider;
+            this.serviceCollection = serviceCollection;
             //SwitchTo("关于",true);
             //if (DateTime.Now>new DateTime(2022,9,10))
             //{
@@ -56,7 +55,7 @@ namespace FdlWindows.View
             //    throw new Exception("禁止访问");
             //}
         }
-      
+
         void InitViews()
         {
             foreach (var item in this.GetType().Assembly.GetTypes())
@@ -64,9 +63,13 @@ namespace FdlWindows.View
                 var att = item.GetCustomAttribute<AutoDetectViewAttribute>();
                 if (att == null)
                     continue;
-                AddView(att.Name,att.Title,att.MenuPath,item.FullName,att.UserSelectAble);
-            } 
-            treeview_views.Nodes[0].ExpandAll(); 
+                if (item.IsAssignableTo(typeof(IView)) == false)
+                {
+                    throw new Exception(att.GetType().Name+ " 属性只能加在"+ nameof(IView));
+                }
+                AddView(att.Name, att.Title, att.MenuPath, item , att.UserSelectAble);
+            }
+            treeview_views.Nodes[0].ExpandAll();
         }
 
         /// <summary>
@@ -79,27 +82,32 @@ namespace FdlWindows.View
         /// <returns></returns>
         IView GetOrCreatView(string name)
         {
-            if (Views.ContainsKey(name)&& Views[name].Count>0)
-                return Views[name].Dequeue();
-            Assembly assembly = GetType().Assembly;
-            Form form = assembly.CreateInstance(ViewClassPaths[name]) as Form;
+            if (Views.ContainsKey(name) && Views[name].Count > 0)
+                return Views[name].Dequeue(); 
+            Form? form =serviceProvider.GetService (ViewClassType[name])  as Form;
+            if (form==null)
+            {
+                throw new Exception($"失败{name} @{ViewClassType[name].FullName}没有注册");
+            }
+            if ((form as IView) == null)
+            {
+                throw new Exception($"失败{name} @{ViewClassType[name].FullName}不是合适的界面");
+            }
+
             form.Dock = DockStyle.Fill;
             form.AutoScroll = true;
             form.TopLevel = false;
             form.ControlBox = false;
             form.FormBorderStyle = FormBorderStyle.None;
-            MainHolder.Controls.Add(form); 
-            if ((form as IView) ==null)
-            {
-                throw new Exception($"反射失败{name} @{ViewClassPaths[name]} 不是合适的界面");
-            }
+            MainHolder.Controls.Add(form);
+          
             if (!Views.ContainsKey(name))
             {
-                Views.Add(name,new Queue<IView>());
+                Views.Add(name, new Queue<IView>());
             }
             NameofViewInstance.Add(form as IView, name);
             return form as IView;
-        } 
+        }
         /// <summary>
         /// 打开指定页面
         /// </summary>
@@ -107,10 +115,10 @@ namespace FdlWindows.View
         /// <param name="newwindow">是否放弃当前界面而打开新界面</param>
         /// <param name="par"></param>
         public bool SwitchTo(string name, bool newwindow, params object[] par)
-        { 
+        {
             if (newwindow)
             {
-               
+
                 FormExitEventArg arg;
                 IView formold;
                 while (Windows.Count > 0)
@@ -125,9 +133,9 @@ namespace FdlWindows.View
                     }
                     else
                     {
-                        var iname= NameofViewInstance[formold];
+                        var iname = NameofViewInstance[formold];
                         formold.View.Visible = false;
-                        if (Views[iname].Count>MaxSameViewInstance)
+                        if (Views[iname].Count > MaxSameViewInstance)
                         {
                             NameofViewInstance.Remove(formold);
                         }
@@ -135,9 +143,9 @@ namespace FdlWindows.View
                         {
                             Views[iname].Enqueue(formold);
                         }
-                       
-                    } 
-                }  
+
+                    }
+                }
                 if (ViewNodes.ContainsKey(name))
                 {//draw 高亮选中的节点
                     if (highlighting != null)
@@ -153,15 +161,15 @@ namespace FdlWindows.View
                 else
                 {
                     throw new Exception("该界面只能附加在其他界面上");
-                }  
-            } 
+                }
+            }
             if (Windows.Count > 0)
             {
                 Windows.Peek().OnEvent("Covered");
                 Windows.Peek().View.Visible = false;
             }
             //显示界面
-            var iuserview = GetOrCreatView(name);  
+            var iuserview = GetOrCreatView(name);
             iuserview.SetViewHolder(this);
             iuserview.PrePare(par);
             Windows.Push(iuserview);
@@ -169,10 +177,11 @@ namespace FdlWindows.View
             return true;
         }
 
-        TreeNode FindNodeInNodes(string name,TreeNodeCollection nodes) {
+        TreeNode FindNodeInNodes(string name, TreeNodeCollection nodes)
+        {
             foreach (TreeNode item in nodes)
             {
-                if (item.Name==name)
+                if (item.Name == name)
                 {
                     return item;
                 }
@@ -183,14 +192,15 @@ namespace FdlWindows.View
         /// 添加一个菜单
         /// </summary>
         /// <param name="path"></param>
-        public TreeNodeCollection AddMenu(string  path) {
+        public TreeNodeCollection AddMenu(string path)
+        {
             var mpath = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
             var root = treeview_views.Nodes;
-            TreeNode find=null;
+            TreeNode find = null;
             foreach (var menu in mpath)
             {
-                find = FindNodeInNodes(menu,root);
-                if (find==null)
+                find = FindNodeInNodes(menu, root);
+                if (find == null)
                 {
                     TreeNode newNode = new TreeNode();
                     newNode.Name = menu;
@@ -201,9 +211,9 @@ namespace FdlWindows.View
                 }
                 else
                 {
-                    if ((string)find.Tag!= "Menu")
+                    if ((string)find.Tag != "Menu")
                     {
-                        throw new Exception("菜单目录"+ path+$"的[{menu}]部分已经被界面占用");
+                        throw new Exception("菜单目录" + path + $"的[{menu}]部分已经被界面占用");
                     }
                 }
                 root = find.Nodes;
@@ -215,17 +225,17 @@ namespace FdlWindows.View
         /// </summary>
         /// <param name="Name">名称，必须是唯一的</param>
         /// <param name="title">显示的名称 可以重复</param>
-        /// <param name="classpath">界面的全路径</param>
+        /// <param name="classtype">界面的全路径</param>
         /// <param name="userselectable">用户是否可以直接选择此界面</param>
-        public void AddView(string Name,string title,string menupath, string classpath, bool userselectable = true)
+        public void AddView(string Name, string title, string menupath, Type classtype, bool userselectable = true)
         {
-            if (Name=="Menu")
+            if (Name == "Menu")
                 throw new Exception("界面名称不能是Menu");
-            if (ViewClassPaths.ContainsKey(Name))
+            if (ViewClassType.ContainsKey(Name))
                 return;
-            ViewMeunPaths.Add(Name,menupath);
-            ViewClassPaths.Add(Name, classpath);
-          
+            ViewMeunPaths.Add(Name, menupath);
+            ViewClassType.Add(Name, classtype);
+
             if (userselectable)
             {
                 TreeNodeCollection root = AddMenu(menupath);
@@ -236,9 +246,10 @@ namespace FdlWindows.View
                 //添加到根节点下
                 root.Add(newNode);
                 ViewNodes.Add(Name, newNode);
-            } 
+            }
         }
-        public void Back() {
+        public void Back()
+        {
             FormExitEventArg arg;
             if (Windows.Count > 1)
             {
@@ -259,7 +270,7 @@ namespace FdlWindows.View
                         Windows.Peek().OnEvent("UnCovered");
                         Windows.Peek().View.Visible = true;
                     }
-                    var iname = NameofViewInstance[view]; 
+                    var iname = NameofViewInstance[view];
                     if (Views[iname].Count > MaxSameViewInstance)
                     {
                         NameofViewInstance.Remove(view);
@@ -273,7 +284,7 @@ namespace FdlWindows.View
         }
         public bool IsTopView(IView it)
         {
-            return Windows.Count>0&&Windows.Peek() ==it;
+            return Windows.Count > 0 && Windows.Peek() == it;
         }
 
         #region 事件
@@ -289,14 +300,14 @@ namespace FdlWindows.View
             try
             {
                 TreeNode theNode = e.Node;
-                if (highlighting==theNode)
+                if (highlighting == theNode)
                 {//没有发生变化
                     return;
                 }
-                if ((string)theNode.Tag!="Menu")
-                { 
+                if ((string)theNode.Tag != "Menu")
+                {
                     SwitchTo(e.Node.Tag as string, true);
-                } 
+                }
             }
             catch (Exception ex)
             {
@@ -311,9 +322,9 @@ namespace FdlWindows.View
         /// <param name="e"></param>
         private void Back_Click(object sender, EventArgs e)
         {
-            Back(); 
+            Back();
         }
-        
+
         #region 窗口大小改变
         private void FMain_ResizeEnd(object sender, EventArgs e)
         {
@@ -349,7 +360,11 @@ namespace FdlWindows.View
                 return;
             Windows.Peek().OnTick();
         }
-         
-    }
 
+    }
+    public class FMainOption {
+        public string? Title;
+        public uint Uid;
+        public Action? CloseCall;
+    }
 }

@@ -23,7 +23,7 @@
         /// <param name="it"></param>
         /// <returns></returns>
         bool IsTopView(IView it);
-        void AddView(string Name, string title, string menupath, string path, bool userselectable = true);
+        void AddView(string Name, string title, string menupath, Type classpath, bool userselectable = true);
         void Back();
     }
 

@@ -3,6 +3,7 @@ using FdlWindows.View;
 using Grpc.Core;
 using Grpc.Core.Interceptors; 
 using GrpcMain.Account;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms; 
@@ -12,8 +13,12 @@ namespace MyClient.View
   
     public partial class FLogin : Form
     {
-        public FLogin()
+        IServiceProvider serviceProvider;
+        IServiceCollection serviceCollection;
+        public FLogin(IServiceProvider serviceProvider, IServiceCollection serviceCollection)
         {
+            this.serviceProvider = serviceProvider;
+            this.serviceCollection = serviceCollection;
             InitializeComponent();
         }
 
@@ -48,7 +53,10 @@ namespace MyClient.View
                     return;
                 }
                 //进入主界面
-                FMain m = new FMain(0, "智慧农业", () => { });
+                FMain? m = serviceProvider.GetService<FMain>();
+                if (m == null) { 
+                    throw new Exception("注入失败");
+                }
                 m.Show();
                 this.Hide();
             }
