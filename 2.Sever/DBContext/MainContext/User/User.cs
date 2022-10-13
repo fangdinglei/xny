@@ -19,7 +19,7 @@ namespace MyDBContext.Main
         public string Phone { get; set; }
         public string EMail { get; set; }
         public byte Status { get; set; }
-        public long LastLogin { get; set; }
+        public long LastLogin { get; set; } 
 
         public virtual User Creator { get; set; }
         public long CreatorId { get; set; }

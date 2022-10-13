@@ -216,6 +216,8 @@ namespace GrpcMain.Account
                         ID = it.Id,
                         Phone = it.Phone,
                         UserName = it.Name,
+                        Email=it.EMail,
+                        LastLogin = it.LastLogin,
                     };
                 }));
                 return rsp;
