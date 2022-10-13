@@ -18,10 +18,13 @@ service UserDeviceService {
     rpc UpdateGroupInfos(DTODefine.Request_UpdateGroupInfos)
         returns (GrpcMain.Common.CommonResponse);
 
-    //TODO 获取用户所有设备
+    //获取用户设备信息
     rpc GetUserDevices(DTODefine.Request_GetUserDevices)
         returns (DTODefine.Response_GetUserDevices);
 
+    //获取用户的所有设备的信息
+    rpc GetDevices(DTODefine.Request_GetDevices)
+        returns (DTODefine.Response_GetDevices);
      //获取用户所有设备的ID
     rpc GetUserAllDeviceID(DTODefine.Request_GetUserAllDeviceID)
         returns (DTODefine.Response_GetUserAllDeviceID); 
@@ -87,15 +90,24 @@ message DTODefine
         repeated User_Device UserDevices=3;
     } 
 
+
+    message Request_GetDevices{
+         optional int64 Cursor=1;
+    }
+    message Response_GetDevices{
+        //0后续无数据
+        int64 Cursor=1;  
+        repeated GrpcMain.Device.DTODefine.Device Devices=2;
+    }
+
+
     message Request_GetUserAllDeviceID{
         //获取子用户设备时需要
-        optional int64 UserId=1;
-
+        optional int64 UserId=1; 
     }  
     message Response_GetUserAllDeviceID{
         int64 UserId=1;
-        repeated int64 Dvids=2;
-
+        repeated int64 Dvids=2; 
     }  
     
     message Request_SetDeviceGroup{

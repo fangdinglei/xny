@@ -44,8 +44,8 @@ namespace MyClient.View
 
         private  void brefresh_Click(object sender, EventArgs e)
         {
-           var res= userDeviceServiceClient.GetGroupInfos( new Google.Protobuf.WellKnownTypes.Empty()  );
-            res.
+            var res1= userDeviceServiceClient.GetGroupInfos( new Google.Protobuf.WellKnownTypes.Empty()  );
+            var groupinfos=   res.Groups ; 
         }
 
         void RefreshDeviceInTab()
