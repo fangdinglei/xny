@@ -1,5 +1,6 @@
 ﻿using FdlWindows.View;
-using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.DependencyInjection;
+using MyClient.Grpc;
 using MyClient.View;
 
 namespace MyClient
@@ -17,7 +18,9 @@ namespace MyClient
             services.AddTransient<FMain, FMain>();
             services.AddSingleton(new FMainOption() { 
                  Title="智慧农业", 
-            }); 
+            });
+
+            services.UserGrpc();
         }
     }
 }
