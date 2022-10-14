@@ -19,7 +19,7 @@ namespace MyClient.View
         ClientCallContextInterceptor interceptor;
         public FLogin(  IServiceCollection serviceCollection, AccountService.AccountServiceClient accountServiceClient, ClientCallContextInterceptor interceptor)
         {
-            this.serviceProvider = serviceProvider; 
+            this.serviceProvider = serviceCollection.BuildServiceProvider(); 
             InitializeComponent();
             this.client = accountServiceClient;
             this.interceptor = interceptor;

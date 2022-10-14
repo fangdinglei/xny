@@ -12,8 +12,9 @@ namespace FdlWindows.View
         /// </summary>
         const int MaxSameViewInstance = 3;
         int __uid;
+       
         /// <summary>
-        /// key name value view
+        /// key name value view 界面缓存
         /// </summary>
         Dictionary<string, Queue<IView>> Views = new Dictionary<string, Queue<IView>>();
         /// <summary>
@@ -41,13 +42,14 @@ namespace FdlWindows.View
         Action? _closecall;
         public FMain(FMainOption op,   IServiceCollection serviceCollection)
         {
+            this.serviceProvider = serviceCollection.BuildServiceProvider();
+            this.serviceCollection = serviceCollection;
             Text = op.Title;
             InitializeComponent();
             InitViews();
             this.ClientSize = new Size(1200, 650);
             _closecall = op.CloseCall;
-            this.serviceProvider = serviceCollection.BuildServiceProvider();
-            this.serviceCollection = serviceCollection;
+       
             //SwitchTo("关于",true);
             //if (DateTime.Now>new DateTime(2022,9,10))
             //{
@@ -67,7 +69,8 @@ namespace FdlWindows.View
                 {
                     throw new Exception(att.GetType().Name+ " 属性只能加在"+ nameof(IView));
                 }
-                AddView(att.Name, att.Title, att.MenuPath, item , att.UserSelectAble);
+                AddView(att.Name, att.Title, att.MenuPath, item , att.UserSelectAble,false);
+                serviceProvider = serviceCollection.BuildServiceProvider();
             }
             treeview_views.Nodes[0].ExpandAll();
         }
@@ -239,7 +242,7 @@ namespace FdlWindows.View
         /// <param name="title">显示的名称 可以重复</param>
         /// <param name="classtype">界面的全路径</param>
         /// <param name="userselectable">用户是否可以直接选择此界面</param>
-        public void AddView(string Name, string title, string menupath, Type classtype, bool userselectable = true)
+        public void AddView(string Name, string title, string menupath, Type classtype, bool userselectable = true,bool rebuiltServiceProvider=true)
         {
             if (Name == "Menu")
                 throw new Exception("界面名称不能是Menu");
@@ -247,6 +250,9 @@ namespace FdlWindows.View
                 return;
             ViewMeunPaths.Add(Name, menupath);
             ViewClassType.Add(Name, classtype);
+            serviceCollection.AddSingleton(classtype);
+            if (rebuiltServiceProvider)
+                serviceProvider = serviceCollection.BuildServiceProvider();
 
             if (userselectable)
             {
@@ -302,7 +308,7 @@ namespace FdlWindows.View
         #region 事件
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _closecall();
+            _closecall?.Invoke();
         }
         TreeNode highlighting = null;
 

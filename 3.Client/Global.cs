@@ -18,8 +18,7 @@ namespace MyClient
                  Title="智慧农业", 
             });
 
-            var provider = services.BuildServiceProvider();
-            services.AddSingleton<IServiceProvider>(provider); 
+            var provider = services.BuildServiceProvider( ); 
             services.UserGrpc();
         }
     }

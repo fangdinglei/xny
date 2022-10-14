@@ -43,7 +43,7 @@ namespace GrpcMain.Account
                     await ct.SaveChangesAsync();
                     return new Response_LoginByUserName()
                     {
-                        Token = null
+                        Token = ""
                     };
                 }
                 else

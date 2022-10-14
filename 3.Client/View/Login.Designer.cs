@@ -46,26 +46,30 @@
             this.groupBox5.Controls.Add(this.tPass);
             this.groupBox5.Controls.Add(this.label3);
             this.groupBox5.Controls.Add(this.btLogin);
-            this.groupBox5.Location = new System.Drawing.Point(12, 12);
+            this.groupBox5.Location = new System.Drawing.Point(15, 16);
+            this.groupBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(399, 358);
+            this.groupBox5.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox5.Size = new System.Drawing.Size(488, 477);
             this.groupBox5.TabIndex = 0;
             this.groupBox5.TabStop = false;
             // 
             // tUName
             // 
-            this.tUName.Location = new System.Drawing.Point(154, 99);
+            this.tUName.Location = new System.Drawing.Point(188, 132);
+            this.tUName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tUName.Name = "tUName";
-            this.tUName.Size = new System.Drawing.Size(229, 28);
+            this.tUName.Size = new System.Drawing.Size(279, 30);
             this.tUName.TabIndex = 17;
-            this.tUName.Text = "system";
+            this.tUName.Text = "admin";
             // 
             // label
             // 
             this.label.AutoSize = true;
-            this.label.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label.ForeColor = System.Drawing.Color.Black;
-            this.label.Location = new System.Drawing.Point(45, 106);
+            this.label.Location = new System.Drawing.Point(55, 141);
+            this.label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(76, 21);
             this.label.TabIndex = 14;
@@ -74,19 +78,21 @@
             // 
             // tPass
             // 
-            this.tPass.Location = new System.Drawing.Point(154, 181);
+            this.tPass.Location = new System.Drawing.Point(188, 241);
+            this.tPass.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tPass.Name = "tPass";
             this.tPass.PasswordChar = '*';
-            this.tPass.Size = new System.Drawing.Size(229, 28);
+            this.tPass.Size = new System.Drawing.Size(279, 30);
             this.tPass.TabIndex = 0;
-            this.tPass.Text = "p1";
+            this.tPass.Text = "123";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(43, 188);
+            this.label3.Location = new System.Drawing.Point(53, 251);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(78, 21);
             this.label3.TabIndex = 13;
@@ -94,11 +100,12 @@
             // 
             // btLogin
             // 
-            this.btLogin.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btLogin.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btLogin.ForeColor = System.Drawing.Color.Black;
-            this.btLogin.Location = new System.Drawing.Point(154, 294);
+            this.btLogin.Location = new System.Drawing.Point(188, 392);
+            this.btLogin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btLogin.Name = "btLogin";
-            this.btLogin.Size = new System.Drawing.Size(90, 34);
+            this.btLogin.Size = new System.Drawing.Size(110, 45);
             this.btLogin.TabIndex = 2;
             this.btLogin.Text = "登录";
             this.btLogin.UseVisualStyleBackColor = true;
@@ -106,10 +113,11 @@
             // 
             // FLogin
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(423, 387);
+            this.ClientSize = new System.Drawing.Size(517, 516);
             this.Controls.Add(this.groupBox5);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "登录";

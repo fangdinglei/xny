@@ -23,6 +23,7 @@ namespace MyDBContext.Main
     }
     public class Device_AutoControl
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public virtual Device Device { get; set; }
 
@@ -64,12 +65,21 @@ namespace MyDBContext.Main
             //      ServerVersion.AutoDetect(s));
             optionsBuilder.UseInMemoryDatabase("dbbs");
         }
+
+        /// <summary>
+        /// 测试使用
+        /// </summary>
+        static bool inited = false;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             User_Device.OnModelCreating(modelBuilder);
             User_SF.OnModelCreating(modelBuilder);
-            new BaseValueBuilder().OnModelCreating(modelBuilder);
+            if (!inited)
+            {
+                inited = true;
+                new BaseValueBuilder().OnModelCreating(modelBuilder);
+            }
             //modelBuilder.Entity<User>().HasMany(it => it.Devices).WithMany(it => it.Creator).
             //    UsingEntity<User_Device>( 
             //    it=> it.HasOne(it => it.Device).WithMany(it=>it.User_Devices),
@@ -82,16 +92,21 @@ namespace MyDBContext.Main
     {
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasData(new User()
+            using (MainContext ct=new MainContext())
             {
-                Name = "admin",
-                EMail = "2432114474@qq.com",
-                LastLogin = 0,
-                Pass = "123",
-                Phone="15850798245",
-                CreatorId = 0,
+                ct.Add(new User()
+                {
+                    Id = -1,
+                    Name = "admin",
+                    EMail = "2432114474@qq.com",
+                    LastLogin = 0,
+                    Pass = "123",
+                    Phone = "15850798245",
+                    CreatorId = 0,
 
-            }); ;
+                });
+                ct.SaveChanges();
+            } 
         }
     }
 }
