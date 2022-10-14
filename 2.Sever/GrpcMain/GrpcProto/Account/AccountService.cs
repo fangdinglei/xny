@@ -211,7 +211,7 @@ namespace GrpcMain.Account
                 {
                     return new UserInfo()
                     {
-                        Father = it.CreatorId,
+                        Father = it.CreatorId ,
                         ID = it.Id,
                         Phone = it.Phone,
                         UserName = it.Name,

@@ -11,7 +11,7 @@ namespace MyDBContext.Main
 {
     public interface IHasCreator {
         long Id { get;  }
-        User Creator { get;  }
-        long CreatorId { get;  }
+        User? Creator { get;  }
+        long  CreatorId { get;  }
     }
 }
