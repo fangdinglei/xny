@@ -32,6 +32,7 @@ message DTODefine
         string PassWord=2;
     }  
     message Response_LoginByUserName{
+        //空则登陆失败
         optional string Token=1;
     }
 

@@ -26,7 +26,13 @@ namespace PgGrpcMain
                 //全局错误处理
                 op.Interceptors.Add<GrpcInterceptor>();
                 op.EnableDetailedErrors = true;
-            }); 
+            });
+            //Test 测试
+            using (MainContext ct = new MainContext())
+            {
+                ct.Database.EnsureCreated();
+            }
+         
         }
         /// <summary>
         /// 注册grpc服务到路由

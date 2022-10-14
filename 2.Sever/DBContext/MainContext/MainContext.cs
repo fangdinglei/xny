@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 //Add-Migration [--context MainContext]
@@ -57,29 +58,28 @@ namespace MyDBContext.Main
         public DbSet<Device_DataPoint> Device_DataPoints { get; set; }
         public DbSet<Internal_Mail> Internal_Mails { get; set; }
 
+        static SqliteConnection? _connection;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (_connection==null)
+            {
+                _connection = new SqliteConnection("Filename=:memory:");
+                _connection.Open();
+            } 
             base.OnConfiguring(optionsBuilder);
             string s = "server=fdlmaindb.mysql.rds.aliyuncs.com;database=dbbs;user id=fangdinglei;password=FdlMainDB@;port=3306;sslmode=None";
             //optionsBuilder.UseMySql(s,
             //      ServerVersion.AutoDetect(s));
-            optionsBuilder.UseInMemoryDatabase("dbbs");
-        }
+            optionsBuilder.UseSqlite(_connection);
 
-        /// <summary>
-        /// 测试使用
-        /// </summary>
-        static bool inited = false;
+        }
+         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             User_Device.OnModelCreating(modelBuilder);
             User_SF.OnModelCreating(modelBuilder);
-            if (!inited)
-            {
-                inited = true;
-                new BaseValueBuilder().OnModelCreating(modelBuilder);
-            }
+            new BaseValueBuilder().OnModelCreating(modelBuilder); 
             //modelBuilder.Entity<User>().HasMany(it => it.Devices).WithMany(it => it.Creator).
             //    UsingEntity<User_Device>( 
             //    it=> it.HasOne(it => it.Device).WithMany(it=>it.User_Devices),
@@ -92,21 +92,17 @@ namespace MyDBContext.Main
     {
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            using (MainContext ct=new MainContext())
+            modelBuilder.Entity<User>().HasData(new User()
             {
-                ct.Add(new User()
-                {
-                    Id = -1,
-                    Name = "admin",
-                    EMail = "2432114474@qq.com",
-                    LastLogin = 0,
-                    Pass = "123",
-                    Phone = "15850798245",
-                    CreatorId = 0,
+                Id = -1,
+                Name = "admin",
+                EMail = "2432114474@qq.com",
+                LastLogin = 0,
+                Pass = "123",
+                Phone = "15850798245",
+                CreatorId = 0,
 
-                });
-                ct.SaveChanges();
-            } 
+            });
         }
     }
 }
