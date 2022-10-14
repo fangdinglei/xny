@@ -16,7 +16,7 @@ namespace MyDBContext.Main
     [Table("log")]
     public class Log
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public byte Level { get; set; }
         public string Title { get; set; }

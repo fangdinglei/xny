@@ -8,11 +8,13 @@
 //dotnet ef -h
 //
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
     public class Device : IHasCreator
-    { 
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public string Name { get; set; }
 

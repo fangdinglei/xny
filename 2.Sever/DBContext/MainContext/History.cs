@@ -17,7 +17,9 @@ namespace MyDBContext.Main
         Login,
         SendDeviceCmd,
     }
-    public class  History {
+    public class  History
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public short Type;
 

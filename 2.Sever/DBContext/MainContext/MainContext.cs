@@ -82,12 +82,16 @@ namespace MyDBContext.Main
     {
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Admin>().HasData(new Admin()
-            //{
-            //    Authority = "[\"creat_activity\"]",
-            //    Password = "abcdef",
-            //     Name = "admin"
-            //});
+            modelBuilder.Entity<User>().HasData(new User()
+            {
+                Name = "admin",
+                EMail = "2432114474@qq.com",
+                LastLogin = 0,
+                Pass = "123",
+                Phone="15850798245",
+                CreatorId = 0,
+
+            }); ;
         }
     }
 }

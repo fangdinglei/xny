@@ -7,12 +7,15 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MyDBContext.Main
 {
     /// <summary>
     /// 用户操作审计
     /// </summary>
-    public class User_Op_Audit { 
+    public class User_Op_Audit {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         /// <summary>
         /// 操作名称

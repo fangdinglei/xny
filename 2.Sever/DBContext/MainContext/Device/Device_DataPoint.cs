@@ -8,9 +8,13 @@
 //dotnet ef -h
 //
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MyDBContext.Main
 {
-    public class Device_DataPoint {
+    public class Device_DataPoint
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public long DeviceId { get; set; }
         public long StreamId { get; set; }

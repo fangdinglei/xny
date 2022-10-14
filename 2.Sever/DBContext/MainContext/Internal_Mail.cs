@@ -7,9 +7,13 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MyDBContext.Main
 {
-    public class Internal_Mail { 
+    public class Internal_Mail
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public string Title { get; set; }
         public string Context { get; set; }
