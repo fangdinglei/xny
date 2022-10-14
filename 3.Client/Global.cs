@@ -6,20 +6,20 @@ using MyClient.View;
 namespace MyClient
 {
     public class Global {
-       static public  IServiceProvider Provider;
+        static public IServiceCollection Collection;
         static  Global()
         {
-            var services = new ServiceCollection();
-            services.AddSingleton<IServiceCollection >(services);
-            var provider = services.BuildServiceProvider();
-            services.AddSingleton<IServiceProvider>(provider);
-            Provider = provider;
-            services.AddTransient<FLogin, FLogin>();
-            services.AddTransient<FMain, FMain>();
+            var services = Collection = new ServiceCollection();
+            services.AddSingleton (services);
+          
+            services.AddSingleton<FLogin >();
+            services.AddSingleton<FMain >();
             services.AddSingleton(new FMainOption() { 
                  Title="智慧农业", 
             });
 
+            var provider = services.BuildServiceProvider();
+            services.AddSingleton<IServiceProvider>(provider); 
             services.UserGrpc();
         }
     }

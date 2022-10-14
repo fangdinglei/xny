@@ -112,7 +112,8 @@ message DTODefine
         //备用
         optional int64 UserId=1;
         repeated int64 Dvids=2;
-        int64 GroupId=3;
+        //没有则默认分组
+        optional int64 GroupId=3;
     }  
     message Request_NewGroup{
         string Name=1;

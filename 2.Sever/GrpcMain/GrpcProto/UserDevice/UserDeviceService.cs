@@ -41,7 +41,7 @@ namespace GrpcMain.UserDevice
                 }
                 foreach (var item in request.Dvids)
                 {
-                    ct.Add(new User_Device()
+                    ct.Add(new MyDBContext.Main.User_Device()
                     {
                         DeviceId = item,
                         UserId = request.UserId,
@@ -67,8 +67,10 @@ namespace GrpcMain.UserDevice
                 var ls = await ct.User_Device_Groups.Where(it => it.CreatorId == id).AsNoTracking().ToListAsync();
                 foreach (var item in ls)
                 {
-                    res.GroupId.Add(item.Id);
-                    res.GroupName.Add(item.Name);
+                    res.Groups.Add(new DTODefine.Types.User_Device_Group() { 
+                        Id=item.Id,
+                        Name=item.Name,
+                    });
                 }
             }
             return res;
@@ -80,7 +82,7 @@ namespace GrpcMain.UserDevice
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
-                ct.Add(new User_Device_Group()
+                ct.Add(new MyDBContext.Main.User_Device_Group()
                 {
                     Name = request.Name,
                     CreatorId = id
@@ -98,7 +100,7 @@ namespace GrpcMain.UserDevice
                 id = request.UserId;
             using (MainContext ct = new MainContext())
             {
-                IQueryable<User_Device> bd;
+                IQueryable<MyDBContext.Main.User_Device> bd;
                 if (qid != id)
                 {
                     var count = await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == qid).CountAsync();
@@ -136,29 +138,55 @@ namespace GrpcMain.UserDevice
                     context.Status = new Status(StatusCode.PermissionDenied, "尝试为用户没有的设备添加分组或请求包含重复的设备编号");
                     return null;
                 }
-                foreach (var item in await bd.ToListAsync())
+                if (request.HasGroupId)
                 {
-                    item.User_Device_GroupId = request.GroupId;
+                    foreach (var item in await bd.ToListAsync())
+                    {
+                        item.User_Device_GroupId = request.GroupId;
+                    }
                 }
+                else
+                {
+                    foreach (var item in await bd.ToListAsync())
+                    {
+                        item.User_Device_GroupId = 0;
+                    }
+                }
+                
                 await ct.SaveChangesAsync();
                 return new CommonResponse() { Success = true };
             }
         }
 
-        [GrpcRequireAuthority]
-        public override async Task<CommonResponse?> UpdateGroupInfo(Request_UpdateGroupInfo request, ServerCallContext context)
+        [GrpcRequireAuthority] 
+        public override async Task<CommonResponse> UpdateGroupInfos(Request_UpdateGroupInfos request, ServerCallContext context)
         {
-
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
-                var gp = await ct.User_Device_Groups.Where(it => it.CreatorId == id).FirstOrDefaultAsync();
-                if (gp == null)
+                foreach (var item in request.Groups)
                 {
-                    context.Status = new Status(StatusCode.PermissionDenied, "用户无该分组");
-                    return null;
+                    if (item.HasDelet&&item.Delet)
+                    {
+                        var gp = await ct.User_Device_Groups.Where(it => it.CreatorId == id && it.Id==item.Id).FirstOrDefaultAsync();
+                        if (gp == null)
+                        {
+                            context.Status = new Status(StatusCode.PermissionDenied, "用户无该分组");
+                            return null;
+                        }
+                        ct.User_Device_Groups.Remove(gp);
+                    }
+                    else
+                    {
+                        var gp = await ct.User_Device_Groups.Where(it => it.CreatorId == id && it.Id == item.Id).FirstOrDefaultAsync();
+                        if (gp == null)
+                        {
+                            context.Status = new Status(StatusCode.PermissionDenied, "用户无该分组");
+                            return null;
+                        }
+                        gp.Name = item.Name; 
+                    }
                 }
-                gp.Name = request.Name;
                 await ct.SaveChangesAsync();
                 return new CommonResponse() { Success = true };
             }
@@ -174,7 +202,7 @@ namespace GrpcMain.UserDevice
                 id = request.UserId;
             using (MainContext ct = new MainContext())
             {
-                IQueryable<User_Device> bd;
+                IQueryable<MyDBContext.Main.User_Device> bd;
                 if (qid != id)
                 {
                     var count = await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == qid).CountAsync();
@@ -208,7 +236,7 @@ namespace GrpcMain.UserDevice
                 }
                 res.UserDevices.AddRange(lsx.Select(it =>
                 {
-                    return new DTODefine.Types.UserDevice()
+                    return new DTODefine.Types.User_Device()
                     {
                         PControl = it.PControl,
                         PData = it.PData,

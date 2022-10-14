@@ -40,18 +40,20 @@ namespace MyClient.View
             // list_Group
             // 
             this.list_Group.FormattingEnabled = true;
-            this.list_Group.ItemHeight = 18;
-            this.list_Group.Location = new System.Drawing.Point(12, 12);
+            this.list_Group.ItemHeight = 24;
+            this.list_Group.Location = new System.Drawing.Point(15, 16);
+            this.list_Group.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.list_Group.Name = "list_Group";
-            this.list_Group.Size = new System.Drawing.Size(246, 328);
+            this.list_Group.Size = new System.Drawing.Size(300, 436);
             this.list_Group.TabIndex = 5;
             this.list_Group.SelectedIndexChanged += new System.EventHandler(this.list_Group_SelectedIndexChanged);
             // 
             // btn_del
             // 
-            this.btn_del.Location = new System.Drawing.Point(267, 149);
+            this.btn_del.Location = new System.Drawing.Point(326, 199);
+            this.btn_del.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_del.Name = "btn_del";
-            this.btn_del.Size = new System.Drawing.Size(116, 58);
+            this.btn_del.Size = new System.Drawing.Size(142, 77);
             this.btn_del.TabIndex = 6;
             this.btn_del.Text = "删除";
             this.btn_del.UseVisualStyleBackColor = true;
@@ -59,9 +61,10 @@ namespace MyClient.View
             // 
             // btn_update
             // 
-            this.btn_update.Location = new System.Drawing.Point(538, 149);
+            this.btn_update.Location = new System.Drawing.Point(658, 199);
+            this.btn_update.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_update.Name = "btn_update";
-            this.btn_update.Size = new System.Drawing.Size(116, 58);
+            this.btn_update.Size = new System.Drawing.Size(142, 77);
             this.btn_update.TabIndex = 7;
             this.btn_update.Text = "确认修改";
             this.btn_update.UseVisualStyleBackColor = true;
@@ -69,25 +72,28 @@ namespace MyClient.View
             // 
             // tname
             // 
-            this.tname.Location = new System.Drawing.Point(355, 64);
+            this.tname.Location = new System.Drawing.Point(405, 83);
+            this.tname.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tname.Name = "tname";
-            this.tname.Size = new System.Drawing.Size(173, 28);
+            this.tname.Size = new System.Drawing.Size(211, 30);
             this.tname.TabIndex = 8;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(287, 67);
+            this.label1.Location = new System.Drawing.Point(351, 89);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 18);
+            this.label1.Size = new System.Drawing.Size(46, 24);
             this.label1.TabIndex = 9;
             this.label1.Text = "名称";
             // 
             // btn_creat
             // 
-            this.btn_creat.Location = new System.Drawing.Point(406, 149);
+            this.btn_creat.Location = new System.Drawing.Point(496, 199);
+            this.btn_creat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_creat.Name = "btn_creat";
-            this.btn_creat.Size = new System.Drawing.Size(116, 58);
+            this.btn_creat.Size = new System.Drawing.Size(142, 77);
             this.btn_creat.TabIndex = 10;
             this.btn_creat.Text = "创建";
             this.btn_creat.UseVisualStyleBackColor = true;
@@ -95,15 +101,16 @@ namespace MyClient.View
             // 
             // FDeviceGroupManager
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(824, 378);
+            this.ClientSize = new System.Drawing.Size(1007, 504);
             this.Controls.Add(this.btn_creat);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tname);
             this.Controls.Add(this.btn_update);
             this.Controls.Add(this.btn_del);
             this.Controls.Add(this.list_Group);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FDeviceGroupManager";
             this.Text = "FDeviceGroupManager";
             this.ResumeLayout(false);

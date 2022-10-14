@@ -13,7 +13,8 @@ namespace MyClient
         static void Main()
         {  
             ApplicationConfiguration.Initialize();
-            Application.Run(Global.Provider.GetService<FLogin>());
+            var f = Global.Collection.BuildServiceProvider().GetService<FLogin>();
+            Application.Run(f);
         }
     }
 }

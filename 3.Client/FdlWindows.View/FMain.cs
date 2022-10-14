@@ -39,14 +39,14 @@ namespace FdlWindows.View
 
         public int Uid => __uid;
         Action? _closecall;
-        public FMain(FMainOption op, IServiceProvider serviceProvider, IServiceCollection serviceCollection)
+        public FMain(FMainOption op,   IServiceCollection serviceCollection)
         {
             Text = op.Title;
             InitializeComponent();
             InitViews();
             this.ClientSize = new Size(1200, 650);
             _closecall = op.CloseCall;
-            this.serviceProvider = serviceProvider;
+            this.serviceProvider = serviceCollection.BuildServiceProvider();
             this.serviceCollection = serviceCollection;
             //SwitchTo("关于",true);
             //if (DateTime.Now>new DateTime(2022,9,10))

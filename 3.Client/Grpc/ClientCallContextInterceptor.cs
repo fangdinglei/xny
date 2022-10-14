@@ -25,12 +25,15 @@ namespace MyClient.Grpc
                 return;
             }
             throw new Exception(String.IsNullOrWhiteSpace(rsp.Message   )?"未知错误": rsp.Message);
-        }
+        } 
         static public void UserGrpc(this IServiceCollection serviceCollection)
         {
-            var channel = new Channel("http://localhost:5001", ChannelCredentials.Insecure);
-            channel.Intercept(new ClientCallContextInterceptor());
-            serviceCollection.TryAddSingleton(channel);
+            var channel = new Channel("127.0.0.1", 5008, ChannelCredentials.Insecure);
+            var interceptor = new ClientCallContextInterceptor();
+           var interceptorchannel= channel.Intercept(interceptor);
+            //serviceCollection.TryAddSingleton<ChannelBase>(channel);
+            serviceCollection.TryAddSingleton(interceptor);
+            serviceCollection.TryAddSingleton(interceptorchannel);
             serviceCollection.TryAddSingleton<AccountService.AccountServiceClient>();
             serviceCollection.TryAddSingleton<UserDeviceService.UserDeviceServiceClient>();
             serviceCollection.TryAddSingleton<DeviceService.DeviceServiceClient>();
@@ -41,11 +44,17 @@ namespace MyClient.Grpc
     }
     public class ClientCallContextInterceptor : Interceptor
     {
-        public string? Token;
+        public string? Token;  
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
-            return continuation(request, context);
+            var contextx = new ClientInterceptorContext<TRequest, TResponse>(context.Method, context.Host, new CallOptions(null, DateTime.UtcNow.AddSeconds(500)));
+            return continuation(request, contextx);
         }
 
+        public override TResponse BlockingUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, BlockingUnaryCallContinuation<TRequest, TResponse> continuation) where TRequest : class where TResponse : class
+        {
+            var contextx = new ClientInterceptorContext<TRequest, TResponse>(context.Method, context.Host, new CallOptions(null, DateTime.UtcNow.AddSeconds(500)));
+            return continuation(request, contextx);
+        }
     }
 }

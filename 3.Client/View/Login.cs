@@ -14,14 +14,12 @@ namespace MyClient.View
   
     public partial class FLogin : Form
     {
-        IServiceProvider serviceProvider;
-        IServiceCollection serviceCollection;
+        IServiceProvider serviceProvider; 
         AccountService.AccountServiceClient client;
         ClientCallContextInterceptor interceptor;
-        public FLogin(IServiceProvider serviceProvider, IServiceCollection serviceCollection, AccountService.AccountServiceClient accountServiceClient, ClientCallContextInterceptor interceptor)
+        public FLogin(  IServiceCollection serviceCollection, AccountService.AccountServiceClient accountServiceClient, ClientCallContextInterceptor interceptor)
         {
-            this.serviceProvider = serviceProvider;
-            this.serviceCollection = serviceCollection;
+            this.serviceProvider = serviceProvider; 
             InitializeComponent();
             this.client = accountServiceClient;
             this.interceptor = interceptor;
@@ -33,7 +31,8 @@ namespace MyClient.View
             string pass = tPass.Text.Trim();
             try
             {
-                var a = await client.LoginByUserNameAsync(new DTODefine.Types.Request_LoginByUserName()
+               
+                var a = /*await*/ client.LoginByUserName/*Async*/(new DTODefine.Types.Request_LoginByUserName()
                 {
                     PassWord = pass,
                     UserName = uname,
