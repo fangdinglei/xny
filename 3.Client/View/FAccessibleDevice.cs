@@ -1,6 +1,7 @@
 ﻿
 using FdlWindows.View;
 using GrpcMain.Device;
+using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using static GrpcMain.Device.DTODefine.Types;
 using static GrpcMain.DeviceType.DTODefine.Types;
-
+using static GrpcMain.UserDevice.DTODefine.Types;
 namespace MyClient.View
 {
     [AutoDetectView("全部设备", "全部设备","",true )]
@@ -20,12 +21,14 @@ namespace MyClient.View
 
         DeviceService.DeviceServiceClient deviceServiceClient ;
         UserDeviceService.UserDeviceServiceClient userDeviceServiceClient;
-        public FAccessibleDevice(DeviceService.DeviceServiceClient deviceServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient)
+        DeviceTypeService.DeviceTypeServiceClient deviceTypeServiceClient ;
+        public FAccessibleDevice(DeviceService.DeviceServiceClient deviceServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, DeviceTypeService.DeviceTypeServiceClient deviceTypeServiceClient)
         {
             InitializeComponent();
             InitDataTable();
             this.deviceServiceClient = deviceServiceClient;
             this.userDeviceServiceClient = userDeviceServiceClient;
+            this.deviceTypeServiceClient = deviceTypeServiceClient;
         }
         void InitDataTable()
         {
@@ -44,34 +47,51 @@ namespace MyClient.View
 
         private  void brefresh_Click(object sender, EventArgs e)
         {
-            var res1= userDeviceServiceClient.GetGroupInfos( new Google.Protobuf.WellKnownTypes.Empty()  );
-            var groupinfos=   res.Groups ; 
+            RefreshDatas();
+            RefreshDeviceInTab();
+        }
+        List<User_Device_Group>? groups;
+        List<User_Device>? user_Devices;
+        List<TypeInfo>? typeInfos;
+        List<Device>? dvinfos;
+        void RefreshDatas() {
+            var res1 = userDeviceServiceClient.GetGroupInfos(new Google.Protobuf.WellKnownTypes.Empty());
+            groups = res1.Groups.ToList();
+            var res2 = userDeviceServiceClient.GetUserDevices(new Request_GetUserDevices());
+            user_Devices = res2.UserDevices.ToList();
+            var res3 = deviceTypeServiceClient.GetTypeInfos(new Request_GetTypeInfos());
+            typeInfos = res3.TypeInfos.ToList();
+            var res4 = userDeviceServiceClient.GetDevices(new Request_GetDevices());
+            dvinfos = res4.Devices.ToList();
+            RefreshDeviceInTab( );
         }
 
-        void RefreshDeviceInTab()
+        void RefreshDeviceInTab(  )
         {
-            if (groupinfo != null && deviceinfos != null
+            if (groups != null && dvinfos != null
                && list_Group.SelectedIndex >= 0
-               && list_Group.SelectedIndex < list_Group.Items.Count)
+               && list_Group.SelectedIndex < list_Group.Items.Count
+               )
             {
                 var dt = table.Clone();
-                foreach (var device in deviceinfos)
+                foreach (var device in dvinfos)
                 { 
                     //如果所选分组和当前分组不一致 则跳过
-                    if (device.GroupID == 0 && list_Group.SelectedIndex != 0
-                        || device.GroupID != 0 && groupinfo[list_Group.SelectedIndex].GroupID!=  device.GroupID )
+                    if (device.GroupId == 0 && list_Group.SelectedIndex != 0
+                        || device.GroupId != 0 &&groups[list_Group.SelectedIndex].Id!=  device.GroupId )
                         continue;
                     DataRow dr = dt.NewRow();
                     dr["Name"] = device.Name;
-                    dr["ID"] = device.ID;
-                    dr["Status"] = "未知"; 
-                    if (devicetypeinfos.ContainsKey(device.TypeID))
+                    dr["ID"] = device.Id;
+                    dr["Status"] = "未知";
+                    var tinfo = typeInfos.Find(it => it.Id == device.DeviceTypeId);
+                    if (tinfo!=null)
                     {
-                        dr["Type"] = devicetypeinfos[device.TypeID].Name;
+                        dr["Type"] = tinfo.Name;
                     }
                     else
                     {
-                        dr["Type"] = device.TypeID;
+                        dr["Type"] = "未知类型";
                     }
                     dr["OP1"] = "测试中";
                     dr["OP2"] = "测试中";
@@ -116,54 +136,12 @@ namespace MyClient.View
 
      
         public void OnTick()
-        {
-            if (!Visible)
-                return;
-            bool refresh=false;
-            if (NewNetGroupInfo != null)
-            {
-                groupinfo = NewNetGroupInfo;
-                NewNetGroupInfo = null;
-                groupinfo.Insert(0, new DeviceGroup(0, "默认"));
-                var dl = groupinfo.Select(it => it.Name).ToList(); 
-                list_Group.DataSource = dl; 
-            }
-            if (NewNetDeviceInfo != null)
-            {
-                deviceinfos = NewNetDeviceInfo;
-                NewNetDeviceInfo = null;
-                refresh  = true;
-                List<uint> typeids = new List<uint>();
-                foreach (var item in deviceinfos)
-                {
-                    if (!typeids.Contains(item.TypeID))
-                    {
-                        typeids.Add(item.TypeID);
-                    }
-                }
-                Global.client.ExecAsync(new GetDeviceTypeInfoRequest (typeids));
-            }
-            lock (this)
-            {
-                if (NewNetTypeInfos.Count!=0)
-                {
-                    for (int i = 0; i < NewNetTypeInfos.Count; i++)
-                    {
-                        devicetypeinfos[NewNetTypeInfos[i].ID] = NewNetTypeInfos[i];
-                    }
-                    NewNetTypeInfos.Clear();
-                    refresh = true;
-                }
-            }
-            if(refresh)
-                RefreshDeviceInTab();
-
+        { 
         }
 
         public void PrePare(params object[] par)
-        { 
-          
-            brefresh_Click(null, null);
+        {
+            brefresh_Click(null,null);
         } 
         public void OnEvent(string name, params object[] pars)
         {
@@ -181,7 +159,7 @@ namespace MyClient.View
 
         private void list_Group_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RefreshDeviceInTab();
+            RefreshDeviceInTab(); 
         }
 
         private void btn_groupmgr_Click(object sender, EventArgs e)
@@ -230,10 +208,10 @@ namespace MyClient.View
         }
 
         [DllImport("user32.dll")]
-        private static extern int SetCursorPos(int x, int y);
+        private static extern int SetCursorPos(int x, int y); 
         private void bgroupmove_MouseDown(object sender, MouseEventArgs e)
         {
-            var tb = new List<uint>();
+            var tb = new List<long>();
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 if ((bool)row.Cells[0].EditedFormattedValue)
@@ -276,16 +254,19 @@ namespace MyClient.View
 
                 try
                 {
-                    var tb =(List<uint>) e.Data.GetData("System.Collections.Generic.List`1[[System.UInt32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]");
-                    var res = Global.client.Exec(new SetDeviceGroupRequest(tb, groupinfo[id].GroupID));
-                    if (res.IsError || res.Data == null || res.Data.Count == 0)
-                        throw new Exception();
-                    foreach (var sucid in res.Data)
+                    var tb =(List<long>) e.Data .GetData( typeof(List<long>));
+                   var req= new Request_SetDeviceGroup()  ;
+                    req.GroupId = groups[id].Id;
+                    req.Dvids.AddRange(tb); 
+                   var res= userDeviceServiceClient.SetDeviceGroup(req);
+                    if (res.Success == false)
+                        throw new Exception(res.Message);
+                    foreach (var sucid in tb)
                     {
-                        var dv = deviceinfos.Find(it => it.ID == sucid);
+                        var dv =dvinfos.Find(it => it.Id == sucid);
                         if (dv != null)
                         {
-                            dv.GroupID = groupinfo[id].GroupID;
+                            dv.GroupId = groups[id].Id;
                         }
                     }
                   

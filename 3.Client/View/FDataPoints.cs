@@ -5,44 +5,32 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
-using XNYAPI.Model.Device;
-using XNYAPI.Request.Data;
-using XNYAPI.Request.UserDevice;
-using XNYAPI.Response.Data;
+using System.Windows.Forms; 
+using FdlWindows.View;
+using CefSharp.WinForms; 
+using CefSharp;
 
 namespace MyClient.View
 {
+    [AutoDetectView("FDataPoints", "数据","",true)]
+    [System.Runtime.InteropServices.ComVisibleAttribute(true)]//标记对com可见
     public partial class FDataPoints : Form, IView
-    {
-        string HTMLSTR = "";
+    { 
 
         public Control View => this;
 
         public FDataPoints()
         {
-            InitializeComponent();
-            string html;
-            using (StreamReader sr = new StreamReader("ECHART/index.html"))
-            {
-                html = sr.ReadToEnd();
-            }
-            string js;
-            using (StreamReader sr = new StreamReader("ECHART/echarts.js"))
-            {
-                js = sr.ReadToEnd();
-            }
-            HTMLSTR = html.Replace("{@@ECHARTJS@@}", js);
-
-            LoadAllDevcieID();
-            //string dtstr="";
-            //webBrowser1.DocumentText = HTMLSTR.Replace(Replace("{@@DATA@@}",dtstr);
+            InitializeComponent(); 
+            string curDir = Directory.GetCurrentDirectory();
+            chromiumWebBrowser1.Load(String.Format("file:///{0}/ECHART/index.html", curDir)); 
+            LoadAllDevcieID(); 
         }
 
         void RefreshChart( )
         {
-            var ds = dateTimePicker.Value.Date;
-            var de = dateTimePicker.Value.Date.AddDays(1).AddMinutes(-1);
+            var ds =XNYAPI.Utilitys.Utility.GetTicket_S(dateTimePicker.Value.Date) ;
+            var de = XNYAPI.Utilitys.Utility.GetTicket_S(dateTimePicker.Value.Date.AddDays(1).AddMinutes(-1));
             GetDataStreamsResponse res = null;
             try
             {
@@ -57,13 +45,25 @@ namespace MyClient.View
                 MessageBox.Show("错误：无法获取数据流");
                 return;
             }
-            if (res.Data.Count == 0|| res.Data[0].Streams.Count==0||
-                res.Data[0].Streams[0].Points.Count == 0)
+            if (res.Data.Count == 0 || res.Data[0].Streams.Count == 0 ||
+                res.Data[0].Streams[0].Points.Count == 0) {
+                if (chromiumWebBrowser1.IsBrowserInitialized)
+                {
+                    chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs", "[]");
+                } 
                 return;
-            string htmlstr = GetDataStr(res.Data[0].Streams[0].Points);
-            webBrowser1.DocumentText = HTMLSTR.Replace("{@@DATA@@}", htmlstr);
+            }
+                
+            
+           
+            string htmlstr = GetDataStr(res.Data[0].Streams[0].Points); 
+            while (!chromiumWebBrowser1.IsBrowserInitialized || chromiumWebBrowser1.IsLoading)
+            {
+                Application.DoEvents();
+            }
+            chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs",htmlstr);
         }
-        List<DeviceInfo> devices;
+        List<UserDeviceInfo> devices;
         void LoadAllDevcieID()
         {
             try
@@ -102,22 +102,20 @@ namespace MyClient.View
             foreach (var point in points)
             {
                 sb.Append("{");
-                sb.Append("\"name\":"); 
+                sb.Append("\'name\':");
                 sb.Append(point.Time);
                 sb.Append(",");
-                sb.Append("\"value\":[");
+                sb.Append("\'value\':[");
                 sb.Append(point.Time);
                 sb.Append(",");
                 sb.Append(Newtonsoft.Json.JsonConvert.DeserializeObject<float>(point.Value.ToString()));
                 sb.Append("]},");
             }
             sb.Remove(sb.Length - 1, 1);
-            sb.Append("];");
+            sb.Append("]");
 
             return sb.ToString();
-        }
-
-
+        } 
 
         public void PrePare(params object[] par)
         {

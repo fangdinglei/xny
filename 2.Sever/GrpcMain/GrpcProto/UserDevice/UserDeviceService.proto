@@ -93,6 +93,7 @@ message DTODefine
 
     message Request_GetDevices{
          optional int64 Cursor=1;
+         optional int64 GroupId=2;
     }
     message Response_GetDevices{
         //0后续无数据
@@ -110,8 +111,9 @@ message DTODefine
         repeated int64 Dvids=2; 
     }  
     
-    message Request_SetDeviceGroup{
-        int64 UserId=1;
+    message Request_SetDeviceGroup{ 
+        //备用
+        optional int64 UserId=1;
         repeated int64 Dvids=2;
         int64 GroupId=3;
     }  
