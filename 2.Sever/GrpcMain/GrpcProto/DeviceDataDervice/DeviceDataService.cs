@@ -16,7 +16,7 @@ namespace GrpcMain.DeviceData
             _timeutility = time;
         }
 
-        [GrpcRequireAuthority]
+        
         public override async Task<Response_GetDataPoints?> GetDataPoints( Request_GetDataPoints request, ServerCallContext context)
         {
             int maxcount = 1000; 
@@ -86,7 +86,7 @@ namespace GrpcMain.DeviceData
             return res;
         }
 
-        [GrpcRequireAuthority]
+        
         public override async Task<Response_GetLatestData> GetLatestData( Request_GetLatestData request, ServerCallContext context)
         { 
             long id = (long)context.UserState["CreatorId"];

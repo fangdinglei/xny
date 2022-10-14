@@ -21,7 +21,7 @@ namespace GrpcMain.InternalMail
             this.myEmailUtility = myEmailUtility;
         }
 
-        [GrpcRequireAuthority]
+        
         public override async Task<CommonResponse> SendMail(Request_SendInternalMail request, ServerCallContext context)
         {
             request.Mail.Time = _timeutility.GetTicket();
@@ -40,7 +40,7 @@ namespace GrpcMain.InternalMail
             }
             return new CommonResponse() { Success = true };
         }
-        [GrpcRequireAuthority]
+        
         public override async Task<CommonResponse?> SetMailReaded(Request_SetMailReaded request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -58,7 +58,7 @@ namespace GrpcMain.InternalMail
             }
             return new CommonResponse() { Success = true };
         }
-        [GrpcRequireAuthority]
+        
         public override async Task<Response_GetMail> GetMail(Request_GetMail request, ServerCallContext context)
         {
             int maxcount = 100 + 1;
@@ -95,7 +95,7 @@ namespace GrpcMain.InternalMail
             }
             return res;
         }
-        [GrpcRequireAuthority]
+        
         public override async Task<CommonResponse> SendEMail(Request_SendEMail request, ServerCallContext context)
         {
 

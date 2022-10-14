@@ -13,23 +13,23 @@ namespace GrpcMain.Device
             _timeutility = time;
         }
 
-        [GrpcRequireAuthority]
+        
         public override Task<CommonResponse> SendCMD( Request_SendCMD request, ServerCallContext context)
         {
             throw new NotImplementedException();
         }
-        [GrpcRequireAuthority]
+        
         public override Task<CommonResponse> DeletDevice( Request_DeletDevice request, ServerCallContext context)
         {
             throw new NotImplementedException();
         }
-        [GrpcRequireAuthority]
+        
         public override Task<Response_GetAllDeviceStatus> GetAllDeviceStatus( Request_GetAllDeviceStatus request, ServerCallContext context)
         {
             throw new NotImplementedException();
         }
 
-        [GrpcRequireAuthority]
+        
         public override Task<CommonResponse> UpdateDeviceInfo( Request_UpdateDeviceInfo request, ServerCallContext context)
         {
             throw new NotImplementedException();

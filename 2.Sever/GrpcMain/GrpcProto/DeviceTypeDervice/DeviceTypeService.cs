@@ -21,7 +21,7 @@ namespace GrpcMain.DeviceType
             _timeutility = time;
         }
 
-        [GrpcRequireAuthority]
+        
         public override async Task<Response_GetTypeInfos> GetTypeInfos( Request_GetTypeInfos request, ServerCallContext context)
         {
             var res = new Response_GetTypeInfos();

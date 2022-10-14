@@ -15,7 +15,7 @@ namespace GrpcMain.UserDevice
         {
             _timeutility = time;
         }
-        [GrpcRequireAuthority]
+        
         public override async Task<CommonResponse?> UpdateUserDevice(Request_UpdateUserDevice request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -57,7 +57,7 @@ namespace GrpcMain.UserDevice
             return new CommonResponse() { Success = true };
         }
 
-        [GrpcRequireAuthority]
+        
         public override async Task<Response_GetGroupInfos> GetGroupInfos(Empty request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -76,7 +76,7 @@ namespace GrpcMain.UserDevice
             return res;
         }
 
-        [GrpcRequireAuthority]
+        
         public override async Task<CommonResponse> NewGroup(Request_NewGroup request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -91,7 +91,7 @@ namespace GrpcMain.UserDevice
             }
             return new CommonResponse() { Success = true };
         }
-        [GrpcRequireAuthority]
+        
         public override async Task<Response_GetUserAllDeviceID?> GetUserAllDeviceID(Request_GetUserAllDeviceID request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -120,7 +120,7 @@ namespace GrpcMain.UserDevice
             }
         }
 
-        [GrpcRequireAuthority]
+        
         public override async Task<CommonResponse?> SetDeviceGroup(Request_SetDeviceGroup request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -158,7 +158,7 @@ namespace GrpcMain.UserDevice
             }
         }
 
-        [GrpcRequireAuthority] 
+         
         public override async Task<CommonResponse> UpdateGroupInfos(Request_UpdateGroupInfos request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -192,7 +192,7 @@ namespace GrpcMain.UserDevice
             }
         }
 
-        [GrpcRequireAuthority]
+        
         public override async Task<Response_GetUserDevices> GetUserDevices(Request_GetUserDevices request, ServerCallContext context)
         {
             int maxcount = 1000 + 1;

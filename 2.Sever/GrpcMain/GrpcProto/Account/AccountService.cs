@@ -16,7 +16,7 @@ namespace GrpcMain.Account
             _timeutility = time;
         }
 
-
+        [GrpcRequireAuthority(NeedLogin =false )]
         public override async Task<Response_LoginByUserName?>
             LoginByUserName(
             Request_LoginByUserName request, ServerCallContext context)
@@ -72,8 +72,7 @@ namespace GrpcMain.Account
                 Token = token
             };
         }
-
-        [GrpcRequireAuthority]
+ 
         public override async Task<CommonResponse?> DeletUser(Request_DeletUser request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -94,7 +93,7 @@ namespace GrpcMain.Account
             };
         }
 
-        [GrpcRequireAuthority]
+ 
         public override async Task<CommonResponse?> ChangePassWord(Request_ChangePassWord request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -147,7 +146,7 @@ namespace GrpcMain.Account
             }
         }
 
-        [GrpcRequireAuthority]
+  
         public override async Task<Response_CreatUser> CreatUser(Request_CreatUser request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -187,7 +186,7 @@ namespace GrpcMain.Account
             }
         }
 
-        [GrpcRequireAuthority]
+ 
         public override async Task<Response_GetUserInfo> GetUserInfo(Request_GetUserInfo request, ServerCallContext context)
         {
             using (MainContext ct = new MainContext())
@@ -224,7 +223,7 @@ namespace GrpcMain.Account
 
         }
 
-        [GrpcRequireAuthority]
+        
         public override async Task<CommonResponse> UpdateUserInfo(Request_UpdateUserInfo request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];

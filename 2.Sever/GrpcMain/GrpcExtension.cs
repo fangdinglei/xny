@@ -2,11 +2,17 @@
 using GrpcMain;
 using GrpcMain.Account;
 using GrpcMain.Common;
+using GrpcMain.Device;
+using GrpcMain.DeviceData;
+using GrpcMain.DeviceType;
+using GrpcMain.InternalMail;
+using GrpcMain.UserDevice;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using MyDBContext.Main;
 using MyJwtHelper;
 using MyUtility;
+using System.Reflection;
 
 namespace PgGrpcMain
 {
@@ -23,9 +29,9 @@ namespace PgGrpcMain
             //开启GRPC
             services.AddGrpc(op =>
             {
-                //全局错误处理
-                op.Interceptors.Add<GrpcInterceptor>();
-                op.EnableDetailedErrors = true;
+                //全局错误处理 
+                 op.Interceptors.Add<GrpcInterceptor>(); 
+                    op.EnableDetailedErrors = true; 
             });
             //Test 测试
             using (MainContext ct = new MainContext())
@@ -41,6 +47,29 @@ namespace PgGrpcMain
         static public void RegistMyGrpc(this WebApplication app)
         {
             app.MapGrpcService<AccountServiceImp>();
+            app.MapGrpcService<DeviceServiceImp>();
+            app.MapGrpcService<UserDeviceServiceImp>();
+            app.MapGrpcService<DeviceDataServiceImp>();
+            app.MapGrpcService<DeviceTypeServiceImp>();
+            app.MapGrpcService<InternalMailServiceImp>();
+
+            foreach (var item in typeof(IGrpcHandle).Assembly.GetTypes())
+            {
+                var att= item.GetCustomAttribute< BindServiceMethodAttribute>();
+                if (att == null)
+                    continue;
+                foreach (var func in item.GetMethods( ))
+                {
+                    if (!func.IsVirtual)
+                        continue;
+                    var atx = func.GetCustomAttribute<GrpcRequireAuthorityAttribute>();
+                    if (atx == null)
+                        continue;
+                    var str="/" + att.BindType.FullName+"/"+func.Name;
+                    GrpcInterceptor.AuthorityAttributes.Add(str, atx);
+                }
+               
+            }
         }
 
 

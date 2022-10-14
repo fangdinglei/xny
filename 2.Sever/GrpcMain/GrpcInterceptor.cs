@@ -8,43 +8,62 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using GrpcMain.Common;
+using Grpc.AspNetCore.Server.Model;
 
 namespace GrpcMain
 {
     public class GrpcInterceptor : Interceptor
     {
+        static public Dictionary<string, GrpcRequireAuthorityAttribute> AuthorityAttributes = new Dictionary<string, GrpcRequireAuthorityAttribute>();
         IGrpcHandle _Handle;
         public GrpcInterceptor(IGrpcHandle handle)
         {
-             _Handle = handle;
+            _Handle = handle;
         }
 
         public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
             TRequest request,
             ServerCallContext context,
             UnaryServerMethod<TRequest, TResponse> continuation)
-        {
-                var at = continuation.Method.GetCustomAttribute<GrpcRequireAuthorityAttribute>(  false);
- 
-            //LogCall<TRequest, TResponse>(MethodType.Unary, context); 
+        { 
             try
             {
-                if (at == null) {
-                    return await continuation(request, context);
-                } 
-                else {
+                GrpcRequireAuthorityAttribute? at;
+                if (!AuthorityAttributes.TryGetValue(context.Method, out at) || at == null)
+                {  //默认鉴权 不审计
                     string errormsg;
-                    var canvisit = _Handle.Authorize(context,at,out errormsg);
-                    if (canvisit ==  false)
+                    var canvisit = _Handle.Authorize(context, at, out errormsg);
+                    if (canvisit == false)
                     {
-                        context.Status = new Status( StatusCode.PermissionDenied,errormsg);
+                        context.Status = new Status(StatusCode.PermissionDenied, errormsg);
                         return null;
                     }
-                    var r=await continuation(request, context);
+                    var r = await continuation(request, context);
+                    return r;
+                }
+                else if (!at.NeedLogin)
+                {
+                    //不要鉴权
+                    return await continuation(request, context);
+                }
+                else
+                {
+                    string errormsg;
+                    var canvisit = _Handle.Authorize(context, at, out errormsg);
+                    if (canvisit == false)
+                    {
+                        context.Status = new Status(StatusCode.PermissionDenied, errormsg);
+                        return null;
+                    }
+                    var r = await continuation(request, context);
                     //审计
-                    if (at.NeedAudit && context.Status.StatusCode == StatusCode.Cancelled) {
-                        await _Handle.RecordAudit( context,request,continuation,at);
-                        context.Status=Status.DefaultSuccess;
+                    if (at.NeedAudit)
+                    {
+                        if (at.NeedAudit && context.Status.StatusCode == StatusCode.Cancelled)
+                        {
+                            await _Handle.RecordAudit(context, request, continuation, at);
+                            context.Status = Status.DefaultSuccess;
+                        }
                     }
                     return r;
                 }
@@ -58,5 +77,5 @@ namespace GrpcMain
         }
 
     }
-   
+
 }
