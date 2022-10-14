@@ -78,8 +78,8 @@ namespace MyDBContext.Main
             }  
             base.OnConfiguring(optionsBuilder);
             string s = "server=fdlmaindb.mysql.rds.aliyuncs.com;database=dbbs;user id=fangdinglei;password=FdlMainDB@;port=3306;sslmode=None";
-             optionsBuilder.UseMySql(s, ServerVersion.AutoDetect(s));
-            //optionsBuilder.UseSqlite(_connection);
+            //optionsBuilder.UseMySql(s, ServerVersion.AutoDetect(s));
+            optionsBuilder.UseSqlite(_connection);
 
         }
          
