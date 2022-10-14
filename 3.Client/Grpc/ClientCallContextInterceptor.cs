@@ -13,11 +13,19 @@ using GrpcMain.Device;
 using GrpcMain.InternalMail;
 using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
+using GrpcMain.Common;
 
 namespace MyClient.Grpc
 {
     public static class GrpcExt
     {
+        static public void ThrowIfNotSuccess(this CommonResponse rsp) {
+            if (rsp.Success)
+            {
+                return;
+            }
+            throw new Exception(String.IsNullOrWhiteSpace(rsp.Message   )?"未知错误": rsp.Message);
+        }
         static public void UserGrpc(this IServiceCollection serviceCollection)
         {
             var channel = new Channel("http://localhost:5001", ChannelCredentials.Insecure);

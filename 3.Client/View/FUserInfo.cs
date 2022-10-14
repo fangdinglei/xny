@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FdlWindows.View;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,15 +7,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using XNYAPI.Model.Account;
-using XNYAPI.Model.Device;
-using XNYAPI.Request.Account;
-using XNYAPI.Request.UserDevice;
-using XNYAPI.Response;
+using System.Windows.Forms; 
 
 namespace MyClient.View
 {
+    [AutoDetectView("FUserInfo","用户信息","",true)]
     public partial class FUserInfo : Form,IView
     {
         public FUserInfo()

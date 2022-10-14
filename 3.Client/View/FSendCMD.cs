@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FdlWindows.View;
+using GrpcMain.Device;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,17 +8,19 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using XNYAPI.Request.Device;
+using System.Windows.Forms; 
 
 namespace MyClient.View
 {
+    [ AutoDetectView("FSendCMD", "","",false)]
     public partial class FSendCMD : Form,IView
     {
-        List<ValueTuple<uint, string>> dvs;
-        public FSendCMD()
+        List<ValueTuple<long, string>>? dvs;
+        DeviceService.DeviceServiceClient deviceServiceClient;
+        public FSendCMD(DeviceService.DeviceServiceClient deviceServiceClient)
         {
             InitializeComponent();
+            this.deviceServiceClient = deviceServiceClient;
         }
 
 
@@ -55,9 +59,12 @@ namespace MyClient.View
             }
             try
             {
-                var res= Global.client.Exec(new SendCMDRequest(dvs.Select(it => it.Item1).ToList(), tcmd.Text));
-                if (res.IsError)
-                    throw new Exception();
+                var req = new DTODefine.Types.Request_SendCMD();
+                req.Dvids.AddRange(dvs.Select(it => it.Item1));
+                req.Cmd = tcmd.Text; 
+                var rsp=deviceServiceClient.SendCMD(req);
+                if (!rsp.Success)
+                    throw new Exception(rsp.Message); 
                 MessageBox.Show("发送成功","提示");
             }
             catch (Exception ex)
@@ -78,7 +85,7 @@ namespace MyClient.View
         {
             if (par.Count()==1&&par[0]!=null && ( par[0] is List<ValueTuple<uint, string>>)  )
             {
-                dvs = (List<ValueTuple<uint, string>>)par[0];
+                dvs = (List<ValueTuple<long, string>>)par[0];
                 RefreshLab();
             }
         }

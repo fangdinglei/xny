@@ -36,10 +36,7 @@ service UserDeviceService {
     //添加用户设备分组
     rpc NewGroup(DTODefine.Request_NewGroup)
         returns (GrpcMain.Common.CommonResponse); 
-    
-    //修改设备分组信息
-    rpc UpdateGroupInfo(DTODefine.Request_UpdateGroupInfo)
-        returns (GrpcMain.Common.CommonResponse); 
+     
 }
 
 
@@ -119,10 +116,6 @@ message DTODefine
     }  
     message Request_NewGroup{
         string Name=1;
-    }
-    message Request_UpdateGroupInfo{
-        int64 GroupId=1;
-        string Name=2;
     } 
     
 }

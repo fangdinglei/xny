@@ -1,59 +1,47 @@
-﻿using System;
+﻿using FdlWindows.View;
+using GrpcMain.UserDevice;
+using MyClient.Grpc;
+using System;
 using System.Collections.Generic; 
 using System.Data; 
 using System.Linq; 
 using System.Windows.Forms;
-using XNYAPI.Model.UserDevice;
-using XNYAPI.Request.UserDevice;
-using XNYAPI.Response;
-
+using static GrpcMain.UserDevice.DTODefine.Types;
 namespace MyClient.View
 {
+    [AutoDetectView("FDeviceGroupManager", "设备分组管理","",true)]
     public partial class FDeviceGroupManager : Form,IView
     {
-        public FDeviceGroupManager()
+        UserDeviceService.UserDeviceServiceClient userDeviceServiceClient;
+        public FDeviceGroupManager(UserDeviceService.UserDeviceServiceClient userDeviceServiceClient)
         {
             InitializeComponent();
             RefreshGroup();
+            this.userDeviceServiceClient = userDeviceServiceClient;
         }
 
-        List<DeviceGroup> groupinfo;
+        List<User_Device_Group> groupinfo;
         void RefreshGroup() {
-            Global.client.ExecAsync(new GetGroupInfoRequest()); 
+            var rsp = userDeviceServiceClient.GetGroupInfos(new Google.Protobuf.WellKnownTypes.Empty());
+            groupinfo = rsp.Groups.ToList();
+            var dl = groupinfo.Select(it => it.Name).ToList();
+            list_Group.DataSource = dl;
         }
 
-        public Control View =>this;
-
-        List<DeviceGroup> NewNetGroupInfo; 
-        void OnNetGroupData(object data)
-        {
-            DataListResponse<DeviceGroup> dt = data as DataListResponse<DeviceGroup>;
-            if (dt == null || dt.IsError)
-                return;
-            NewNetGroupInfo = dt.Data;
-        }
+        public Control View =>this; 
         public void OnEvent(string name, params object[] pars)
         {
             if (name == "Exit")
             {
-                Global.client.RemoveListener(typeof(DataListResponse<DeviceGroup>), OnNetGroupData); 
-            }
+                 }
         } 
         public void PrePare(params object[] par)
         {
-            Global.client.AddListener(typeof(DataListResponse<DeviceGroup>), OnNetGroupData);
             RefreshGroup();
         }
         public void OnTick() {
             if (!Visible)
-                return;
-            if (NewNetGroupInfo != null)
-            {
-                groupinfo = NewNetGroupInfo;
-                NewNetGroupInfo = null;
-                var dl = groupinfo.Select(it => it.Name).ToList(); 
-                list_Group.DataSource = dl; 
-            }
+                return; 
         }
         public void SetViewHolder(IViewHolder viewholder)
         {
@@ -61,12 +49,12 @@ namespace MyClient.View
         }
 
 
-        uint GetSelectedGroupID() {
+       long GetSelectedGroupID() {
             if (list_Group.SelectedIndex >= 0
                    && groupinfo != null
                    && list_Group.SelectedIndex < groupinfo.Count)
             {
-                return groupinfo[list_Group.SelectedIndex].GroupID;
+                return groupinfo[list_Group.SelectedIndex].Id;
             }
             return uint.MaxValue;
         }
@@ -76,24 +64,18 @@ namespace MyClient.View
             try
             {
                 var gid = GetSelectedGroupID();
-                if (gid == uint.MaxValue)
+                if (gid == long.MaxValue)
                     return;
-                var res =Global.client.Exec(new UpdateGroupInfoRequest(gid,"",true));
-                if (res.IsError) {
-                    MessageBox.Show(res.Error, "错误");
-                    return;
-                }
-                 
-                if (res.Suc)
-                {
-                    MessageBox.Show("删除成功", "错误");
-                    RefreshGroup();
-                }
-                else
-                {
-                    MessageBox.Show(res.Data, "错误");
-                }
-              
+                var req = new Request_UpdateGroupInfos();
+                req.Groups.Add(new User_Device_Group() { 
+                    Delet=true,
+                    Id=gid,
+                });
+                var res =userDeviceServiceClient.UpdateGroupInfos(req) ;
+                res.ThrowIfNotSuccess();
+
+                MessageBox.Show("删除成功", "提示");
+                RefreshGroup(); 
             }
             catch (Exception ex)
             {
@@ -105,22 +87,12 @@ namespace MyClient.View
         {
             try
             {
-                var res = Global.client.Exec(new CreatGroupRequest(tname.Text));
-                if (res.IsError)
-                {
-                    MessageBox.Show(res.Error, "错误");
-                    return;
-                }
-
-                if (res.Suc)
-                {
-                    MessageBox.Show("创建成功", "错误");
-                    RefreshGroup();
-                }
-                else
-                {
-                    MessageBox.Show(res.Data, "错误");
-                }
+                var req = new Request_NewGroup();
+                req.Name = tname.Text;
+                var res = userDeviceServiceClient.NewGroup(req);
+                res.ThrowIfNotSuccess(); 
+                MessageBox.Show("创建成功", "错误");
+                RefreshGroup();
             }
             catch (Exception)
             {
@@ -133,25 +105,19 @@ namespace MyClient.View
             try
             {
                 var gid = GetSelectedGroupID();
-                if (gid == uint.MaxValue)
-                    return; 
-                var res = Global.client.Exec(new UpdateGroupInfoRequest(gid, tname.Text, false));
-                if (res.IsError)
-                {
-                    MessageBox.Show(res.Error, "错误");
+                if (gid == long.MaxValue)
                     return;
-                }
-                if (res.Suc)
-                {
-                    MessageBox.Show("修改成功", "错误");
-                    RefreshGroup();
-                }
-                else
-                {
-                    MessageBox.Show(res.Data, "错误");
-                }
-               
-               
+                var req = new Request_UpdateGroupInfos();
+                req.Groups.Add(new User_Device_Group()
+                { 
+                    Id = gid,
+                    Name = tname.Text,
+                });
+                var res = userDeviceServiceClient.UpdateGroupInfos(req);
+                res.ThrowIfNotSuccess();
+
+                MessageBox.Show("修改成功", "错误");
+                RefreshGroup(); 
             }
             catch (Exception)
             {
