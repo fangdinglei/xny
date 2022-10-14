@@ -18,6 +18,7 @@ namespace MyDBContext.Main
         SendDeviceCmd,
     }
     public class  History {
+        public long Id { get; set; }
         public short Type;
 
         public string Data { get; set; }

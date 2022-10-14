@@ -7,6 +7,9 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using Microsoft.EntityFrameworkCore;
+using System;
+
 namespace MyDBContext.Main
 {
     /// <summary>
@@ -18,6 +21,12 @@ namespace MyDBContext.Main
         public long FatherId { get; set; }
         public virtual User Son { get; set; }
         public virtual User Father { get; set; }
+
+        internal static void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User_SF>().HasKey(it=>new { it.FatherId, it.SonId});
+            modelBuilder.Entity<User_SF>().HasIndex(it => new { it.SonId, it.FatherId });
+        }
     } 
 
 }

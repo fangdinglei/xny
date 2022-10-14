@@ -60,12 +60,15 @@ namespace MyDBContext.Main
         {
             base.OnConfiguring(optionsBuilder);
             string s = "server=fdlmaindb.mysql.rds.aliyuncs.com;database=dbbs;user id=fangdinglei;password=FdlMainDB@;port=3306;sslmode=None";
-            optionsBuilder.UseMySql(s,
-                  ServerVersion.AutoDetect(s));
+            //optionsBuilder.UseMySql(s,
+            //      ServerVersion.AutoDetect(s));
+            optionsBuilder.UseInMemoryDatabase("dbbs");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            User_Device.OnModelCreating(modelBuilder);
+            User_SF.OnModelCreating(modelBuilder);
             new BaseValueBuilder().OnModelCreating(modelBuilder);
             //modelBuilder.Entity<User>().HasMany(it => it.Devices).WithMany(it => it.Creator).
             //    UsingEntity<User_Device>( 

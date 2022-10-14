@@ -26,6 +26,6 @@ namespace MyDBContext.Main
         public long CreatorId { get; set; } 
         public virtual User Creator { get;   }
 
-        public virtual Device_AutoControl Device_AutoControl { get; set; } 
+        //public virtual Device_AutoControl Device_AutoControl { get; set; } 
     } 
 }
