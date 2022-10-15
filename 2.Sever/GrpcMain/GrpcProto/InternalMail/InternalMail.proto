@@ -29,6 +29,10 @@ message DTODefine
         string Context =3;
         optional int64 Time=4;
         optional bool Readed=5;
+        optional int64 SenderId =6;
+        int64 ReceiverId =7; 
+        optional int64 LastEMailTime =8;
+
     }
     message Request_SendInternalMail{ 
         InternalMail Mail=1;

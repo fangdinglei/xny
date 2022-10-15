@@ -22,14 +22,25 @@ namespace GrpcMain.InternalMail
         }
 
         
-        public override async Task<CommonResponse> SendMail(Request_SendInternalMail request, ServerCallContext context)
+        public override async Task<CommonResponse?> SendMail(Request_SendInternalMail request, ServerCallContext context)
         {
+            long id = (long)context.UserState["CreatorId"];
             request.Mail.Time = _timeutility.GetTicket();
             using (MainContext ct = new MainContext())
             {
+                var count=await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.Mail.ReceiverId).CountAsync();
+                if (count==0)
+                {
+                    context.Status = new Status( StatusCode.PermissionDenied,"无权给该用户发邮件");
+                    return null;
+                }
+
                 ct.Internal_Mails.Add(
                     new Internal_Mail
                     {
+                        SenderId= id,
+                        LastEMailTime=0,
+                        ReceiverId=request.Mail.ReceiverId,
                         Readed = false,
                         Context = request.Mail.Context,
                         Title = request.Mail.Title,

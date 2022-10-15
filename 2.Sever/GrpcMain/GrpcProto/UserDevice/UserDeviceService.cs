@@ -29,7 +29,7 @@ namespace GrpcMain.UserDevice
             using (MainContext ct = new MainContext())
             {
                 if (request.UserDevice.UserId == id ||
-                                    await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == request.UserId).CountAsync() == 0)
+                                    await ct.User_SFs.Where(it => it.User1Id== id && it.User2Id == request.UserId&&it.IsFather).CountAsync() == 0)
                 {
                     context.Status = new Status(StatusCode.PermissionDenied, "指定了无效的接收用户");
                     return null;
@@ -109,7 +109,7 @@ namespace GrpcMain.UserDevice
                 IQueryable<MyDBContext.Main.User_Device> bd;
                 if (qid != id)
                 {
-                    var count = await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == qid).CountAsync();
+                    var count = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == qid&&it.IsFather).CountAsync();
                     if (count == 0)
                     {
                         context.Status = new Status(StatusCode.PermissionDenied, "只能查询自己和子用户");
@@ -211,7 +211,7 @@ namespace GrpcMain.UserDevice
                 IQueryable<MyDBContext.Main.User_Device> bd;
                 if (qid != id)
                 {
-                    var count = await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == qid).CountAsync();
+                    var count = await ct.User_SFs.Where(it => it.User1Id== id && it.User2Id== qid&&it.IsFather).CountAsync();
                     if (count == 0)
                     {
                         context.Status = new Status(StatusCode.PermissionDenied, "只能查询自己和子用户");

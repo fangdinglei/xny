@@ -13,19 +13,20 @@ using System;
 namespace MyDBContext.Main
 {
     /// <summary>
-    /// 记录用户父子映射 也包含自己和自己
+    /// 记录用户父子映射  
     /// </summary>
     public class User_SF {
-
-        public long SonId { get; set; }
-        public long FatherId { get; set; }
-        public virtual User Son { get; set; }
-        public virtual User Father { get; set; }
+        public long User1Id { get; set; }
+        public long User2Id { get; set; } 
+        public bool IsFather { get; set; }
+        public bool IsSelf { get; set; } 
+        public virtual User User1 { get; set; }
+        public virtual User User2 { get; set; }
 
         internal static void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User_SF>().HasKey(it=>new { it.FatherId, it.SonId});
-            modelBuilder.Entity<User_SF>().HasIndex(it => new { it.SonId, it.FatherId });
+            modelBuilder.Entity<User_SF>().HasKey(it=>new { it.User1Id, it.User2Id });
+            //modelBuilder.Entity<User_SF>().HasIndex(it => new { it.SonId, it.FatherId });
         }
     } 
 

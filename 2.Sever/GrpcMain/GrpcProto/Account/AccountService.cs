@@ -78,13 +78,14 @@ namespace GrpcMain.Account
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
-                var sf = await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == request.UserId).AsNoTracking().SingleOrDefaultAsync();
+                var sf = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.UserId &&it.IsFather).AsNoTracking().SingleOrDefaultAsync();
                 if (sf == null)
                 {
                     context.Status = new Status(StatusCode.PermissionDenied, "没有该子用户");
                     return null;
                 }
-                ct.Remove(sf.Son);
+                throw new Exception("维护中");
+                //ct.Remove(sf.Son);
                 await ct.SaveChangesAsync();
             }
             return new CommonResponse()
@@ -101,7 +102,7 @@ namespace GrpcMain.Account
             {
                 if (request.HasUid)
                 {//改子用户
-                    var sf = await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == request.Uid)
+                    var sf = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.Uid&&it.IsFather)
                         .AsNoTracking().FirstOrDefaultAsync();
                     if (sf == null)
                     {
@@ -163,19 +164,30 @@ namespace GrpcMain.Account
                 ct.Add(user);
                 await ct.SaveChangesAsync();
 
-                var users = await ct.User_SFs.Where(it => it.SonId == id).Select(it => it.FatherId).ToListAsync();
+                var users = await ct.User_SFs.Where(it => it.User1Id == id&&it.IsFather||it.IsSelf).Select(it => it.User2Id).ToListAsync();
                 foreach (var item in users)
                 {
                     ct.Add(new User_SF()
                     {
-                        FatherId = item,
-                        SonId = user.Id,
+                        User1Id = item,
+                        User2Id = user.Id,
+                        IsSelf=false,
+                        IsFather=true,
+                    }); 
+                    ct.Add(new User_SF()
+                    {
+                        User1Id = user.Id,
+                        User2Id = item,
+                        IsSelf = false,
+                        IsFather = false,
                     });
                 }
                 ct.Add(new User_SF()
                 {
-                    FatherId = user.Id,
-                    SonId = user.Id,
+                    User1Id = user.Id,
+                    User2Id  = user.Id,
+                    IsSelf = true,
+                    IsFather=false,
                 });
                 await ct.SaveChangesAsync();
                 await trans.CommitAsync();
@@ -233,7 +245,7 @@ namespace GrpcMain.Account
                 //鉴权
                 if (request.UserInfo.ID != id)
                 {
-                    var sf = await ct.User_SFs.Where(it => it.FatherId == id && it.SonId == request.UserInfo.ID)
+                    var sf = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.UserInfo.ID&&it.IsFather)
                        .AsNoTracking().FirstOrDefaultAsync();
                     if (sf == null)
                     {
@@ -241,7 +253,7 @@ namespace GrpcMain.Account
                         return null;
                     }
                 }
-                user = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
+                user = await ct.Users.Where(it => it.Id == request.UserInfo.ID).FirstOrDefaultAsync();
                 if (user == null)
                 {
                     throw new Exception("用户应当不空但是为空");

@@ -31,30 +31,27 @@ namespace MyDBContext.Main
         /// <returns></returns>
         static public async Task<OwnerType> GetOwnerTypeAsync(this IHasCreator creator, MainContext ct, long uid)
         {
+            var u1 = creator.Id;
+            var u2 = uid; 
             var sf = await ct.User_SFs
-              .Where(it => it.SonId == uid && it.FatherId == creator.CreatorId
-              || it.FatherId == uid && it.SonId == creator.CreatorId)
+              .Where(it => it.User1Id == u1 && it.User2Id == u2 )
                .AsNoTracking().FirstOrDefaultAsync();
             if (sf != null)
             {
                 return OwnerType.Non;
             }
-            else if (sf.SonId == sf.FatherId)
+            else if (sf.IsSelf)
             {
                 return OwnerType.Creator;
             }
-            else if (sf.FatherId == uid)
+            else if (sf.IsFather)
             {
                 return OwnerType.FatherOfCreator;
             }
-            else if (sf.SonId == uid)
+            else  
             {
                 return OwnerType.SonOfCreator;
-            }
-            else
-            {
-                return OwnerType.Non;
-            }
+            } 
 
         }
         /// <summary>
@@ -69,29 +66,25 @@ namespace MyDBContext.Main
             IQueryable<TEntity> bd;
             if (fathervisitson && sonvisitfather)
             {
-                var bd1 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.SonId,
+                var bd1 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                  (dt, us) => new { us, dt })
-                 .Where(it => it.us.FatherId == uid)
-                 .Select(it => it.dt);
-                var bd2 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.FatherId,
-                   (dt, us) => new { us, dt })
-                   .Where(it => it.us.SonId == uid)
-                   .Select(it => it.dt);
-                bd = bd1.Union(bd2);
+                 .Where(it => it.us.User2Id == uid)
+                 .Select(it => it.dt); 
+                bd = bd1 ;
             }
             else if (fathervisitson)
             {
-                bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.SonId,
+                bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                    (dt, us) => new { us, dt })
-                   .Where(it => it.us.FatherId == uid)
+                   .Where(it => it.us.User2Id == uid &&(!it.us.IsFather ||it.us.IsSelf))
                    .Select(it => it.dt);
             }
             else if (sonvisitfather)
             {
-                bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.FatherId,
-                   (dt, us) => new { us, dt })
-                   .Where(it => it.us.SonId == uid)
-                   .Select(it => it.dt);
+                bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
+                     (dt, us) => new { us, dt })
+                     .Where(it => it.us.User2Id == uid && (it.us.IsFather || it.us.IsSelf))
+                     .Select(it => it.dt);
             }
             else
             {//只获取自己创建的
@@ -129,29 +122,25 @@ namespace MyDBContext.Main
             IQueryable<TEntity> bd;
             if (fathervisitson && sonvisitfather)
             {
-                var bd1 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.SonId,
+                var bd1 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                  (dt, us) => new { us, dt })
-                 .Where(it => it.us.FatherId == uid)
+                 .Where(it => it.us.User2Id == uid)
                  .Select(it => it.dt);
-                var bd2 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.FatherId,
-                   (dt, us) => new { us, dt })
-                   .Where(it => it.us.SonId == uid)
-                   .Select(it => it.dt);
-                bd = bd1.Union(bd2);
+                bd = bd1;
             }
             else if (fathervisitson)
             {
-                bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.SonId,
+                bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                    (dt, us) => new { us, dt })
-                   .Where(it => it.us.FatherId == uid)
+                   .Where(it => it.us.User2Id == uid && (!it.us.IsFather || it.us.IsSelf))
                    .Select(it => it.dt);
             }
             else if (sonvisitfather)
             {
-                bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.FatherId,
-                   (dt, us) => new { us, dt })
-                   .Where(it => it.us.SonId == uid)
-                   .Select(it => it.dt);
+                bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
+                     (dt, us) => new { us, dt })
+                     .Where(it => it.us.User2Id == uid && (it.us.IsFather || it.us.IsSelf))
+                     .Select(it => it.dt);
             }
             else
             {//只获取自己创建的
@@ -174,7 +163,7 @@ namespace MyDBContext.Main
             {
                 bd = bd.AsNoTracking();
             }
-            return await bd.CountAsync() ;
+            return await bd.CountAsync();
         }
     }
 }
