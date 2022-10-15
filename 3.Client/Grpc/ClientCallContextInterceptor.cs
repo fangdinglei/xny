@@ -27,8 +27,8 @@ namespace MyClient.Grpc
             throw new Exception(String.IsNullOrWhiteSpace(rsp.Message   )?"未知错误": rsp.Message);
         } 
         static public void UserGrpc(this IServiceCollection serviceCollection)
-        {
-            var channel = new Channel("127.0.0.1", 5008, ChannelCredentials.Insecure);
+        { 
+            var channel = new Channel("localhost", 5008, ChannelCredentials.SecureSsl);
             var interceptor = new ClientCallContextInterceptor();
            var interceptorchannel= channel.Intercept(interceptor);
             //serviceCollection.TryAddSingleton<ChannelBase>(channel);

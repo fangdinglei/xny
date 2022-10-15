@@ -15,7 +15,7 @@ using MyJwtHelper;
 using MyUtility;
 using System.Reflection;
 
-namespace PgGrpcMain
+namespace GrpcMain
 {
     static public class MyGrpcExtension
     {

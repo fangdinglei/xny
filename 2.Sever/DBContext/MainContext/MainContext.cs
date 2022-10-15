@@ -294,21 +294,7 @@ namespace MyDBContext.Main
                 IsSelf = false,
                 User1Id = 5,
                 User2Id = 3,
-            });
-            modelBuilder.Entity<User_SF>().HasData(new User_SF()
-            {
-                IsFather = true,
-                IsSelf = false,
-                User1Id = 2,
-                User2Id = 4,
-            });
-            modelBuilder.Entity<User_SF>().HasData(new User_SF()
-            {
-                IsFather = false,
-                IsSelf = false,
-                User1Id = 4,
-                User2Id = 2,
-            });
+            }); 
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
                 IsFather = false,
@@ -394,21 +380,7 @@ namespace MyDBContext.Main
                 IsSelf = false,
                 User1Id = 13,
                 User2Id = 11,
-            });
-            modelBuilder.Entity<User_SF>().HasData(new User_SF()
-            {
-                IsFather = true,
-                IsSelf = false,
-                User1Id = 10,
-                User2Id = 12,
-            });
-            modelBuilder.Entity<User_SF>().HasData(new User_SF()
-            {
-                IsFather = false,
-                IsSelf = false,
-                User1Id = 12,
-                User2Id = 10,
-            });
+            }); 
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
                 IsFather = false,

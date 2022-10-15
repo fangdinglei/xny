@@ -1,4 +1,4 @@
-﻿namespace PgGrpcMain.Common
+﻿namespace GrpcMain.Common
 {
     public class Settings
     {

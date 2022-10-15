@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PgGrpcMain.Common
+namespace GrpcMain.Common
 {
     public class RandomUtility
     {
