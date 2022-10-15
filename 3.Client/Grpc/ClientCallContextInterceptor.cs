@@ -47,14 +47,39 @@ namespace MyClient.Grpc
         public string? Token;  
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
-            var contextx = new ClientInterceptorContext<TRequest, TResponse>(context.Method, context.Host, new CallOptions(null, DateTime.UtcNow.AddSeconds(500)));
+            CallOptions options = context.Options;
+            if (Token!=null)
+            {
+                if (context.Options.Headers == null) {
+                    options = new CallOptions(new Metadata(),DateTime.Now.AddSeconds(8),options.CancellationToken
+                        ,options.WriteOptions,options.PropagationToken,options.Credentials); 
+                }
+#pragma warning disable CS8602 // 解引用可能出现空引用。
+                options.Headers.Add("Token", Token);
+#pragma warning restore CS8602 // 解引用可能出现空引用。
+            } 
+            var contextx = new ClientInterceptorContext<TRequest, TResponse>
+                (context.Method, context.Host, options);
             return continuation(request, contextx);
         }
 
         public override TResponse BlockingUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, BlockingUnaryCallContinuation<TRequest, TResponse> continuation) where TRequest : class where TResponse : class
         {
-            var contextx = new ClientInterceptorContext<TRequest, TResponse>(context.Method, context.Host, new CallOptions(null, DateTime.UtcNow.AddSeconds(500)));
-            return continuation(request, contextx);
+            CallOptions options = context.Options;
+            if (Token != null)
+            {
+                if (context.Options.Headers == null)
+                {
+                    options = new CallOptions(new Metadata(), DateTime.Now.AddSeconds(8), options.CancellationToken
+                        , options.WriteOptions, options.PropagationToken, options.Credentials);
+                }
+#pragma warning disable CS8602 // 解引用可能出现空引用。
+                options.Headers.Add("Token", Token);
+#pragma warning restore CS8602 // 解引用可能出现空引用。
+            }
+            var contextx = new ClientInterceptorContext<TRequest, TResponse>
+                (context.Method, context.Host, options);
+            return continuation(request, contextx); 
         }
     }
 }

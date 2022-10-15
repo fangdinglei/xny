@@ -12,7 +12,7 @@
         ///  当NeedAudit并且状态为Cancel并且包含AuditorId 自动记录审计
         /// </summary>
         public bool NeedAudit { get; private set; }
-        public string NeedAudit_OpName { get; private set; }
+        public string? NeedAudit_OpName { get; private set; }
         public GrpcRequireAuthorityAttribute()
         {
             NeedLogin = true;

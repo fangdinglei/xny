@@ -7,6 +7,7 @@ using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
 using GrpcMain.InternalMail;
 using GrpcMain.UserDevice;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using MyDBContext.Main;
@@ -72,6 +73,26 @@ namespace PgGrpcMain
             }
         }
 
+       static bool TryDeserializeObject<T>(this  string json,out T? obj)where T:class
+        {
+           
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                obj = null;
+                return false;
+            }
+            try
+            {
+                 obj=Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json); 
+                return obj != null;
+            }
+            catch (Exception)
+            {
+                obj = null;
+                return false;
+            }
+        }
+
 
         internal class MyGrpcHandle : IGrpcHandle
         {
@@ -89,25 +110,37 @@ namespace PgGrpcMain
                 _timeUtility = timeUtility;
             }
 
-            public bool Authorize(ServerCallContext context, GrpcRequireAuthorityAttribute att, out string error)
+            public async Task<(bool,string?  )> Authorize(ServerCallContext context, GrpcRequireAuthorityAttribute att )
             {
                 object token;
-                if ((token = context.RequestHeaders.Get("Token")) == null)
+                var et = context.RequestHeaders.Get("Token");
+                if (et == null|| (token = et.Value) == null)
                 {
-                    error = "请添加Token再访问";
-                    return false;
+                    return (false, "请添加Token再访问"); 
                 }
                 var tokenstr = (string)token;
                 var jwt = _jwtHelper.Get<TokenClass>(tokenstr);
                 if (jwt == null)
-                {
-                    error = "token无效";
-                    return false;
+                { 
+                    return (false, "token无效");
                 }
-
+                if (att.Authoritys!=null&&att.Authoritys.Count()>0)
+                {//校验高级权限
+                    using (MainContext ct = new MainContext()) {
+                       var authoritys=await ct.Users.Where(it => it.Id == jwt.Id).Select(it => it.Authoritys).FirstOrDefaultAsync();
+                        List<string>? authoritysx;
+                        if (authoritys == null || !authoritys.TryDeserializeObject(out authoritysx)||authoritysx==null) {
+                            return (false, "需要高级权限 " + att.Authoritys[0]);  
+                        }
+                        var nothave = att.Authoritys.Except(authoritysx);
+                        if (nothave.Count()!=0)
+                        {
+                            return (false, "需要高级权限 " + nothave.First());
+                        } 
+                    }    
+                }
                 context.UserState["CreatorId"] = jwt.Id;
-                error = "";
-                return true;
+                return (true, null);
             }
 
             public string GetToken(TokenClass tokenClass)

@@ -31,8 +31,8 @@ namespace GrpcMain
                 GrpcRequireAuthorityAttribute? at;
                 if (!AuthorityAttributes.TryGetValue(context.Method, out at) || at == null)
                 {  //默认鉴权 不审计
-                    string errormsg;
-                    var canvisit = _Handle.Authorize(context, at, out errormsg);
+                    string? errormsg;
+                    (var canvisit, errormsg) =await _Handle.Authorize(context, at);
                     if (canvisit == false)
                     {
                         context.Status = new Status(StatusCode.PermissionDenied, errormsg);
@@ -48,8 +48,8 @@ namespace GrpcMain
                 }
                 else
                 {
-                    string errormsg;
-                    var canvisit = _Handle.Authorize(context, at, out errormsg);
+                    string? errormsg;
+                    (var canvisit, errormsg) = await _Handle.Authorize(context, at );
                     if (canvisit == false)
                     {
                         context.Status = new Status(StatusCode.PermissionDenied, errormsg);

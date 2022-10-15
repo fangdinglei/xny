@@ -23,7 +23,10 @@ namespace MyDBContext.Main
         public string EMail { get; set; }
         public byte Status { get; set; }
         public long LastLogin { get; set; }
-         
+
+        [Required]
+        public string Authoritys { get; set; } 
+
         public virtual User? Creator { get; set; }
         public long  CreatorId { get; set; }
 
