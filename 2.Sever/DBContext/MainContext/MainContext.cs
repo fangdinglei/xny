@@ -110,8 +110,9 @@ namespace MyDBContext.Main
                 Pass = "123",
                 Phone = "15850798245",
                 CreatorId =0,
+                Authoritys="[]"
 
-            });
+            });;
         }
     }
 

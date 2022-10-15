@@ -89,8 +89,9 @@ message DTODefine
 
 
     message Request_GetDevices{
-         optional int64 Cursor=1;
-         optional int64 GroupId=2;
+        //设备ID
+        optional int64 Cursor=1;
+        optional int64 GroupId=2;
     }
     message Response_GetDevices{
         //0后续无数据

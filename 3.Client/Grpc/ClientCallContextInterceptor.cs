@@ -51,7 +51,7 @@ namespace MyClient.Grpc
             if (Token!=null)
             {
                 if (context.Options.Headers == null) {
-                    options = new CallOptions(new Metadata(),DateTime.Now.AddSeconds(8),options.CancellationToken
+                    options = new CallOptions(new Metadata(),DateTime.UtcNow.AddSeconds(8),options.CancellationToken
                         ,options.WriteOptions,options.PropagationToken,options.Credentials); 
                 }
 #pragma warning disable CS8602 // 解引用可能出现空引用。
@@ -70,7 +70,7 @@ namespace MyClient.Grpc
             {
                 if (context.Options.Headers == null)
                 {
-                    options = new CallOptions(new Metadata(), DateTime.Now.AddSeconds(8), options.CancellationToken
+                    options = new CallOptions(new Metadata(), DateTime.UtcNow.AddSeconds(8), options.CancellationToken
                         , options.WriteOptions, options.PropagationToken, options.Credentials);
                 }
 #pragma warning disable CS8602 // 解引用可能出现空引用。

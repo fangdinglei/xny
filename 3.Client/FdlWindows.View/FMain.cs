@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace FdlWindows.View
 {
@@ -85,8 +86,11 @@ namespace FdlWindows.View
         /// <returns></returns>
         IView GetOrCreatView(string name)
         {
-            if (Views.ContainsKey(name) && Views[name].Count > 0)
-                return Views[name].Dequeue();
+            if (Views.ContainsKey(name) && Views[name].Count > 0) {
+                var t = Views[name].Dequeue(); 
+                return t;
+            }
+             
             IView? _interface =serviceProvider.GetService (ViewClassType[name])  as IView;
             if (_interface == null)
             {
@@ -120,9 +124,36 @@ namespace FdlWindows.View
             {
                 Views.Add(name, new Queue<IView>());
             }
-            NameofViewInstance.Add(_interface  , name);
+            NameofViewInstance.Add(_interface, name);
             return _interface  ;
         }
+        void OnViewClose(IView view ) {
+            //窗口关闭
+            if (Windows.Count > 0)
+            {
+                try
+                {
+                    Windows.Peek().OnEvent("UnCovered");
+                    Windows.Peek().View.Visible = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "界面UnCovered失败");
+                    NameofViewInstance.Remove(view);
+                    return;
+                } 
+            }
+            var iname = NameofViewInstance[view];
+            if (Views[iname].Count > MaxSameViewInstance)
+            {
+                NameofViewInstance.Remove(view);
+            }
+            else
+            {
+                Views[iname].Enqueue(view);
+            }
+        }
+
         /// <summary>
         /// 打开指定页面
         /// </summary>
@@ -148,17 +179,7 @@ namespace FdlWindows.View
                     }
                     else
                     {
-                        var iname = NameofViewInstance[formold];
-                        formold.View.Visible = false;
-                        if (Views[iname].Count > MaxSameViewInstance)
-                        {
-                            NameofViewInstance.Remove(formold);
-                        }
-                        else
-                        {
-                            Views[iname].Enqueue(formold);
-                        }
-
+                        OnViewClose(formold );
                     }
                 }
                 if (ViewNodes.ContainsKey(name))
@@ -178,17 +199,21 @@ namespace FdlWindows.View
                     throw new Exception("该界面只能附加在其他界面上");
                 }
             }
-            if (Windows.Count > 0)
-            {
-                Windows.Peek().OnEvent("Covered");
-                Windows.Peek().View.Visible = false;
-            }
             //显示界面
             var iuserview = GetOrCreatView(name);
-            iuserview.SetViewHolder(this);
-            iuserview.PrePare(par);
-            Windows.Push(iuserview);
-            iuserview.View.Visible = true;
+            try
+            {
+                iuserview.SetViewHolder(this);
+                iuserview.PrePare(par);
+                Windows.Push(iuserview);
+                iuserview.View.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                OnViewClose(iuserview);
+                MessageBox.Show(ex.Message,"界面初始化失败"); 
+            }
+        
             return true;
         }
 
@@ -250,7 +275,7 @@ namespace FdlWindows.View
                 return;
             ViewMeunPaths.Add(Name, menupath);
             ViewClassType.Add(Name, classtype);
-            serviceCollection.AddSingleton(classtype);
+            serviceCollection.AddTransient(classtype);
             if (rebuiltServiceProvider)
                 serviceProvider = serviceCollection.BuildServiceProvider();
 
@@ -282,21 +307,7 @@ namespace FdlWindows.View
                 else
                 {
                     view.View.Visible = false;
-                    //窗口关闭
-                    if (Windows.Count > 0)
-                    {
-                        Windows.Peek().OnEvent("UnCovered");
-                        Windows.Peek().View.Visible = true;
-                    }
-                    var iname = NameofViewInstance[view];
-                    if (Views[iname].Count > MaxSameViewInstance)
-                    {
-                        NameofViewInstance.Remove(view);
-                    }
-                    else
-                    {
-                        Views[iname].Enqueue(view);
-                    }
+                    OnViewClose(view);
                 }
             }
         }

@@ -4,6 +4,7 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using System.Linq;
 using static GrpcMain.UserDevice.DTODefine.Types;
 
 namespace GrpcMain.UserDevice
@@ -11,9 +12,14 @@ namespace GrpcMain.UserDevice
     public class UserDeviceServiceImp : UserDeviceService.UserDeviceServiceBase
     {
         ITimeUtility _timeutility;
-        public UserDeviceServiceImp(ITimeUtility time)
+        IGrpcCursorUtility _cursorUtility;
+
+ 
+
+        public UserDeviceServiceImp(ITimeUtility time, IGrpcCursorUtility cursorUtility)
         {
-            _timeutility = time;
+            _timeutility = time; 
+            _cursorUtility = cursorUtility;
         }
         
         public override async Task<CommonResponse?> UpdateUserDevice(Request_UpdateUserDevice request, ServerCallContext context)
@@ -247,6 +253,40 @@ namespace GrpcMain.UserDevice
                 }));
                 return res;
             }
+        }
+
+        public override async Task<Response_GetDevices> GetDevices(Request_GetDevices request, ServerCallContext context)
+        {
+            int maxcount = 1000 + 1;
+            long id = (long)context.UserState["CreatorId"];
+            Response_GetDevices res = new Response_GetDevices();
+            using (MainContext ct = new MainContext()) {
+                var bd = ct.User_Devices.Join(ct.Devices, it => it.DeviceId, it => it.Id, (a, device) => new { a.UserId, a.User_Device_GroupId, device });
+                bd = bd.Where(it => it.UserId== id);
+                if (request.HasGroupId)
+                {
+                    bd = bd.Where(it=>it.User_Device_GroupId==request.GroupId);
+                }
+                if (request.HasCursor)
+                {
+                    bd = bd.Where(it => it.device.Id>=request.Cursor); 
+                }
+                var ls =await bd.ToListAsync();
+                var lsx  =_cursorUtility.Run(ls, maxcount, (it) => res.Cursor = it.device.Id);
+                res.Devices.AddRange(lsx.Select(it => 
+                    new global::GrpcMain.Device.DTODefine.Types.Device
+                    {
+                        Id=it.device.Id,
+                        DeviceTypeId=it.device.DeviceTypeId,
+                        GroupId=it.User_Device_GroupId,
+                        LatestData=it.device.LatestData,
+                        LocationStr=it.device.LocationStr,
+                        Name=it.device.Name,
+                        Status=it.device.Status,
+                    } 
+                ));
+            }
+            return res;
         }
     }
 }

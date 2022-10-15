@@ -20,6 +20,14 @@
 
     public class GrpcCursorUtilityImp : IGrpcCursorUtility
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="maxcount">实际获取为maxcount-1个</param>
+        /// <param name="onlast"></param>
+        /// <returns></returns>
         public IEnumerable<T> Run<T>(IEnumerable<T> list, int maxcount, Action<T > onlast)
         {
             if (list.Count()==maxcount)

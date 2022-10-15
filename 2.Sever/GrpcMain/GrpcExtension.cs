@@ -124,7 +124,7 @@ namespace PgGrpcMain
                 { 
                     return (false, "token无效");
                 }
-                if (att.Authoritys!=null&&att.Authoritys.Count()>0)
+                if (att!=null&&att.Authoritys!=null&&att.Authoritys.Count()>0)
                 {//校验高级权限
                     using (MainContext ct = new MainContext()) {
                        var authoritys=await ct.Users.Where(it => it.Id == jwt.Id).Select(it => it.Authoritys).FirstOrDefaultAsync();

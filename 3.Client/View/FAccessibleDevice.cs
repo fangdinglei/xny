@@ -140,7 +140,7 @@ namespace MyClient.View
         }
 
         public void PrePare(params object[] par)
-        {
+        { 
             brefresh_Click(null,null);
         } 
         public void OnEvent(string name, params object[] pars)
