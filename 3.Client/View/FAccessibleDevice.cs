@@ -8,10 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using static GrpcMain.Device.DTODefine.Types;
 using static GrpcMain.DeviceType.DTODefine.Types;
 using static GrpcMain.UserDevice.DTODefine.Types;
+using TypeInfo = GrpcMain.DeviceType.DTODefine.Types.TypeInfo;
+
 namespace MyClient.View
 {
     [AutoDetectView("全部设备", "全部设备", "", true)]
@@ -67,6 +70,7 @@ namespace MyClient.View
                  },
                  okcall: () =>
                  {
+                     RefreshGroupList();
                      RefreshDeviceInTab();
                      brefresh.Enabled = true;
                  },
@@ -75,6 +79,26 @@ namespace MyClient.View
                      brefresh.Enabled = true;
                  }
             );
+        }
+
+        /// <summary>
+        /// 刷新设备分组列表
+        /// </summary>
+        void RefreshGroupList()
+        {
+            list_Group.DataSource=null;
+            var ginfo = new List<User_Device_Group>();
+            ginfo.Add(new User_Device_Group() { 
+                Id=0,
+                Name="全部",
+            }); 
+            ginfo.Add(new User_Device_Group()
+            {
+                Id = 0,
+                Name = "默认分组",
+            });
+            ginfo.AddRange(groups);
+            list_Group.DataSource = ginfo.Select(it=>it.Name).ToList();
         }
         async Task<bool> RefreshDatas()
         {
@@ -97,22 +121,36 @@ namespace MyClient.View
         }
         void RefreshDeviceInTab()
         {
+            var idx =
+                list_Group.SelectedIndex == -1 ? 0 : list_Group.SelectedIndex;
             if (groups != null && dvinfos != null
-               && list_Group.SelectedIndex >= 0
-               && list_Group.SelectedIndex < list_Group.Items.Count
+               && idx >= 0
+               && idx < list_Group.Items.Count
                )
             {
                 var dt = table.Clone();
                 foreach (var device in dvinfos)
                 {
-                    //如果所选分组和当前分组不一致 则跳过
-                    if (device.UserDevice.UserDeviceGroup == 0 && list_Group.SelectedIndex != 0
-                        || device.UserDevice.UserDeviceGroup != 0 && groups[list_Group.SelectedIndex].Id != device.UserDevice.UserDeviceGroup)
+                    //选择全部
+                    var c0 = idx == 0;
+                    //默认分组且符合
+                    var c1 = c0||idx == 1 && device.UserDevice.UserDeviceGroup == 0;
+                    //或 不是默认分组且符合
+                    var c2 = c1||idx > 1 && groups[idx - 2].Id == device.UserDevice.UserDeviceGroup;
+                    //或 是默认分组和设备分组信息不存在 防止出现不一致导致无法访问设备
+                    var c3 = c2 || 
+                        idx == 0 && groups.Find(it => it.Id == device.UserDevice.UserDeviceGroup ) == null ;
+                    if (!c3)
                         continue;
                     DataRow dr = dt.NewRow();
                     dr["Name"] = device.Device.Name;
                     dr["ID"] = device.Device.Id;
-                    dr["Status"] = "未知";
+                    dr["Status"] = device.Device.Status switch { 
+                        1=>"未激活",
+                        2=>"离线",
+                        3=>"在线",
+                        _=>"未知"
+                    };
                     var tinfo = typeInfos.Find(it => it.Id == device.Device.DeviceTypeId);
                     if (tinfo != null)
                     {

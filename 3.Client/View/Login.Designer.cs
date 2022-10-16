@@ -61,7 +61,7 @@
             this.tUName.Name = "tUName";
             this.tUName.Size = new System.Drawing.Size(279, 30);
             this.tUName.TabIndex = 17;
-            this.tUName.Text = "admin";
+            this.tUName.Text = "user2";
             // 
             // label
             // 

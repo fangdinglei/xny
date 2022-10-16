@@ -16,6 +16,7 @@ namespace MyClient
             services.AddSingleton<FMain >();
             services.AddSingleton(new FMainOption() { 
                  Title="智慧农业", 
+                 CloseCall=()=> System.Environment.Exit(0)
             });
 
             var provider = services.BuildServiceProvider( ); 

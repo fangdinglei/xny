@@ -33,8 +33,16 @@ namespace MyClient.View
 
         void OnSuccess() {
             setisloading(false);
-            loading = false; 
-            okcall?.Invoke();
+            loading = false;
+            try
+            {
+                okcall?.Invoke();
+            }
+            catch (Exception)
+            {
+                Debug.Assert(false,"回调失败");
+            }
+        
             okcall = null;
             exitcall = null;
             _viewholder.Back();
@@ -113,7 +121,15 @@ namespace MyClient.View
         {
             if (name == "Exit")
             {
-                exitcall?.Invoke();
+                try
+                {
+                    exitcall?.Invoke();
+                }
+                catch (Exception)
+                {
+                    Debug.Assert(false, "回调失败");
+                }
+               
                 //FormExitEventArg arg = pars[0] as FormExitEventArg;
                 //arg.Cancel = !arg.IsForNewWindow; 
             }

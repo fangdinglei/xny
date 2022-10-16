@@ -58,7 +58,6 @@ namespace MyClient.View
             }
             m.Show();
             this.Hide();
-
         } 
 
         /// <summary>
