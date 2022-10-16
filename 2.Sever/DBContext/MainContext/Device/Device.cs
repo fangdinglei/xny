@@ -18,6 +18,9 @@ namespace MyDBContext.Main
         public long Id { get; set; }
         public string Name { get; set; }
 
+        /// <summary>
+        /// 1未激活 2离线 3在线 4
+        /// </summary>
         public int Status { get; set; }
         public string LatestData { get; set; }
         public string  LocationStr { get; set; }

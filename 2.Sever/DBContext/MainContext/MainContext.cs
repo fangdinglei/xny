@@ -102,20 +102,24 @@ namespace MyDBContext.Main
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             /*
-             用户初始化
+             初始化
                         admin-系统用户[SystemUser]
                         
-                        user2-顶级用户
+                        user2-顶级用户      -设备1(分组1) 2 3
                         /   \
-                     user3  user4
-                      /
-                   user5
+                     user3   \              -设备1(分组2) 2  
+                      /      user4          -设备1
+                   user5                    -设备1
 
                        user10-顶级用户
                        /   \
-                    user11  user12
-                     /
-                  user13
+                    user11  \  
+                     /      user12
+                  user13 
+
+                设备1 -类型1
+                设备2 -类型1
+                设备3 -类型2
              */
 
             #region 用户
@@ -404,7 +408,127 @@ namespace MyDBContext.Main
             });
             #endregion
 
+            #region 设备添加
+            modelBuilder.Entity<Device_Type>().HasData(
+                new Device_Type() { 
+                    Id=1,
+                    Name="测试类型1",
+                    CreatorId=2,
+                    DataPoints="[]",
+                    Script="",
+                }
+                , new Device_Type()
+                {
+                    Id = 2,
+                    Name = "测试类型2",
+                    CreatorId = 2,
+                    DataPoints = "[]",
+                    Script = "",
+                }
 
+                );
+            modelBuilder.Entity<User_Device_Group>().HasData(
+              new User_Device_Group()
+              {
+                  Id = 1,
+                  Name = "测试分组1",
+                  CreatorId = 2, 
+              } ,
+               new User_Device_Group()
+               {
+                   Id = 2,
+                   Name = "测试分组2",
+                   CreatorId = 3,
+               }
+              );
+            modelBuilder.Entity<Device>().HasData(
+                new Device() { 
+                    Id=1,
+                    Name="设备1",
+                    CreatorId=2,
+                    DeviceTypeId=1,
+                    LatestData="{}",
+                    LocationStr="",
+                    Status=2,
+                }
+                , new Device()
+                {
+                    Id = 2, 
+                    Name = "设备2",
+                    CreatorId = 2,
+                    DeviceTypeId = 1,
+                    LatestData = "{}",
+                    LocationStr = "",
+                    Status = 2,
+                }
+                , new Device()
+                {
+                    Id = 3,
+                    Name = "设备3",
+                    CreatorId = 2,
+                    DeviceTypeId = 2,
+                    LatestData = "{}",
+                    LocationStr = "",
+                    Status = 2,
+                } 
+            );
+            modelBuilder.Entity<User_Device>().HasData(
+                new User_Device()
+                {
+                    UserId = 2,
+                    DeviceId = 1,
+                    PControl = true,
+                    PData = true,
+                    PStatus = true,
+                    User_Device_GroupId =1,
+                }
+                , new User_Device()
+                {
+                    UserId = 2,
+                    DeviceId = 2,
+                    PControl = true,
+                    PData = true,
+                    PStatus = true,
+                    User_Device_GroupId = 0,
+                }
+                , new User_Device()
+                {
+                    UserId = 2,
+                    DeviceId = 3,
+                    PControl = true,
+                    PData = true,
+                    PStatus = true,
+                    User_Device_GroupId = 0,
+                }
+                , new User_Device()
+                {
+                    UserId = 3,
+                    DeviceId = 1,
+                    PControl = true,
+                    PData = true,
+                    PStatus = true,
+                    User_Device_GroupId = 2,
+                }
+                , new User_Device()
+                {
+                    UserId = 3,
+                    DeviceId = 2,
+                    PControl = true,
+                    PData = true,
+                    PStatus = true,
+                    User_Device_GroupId = 0,
+                }
+                , new User_Device()
+                {
+                    UserId = 4,
+                    DeviceId = 1,
+                    PControl = true,
+                    PData = true,
+                    PStatus = true,
+                    User_Device_GroupId = 0,
+                } 
+            );
+            #endregion
 
 
 
