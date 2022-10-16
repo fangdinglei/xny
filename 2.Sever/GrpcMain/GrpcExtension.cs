@@ -32,7 +32,7 @@ namespace GrpcMain
             {
                 //全局错误处理 
                  op.Interceptors.Add<GrpcInterceptor>(); 
-                    op.EnableDetailedErrors = true; 
+                    op.EnableDetailedErrors = true;  
             });
             //Test 测试
             using (MainContext ct = new MainContext())

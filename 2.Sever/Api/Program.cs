@@ -9,19 +9,18 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
-using GrpcMain;
-using PgGrpcMain;
+using GrpcMain; 
 using MyEmailUtility;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+ builder.Services.AddControllersWithViews();
 //添加工具类
 builder.Services.TryAddSingleton<MyUtility.IRandomUtility, MyUtility.RandomUtility>();
 builder.Services.TryAddSingleton<MyUtility.ITimeUtility, MyUtility.TimeUtility>();
 builder.Services.UseMyGrpc("2432114474");
-builder.Services.UseMyEmail();
+builder.Services.UseMyEmail(); 
 
 #region 禁用模型校验
 
@@ -64,29 +63,29 @@ builder.Services.AddFluentValidationAutoValidation(
     );
 builder.Services.AddValidatorsFromAssemblyContaining<GrpcMain.GrpcInterceptor>();
 
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v2", new OpenApiInfo
-    {
-        Version = "v2",
-        Title = "",
-        Description = "APIv2"
-    });
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-});
+//builder.Services.AddSwaggerGen(options =>
+//{
+//    options.SwaggerDoc("v2", new OpenApiInfo
+//    {
+//        Version = "v2",
+//        Title = "",
+//        Description = "APIv2"
+//    });
+//    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+//    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+//});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
+    //app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     //app.UseHsts();
 }
@@ -96,17 +95,13 @@ app.RegistMyGrpc();
 //app.UseStaticFiles();
 
 app.UseRouting();
-
-//app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "pg/{controller=Home}/{action=Index}/{id?}");
-//app.MapGrpcService<AdminGrpcController >();
+    pattern: "{controller=Home}/{action=Index}/{id?}"); 
 #if DEBUG
-app.Urls.Add("http://localhost:5008");
+app.Urls.Add("https://localhost:8089");
 #else
-app.Urls.Add("http://*:9000");
+ app.Urls.Add("http://*:8089");
 #endif
 app.Run();
 

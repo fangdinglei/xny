@@ -15,10 +15,10 @@ namespace GrpcMain
     public class GrpcInterceptor : Interceptor
     {
         static public Dictionary<string, GrpcRequireAuthorityAttribute> AuthorityAttributes = new Dictionary<string, GrpcRequireAuthorityAttribute>();
-        IGrpcHandle _Handle;
-        public GrpcInterceptor(IGrpcHandle handle)
+        IGrpcHandle _Handle; 
+        public GrpcInterceptor(IGrpcHandle handle )
         {
-            _Handle = handle;
+            _Handle = handle; 
         }
 
         public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
@@ -27,7 +27,7 @@ namespace GrpcMain
             UnaryServerMethod<TRequest, TResponse> continuation)
         { 
             try
-            {
+            { 
                 GrpcRequireAuthorityAttribute? at;
                 if (!AuthorityAttributes.TryGetValue(context.Method, out at) || at == null)
                 {  //默认鉴权 不审计
