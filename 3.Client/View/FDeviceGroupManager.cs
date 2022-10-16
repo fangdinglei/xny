@@ -16,7 +16,6 @@ namespace MyClient.View
         public FDeviceGroupManager(UserDeviceService.UserDeviceServiceClient userDeviceServiceClient)
         {
             InitializeComponent();
-            RefreshGroup();
             this.userDeviceServiceClient = userDeviceServiceClient;
         }
 

@@ -1,5 +1,6 @@
 ﻿
 using FdlWindows.View;
+using Grpc.Net.Client.Configuration;
 using GrpcMain.Device;
 using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
@@ -40,32 +41,57 @@ namespace MyClient.View
             table.Columns.Add("OP1");
             table.Columns.Add("OP2");
         }
-
-     
- 
-     
-
-        private  void brefresh_Click(object sender, EventArgs e)
-        {
-            RefreshDatas();
-            RefreshDeviceInTab();
-        }
+         
         List<User_Device_Group>? groups;
         List<User_Device>? user_Devices;
         List<TypeInfo>? typeInfos;
         List<Device>? dvinfos;
-        void RefreshDatas() {
-            var res1 = userDeviceServiceClient.GetGroupInfos(new Google.Protobuf.WellKnownTypes.Empty());
-            groups = res1.Groups.ToList();
-            var res2 = userDeviceServiceClient.GetUserDevices(new Request_GetUserDevices());
-            user_Devices = res2.UserDevices.ToList();
-            var res3 = deviceTypeServiceClient.GetTypeInfos(new Request_GetTypeInfos());
-            typeInfos = res3.TypeInfos.ToList();
-            var res4 = userDeviceServiceClient.GetDevices(new Request_GetDevices());
-            dvinfos = res4.Devices.ToList();
-            RefreshDeviceInTab( );
+        private  void brefresh_Click(object sender, EventArgs e)
+        {
+            if (!brefresh.Enabled)
+               return;
+            brefresh.Enabled = false;
+            ViewHolder.ShowLoading(this,
+                 async () =>
+                 {
+                     //await Task.Delay(10000);
+                     //throw new Exception();
+                     if (await RefreshDatas())
+                     { 
+                         return true;
+                     }
+                     else
+                     {
+                         return false;
+                     }
+                 } ,
+                 okcall: () => {
+                     RefreshDeviceInTab();
+                     brefresh.Enabled = true;
+                 },
+                 exitcall :() => {
+                     brefresh.Enabled = true;
+                 }
+            ); 
         }
-
+        async Task<bool> RefreshDatas() {
+            try
+            {
+                var res1 =await userDeviceServiceClient.GetGroupInfosAsync(new Google.Protobuf.WellKnownTypes.Empty());
+                groups = res1.Groups.ToList();
+                var res2 = await userDeviceServiceClient.GetUserDevicesAsync(new Request_GetUserDevices());
+                user_Devices = res2.UserDevices.ToList();
+                var res3 = await deviceTypeServiceClient.GetTypeInfosAsync(new Request_GetTypeInfos());
+                typeInfos = res3.TypeInfos.ToList();
+                var res4 = await userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices());
+                dvinfos = res4.Devices.ToList();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            } 
+        } 
         void RefreshDeviceInTab(  )
         {
             if (groups != null && dvinfos != null

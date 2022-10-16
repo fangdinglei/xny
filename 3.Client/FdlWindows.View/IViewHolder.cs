@@ -25,6 +25,9 @@
         bool IsTopView(IView it);
         void AddView(string Name, string title, string menupath, Type classpath, bool userselectable = true,bool     rebuiltServiceProvider=true);
         void Back();
+        void ShowLoading(IView view, Func<Task<bool>> load, Func<Task<bool>>? retry=null
+            ,Action okcall=null,Action exitcall=null);
+        bool IsLoading(IView view);
     }
 
 }

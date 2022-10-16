@@ -1,4 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MyClient.View;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -19,23 +23,24 @@ namespace FdlWindows.View
         /// </summary>
         Dictionary<string, Queue<IView>> Views = new Dictionary<string, Queue<IView>>();
         /// <summary>
-        /// key IView value NameofViewInstance
+        ///用于创建实例获取名称以缓存 key IView value NameofViewInstance
         /// </summary>
         Dictionary<IView, string> NameofViewInstance = new Dictionary<IView, string>();
         /// <summary>
-        /// key name value classpath
+        ///用于创建实例 key name value classpath
         /// </summary>
         Dictionary<string, Type> ViewClassType = new  ();
         /// <summary>
-        /// key name value menupath
+        ///备用 key name value menupath
         /// </summary>
         Dictionary<string, string> ViewMeunPaths = new Dictionary<string, string>();
         /// <summary>
-        /// key name value treenode
+        /// 用于名称找节点 key name value treenode
         /// </summary>
         Dictionary<string, TreeNode> ViewNodes = new Dictionary<string, TreeNode>();
 
         Stack<IView> Windows = new Stack<IView>();
+        Queue<FLoading> LoadingQueue=new Queue<FLoading> ();
 
         public Control Holder => this;
 
@@ -59,8 +64,13 @@ namespace FdlWindows.View
             //}
         }
 
+
+        /// <summary>
+        /// 反射注册所有View
+        /// </summary>
+        /// <exception cref="Exception"></exception>
         void InitViews()
-        {
+        { 
             foreach (var item in this.GetType().Assembly.GetTypes())
             {
                 var att = item.GetCustomAttribute<AutoDetectViewAttribute>();
@@ -76,83 +86,7 @@ namespace FdlWindows.View
             treeview_views.Nodes[0].ExpandAll();
         }
 
-        /// <summary>
-        /// 获取一个界面或者创建一个界面
-        /// <br/>
-        /// 没有则抛出异常
-        /// </summary>
-        /// <param name="name"></param>
-        /// <exception cref="Exception"/>
-        /// <returns></returns>
-        IView GetOrCreatView(string name)
-        {
-            if (Views.ContainsKey(name) && Views[name].Count > 0) {
-                var t = Views[name].Dequeue(); 
-                return t;
-            }
-             
-            IView? _interface =serviceProvider.GetService (ViewClassType[name])  as IView;
-            if (_interface == null)
-            {
-                throw new Exception($"失败{name} @{ViewClassType[name].FullName}没有注册或者不是合适的界面");
-            }
-            var view = _interface.View ;
-            view.Dock = DockStyle.Fill;
-
-            var type = view.GetType();
-            PropertyInfo? p;
-            if ((p = type.GetProperty("AutoScroll"))!=null)
-            {
-                p.SetValue(view,true); 
-            }
-            if ((p = type.GetProperty("TopLevel")) != null)
-            {
-                p.SetValue(view, false);
-            }
-            if ((p = type.GetProperty("ControlBox")) != null)
-            {
-                p.SetValue(view, false);
-            }
-            if ((p = type.GetProperty("FormBorderStyle")) != null)
-            {
-                p.SetValue(view, FormBorderStyle.None);
-            }   
-
-            MainHolder.Controls.Add(view);
-          
-            if (!Views.ContainsKey(name))
-            {
-                Views.Add(name, new Queue<IView>());
-            }
-            NameofViewInstance.Add(_interface, name);
-            return _interface  ;
-        }
-        void OnViewClose(IView view ) {
-            //窗口关闭
-            if (Windows.Count > 0)
-            {
-                try
-                {
-                    Windows.Peek().OnEvent("UnCovered");
-                    Windows.Peek().View.Visible = true;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "界面UnCovered失败");
-                    NameofViewInstance.Remove(view);
-                    return;
-                } 
-            }
-            var iname = NameofViewInstance[view];
-            if (Views[iname].Count > MaxSameViewInstance)
-            {
-                NameofViewInstance.Remove(view);
-            }
-            else
-            {
-                Views[iname].Enqueue(view);
-            }
-        }
+    
 
         /// <summary>
         /// 打开指定页面
@@ -163,14 +97,13 @@ namespace FdlWindows.View
         public bool SwitchTo(string name, bool newwindow, params object[] par)
         {
             if (newwindow)
-            {
-
+            { 
                 FormExitEventArg arg;
                 IView formold;
                 while (Windows.Count > 0)
                 {
                     formold = Windows.Pop();
-                    arg = new FormExitEventArg();
+                    arg = new FormExitEventArg() { IsForNewWindow=true  };
                     formold.OnEvent("Exit", arg);
                     if (arg.Cancel)
                     {
@@ -203,10 +136,11 @@ namespace FdlWindows.View
             var iuserview = GetOrCreatView(name);
             try
             {
+                Windows.Push(iuserview); 
+                iuserview.View.Visible = true;
+                iuserview.View.BringToFront();
                 iuserview.SetViewHolder(this);
                 iuserview.PrePare(par);
-                Windows.Push(iuserview);
-                iuserview.View.Visible = true;
             }
             catch (Exception ex)
             {
@@ -217,6 +151,86 @@ namespace FdlWindows.View
             return true;
         }
 
+        #region 创建View模块 
+        void OnViewClose(IView view ) {
+            //窗口关闭
+            if (Windows.Count > 0)
+            {
+                try
+                {
+                    Windows.Peek().OnEvent("UnCovered");
+                    Windows.Peek().View.Visible = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "界面UnCovered失败");
+                    NameofViewInstance.Remove(view);
+                    return;
+                } 
+            }
+            var iname = NameofViewInstance[view];
+            if ( IsLoading(view)|| Views[iname].Count > MaxSameViewInstance)
+            {
+                NameofViewInstance.Remove(view);
+                MainHolder.Controls.Remove(view.View);
+            }
+            else
+            {
+                Views[iname].Enqueue(view);
+            }
+        }
+        /// <summary>
+        /// 获取一个界面或者创建一个界面
+        /// <br/>
+        /// 没有则抛出异常
+        /// </summary>
+        /// <param name="name"></param>
+        /// <exception cref="Exception"/>
+        /// <returns></returns>
+        IView GetOrCreatView(string name)
+        {
+            if (Views.ContainsKey(name) && Views[name].Count > 0)
+            {
+                var t = Views[name].Dequeue();
+                return t;
+            }
+
+            IView? _interface = serviceProvider.GetService(ViewClassType[name]) as IView;
+            if (_interface == null)
+            {
+                throw new Exception($"失败{name} @{ViewClassType[name].FullName}没有注册或者不是合适的界面");
+            }
+            var view = _interface.View;
+            view.Dock = DockStyle.Fill;
+
+            var type = view.GetType();
+            PropertyInfo? p;
+            if ((p = type.GetProperty("AutoScroll")) != null)
+            {
+                p.SetValue(view, true);
+            }
+            if ((p = type.GetProperty("TopLevel")) != null)
+            {
+                p.SetValue(view, false);
+            }
+            if ((p = type.GetProperty("ControlBox")) != null)
+            {
+                p.SetValue(view, false);
+            }
+            if ((p = type.GetProperty("FormBorderStyle")) != null)
+            {
+                p.SetValue(view, FormBorderStyle.None);
+            }
+
+            MainHolder.Controls.Add(view);
+
+            if (!Views.ContainsKey(name))
+            {
+                Views.Add(name, new Queue<IView>());
+            }
+            NameofViewInstance.Add(_interface, name);
+            return _interface;
+        }
         TreeNode FindNodeInNodes(string name, TreeNodeCollection nodes)
         {
             foreach (TreeNode item in nodes)
@@ -291,6 +305,9 @@ namespace FdlWindows.View
                 ViewNodes.Add(Name, newNode);
             }
         }
+       
+        #endregion
+        
         public void Back()
         {
             FormExitEventArg arg;
@@ -389,6 +406,28 @@ namespace FdlWindows.View
                 return;
             Windows.Peek().OnTick();
         }
+
+        #region 加载中模块
+        HashSet<IView> _ViewLoading = new();
+        public void ShowLoading(IView view, Func<Task<bool>> load, Func<Task<bool>>? retry = null, 
+            Action okcall = null, Action exitcall = null)
+        {
+            _ViewLoading.Add(view);
+            SwitchTo("Loading", false, load, retry,okcall, exitcall, (bool isloading) => {
+                if (isloading) {
+                    _ViewLoading.Add(view);
+                }
+                else
+                {
+                    _ViewLoading.Remove(view);
+                } 
+            });
+        } 
+        public bool IsLoading(IView view)
+        {
+            return _ViewLoading.Contains(view);
+        }
+        #endregion
 
     }
     public class FMainOption {
