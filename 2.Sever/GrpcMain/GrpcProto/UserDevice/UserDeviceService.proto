@@ -29,7 +29,7 @@ service UserDeviceService {
     rpc GetUserAllDeviceID(DTODefine.Request_GetUserAllDeviceID)
         returns (DTODefine.Response_GetUserAllDeviceID); 
     
-    //将设备加入分组
+    //将设备加入分组 要不全部成功要不全部失败
     rpc SetDeviceGroup(DTODefine.Request_SetDeviceGroup)
         returns (GrpcMain.Common.CommonResponse); 
 

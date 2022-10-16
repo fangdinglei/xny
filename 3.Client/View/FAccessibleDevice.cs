@@ -293,8 +293,7 @@ namespace MyClient.View
             DragDropEffects dde1 = this.DoDragDrop(tb, DragDropEffects.Move);
             if (dde1 == DragDropEffects.Move)//如果移动成功
             {
-                // brefresh_ClickAsync(null, null);
-                list_Group_SelectedIndexChanged(null, null);
+                RefreshDeviceInTab();
             }
 
         }
@@ -310,7 +309,7 @@ namespace MyClient.View
             var pt = list_Group.PointToClient(new System.Drawing.Point(e.X, e.Y));
 
             int id = list_Group.IndexFromPoint(pt);
-            if (id == -1)
+            if (id == -1||id==0)
             {
                 e.Effect = DragDropEffects.None;
             }
@@ -323,7 +322,11 @@ namespace MyClient.View
                 {
                     var tb = (List<long>)e.Data.GetData(typeof(List<long>));
                     var req = new Request_SetDeviceGroup();
-                    req.GroupId = groups[id].Id;
+                    if (id==1)
+                        req.GroupId = 0;
+                    else
+                        req.GroupId = groups[id - 2].Id;
+
                     req.Dvids.AddRange(tb);
                     var res = userDeviceServiceClient.SetDeviceGroup(req);
                     if (res.Success == false)
@@ -333,15 +336,20 @@ namespace MyClient.View
                         var dv = dvinfos.Find(it => it.Device.Id == sucid);
                         if (dv != null)
                         {
-                            dv.UserDevice.UserDeviceGroup = groups[id].Id;
+                            dv.UserDevice.UserDeviceGroup = id switch { 
+                                1=>0,
+                                _=> groups[id - 2].Id
+                            } ;
                         }
                     }
 
                     e.Effect = DragDropEffects.Move;
+                    brefresh_Click(null,null);
                 }
                 catch (Exception ex)
                 {
                     e.Effect = DragDropEffects.None;
+                    MessageBox.Show("移动分组出错"+ex.Message,"错误");
                 }
 
                 //设置设备分组

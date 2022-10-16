@@ -39,12 +39,21 @@ namespace GrpcMain
                         return null;
                     }
                     var r = await continuation(request, context);
+                    if (r == null)
+                    {
+                        return Activator.CreateInstance<TResponse>();
+                    }
                     return r;
                 }
                 else if (!at.NeedLogin)
                 {
                     //不要鉴权
-                    return await continuation(request, context);
+                    var r= await continuation(request, context);
+                    if (r == null)
+                    {
+                        return Activator.CreateInstance<TResponse>();
+                    }
+                    return r;
                 }
                 else
                 {
@@ -53,7 +62,7 @@ namespace GrpcMain
                     if (canvisit == false)
                     {
                         context.Status = new Status(StatusCode.PermissionDenied, errormsg);
-                        return null;
+                        return Activator.CreateInstance<TResponse>();
                     }
                     var r = await continuation(request, context);
                     //审计
@@ -65,6 +74,10 @@ namespace GrpcMain
                             context.Status = Status.DefaultSuccess;
                         }
                     }
+                    if (r==null)
+                    {
+                        return Activator.CreateInstance<TResponse>();
+                    }
                     return r;
                 }
             }
@@ -72,7 +85,7 @@ namespace GrpcMain
             {
                 _Handle.OnError(ex);
                 context.Status = new Status(StatusCode.Internal, "内部异常");
-                return null;
+                return Activator.CreateInstance<TResponse>();
             }
         }
 

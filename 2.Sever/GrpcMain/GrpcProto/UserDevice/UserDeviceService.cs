@@ -137,7 +137,7 @@ namespace GrpcMain.UserDevice
                     context.Status = new Status(StatusCode.PermissionDenied, "用户无该分组");
                     return null;
                 }
-                var bd = ct.User_Devices.Where(it => request.Dvids.ToList().Contains(it.DeviceId));
+                var bd = ct.User_Devices.Where(it =>it.UserId==id&& request.Dvids.ToList().Contains(it.DeviceId));
                 var count = await bd.CountAsync();
                 if (count != request.Dvids.Count)
                 {
