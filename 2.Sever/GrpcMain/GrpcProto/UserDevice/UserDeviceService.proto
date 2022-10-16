@@ -50,8 +50,9 @@ message DTODefine
     }
     message User_Device{
         //optional int64 Id=1;
-        optional int64 Dvid=2;
-        int64 UserId=3;
+        optional int64 Dvid=1;
+        optional int64 UserId=2;
+        int64 UserDeviceGroup=3;
         //数据读取权限
         bool PData=4;
         //实时状态获取权限
@@ -93,10 +94,15 @@ message DTODefine
         optional int64 Cursor=1;
         optional int64 GroupId=2;
     }
+    message DeviceWithUserDeviceInfo{
+        GrpcMain.Device.DTODefine.Device Device=1;
+        User_Device UserDevice=2;
+    }
+    
     message Response_GetDevices{
         //0后续无数据
         int64 Cursor=1;  
-        repeated GrpcMain.Device.DTODefine.Device Devices=2;
+        repeated DeviceWithUserDeviceInfo Info=2;
     }
 
 

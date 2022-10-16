@@ -261,11 +261,11 @@ namespace GrpcMain.UserDevice
             long id = (long)context.UserState["CreatorId"];
             Response_GetDevices res = new Response_GetDevices();
             using (MainContext ct = new MainContext()) {
-                var bd = ct.User_Devices.Join(ct.Devices, it => it.DeviceId, it => it.Id, (a, device) => new { a.UserId, a.User_Device_GroupId, device });
-                bd = bd.Where(it => it.UserId== id);
+                var bd = ct.User_Devices.Join(ct.Devices, it => it.DeviceId, it => it.Id, (userdeive, device) => new { userdeive, device });
+                bd = bd.Where(it => it.userdeive.UserId == id);
                 if (request.HasGroupId)
                 {
-                    bd = bd.Where(it=>it.User_Device_GroupId==request.GroupId);
+                    bd = bd.Where(it=>it.userdeive.User_Device_GroupId==request.GroupId);
                 }
                 if (request.HasCursor)
                 {
@@ -273,16 +273,24 @@ namespace GrpcMain.UserDevice
                 }
                 var ls =await bd.ToListAsync();
                 var lsx  =_cursorUtility.Run(ls, maxcount, (it) => res.Cursor = it.device.Id);
-                res.Devices.AddRange(lsx.Select(it => 
-                    new global::GrpcMain.Device.DTODefine.Types.Device
+                res.Info .AddRange(lsx.Select(it => 
+                    new  DeviceWithUserDeviceInfo
                     {
-                        Id=it.device.Id,
-                        DeviceTypeId=it.device.DeviceTypeId,
-                        GroupId=it.User_Device_GroupId,
-                        LatestData=it.device.LatestData,
-                        LocationStr=it.device.LocationStr,
-                        Name=it.device.Name,
-                        Status=it.device.Status,
+                        Device=new Device.DTODefine.Types.Device()
+                        {
+                            Id = it.device.Id,
+                            DeviceTypeId = it.device.DeviceTypeId,
+                            LatestData = it.device.LatestData,
+                            LocationStr = it.device.LocationStr,
+                            Name = it.device.Name,
+                            Status = it.device.Status, 
+                        },
+                        UserDevice=new DTODefine.Types.User_Device() {  
+                            PControl=it.userdeive.PControl,
+                            PData=it.userdeive.PData,
+                            PStatus=it.userdeive.PStatus,
+                            UserDeviceGroup =it.userdeive.User_Device_GroupId,
+                        } 
                     } 
                 ));
             }

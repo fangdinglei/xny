@@ -14,15 +14,15 @@ using static GrpcMain.DeviceType.DTODefine.Types;
 using static GrpcMain.UserDevice.DTODefine.Types;
 namespace MyClient.View
 {
-    [AutoDetectView("全部设备", "全部设备","",true )]
+    [AutoDetectView("全部设备", "全部设备", "", true)]
     public partial class FAccessibleDevice : Form, IView
     {
         public Control View => this;
         DataTable? table;
 
-        DeviceService.DeviceServiceClient deviceServiceClient ;
+        DeviceService.DeviceServiceClient deviceServiceClient;
         UserDeviceService.UserDeviceServiceClient userDeviceServiceClient;
-        DeviceTypeService.DeviceTypeServiceClient deviceTypeServiceClient ;
+        DeviceTypeService.DeviceTypeServiceClient deviceTypeServiceClient;
         public FAccessibleDevice(DeviceService.DeviceServiceClient deviceServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, DeviceTypeService.DeviceTypeServiceClient deviceTypeServiceClient)
         {
             InitializeComponent();
@@ -41,15 +41,15 @@ namespace MyClient.View
             table.Columns.Add("OP1");
             table.Columns.Add("OP2");
         }
-         
+
         List<User_Device_Group>? groups;
         List<User_Device>? user_Devices;
         List<TypeInfo>? typeInfos;
-        List<Device>? dvinfos;
-        private  void brefresh_Click(object sender, EventArgs e)
+        List<DeviceWithUserDeviceInfo>? dvinfos;
+        private void brefresh_Click(object sender, EventArgs e)
         {
             if (!brefresh.Enabled)
-               return;
+                return;
             brefresh.Enabled = false;
             ViewHolder.ShowLoading(this,
                  async () =>
@@ -57,42 +57,45 @@ namespace MyClient.View
                      //await Task.Delay(10000);
                      //throw new Exception();
                      if (await RefreshDatas())
-                     { 
+                     {
                          return true;
                      }
                      else
                      {
                          return false;
                      }
-                 } ,
-                 okcall: () => {
+                 },
+                 okcall: () =>
+                 {
                      RefreshDeviceInTab();
                      brefresh.Enabled = true;
                  },
-                 exitcall :() => {
+                 exitcall: () =>
+                 {
                      brefresh.Enabled = true;
                  }
-            ); 
+            );
         }
-        async Task<bool> RefreshDatas() {
+        async Task<bool> RefreshDatas()
+        {
             try
             {
-                var res1 =await userDeviceServiceClient.GetGroupInfosAsync(new Google.Protobuf.WellKnownTypes.Empty());
+                var res1 = await userDeviceServiceClient.GetGroupInfosAsync(new Google.Protobuf.WellKnownTypes.Empty());
                 groups = res1.Groups.ToList();
                 var res2 = await userDeviceServiceClient.GetUserDevicesAsync(new Request_GetUserDevices());
                 user_Devices = res2.UserDevices.ToList();
                 var res3 = await deviceTypeServiceClient.GetTypeInfosAsync(new Request_GetTypeInfos());
                 typeInfos = res3.TypeInfos.ToList();
                 var res4 = await userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices());
-                dvinfos = res4.Devices.ToList();
+                dvinfos = res4.Info.ToList();
                 return true;
             }
             catch (Exception)
             {
                 return false;
-            } 
-        } 
-        void RefreshDeviceInTab(  )
+            }
+        }
+        void RefreshDeviceInTab()
         {
             if (groups != null && dvinfos != null
                && list_Group.SelectedIndex >= 0
@@ -101,17 +104,17 @@ namespace MyClient.View
             {
                 var dt = table.Clone();
                 foreach (var device in dvinfos)
-                { 
+                {
                     //如果所选分组和当前分组不一致 则跳过
-                    if (device.GroupId == 0 && list_Group.SelectedIndex != 0
-                        || device.GroupId != 0 &&groups[list_Group.SelectedIndex].Id!=  device.GroupId )
+                    if (device.UserDevice.UserDeviceGroup == 0 && list_Group.SelectedIndex != 0
+                        || device.UserDevice.UserDeviceGroup != 0 && groups[list_Group.SelectedIndex].Id != device.UserDevice.UserDeviceGroup)
                         continue;
                     DataRow dr = dt.NewRow();
-                    dr["Name"] = device.Name;
-                    dr["ID"] = device.Id;
+                    dr["Name"] = device.Device.Name;
+                    dr["ID"] = device.Device.Id;
                     dr["Status"] = "未知";
-                    var tinfo = typeInfos.Find(it => it.Id == device.DeviceTypeId);
-                    if (tinfo!=null)
+                    var tinfo = typeInfos.Find(it => it.Id == device.Device.DeviceTypeId);
+                    if (tinfo != null)
                     {
                         dr["Type"] = tinfo.Name;
                     }
@@ -145,7 +148,7 @@ namespace MyClient.View
         #endregion 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex<0||e.RowIndex == dataGridView1.Rows.Count - 1)
+            if (e.RowIndex < 0 || e.RowIndex == dataGridView1.Rows.Count - 1)
                 return;
             string id = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
             //if (e.ColumnIndex == 4)
@@ -160,37 +163,37 @@ namespace MyClient.View
         }
 
 
-     
+
         public void OnTick()
-        { 
+        {
         }
 
         public void PrePare(params object[] par)
-        { 
-            brefresh_Click(null,null);
-        } 
+        {
+            brefresh_Click(null, null);
+        }
         public void OnEvent(string name, params object[] pars)
         {
-            if (name=="Exit")
+            if (name == "Exit")
             {
-               
+
             }
         }
 
         IViewHolder ViewHolder;
         public void SetViewHolder(IViewHolder viewholder)
         {
-            ViewHolder = viewholder; 
+            ViewHolder = viewholder;
         }
 
         private void list_Group_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RefreshDeviceInTab(); 
+            RefreshDeviceInTab();
         }
 
         private void btn_groupmgr_Click(object sender, EventArgs e)
         {
-            ViewHolder.SwitchTo("设备分组管理",false);
+            ViewHolder.SwitchTo("设备分组管理", false);
         }
 
         private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
@@ -216,25 +219,25 @@ namespace MyClient.View
 
         }
 
-     
+
 
         private void b_sendcmd_Click(object sender, EventArgs e)
         {
             var tb = new List<ValueTuple<uint, string>>();
-            foreach (DataGridViewRow row in dataGridView1.Rows )
+            foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 if ((bool)row.Cells[0].EditedFormattedValue)
                 {
-                    tb.Add((uint.Parse((string)row.Cells[1].EditedFormattedValue) , (string)row.Cells[2].EditedFormattedValue));
-                }    
+                    tb.Add((uint.Parse((string)row.Cells[1].EditedFormattedValue), (string)row.Cells[2].EditedFormattedValue));
+                }
             }
             if (tb.Count == 0)
                 return;
-            ViewHolder.SwitchTo("向设备发送命令",false, tb);
+            ViewHolder.SwitchTo("向设备发送命令", false, tb);
         }
 
         [DllImport("user32.dll")]
-        private static extern int SetCursorPos(int x, int y); 
+        private static extern int SetCursorPos(int x, int y);
         private void bgroupmove_MouseDown(object sender, MouseEventArgs e)
         {
             var tb = new List<long>();
@@ -247,7 +250,7 @@ namespace MyClient.View
             }
             if (tb.Count == 0)
                 return;
-            var pt = list_Group.PointToScreen(new System.Drawing.Point(0,0));
+            var pt = list_Group.PointToScreen(new System.Drawing.Point(0, 0));
             SetCursorPos(pt.X, pt.Y);
             DragDropEffects dde1 = this.DoDragDrop(tb, DragDropEffects.Move);
             if (dde1 == DragDropEffects.Move)//如果移动成功
@@ -262,7 +265,7 @@ namespace MyClient.View
             e.Effect = DragDropEffects.Move;
         }
 
-    
+
         private void list_Group_DragDrop(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.None;
@@ -280,22 +283,22 @@ namespace MyClient.View
 
                 try
                 {
-                    var tb =(List<long>) e.Data .GetData( typeof(List<long>));
-                   var req= new Request_SetDeviceGroup()  ;
+                    var tb = (List<long>)e.Data.GetData(typeof(List<long>));
+                    var req = new Request_SetDeviceGroup();
                     req.GroupId = groups[id].Id;
-                    req.Dvids.AddRange(tb); 
-                   var res= userDeviceServiceClient.SetDeviceGroup(req);
+                    req.Dvids.AddRange(tb);
+                    var res = userDeviceServiceClient.SetDeviceGroup(req);
                     if (res.Success == false)
                         throw new Exception(res.Message);
                     foreach (var sucid in tb)
                     {
-                        var dv =dvinfos.Find(it => it.Id == sucid);
+                        var dv = dvinfos.Find(it => it.Device.Id == sucid);
                         if (dv != null)
                         {
-                            dv.GroupId = groups[id].Id;
+                            dv.UserDevice.UserDeviceGroup = groups[id].Id;
                         }
                     }
-                  
+
                     e.Effect = DragDropEffects.Move;
                 }
                 catch (Exception ex)
@@ -316,7 +319,7 @@ namespace MyClient.View
             bool hasnotchecked = false;
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                if ((bool)row.Cells[0].EditedFormattedValue==false)
+                if ((bool)row.Cells[0].EditedFormattedValue == false)
                 {
                     hasnotchecked = true;
                     break;
@@ -340,8 +343,8 @@ namespace MyClient.View
             }
             if (tb.Count == 0)
                 return;
-            ViewHolder.SwitchTo("自动控制配置", false, tb); 
+            ViewHolder.SwitchTo("自动控制配置", false, tb);
         }
- 
+
     }
 }
