@@ -7,7 +7,7 @@ import "Common/CommonResponse.proto";
 import "Device/DeviceService.proto";
 service UserDeviceService { 
 
-    //修改设备权限 如果所有权限都false 则删除设备
+    //只能直接父用户调用 修改设备权限 如果所有权限都false 则删除设备
     rpc UpdateUserDevice(DTODefine.Request_UpdateUserDevice)
         returns (GrpcMain.Common.CommonResponse);
 
@@ -29,7 +29,7 @@ service UserDeviceService {
     rpc GetUserAllDeviceID(DTODefine.Request_GetUserAllDeviceID)
         returns (DTODefine.Response_GetUserAllDeviceID); 
     
-    //将设备加入分组 要不全部成功要不全部失败
+    //将设备加入分组
     rpc SetDeviceGroup(DTODefine.Request_SetDeviceGroup)
         returns (GrpcMain.Common.CommonResponse); 
 

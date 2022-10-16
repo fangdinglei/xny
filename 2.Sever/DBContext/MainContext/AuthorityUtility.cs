@@ -55,6 +55,39 @@ namespace MyDBContext.Main
 
         }
         /// <summary>
+        /// 获取用户和实体的权限关系
+        /// </summary>
+        /// <param name="creator"></param>
+        /// <param name="ct"></param>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        static public async Task<OwnerType> GetOwnerTypeAsync(this long creator, MainContext ct, long uid)
+        {
+            var u1 = creator;
+            var u2 = uid;
+            var sf = await ct.User_SFs
+              .Where(it => it.User1Id == u1 && it.User2Id == u2)
+               .AsNoTracking().FirstOrDefaultAsync();
+            if (sf != null)
+            {
+                return OwnerType.Non;
+            }
+            else if (sf.IsSelf)
+            {
+                return OwnerType.Creator;
+            }
+            else if (sf.IsFather)
+            {
+                return OwnerType.FatherOfCreator;
+            }
+            else
+            {
+                return OwnerType.SonOfCreator;
+            }
+
+        }
+
+        /// <summary>
         /// 获取所有用户可访问的实体
         /// </summary>
         /// <returns></returns>

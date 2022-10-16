@@ -42,7 +42,7 @@ namespace MyClient.View
             this.list_Group.FormattingEnabled = true;
             this.list_Group.ItemHeight = 24;
             this.list_Group.Location = new System.Drawing.Point(15, 16);
-            this.list_Group.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.list_Group.Margin = new System.Windows.Forms.Padding(4);
             this.list_Group.Name = "list_Group";
             this.list_Group.Size = new System.Drawing.Size(300, 436);
             this.list_Group.TabIndex = 5;
@@ -51,7 +51,7 @@ namespace MyClient.View
             // btn_del
             // 
             this.btn_del.Location = new System.Drawing.Point(326, 199);
-            this.btn_del.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_del.Margin = new System.Windows.Forms.Padding(4);
             this.btn_del.Name = "btn_del";
             this.btn_del.Size = new System.Drawing.Size(142, 77);
             this.btn_del.TabIndex = 6;
@@ -62,7 +62,7 @@ namespace MyClient.View
             // btn_update
             // 
             this.btn_update.Location = new System.Drawing.Point(658, 199);
-            this.btn_update.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_update.Margin = new System.Windows.Forms.Padding(4);
             this.btn_update.Name = "btn_update";
             this.btn_update.Size = new System.Drawing.Size(142, 77);
             this.btn_update.TabIndex = 7;
@@ -73,10 +73,11 @@ namespace MyClient.View
             // tname
             // 
             this.tname.Location = new System.Drawing.Point(405, 83);
-            this.tname.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tname.Margin = new System.Windows.Forms.Padding(4);
             this.tname.Name = "tname";
             this.tname.Size = new System.Drawing.Size(211, 30);
             this.tname.TabIndex = 8;
+            this.tname.TextChanged += new System.EventHandler(this.tname_TextChanged);
             // 
             // label1
             // 
@@ -91,7 +92,7 @@ namespace MyClient.View
             // btn_creat
             // 
             this.btn_creat.Location = new System.Drawing.Point(496, 199);
-            this.btn_creat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_creat.Margin = new System.Windows.Forms.Padding(4);
             this.btn_creat.Name = "btn_creat";
             this.btn_creat.Size = new System.Drawing.Size(142, 77);
             this.btn_creat.TabIndex = 10;
@@ -110,7 +111,7 @@ namespace MyClient.View
             this.Controls.Add(this.btn_update);
             this.Controls.Add(this.btn_del);
             this.Controls.Add(this.list_Group);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FDeviceGroupManager";
             this.Text = "FDeviceGroupManager";
             this.ResumeLayout(false);

@@ -20,11 +20,23 @@ namespace MyClient.View
         }
 
         List<User_Device_Group> groupinfo;
-        void RefreshGroup() {
+
+        /// <summary>
+        /// 刷新分组信息
+        /// </summary>
+        /// <param name="select">选中名称和此一样的条目</param>
+        void RefreshGroup(string select) {
             var rsp = userDeviceServiceClient.GetGroupInfos(new Google.Protobuf.WellKnownTypes.Empty());
             groupinfo = rsp.Groups.ToList();
             var dl = groupinfo.Select(it => it.Name).ToList();
             list_Group.DataSource = dl;
+
+            int idx = 0;
+            if ((idx = (list_Group.DataSource as List<string>).FindIndex(it => it == select)) > 0)
+            {
+                list_Group.SelectedIndex = idx;
+            }
+
         }
 
         public Control View =>this; 
@@ -36,7 +48,7 @@ namespace MyClient.View
         } 
         public void PrePare(params object[] par)
         {
-            RefreshGroup();
+            RefreshGroup("");
         }
         public void OnTick() {
             if (!Visible)
@@ -74,7 +86,7 @@ namespace MyClient.View
                 res.ThrowIfNotSuccess();
 
                 MessageBox.Show("删除成功", "提示");
-                RefreshGroup(); 
+                RefreshGroup(""); 
             }
             catch (Exception ex)
             {
@@ -104,12 +116,8 @@ namespace MyClient.View
                 var res = userDeviceServiceClient.NewGroup(req);
                 res.ThrowIfNotSuccess(); 
                 MessageBox.Show("创建成功", "错误");
-                RefreshGroup();
-                int idx = 0;
-                if ((idx = (list_Group.DataSource as List<string>).FindIndex(it => it == tname.Text)) >0)
-                { 
-                    list_Group.SelectedIndex = idx;
-                }
+                RefreshGroup(tname.Text);
+                
             }
             catch (Exception ex)
             {
@@ -147,12 +155,7 @@ namespace MyClient.View
                 res.ThrowIfNotSuccess();
 
                 MessageBox.Show("修改成功", "提示");
-                RefreshGroup();
-                int idx = 0;
-                if ((idx = (list_Group.DataSource as List<string>).FindIndex(it => it == tname.Text)) > 0)
-                {
-                    list_Group.SelectedIndex = idx;
-                }
+                RefreshGroup(tname.Text);
             }
             catch (Exception ex)
             {
@@ -162,14 +165,22 @@ namespace MyClient.View
 
         private void list_Group_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (GetSelectedGroupID()==0|| GetSelectedGroupID()==uint.MaxValue)
+            if ( GetSelectedGroupID()==long.MaxValue)
             {
-               /* btn_creat.Enabled = */btn_del.Enabled = btn_update.Enabled = false;
+                tname.Text = ""; 
+                btn_del.Enabled = false;
             }
             else
             {
-              /*  btn_creat.Enabled = */btn_del.Enabled = btn_update.Enabled = true;
+                tname.Text = list_Group.SelectedItem as string; 
+                btn_del.Enabled  = true;
             }
+            btn_update.Enabled = false;
+        }
+
+        private void tname_TextChanged(object sender, EventArgs e)
+        {
+            btn_update.Enabled=(sender as TextBox).Text!=list_Group.SelectedItem as string;
         }
     }
 }
