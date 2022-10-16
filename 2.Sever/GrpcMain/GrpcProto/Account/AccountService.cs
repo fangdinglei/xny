@@ -199,22 +199,31 @@ namespace GrpcMain.Account
         }
 
  
-        public override async Task<Response_GetUserInfo> GetUserInfo(Request_GetUserInfo request, ServerCallContext context)
+        public override async Task<Response_GetUserInfo?> GetUserInfo(Request_GetUserInfo request, ServerCallContext context)
         {
             using (MainContext ct = new MainContext())
             {
                 long id = (long)context.UserState["CreatorId"];
-                List<User> list = new List<User>();
-
+                long qid = id;
+                if (request.HasUserId) {
+                    qid = request.UserId;
+                    if ((await id.GetOwnerTypeAsync(ct, qid))!= AuthorityUtility.OwnerType.SonOfCreator)
+                    {
+                        context.Status = new Status( StatusCode.PermissionDenied,"只能获取自己的子用户的信息");
+                        return null;
+                    }
+                    
+                }
+                var list = new List<User>();
                 if (request.SubUser)
                 {
-                    var r = await ct.Users.Where(it => it.Id == id).AsNoTracking().FirstOrDefaultAsync();
+                    var r = await ct.Users.Where(it => it.Id == qid).AsNoTracking().FirstOrDefaultAsync();
                     list.Add(r);
-                    list.AddRange(await ct.Users.Where(it => it.CreatorId == id).AsNoTracking().ToListAsync());
+                    list.AddRange(await ct.Users.Where(it => it.CreatorId == qid).AsNoTracking().ToListAsync());
                 }
                 else
                 {
-                    var r = await ct.Users.Where(it => it.Id == id).AsNoTracking().FirstOrDefaultAsync();
+                    var r = await ct.Users.Where(it => it.Id == qid).AsNoTracking().FirstOrDefaultAsync();
                     list.Add(r);
                 }
                 var rsp = new Response_GetUserInfo();

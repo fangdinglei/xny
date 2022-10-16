@@ -69,7 +69,7 @@ namespace MyClient.View
             }
             catch (Exception ex)
             {
-                 
+                MessageBox.Show("发送设备:"+ex.Message, "提示");
             }
             
         }

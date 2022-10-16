@@ -65,6 +65,8 @@ message DTODefine
     }
     message Request_GetUserInfo{
         bool SubUser=1;
+        //被获取信息的用户
+        optional int64 UserId=2;
     }  
     message Response_GetUserInfo{
         repeated UserInfo UserInfo=1;
