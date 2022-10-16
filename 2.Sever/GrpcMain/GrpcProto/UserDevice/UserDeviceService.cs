@@ -177,8 +177,18 @@ namespace GrpcMain.UserDevice
                         var gp = await ct.User_Device_Groups.Where(it => it.CreatorId == id && it.Id==item.Id).FirstOrDefaultAsync();
                         if (gp == null)
                         {
-                            context.Status = new Status(StatusCode.PermissionDenied, "用户无该分组");
-                            return null;
+                            return new CommonResponse() { 
+                                Success=false,
+                                Message= "用户无该分组"
+                            }; 
+                        }
+                        if (ct.User_Devices.Where(it=>it.UserId==id&&it.User_Device_GroupId==item.Id).Take(1).Count()>0)
+                        {
+                            return new CommonResponse()
+                            {
+                                Success = false,
+                                Message = "该分组存在设备,请先删除设备或移动设备到其他分组"
+                            };
                         }
                         ct.User_Device_Groups.Remove(gp);
                     }
@@ -187,8 +197,11 @@ namespace GrpcMain.UserDevice
                         var gp = await ct.User_Device_Groups.Where(it => it.CreatorId == id && it.Id == item.Id).FirstOrDefaultAsync();
                         if (gp == null)
                         {
-                            context.Status = new Status(StatusCode.PermissionDenied, "用户无该分组");
-                            return null;
+                            return new CommonResponse()
+                            {
+                                Success = false,
+                                Message = "用户无该分组"
+                            };
                         }
                         gp.Name = item.Name; 
                     }

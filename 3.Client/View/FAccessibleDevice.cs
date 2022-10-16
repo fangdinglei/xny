@@ -231,7 +231,7 @@ namespace MyClient.View
 
         private void btn_groupmgr_Click(object sender, EventArgs e)
         {
-            ViewHolder.SwitchTo("设备分组管理", false);
+            ViewHolder.SwitchTo("FDeviceGroupManager", false);
         }
 
         private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
@@ -274,6 +274,7 @@ namespace MyClient.View
             ViewHolder.SwitchTo("向设备发送命令", false, tb);
         }
 
+        #region 分组移动
         [DllImport("user32.dll")]
         private static extern int SetCursorPos(int x, int y);
         private void bgroupmove_MouseDown(object sender, MouseEventArgs e)
@@ -301,15 +302,13 @@ namespace MyClient.View
         {
             e.Effect = DragDropEffects.Move;
         }
-
-
         private void list_Group_DragDrop(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.None;
             var pt = list_Group.PointToClient(new System.Drawing.Point(e.X, e.Y));
 
             int id = list_Group.IndexFromPoint(pt);
-            if (id == -1||id==0)
+            if (id == -1 || id == 0)
             {
                 e.Effect = DragDropEffects.None;
             }
@@ -322,7 +321,7 @@ namespace MyClient.View
                 {
                     var tb = (List<long>)e.Data.GetData(typeof(List<long>));
                     var req = new Request_SetDeviceGroup();
-                    if (id==1)
+                    if (id == 1)
                         req.GroupId = 0;
                     else
                         req.GroupId = groups[id - 2].Id;
@@ -336,28 +335,26 @@ namespace MyClient.View
                         var dv = dvinfos.Find(it => it.Device.Id == sucid);
                         if (dv != null)
                         {
-                            dv.UserDevice.UserDeviceGroup = id switch { 
-                                1=>0,
-                                _=> groups[id - 2].Id
-                            } ;
+                            dv.UserDevice.UserDeviceGroup = id switch
+                            {
+                                1 => 0,
+                                _ => groups[id - 2].Id
+                            };
                         }
                     }
 
                     e.Effect = DragDropEffects.Move;
-                    brefresh_Click(null,null);
+                    RefreshDeviceInTab();
                 }
                 catch (Exception ex)
                 {
                     e.Effect = DragDropEffects.None;
-                    MessageBox.Show("移动分组出错"+ex.Message,"错误");
+                    MessageBox.Show("移动分组出错" + ex.Message, "错误");
                 }
-
-                //设置设备分组
-                //移动
-                // MessageBox.Show();
             }
 
         }
+        #endregion  
 
         private void bselectall_Click(object sender, EventArgs e)
         {

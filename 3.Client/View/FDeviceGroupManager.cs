@@ -55,7 +55,7 @@ namespace MyClient.View
             {
                 return groupinfo[list_Group.SelectedIndex].Id;
             }
-            return uint.MaxValue;
+            return long.MaxValue;
         }
 
         private void btn_del_Click(object sender, EventArgs e)
@@ -78,7 +78,7 @@ namespace MyClient.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show("删除失败", "错误");
+                MessageBox.Show("删除失败:"+ex.Message, "错误");
             }
         }
 
@@ -87,15 +87,33 @@ namespace MyClient.View
             try
             {
                 var req = new Request_NewGroup();
+                tname.Text = tname.Text.Trim();
                 req.Name = tname.Text;
+                if (string.IsNullOrEmpty(tname.Text) )
+                {
+                    tname.Focus();
+                    MessageBox.Show("名称不能为空"); 
+                    return;
+                }
+                if (groupinfo != null&&groupinfo.Find(it=>it.Name==tname.Text)!=null)
+                {
+                    tname.Focus();
+                    MessageBox.Show("名称不能重复");
+                    return;
+                }
                 var res = userDeviceServiceClient.NewGroup(req);
                 res.ThrowIfNotSuccess(); 
                 MessageBox.Show("创建成功", "错误");
                 RefreshGroup();
+                int idx = 0;
+                if ((idx = (list_Group.DataSource as List<string>).FindIndex(it => it == tname.Text)) >0)
+                { 
+                    list_Group.SelectedIndex = idx;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("创建失败", "错误");
+                MessageBox.Show("创建失败:" + ex.Message, "错误");
             }
         }
 
@@ -106,6 +124,19 @@ namespace MyClient.View
                 var gid = GetSelectedGroupID();
                 if (gid == long.MaxValue)
                     return;
+                tname.Text = tname.Text.Trim(); 
+                if (string.IsNullOrEmpty(tname.Text))
+                {
+                    tname.Focus();
+                    MessageBox.Show("名称不能为空");
+                    return;
+                }
+                if (groupinfo != null && groupinfo.Find(it => it.Name == tname.Text) != null)
+                {
+                    tname.Focus();
+                    MessageBox.Show("名称不能重复");
+                    return;
+                }
                 var req = new Request_UpdateGroupInfos();
                 req.Groups.Add(new User_Device_Group()
                 { 
@@ -115,12 +146,17 @@ namespace MyClient.View
                 var res = userDeviceServiceClient.UpdateGroupInfos(req);
                 res.ThrowIfNotSuccess();
 
-                MessageBox.Show("修改成功", "错误");
-                RefreshGroup(); 
+                MessageBox.Show("修改成功", "提示");
+                RefreshGroup();
+                int idx = 0;
+                if ((idx = (list_Group.DataSource as List<string>).FindIndex(it => it == tname.Text)) > 0)
+                {
+                    list_Group.SelectedIndex = idx;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("修改失败", "错误");
+                MessageBox.Show("修改失败:" + ex.Message, "错误");
             }
         }
 
