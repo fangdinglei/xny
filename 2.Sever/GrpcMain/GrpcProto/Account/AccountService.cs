@@ -205,7 +205,7 @@ namespace GrpcMain.Account
             {
                 long id = (long)context.UserState["CreatorId"];
                 long qid = id;
-                if (request.HasUserId) {
+                if (request.HasUserId&&request.UserId!=id) {
                     qid = request.UserId;
                     if ((await id.GetOwnerTypeAsync(ct, qid))!= AuthorityUtility.OwnerType.SonOfCreator)
                     {
@@ -237,6 +237,7 @@ namespace GrpcMain.Account
                         UserName = it.Name,
                         Email=it.EMail,
                         LastLogin = it.LastLogin,
+                        Authoritys = it.Authoritys,
                     };
                 }));
                 return rsp;
@@ -267,13 +268,17 @@ namespace GrpcMain.Account
                 {
                     throw new Exception("用户应当不空但是为空");
                 }
-                if (string.IsNullOrEmpty(request.UserInfo.UserName))
+                if (!string.IsNullOrWhiteSpace(request.UserInfo.UserName))
                 {
                     user.Name = request.UserInfo.UserName;
                 }
-                if (string.IsNullOrEmpty(request.UserInfo.Phone))
+                if (!string.IsNullOrWhiteSpace(request.UserInfo.Phone))
                 {
                     user.Phone = request.UserInfo.Phone;
+                }
+                if (!string.IsNullOrWhiteSpace(request.UserInfo.Email))
+                {
+                    user.EMail = request.UserInfo.Email;
                 }
                 await ct.SaveChangesAsync();
                 return new CommonResponse

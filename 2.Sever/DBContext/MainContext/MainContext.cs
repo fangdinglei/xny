@@ -9,6 +9,7 @@ using System;
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 //Add-Migration [--context MainContext]
 //Remove-Migration 取消最近一次迁移
 //Update-Database [迁移名称  迁移直到(包含)或回退直到(不回退指定的版本) 0表示一开始]
@@ -67,7 +68,7 @@ namespace MyDBContext.Main
 
         static SqliteConnection? _connection;
 
-
+        [DebuggerStepThrough]
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.ReplaceService<IMigrationsModelDiffer, MigrationsModelDifferWithoutForeignKey>();
@@ -82,7 +83,7 @@ namespace MyDBContext.Main
             optionsBuilder.UseSqlite(_connection);
 
         }
-         
+        [DebuggerStepThrough]
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         { 
             base.OnModelCreating(modelBuilder);
@@ -103,19 +104,19 @@ namespace MyDBContext.Main
         {
             /*
              初始化
-                        admin-系统用户[SystemUser]
-                        
-                        user2-顶级用户      -设备1(分组1) 2 3
-                        /   \
-                     user3   \              -设备1(分组2) 2  
-                      /      user4          -设备1
-                   user5                    -设备1
+                  admin-系统用户[SystemUser,测试权限1]
+                  
+                  user2-顶级用户[测试权限1,测试权限2]      -设备1(分组1) 2 3
+                  /   \
+               user3   \              -设备1(分组2) 2  
+                /      user4          -设备1
+             user5                    -设备1
 
-                       user10-顶级用户
-                       /   \
-                    user11  \  
-                     /      user12
-                  user13 
+                 user10-顶级用户
+                 /   \
+              user11  \  
+               /      user12
+            user13 
 
                 设备1 -类型1
                 设备2 -类型1
@@ -133,7 +134,7 @@ namespace MyDBContext.Main
                 Pass = "123",
                 Phone = "15850798245",
                 CreatorId =0,
-                Authoritys="[SystemUser]" 
+                Authoritys= "[\"SystemUser\",\"测试权限1\"]"
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -144,7 +145,7 @@ namespace MyDBContext.Main
                 Pass = "123",
                 Phone = "15850798245",
                 CreatorId = 0,
-                Authoritys = "[]" 
+                Authoritys = "[\"测试权限1\",\"测试权限2\"]"
             });
             modelBuilder.Entity<User>().HasData(new User()
             {

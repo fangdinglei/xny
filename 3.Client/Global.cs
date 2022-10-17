@@ -5,7 +5,7 @@ using MyClient.View;
 
 namespace MyClient
 {
-    public class Global {
+    public static class Global {
         static public IServiceCollection Collection;
         static  Global()
         {
@@ -22,5 +22,28 @@ namespace MyClient
             var provider = services.BuildServiceProvider( ); 
             services.UserGrpc();
         }
+        static public bool TryDeserializeObject<T>(this string json, out T? obj) where T : class
+        {
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                obj = null;
+                return false;
+            }
+            try
+            {
+                obj = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
+                return obj != null;
+            }
+            catch (Exception)
+            {
+                obj = null;
+                return false;
+            }
+        }
+
+
+
+
     }
 }

@@ -62,6 +62,7 @@ message DTODefine
         optional int64 Father=4;    
         optional string Email=5;
         optional int64 LastLogin=6;
+        optional string Authoritys =7;
     }
     message Request_GetUserInfo{
         bool SubUser=1;
