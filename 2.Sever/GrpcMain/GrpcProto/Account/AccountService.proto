@@ -19,7 +19,7 @@ service AccountService {
     //获取用户信息
     rpc GetUserInfo(DTODefine.Request_GetUserInfo)
         returns (DTODefine.Response_GetUserInfo);
-    //修改用户信息
+    //修改用户信息 也可修改高级信息
     rpc UpdateUserInfo(DTODefine.Request_UpdateUserInfo)
         returns (GrpcMain.Common.CommonResponse);
 }

@@ -68,7 +68,7 @@ namespace MyDBContext.Main
             var sf = await ct.User_SFs
               .Where(it => it.User1Id == u1 && it.User2Id == u2)
                .AsNoTracking().FirstOrDefaultAsync();
-            if (sf != null)
+            if (sf == null)
             {
                 return OwnerType.Non;
             }

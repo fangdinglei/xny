@@ -73,7 +73,7 @@ namespace GrpcMain
             }
         }
 
-       static bool TryDeserializeObject<T>(this  string json,out T? obj)where T:class
+       static public  bool TryDeserializeObject<T>(this  string json,out T? obj)where T:class
         {
            
             if (string.IsNullOrWhiteSpace(json))

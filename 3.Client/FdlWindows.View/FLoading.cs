@@ -38,9 +38,9 @@ namespace MyClient.View
             {
                 okcall?.Invoke();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Debug.Assert(false,"回调失败");
+                Debug.Assert(false,"回调失败"+ex.Message);
             }
         
             okcall = null;

@@ -52,11 +52,13 @@ namespace MyClient.View
             this.label6 = new System.Windows.Forms.Label();
             this.temail = new System.Windows.Forms.TextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -219,17 +221,21 @@ namespace MyClient.View
             // 
             // group_priority_list
             // 
+            this.group_priority_list.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.group_priority_list.FormattingEnabled = true;
-            this.group_priority_list.Location = new System.Drawing.Point(6, 21);
+            this.group_priority_list.Location = new System.Drawing.Point(3, 3);
             this.group_priority_list.Name = "group_priority_list";
-            this.group_priority_list.Size = new System.Drawing.Size(266, 274);
+            this.group_priority_list.Size = new System.Drawing.Size(508, 409);
             this.group_priority_list.TabIndex = 0;
             // 
             // group_priority_btn_ok
             // 
-            this.group_priority_btn_ok.Location = new System.Drawing.Point(6, 301);
+            this.group_priority_btn_ok.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.group_priority_btn_ok.Location = new System.Drawing.Point(166, 438);
             this.group_priority_btn_ok.Name = "group_priority_btn_ok";
-            this.group_priority_btn_ok.Size = new System.Drawing.Size(112, 34);
+            this.group_priority_btn_ok.Size = new System.Drawing.Size(181, 54);
             this.group_priority_btn_ok.TabIndex = 1;
             this.group_priority_btn_ok.Text = "提交变更";
             this.group_priority_btn_ok.UseVisualStyleBackColor = true;
@@ -291,8 +297,7 @@ namespace MyClient.View
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.group_priority_btn_ok);
-            this.tabPage1.Controls.Add(this.group_priority_list);
+            this.tabPage1.Controls.Add(this.tableLayoutPanel1);
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -300,6 +305,21 @@ namespace MyClient.View
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "高级权限";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.group_priority_list, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.group_priority_btn_ok, 0, 1);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 6);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 64F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 130F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(514, 627);
+            this.tableLayoutPanel1.TabIndex = 2;
             // 
             // tabPage2
             // 
@@ -338,6 +358,7 @@ namespace MyClient.View
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.tabPage1.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -370,5 +391,6 @@ namespace MyClient.View
         private TabPage tabPage4;
         private Label label6;
         private TextBox temail;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }

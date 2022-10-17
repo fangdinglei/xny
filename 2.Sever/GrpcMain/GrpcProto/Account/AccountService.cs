@@ -3,6 +3,7 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using Ubiety.Dns.Core;
 using static GrpcMain.Account.DTODefine.Types;
 namespace GrpcMain.Account
 {
@@ -251,34 +252,63 @@ namespace GrpcMain.Account
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
-                User? user;
-                //鉴权
-                if (request.UserInfo.ID != id)
+                User? user; User? self;
+                //鉴权 自己则不能改权限 子用户则
+                if (request.UserInfo.ID == id)
                 {
-                    var sf = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.UserInfo.ID&&it.IsFather)
-                       .AsNoTracking().FirstOrDefaultAsync();
-                    if (sf == null)
-                    {
-                        context.Status = new Status(StatusCode.PermissionDenied, "无该子用户的所有权");
-                        return null;
-                    }
+                    request.UserInfo.ClearAuthoritys(); 
                 }
-                user = await ct.Users.Where(it => it.Id == request.UserInfo.ID).FirstOrDefaultAsync();
-                if (user == null)
+                else
+                {
+                    var sf = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.UserInfo.ID && it.IsFather)
+                      .AsNoTracking().FirstOrDefaultAsync();
+                    if (sf == null) {
+                        return new CommonResponse()
+                        {
+                            Success = false,
+                            Message = "无该子用户的所有权",
+                        };
+                    } 
+                }
+                user = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
+                if (user == null )
                 {
                     throw new Exception("用户应当不空但是为空");
                 }
-                if (!string.IsNullOrWhiteSpace(request.UserInfo.UserName))
+                if (request.UserInfo.HasUserName)
                 {
                     user.Name = request.UserInfo.UserName;
                 }
-                if (!string.IsNullOrWhiteSpace(request.UserInfo.Phone))
+                if (request.UserInfo.HasPhone)
                 {
                     user.Phone = request.UserInfo.Phone;
                 }
-                if (!string.IsNullOrWhiteSpace(request.UserInfo.Email))
+                if (request.UserInfo.HasEmail)
                 {
                     user.EMail = request.UserInfo.Email;
+                }
+                if (request.UserInfo.HasAuthoritys)
+                {//修改高级权限
+                    List<string>? authorityssubuser;
+                    if (user.Authoritys.TryDeserializeObject(out authorityssubuser) && authorityssubuser.Count > 0)
+                    {
+                        self = await ct.Users.Where(it => it.Id == id).AsNoTracking().FirstOrDefaultAsync();
+                        if (self == null)
+                        {
+                            throw new Exception("用户自己应当不空但是为空");
+                        }
+                        List<string>? authoritysself;
+                        if (!self.Authoritys.TryDeserializeObject(out authoritysself) || 
+                            authoritysself == null ||authoritysself.Count< authorityssubuser.Count
+                            || authorityssubuser.Except(authoritysself).Count() != 0)
+                        {
+                            return new CommonResponse() { 
+                                Success=false,
+                                Message="父用户不具有这些权限",
+                            };
+                        }
+                        user.Authoritys = request.UserInfo.Authoritys;
+                    } 
                 }
                 await ct.SaveChangesAsync();
                 return new CommonResponse
