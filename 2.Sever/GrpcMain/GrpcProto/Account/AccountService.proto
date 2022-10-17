@@ -76,6 +76,6 @@ message DTODefine
     message Request_UpdateUserInfo{
         UserInfo UserInfo=1;
     }
-    
+     
 }
  

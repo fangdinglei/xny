@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
+using MyDBContext;
 using MyDBContext.Main;
 using MyUtility;
 using Ubiety.Dns.Core;
@@ -29,34 +30,37 @@ namespace GrpcMain.Account
                 && it.Pass == request.PassWord).AsNoTracking().FirstOrDefaultAsync();
                 if (user == null)
                 {//登陆失败
-                    await ct.AddAsync(new History()
-                    {
-                        _Type = HistoryType.Login,
-                        Data = Newtonsoft.Json.JsonConvert.SerializeObject(
-                            new
-                            {
-                                Success = false,
-                                Ip = context.Peer,
-                                Time = _timeutility.GetTicket()
-                            }
-                       )
-                    });
-                    await ct.SaveChangesAsync();
+                    //await ct.AddAsync(new MyDBContext.Main. History()
+                    //{
+                    //    _Type = HistoryType.Login,
+                    //    Success=false,
+                    //    Time = _timeutility.GetTicket(),
+                    //    Data = Newtonsoft.Json.JsonConvert.SerializeObject(
+                    //        new
+                    //        {
+                    //            Success = false,
+                    //            Ip = context.Peer,
+                    //        }
+                    //   )
+                    //});
+                    //await ct.SaveChangesAsync();
                     return new Response_LoginByUserName()
                     { 
                     };
                 }
                 else
                 {//登陆成功
-                    await ct.AddAsync(new History()
+                    await ct.AddAsync(new MyDBContext.Main.History()
                     {
                         _Type = HistoryType.Login,
+                        Success = true,
+                        Time=_timeutility.GetTicket(),
+                        CreatorId = user.Id,
                         Data = Newtonsoft.Json.JsonConvert.SerializeObject(
                            new
                            {
                                Success = true,
                                Ip = context.Peer,
-                               Time = _timeutility.GetTicket()
                            }
                       )
                     });

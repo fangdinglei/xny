@@ -261,17 +261,17 @@ namespace MyClient.View
 
         private void b_sendcmd_Click(object sender, EventArgs e)
         {
-            var tb = new List<ValueTuple<uint, string>>();
+            var tb = new List<ValueTuple<long, string>>();
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 if ((bool)row.Cells[0].EditedFormattedValue)
                 {
-                    tb.Add((uint.Parse((string)row.Cells[1].EditedFormattedValue), (string)row.Cells[2].EditedFormattedValue));
+                    tb.Add((long.Parse((string)row.Cells[1].EditedFormattedValue), (string)row.Cells[2].EditedFormattedValue));
                 }
             }
             if (tb.Count == 0)
                 return;
-            ViewHolder.SwitchTo("向设备发送命令", false, tb);
+            ViewHolder.SwitchTo("FSendCMD", false, tb);
         }
 
         #region 分组移动

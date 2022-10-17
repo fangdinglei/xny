@@ -83,11 +83,16 @@ namespace MyClient.View
 
         public void PrePare(params object[] par)
         {
-            if (par.Count()==1&&par[0]!=null && ( par[0] is List<ValueTuple<uint, string>>)  )
+            if (par.Count()==1&&par[0]!=null && ( par[0] is List<ValueTuple<long, string>>)  )
             {
                 dvs = (List<ValueTuple<long, string>>)par[0];
                 RefreshLab();
             }
+            else
+            {
+                throw new Exception("该界面需要参数");
+            }
+
         }
 
         public void SetViewHolder(IViewHolder viewholder)

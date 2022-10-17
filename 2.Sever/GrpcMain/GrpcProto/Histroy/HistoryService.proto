@@ -1,0 +1,34 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.History";
+package GrpcMain.History;
+import "Common/CommonResponse.proto";
+service HistoryService { 
+    rpc GetHistory(DTODefine.Request_GetHistory)
+        returns (DTODefine.Response_GetHistory);
+}
+
+
+message DTODefine
+{    
+    message History{
+        int64 Id=1;
+        int32 Type=2;
+        int64 Time=3;
+        bool Success=4;
+        string Data=5;
+    }
+    message Request_GetHistory{
+        //日志的产生者
+        optional int64 UserId=1;
+        optional int64 StartTime=2;
+        optional int64 EndTime=3;
+        //50 100 200 400 800 默认400
+        optional int32 MaxCount=4;
+        int32 Type=5;
+    }
+    message Response_GetHistory{
+        repeated History Historys=1;
+    }
+}
+ 

@@ -12,18 +12,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
-    public enum HistoryType {
-        Unknown,
-        Login,
-        SendDeviceCmd,
-    }
-    public class  History
+    public class  History:IHasCreator
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-        public short Type;
+        public short Type { get; set; }
+        public long Time { get; set; }
+        public bool Success { get; set; }
 
         public string Data { get; set; }
+
+        public long CreatorId { get; set; }
+        public virtual User Creator { get; }
+
+
         [NotMapped]
         public HistoryType _Type
         {

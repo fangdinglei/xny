@@ -18,6 +18,9 @@ using static GrpcMain.Account.DTODefine.Types;
 using static GrpcMain.UserDevice.DTODefine.Types;
 using System.Threading.Tasks.Dataflow;
 using System.Collections.ObjectModel;
+using GrpcMain.History;
+using Sayaka.Common;
+using MyDBContext;
 
 namespace MyClient.View
 {
@@ -596,6 +599,67 @@ namespace MyClient.View
                 }
 
             }
+
+        }
+
+        class UserLoginHistoryManager : BaseManager
+        {
+            private ListView _group_loginhistory_list;
+            private ComboBox _group_loginhistory_maxcount;
+            private CheckBox _group_loginhistory_usetimes;
+            private Button _group_loginhistory_getinfos;
+            private AccountService.AccountServiceClient  _accountServiceClient;
+            private HistoryService.HistoryServiceClient _historyServiceClient;
+            private IViewHolder _viewHolder;
+            private IView _father;
+            
+            private List<HistoryType.>
+            
+            public UserLoginHistoryManager(ListBox list_user, CheckedListBox group_priority_list, Button group_priority_btn_ok, TabControl tabControl1, Func<Collection<UserInfo>?> getUserInfos )
+            : base(tabControl1, 1, list_user, getUserInfos)
+            {
+                
+            }
+
+            protected override void SetUserInfo(UserInfo? sonInfo, UserInfo? fatherinfo)
+            {
+                base.SetUserInfo(sonInfo, fatherinfo);
+                Refresh();
+            }
+
+        
+
+            public override void Refresh()
+            {
+                if (!Active)
+                    return;
+                _viewHolder.ShowLoading(_father,async () => {
+                    var req = new GrpcMain.History.DTODefine.Types.Request_GetHistory()
+                    {
+                        UserId = SelectedUser.ID,
+                        Type= (int)HistoryType.Login,
+                    };
+                    if (_group_loginhistory_usetimes.Checked)
+                    {//TODO 使用时间
+
+                    }
+                    req.MaxCount = int.Parse(_group_loginhistory_maxcount.SelectedItem as string);
+                    var rsp=await _historyServiceClient.GetHistoryAsync(req);
+                    if (rsp.)
+                    {
+
+                    }
+                    return false;
+                }, okcall: () => { 
+                
+                }, exitcall: () => { 
+                
+                }
+                
+                );
+            }
+
+            
 
         }
         #endregion

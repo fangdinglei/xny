@@ -30,4 +30,8 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EnumDefines\EnumDefines.csproj" />
+  </ItemGroup>
+
 </Project>
