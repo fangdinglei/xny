@@ -55,13 +55,15 @@ namespace MyClient.View
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.group_loginhistory_datepicker1 = new System.Windows.Forms.DateTimePicker();
+            this.group_loginhistory_datepicker2 = new System.Windows.Forms.DateTimePicker();
+            this.group_loginhistory_list = new System.Windows.Forms.ListBox();
+            this.group_loginhistory_maxcount = new System.Windows.Forms.ComboBox();
+            this.group_loginhistory_usetimes = new System.Windows.Forms.CheckBox();
+            this.group_loginhistory_getinfos = new System.Windows.Forms.Button();
             this.group_loginhistory_multidelet = new System.Windows.Forms.Button();
             this.group_loginhistory_delet = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.group_loginhistory_list = new System.Windows.Forms.ListView();
-            this.group_loginhistory_getinfos = new System.Windows.Forms.Button();
-            this.group_loginhistory_usetimes = new System.Windows.Forms.CheckBox();
-            this.group_loginhistory_maxcount = new System.Windows.Forms.ComboBox();
+            this.group_loginhistory_text = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -343,13 +345,15 @@ namespace MyClient.View
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.group_loginhistory_datepicker1);
+            this.tabPage3.Controls.Add(this.group_loginhistory_datepicker2);
+            this.tabPage3.Controls.Add(this.group_loginhistory_list);
             this.tabPage3.Controls.Add(this.group_loginhistory_maxcount);
             this.tabPage3.Controls.Add(this.group_loginhistory_usetimes);
             this.tabPage3.Controls.Add(this.group_loginhistory_getinfos);
             this.tabPage3.Controls.Add(this.group_loginhistory_multidelet);
             this.tabPage3.Controls.Add(this.group_loginhistory_delet);
-            this.tabPage3.Controls.Add(this.textBox1);
-            this.tabPage3.Controls.Add(this.group_loginhistory_list);
+            this.tabPage3.Controls.Add(this.group_loginhistory_text);
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -358,61 +362,36 @@ namespace MyClient.View
             this.tabPage3.Text = "登陆日志";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // group_loginhistory_multidelet
+            // group_loginhistory_datepicker1
             // 
-            this.group_loginhistory_multidelet.Location = new System.Drawing.Point(313, 302);
-            this.group_loginhistory_multidelet.Name = "group_loginhistory_multidelet";
-            this.group_loginhistory_multidelet.Size = new System.Drawing.Size(112, 34);
-            this.group_loginhistory_multidelet.TabIndex = 3;
-            this.group_loginhistory_multidelet.Text = "批量删除";
-            this.group_loginhistory_multidelet.UseVisualStyleBackColor = true;
+            this.group_loginhistory_datepicker1.CustomFormat = " ";
+            this.group_loginhistory_datepicker1.Font = new System.Drawing.Font("Microsoft YaHei UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.group_loginhistory_datepicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.group_loginhistory_datepicker1.Location = new System.Drawing.Point(211, 64);
+            this.group_loginhistory_datepicker1.Name = "group_loginhistory_datepicker1";
+            this.group_loginhistory_datepicker1.Size = new System.Drawing.Size(214, 48);
+            this.group_loginhistory_datepicker1.TabIndex = 10;
             // 
-            // group_loginhistory_delet
+            // group_loginhistory_datepicker2
             // 
-            this.group_loginhistory_delet.Location = new System.Drawing.Point(471, 120);
-            this.group_loginhistory_delet.Name = "group_loginhistory_delet";
-            this.group_loginhistory_delet.Size = new System.Drawing.Size(112, 34);
-            this.group_loginhistory_delet.TabIndex = 2;
-            this.group_loginhistory_delet.Text = "删除";
-            this.group_loginhistory_delet.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(211, 120);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(239, 138);
-            this.textBox1.TabIndex = 1;
+            this.group_loginhistory_datepicker2.CustomFormat = " ";
+            this.group_loginhistory_datepicker2.Font = new System.Drawing.Font("Microsoft YaHei UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.group_loginhistory_datepicker2.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.group_loginhistory_datepicker2.Location = new System.Drawing.Point(211, 10);
+            this.group_loginhistory_datepicker2.Name = "group_loginhistory_datepicker2";
+            this.group_loginhistory_datepicker2.Size = new System.Drawing.Size(214, 48);
+            this.group_loginhistory_datepicker2.TabIndex = 11;
             // 
             // group_loginhistory_list
             // 
-            this.group_loginhistory_list.Location = new System.Drawing.Point(6, 6);
+            this.group_loginhistory_list.FormattingEnabled = true;
+            this.group_loginhistory_list.ItemHeight = 24;
+            this.group_loginhistory_list.Location = new System.Drawing.Point(6, 10);
             this.group_loginhistory_list.Name = "group_loginhistory_list";
-            this.group_loginhistory_list.Size = new System.Drawing.Size(199, 456);
-            this.group_loginhistory_list.TabIndex = 0;
-            this.group_loginhistory_list.UseCompatibleStateImageBehavior = false;
+            this.group_loginhistory_list.Size = new System.Drawing.Size(199, 484);
+            this.group_loginhistory_list.TabIndex = 9;
             // 
-            // group_loginhistory_getinfos
-            // 
-            this.group_loginhistory_getinfos.Location = new System.Drawing.Point(471, 40);
-            this.group_loginhistory_getinfos.Name = "group_loginhistory_getinfos";
-            this.group_loginhistory_getinfos.Size = new System.Drawing.Size(112, 34);
-            this.group_loginhistory_getinfos.TabIndex = 6;
-            this.group_loginhistory_getinfos.Text = "搜索";
-            this.group_loginhistory_getinfos.UseVisualStyleBackColor = true;
-            // 
-            // group_loginhistory_usetimes
-            // 
-            this.group_loginhistory_usetimes.AutoSize = true;
-            this.group_loginhistory_usetimes.Location = new System.Drawing.Point(481, 6);
-            this.group_loginhistory_usetimes.Name = "group_loginhistory_usetimes";
-            this.group_loginhistory_usetimes.Size = new System.Drawing.Size(108, 28);
-            this.group_loginhistory_usetimes.TabIndex = 7;
-            this.group_loginhistory_usetimes.Text = "时间筛选";
-            this.group_loginhistory_usetimes.UseVisualStyleBackColor = true;
-            // 
-            // comboBox1
+            // group_loginhistory_maxcount
             // 
             this.group_loginhistory_maxcount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.group_loginhistory_maxcount.FormattingEnabled = true;
@@ -421,10 +400,58 @@ namespace MyClient.View
             "200",
             "400",
             "800"});
-            this.group_loginhistory_maxcount.Location = new System.Drawing.Point(255, 31);
-            this.group_loginhistory_maxcount.Name = "comboBox1";
+            this.group_loginhistory_maxcount.Location = new System.Drawing.Point(523, 17);
+            this.group_loginhistory_maxcount.Name = "group_loginhistory_maxcount";
             this.group_loginhistory_maxcount.Size = new System.Drawing.Size(182, 32);
             this.group_loginhistory_maxcount.TabIndex = 8;
+            // 
+            // group_loginhistory_usetimes
+            // 
+            this.group_loginhistory_usetimes.AutoSize = true;
+            this.group_loginhistory_usetimes.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.group_loginhistory_usetimes.Location = new System.Drawing.Point(431, 9);
+            this.group_loginhistory_usetimes.Name = "group_loginhistory_usetimes";
+            this.group_loginhistory_usetimes.Size = new System.Drawing.Size(86, 49);
+            this.group_loginhistory_usetimes.TabIndex = 7;
+            this.group_loginhistory_usetimes.Text = "时间筛选";
+            this.group_loginhistory_usetimes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.group_loginhistory_usetimes.UseVisualStyleBackColor = true;
+            // 
+            // group_loginhistory_getinfos
+            // 
+            this.group_loginhistory_getinfos.Location = new System.Drawing.Point(431, 61);
+            this.group_loginhistory_getinfos.Name = "group_loginhistory_getinfos";
+            this.group_loginhistory_getinfos.Size = new System.Drawing.Size(154, 51);
+            this.group_loginhistory_getinfos.TabIndex = 6;
+            this.group_loginhistory_getinfos.Text = "搜索";
+            this.group_loginhistory_getinfos.UseVisualStyleBackColor = true;
+            // 
+            // group_loginhistory_multidelet
+            // 
+            this.group_loginhistory_multidelet.Location = new System.Drawing.Point(664, 64);
+            this.group_loginhistory_multidelet.Name = "group_loginhistory_multidelet";
+            this.group_loginhistory_multidelet.Size = new System.Drawing.Size(68, 79);
+            this.group_loginhistory_multidelet.TabIndex = 3;
+            this.group_loginhistory_multidelet.Text = "批量删除";
+            this.group_loginhistory_multidelet.UseVisualStyleBackColor = true;
+            // 
+            // group_loginhistory_delet
+            // 
+            this.group_loginhistory_delet.Location = new System.Drawing.Point(211, 359);
+            this.group_loginhistory_delet.Name = "group_loginhistory_delet";
+            this.group_loginhistory_delet.Size = new System.Drawing.Size(154, 45);
+            this.group_loginhistory_delet.TabIndex = 2;
+            this.group_loginhistory_delet.Text = "删除";
+            this.group_loginhistory_delet.UseVisualStyleBackColor = true;
+            // 
+            // group_loginhistory_text
+            // 
+            this.group_loginhistory_text.Location = new System.Drawing.Point(211, 121);
+            this.group_loginhistory_text.Multiline = true;
+            this.group_loginhistory_text.Name = "group_loginhistory_text";
+            this.group_loginhistory_text.ReadOnly = true;
+            this.group_loginhistory_text.Size = new System.Drawing.Size(239, 232);
+            this.group_loginhistory_text.TabIndex = 1;
             // 
             // FUserInfo
             // 
@@ -479,10 +506,12 @@ namespace MyClient.View
         private TableLayoutPanel tableLayoutPanel1;
         private Button group_loginhistory_multidelet;
         private Button group_loginhistory_delet;
-        private TextBox textBox1;
-        private ListView group_loginhistory_list;
+        private TextBox group_loginhistory_text;
         private ComboBox group_loginhistory_maxcount;
         private CheckBox group_loginhistory_usetimes;
         private Button group_loginhistory_getinfos;
+        private ListBox group_loginhistory_list;
+        private DateTimePicker group_loginhistory_datepicker1;
+        private DateTimePicker group_loginhistory_datepicker2;
     }
 }

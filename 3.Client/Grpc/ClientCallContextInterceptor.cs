@@ -15,6 +15,7 @@ using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
 using GrpcMain.Common;
 using Grpc.Net.Client;
+using GrpcMain.History;
 
 namespace MyClient.Grpc
 {
@@ -42,6 +43,7 @@ namespace MyClient.Grpc
             serviceCollection.TryAddSingleton<InternalMailService.InternalMailServiceClient>();
             serviceCollection.TryAddSingleton<DeviceDataService.DeviceDataServiceClient>();
             serviceCollection.TryAddSingleton<DeviceTypeService.DeviceTypeServiceClient>();
+            serviceCollection.TryAddSingleton<HistoryService.HistoryServiceClient>();
         }
     }
     public class ClientCallContextInterceptor : Interceptor

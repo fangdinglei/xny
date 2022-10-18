@@ -3,6 +3,7 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using System.Security.Cryptography;
 using Ubiety.Dns.Core;
 using static GrpcMain.History.DTODefine.Types;
 namespace GrpcMain.History
@@ -65,6 +66,80 @@ namespace GrpcMain.History
                     };
                 }));
                 return res;
+            }
+        }
+
+
+        public override async Task<CommonResponse> DeletHistory(Request_DeletHistory request, ServerCallContext context)
+        {
+            long id = (long)context.UserState["CreatorId"];  
+            using (MainContext ct = new MainContext())
+            {
+                if ( request.Id == id)
+                {
+                    return new CommonResponse() { 
+                        Message="无法删除自己的日志",
+                        Success=false,
+                    }; 
+                }
+                var history = await ct.Historys.Where(it => it.Id == request.Id).FirstOrDefaultAsync();
+                if (history==null)
+                {
+                    return new CommonResponse()
+                    {
+                        Message = "只能删除自己的子用户的日志",
+                        Success = false,
+                    };
+                }
+                
+                var sf = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id ==  history.CreatorId && it.IsFather)
+                  .AsNoTracking().FirstOrDefaultAsync();
+                if (sf == null)
+                {
+                    return new CommonResponse()
+                    {
+                        Message = "只能删除自己的子用户的日志",
+                        Success = false,
+                    };
+                }
+                ct.Remove(history);
+                await ct.SaveChangesAsync();
+                return new CommonResponse { 
+                    Success=true, 
+                };
+            }
+        }
+
+        public override async Task<CommonResponse> DeletHistorys(Request_DeletHistorys request, ServerCallContext context)
+        {
+            long id = (long)context.UserState["CreatorId"];
+            using (MainContext ct = new MainContext())
+            {
+                if (request.UserId== id)
+                {
+                    return new CommonResponse()
+                    {
+                        Message = "无法删除自己的日志",
+                        Success = false,
+                    };
+                }
+                var sf = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.UserId && it.IsFather)
+                .AsNoTracking().FirstOrDefaultAsync();
+                if (sf == null)
+                {
+                    return new CommonResponse()
+                    {
+                        Message = "只能删除自己的子用户的日志",
+                        Success = false,
+                    };
+                }
+
+                await ct.DeleteRangeAsync<MyDBContext.Main.History>(it=>
+                it.CreatorId==request.UserId&&it.Time >= request.StartTime&&it.Time<request.EndTime); 
+                return new CommonResponse
+                {
+                    Success = true,
+                };
             }
         }
 

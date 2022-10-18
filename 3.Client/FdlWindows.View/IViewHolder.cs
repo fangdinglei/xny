@@ -28,6 +28,8 @@
         void ShowLoading(IView view, Func<Task<bool>> load, Func<Task<bool>>? retry=null
             ,Action okcall=null,Action exitcall=null);
         bool IsLoading(IView view);
+
+        void ShowDatePicker(Action<DateTime, DateTime> call);
     }
 
 }

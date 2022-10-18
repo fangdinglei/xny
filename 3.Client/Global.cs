@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MyClient.Grpc;
 using MyClient.View;
+using MyUtility;
 
 namespace MyClient
 {
@@ -13,6 +14,7 @@ namespace MyClient
             services.AddSingleton (services);
           
             services.AddSingleton<FLogin >();
+            services.AddSingleton<ITimeUtility,TimeUtility>();
             services.AddSingleton<FMain >();
             services.AddSingleton(new FMainOption() { 
                  Title="智慧农业", 

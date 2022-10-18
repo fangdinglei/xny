@@ -6,6 +6,13 @@ import "Common/CommonResponse.proto";
 service HistoryService { 
     rpc GetHistory(DTODefine.Request_GetHistory)
         returns (DTODefine.Response_GetHistory);
+
+    rpc DeletHistory(DTODefine.Request_DeletHistory)
+        returns (Common.CommonResponse);
+
+    rpc DeletHistorys(DTODefine.Request_DeletHistorys)
+        returns (Common.CommonResponse);
+
 }
 
 
@@ -30,5 +37,18 @@ message DTODefine
     message Response_GetHistory{
         repeated History Historys=1;
     }
+
+    message Request_DeletHistory{
+        //日志Id
+        int64 Id=1;
+    }
+    message Request_DeletHistorys{
+        int64 StartTime=1;
+        int64 EndTime=2;
+        //日志产生的用户
+        int64 UserId=3;
+        //日志类型
+        int32 Type=4;
+    }   
 }
  

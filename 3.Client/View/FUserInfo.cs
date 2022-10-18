@@ -7,20 +7,15 @@ using MyClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using static GrpcMain.Account.DTODefine.Types;
 using static GrpcMain.UserDevice.DTODefine.Types;
-using System.Threading.Tasks.Dataflow;
 using System.Collections.ObjectModel;
 using GrpcMain.History;
-using Sayaka.Common;
 using MyDBContext;
+using MyUtility;
+using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Forms;
+using System.Linq;
 
 namespace MyClient.View
 {
@@ -29,23 +24,38 @@ namespace MyClient.View
     {
         UserBaseInfoManager _userBaseInfoManager;
         UserPriorityManager _userPriorityManager;
+        UserLoginHistoryManager _userLoginHistoryManager;
+        BaseManager[] Managers => new BaseManager[] {
+        _userBaseInfoManager,
+        _userPriorityManager,
+        _userLoginHistoryManager
+        };
 
         AccountService.AccountServiceClient _accountServiceClient;
         UserDeviceService.UserDeviceServiceClient _userDeviceServiceClient;
         DeviceService.DeviceServiceClient _deviceServiceClient;
+        HistoryService.HistoryServiceClient _historyServiceClient;
+        private ITimeUtility _timeUtility;
         IViewHolder _viewholder;
-        public FUserInfo(AccountService.AccountServiceClient accountServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, DeviceService.DeviceServiceClient deviceServiceClient)
+        public FUserInfo(AccountService.AccountServiceClient accountServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, DeviceService.DeviceServiceClient deviceServiceClient, HistoryService.HistoryServiceClient historyServiceClient, ITimeUtility timeUtility)
         {
             InitializeComponent();
             this._userDeviceServiceClient = userDeviceServiceClient;
             this._accountServiceClient = accountServiceClient;
             this._deviceServiceClient = deviceServiceClient;
+            _historyServiceClient = historyServiceClient;
+            _timeUtility = timeUtility;
             _userBaseInfoManager = new UserBaseInfoManager(
                 tuname, tuid, tpass, tphone, temail, baseinfo_authoritys
                 , btn_passupdate, btn_update, list_user, tabControl1
                 , getUserInfos: () => _userInfos, client: accountServiceClient);
             _userPriorityManager = new UserPriorityManager(list_user,
-                group_priority_list, group_priority_btn_ok, tabControl1, getUserInfos: () => _userInfos,accountServiceClient);
+                group_priority_list, group_priority_btn_ok, tabControl1, getUserInfos: () => _userInfos, accountServiceClient);
+            _userLoginHistoryManager = new UserLoginHistoryManager(list_user, tabControl1, group_loginhistory_list,
+                group_loginhistory_text, group_loginhistory_maxcount, group_loginhistory_usetimes, group_loginhistory_getinfos,
+                _accountServiceClient, _historyServiceClient, () => _userInfos, _timeUtility,group_loginhistory_multidelet,group_loginhistory_delet,
+               _viewholder, this,group_loginhistory_datepicker1,group_loginhistory_datepicker2);
+      
         }
 
         public Control View => this;
@@ -118,6 +128,10 @@ namespace MyClient.View
         public void SetViewHolder(IViewHolder viewholder)
         {
             this._viewholder = viewholder;
+            foreach (var item in Managers)
+            {
+                item.SetViewHolder(viewholder);
+            }
         }
 
         /// <summary>
@@ -282,7 +296,7 @@ namespace MyClient.View
             private TabControl _tabControl1;
             private int _tabindex;
             protected Func<Collection<UserInfo>?> _getUserInfos;
-
+            protected IViewHolder _viewHolder;
             protected BaseManager(TabControl tabControl1, int tabindex, ListBox list_user, Func<Collection<UserInfo>?> getUserInfos)
             {
                 _list_user = list_user;
@@ -325,6 +339,10 @@ namespace MyClient.View
             {
                 SelectedUser = sonInfo;
                 FatherInfo = fatherinfo;
+            }
+
+            public void SetViewHolder(IViewHolder viewHolder) {
+                _viewHolder = viewHolder;
             }
         }
 
@@ -604,26 +622,164 @@ namespace MyClient.View
 
         class UserLoginHistoryManager : BaseManager
         {
-            private ListView _group_loginhistory_list;
+            private ListBox _group_loginhistory_list;
+            private TextBox _group_loginhistory_text;
             private ComboBox _group_loginhistory_maxcount;
             private CheckBox _group_loginhistory_usetimes;
             private Button _group_loginhistory_getinfos;
-            private AccountService.AccountServiceClient  _accountServiceClient;
+            private Button _group_loginhistory_multidelet;
+            private Button _group_loginhistory_delet;
+            private DateTimePicker _group_loginhistory_datepicker1;
+            private DateTimePicker _group_loginhistory_datepicker2;
+            private AccountService.AccountServiceClient _accountServiceClient;
             private HistoryService.HistoryServiceClient _historyServiceClient;
-            private IViewHolder _viewHolder;
+            private ITimeUtility _timeUtility; 
             private IView _father;
-            
-            private List<HistoryType.>
-            
-            public UserLoginHistoryManager(ListBox list_user, CheckedListBox group_priority_list, Button group_priority_btn_ok, TabControl tabControl1, Func<Collection<UserInfo>?> getUserInfos )
+
+            private BindingList<ToStringHelper<GrpcMain.History.DTODefine.Types.History>> _histories;
+
+            public ITimeUtility TimeUtility { get => _timeUtility; set => _timeUtility = value; }
+
+            public UserLoginHistoryManager(ListBox list_user, TabControl tabControl1, ListBox group_loginhistory_list, TextBox group_loginhistory_text, ComboBox group_loginhistory_maxcount, CheckBox group_loginhistory_usetimes, Button group_loginhistory_getinfos, AccountService.AccountServiceClient accountServiceClient, HistoryService.HistoryServiceClient historyServiceClient, Func<Collection<UserInfo>?> getUserInfos, ITimeUtility timeUtility, Button group_loginhistory_multidelet, Button group_loginhistory_delet, IViewHolder viewHolder, IView father, DateTimePicker group_loginhistory_datepicker1, DateTimePicker group_loginhistory_datepicker2)
             : base(tabControl1, 1, list_user, getUserInfos)
             {
-                
+                _group_loginhistory_list = group_loginhistory_list;
+                _group_loginhistory_maxcount = group_loginhistory_maxcount;
+                _group_loginhistory_usetimes = group_loginhistory_usetimes;
+                _group_loginhistory_getinfos = group_loginhistory_getinfos;
+                _accountServiceClient = accountServiceClient;
+                _historyServiceClient = historyServiceClient;
+                _group_loginhistory_text = group_loginhistory_text;
+                TimeUtility = timeUtility;
+                _group_loginhistory_multidelet = group_loginhistory_multidelet;
+                _group_loginhistory_delet = group_loginhistory_delet;
+                _viewHolder = viewHolder;
+                _father = father;
+
+                _group_loginhistory_maxcount.SelectedIndex = 0;
+                _group_loginhistory_list.SelectedIndexChanged +=
+                    (box, _) => OnSelectChanged(box as ListBox, _group_loginhistory_text);
+                _group_loginhistory_getinfos.Click +=
+                    (_, _) => OnSearch(_group_loginhistory_maxcount, _group_loginhistory_usetimes);
+                _group_loginhistory_delet.Click +=
+                    (_, _) => OnDelet(_group_loginhistory_list);
+                _group_loginhistory_multidelet.Click +=
+                    (_, _) => OnMultiDelet();
+                _group_loginhistory_datepicker1 = group_loginhistory_datepicker1;
+                _group_loginhistory_datepicker2 = group_loginhistory_datepicker2;
+            }
+
+            /// <summary>
+            /// 包含开始时间 到当前选择日期的23.59.59
+            /// </summary>
+            /// <param name="maxcount"></param>
+            /// <param name="usertimes"></param>
+            void OnSearch(ComboBox maxcount, CheckBox usertimes ) {
+                var vs = _group_loginhistory_datepicker1.Value;
+                var ve = _group_loginhistory_datepicker2.Value;
+                vs = new DateTime(vs.Year, vs.Month, vs.Day);
+                ve= new DateTime(ve.Year, ve.Month, ve.Day, 23, 59, 59) ;
+
+                long st =_timeUtility.GetTicket(vs);
+                long ed = _timeUtility.GetTicket(ve);
+
+                _viewHolder.ShowLoading(_father, async () =>
+                {
+                    try
+                    {
+                        var req = new GrpcMain.History.DTODefine.Types.Request_GetHistory()
+                        {
+                            UserId = SelectedUser.ID,
+                            Type = (int)HistoryType.Login,
+                        };
+                        if (usertimes.Checked)
+                        {//TODO 使用时间
+                            req.StartTime = st;
+                            req.EndTime = ed;
+                        }
+                        req.MaxCount = int.Parse(maxcount.Text);
+                        var rsp = await _historyServiceClient.GetHistoryAsync(req);
+                        _histories = new BindingList<ToStringHelper<GrpcMain.History.DTODefine.Types.History>>(
+                            rsp.Historys.Select(it => new ToStringHelper<GrpcMain.History.DTODefine.Types.History>(it, (it) => {
+                                return _timeUtility.GetDateTime(it.Time).ToString();
+                            }) ).ToList());
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("错误:" + ex.Message, "错误");
+                        return false;
+                    } 
+                }, okcall: () =>
+                { 
+                    _group_loginhistory_list.DataSource = _histories;
+                    _group_loginhistory_list.DisplayMember = "Time";
+                }, exitcall: () =>
+                {
+                });
+
+
+              
+            }
+            void OnSelectChanged(ListBox box,TextBox text) {
+                if (_histories!=null&&box.SelectedIndex>=0&&box.SelectedIndex<_histories.Count)
+                {
+                    text.Text =TimeUtility.GetDateTime(_histories[box.SelectedIndex].Value.Time)
+                        .ToString();
+                }
+                else
+                {
+                    text.Text = "";
+                } 
+            }
+            /// <summary>
+            /// 删除单个记录
+            /// </summary>
+            /// <param name="list"></param>
+            void OnDelet(ListBox list ) {
+                try
+                {
+                    if (_histories != null && list.SelectedIndex >= 0 && list.SelectedIndex < _histories.Count)
+                    {
+                        var rsp = _historyServiceClient.DeletHistory(new GrpcMain.History.DTODefine.Types.Request_DeletHistory
+                        {
+                            Id = _histories[list.SelectedIndex].Value.Id
+                        });
+                        rsp.ThrowIfNotSuccess();
+                    }
+                    else
+                    {
+                        MessageBox.Show("选择了错误的项目", "提示");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("错误:"+ex.Message, "错误");
+                }
+            }
+            void OnMultiDelet() {
+                _viewHolder.ShowDatePicker((s, e) => {
+                    try
+                    {
+                        var rsp = _historyServiceClient.DeletHistorys(new GrpcMain.History.DTODefine.Types.Request_DeletHistorys() { 
+                            StartTime=TimeUtility.GetTicket(s),
+                            EndTime=TimeUtility.GetTicket(e),
+                            Type=(int)HistoryType.Login,
+                            UserId=SelectedUser.ID,
+                        });
+                        rsp.ThrowIfNotSuccess();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("错误:" + ex.Message, "错误");
+                    }
+                });
             }
 
             protected override void SetUserInfo(UserInfo? sonInfo, UserInfo? fatherinfo)
             {
                 base.SetUserInfo(sonInfo, fatherinfo);
+                _group_loginhistory_list.DataSource = _histories = null; 
                 Refresh();
             }
 
@@ -633,30 +789,7 @@ namespace MyClient.View
             {
                 if (!Active)
                     return;
-                _viewHolder.ShowLoading(_father,async () => {
-                    var req = new GrpcMain.History.DTODefine.Types.Request_GetHistory()
-                    {
-                        UserId = SelectedUser.ID,
-                        Type= (int)HistoryType.Login,
-                    };
-                    if (_group_loginhistory_usetimes.Checked)
-                    {//TODO 使用时间
-
-                    }
-                    req.MaxCount = int.Parse(_group_loginhistory_maxcount.SelectedItem as string);
-                    var rsp=await _historyServiceClient.GetHistoryAsync(req);
-                    if (rsp.)
-                    {
-
-                    }
-                    return false;
-                }, okcall: () => { 
-                
-                }, exitcall: () => { 
-                
-                }
-                
-                );
+               
             }
 
             
@@ -664,5 +797,5 @@ namespace MyClient.View
         }
         #endregion
 
-    }
+    } 
 }

@@ -5,6 +5,7 @@ using GrpcMain.Common;
 using GrpcMain.Device;
 using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
+using GrpcMain.History;
 using GrpcMain.InternalMail;
 using GrpcMain.UserDevice;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,7 @@ namespace GrpcMain
             app.MapGrpcService<DeviceDataServiceImp>();
             app.MapGrpcService<DeviceTypeServiceImp>();
             app.MapGrpcService<InternalMailServiceImp>();
-
+            app.MapGrpcService<HistoryServiceImp>();
             foreach (var item in typeof(IGrpcHandle).Assembly.GetTypes())
             {
                 var att= item.GetCustomAttribute< BindServiceMethodAttribute>();

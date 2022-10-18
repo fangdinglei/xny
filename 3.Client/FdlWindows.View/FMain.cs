@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MyClient.FdlWindows.View;
 using MyClient.View;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
+using static Grpc.Core.Metadata;
 
 namespace FdlWindows.View
 {
@@ -428,6 +430,10 @@ namespace FdlWindows.View
             return _ViewLoading.Contains(view);
         }
         #endregion
+
+        public void ShowDatePicker(Action<DateTime,DateTime> call) {
+            SwitchTo("FDateSelector", false, call);
+        }
 
     }
     public class FMainOption {

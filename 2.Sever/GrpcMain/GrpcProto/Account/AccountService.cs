@@ -50,7 +50,7 @@ namespace GrpcMain.Account
                 }
                 else
                 {//登陆成功
-                    await ct.AddAsync(new MyDBContext.Main.History()
+                    ct.Add(new MyDBContext.Main.History()
                     {
                         _Type = HistoryType.Login,
                         Success = true,
@@ -64,7 +64,7 @@ namespace GrpcMain.Account
                            }
                       )
                     });
-
+                    await ct.SaveChangesAsync();
                 }
             }
             var token = _handle.GetToken(
