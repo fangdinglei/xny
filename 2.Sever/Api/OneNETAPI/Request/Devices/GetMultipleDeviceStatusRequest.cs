@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using OneNET.Api.Response;
+﻿using OneNET.Api.Response;
 using OneNET.Api.Util;
+using System;
+using System.Collections.Generic;
 
 namespace OneNET.Api.Request
 {  /// <summary>
@@ -18,7 +17,7 @@ namespace OneNET.Api.Request
         /// <summary>
         /// 查询具体设备的ID参数
         /// </summary>
-        public List<string>  DeviceIDs;
+        public List<string> DeviceIDs;
 
         public Scheme Protocol;
 
@@ -27,7 +26,7 @@ namespace OneNET.Api.Request
         /// <summary>
         /// 获取设备在线状态
         /// </summary>
-        public GetMultipleDeviceStatusRequest(List<string>  dvs)
+        public GetMultipleDeviceStatusRequest(List<string> dvs)
         {
             otherParameters = new Dictionary<string, string>();
             DeviceIDs = dvs;
@@ -45,9 +44,9 @@ namespace OneNET.Api.Request
             string devids = "";
             foreach (var id in DeviceIDs)
                 devids += id + ",";
-            devids = devids.Substring(0,devids.Length-1);
+            devids = devids.Substring(0, devids.Length - 1);
             otherParameters.Add(DEVIDS, devids);
-            var url =  URIUtils.fmtURI(URI, context);
+            var url = URIUtils.fmtURI(URI, context);
             var webUtils = new WebUtils();
             return webUtils.BuildGetUrl(url, otherParameters);
         }
@@ -66,7 +65,7 @@ namespace OneNET.Api.Request
 
         public void Validate()
         {
-            if (DeviceIDs==null|| DeviceIDs.Count==0)
+            if (DeviceIDs == null || DeviceIDs.Count == 0)
             {
                 throw new OneNETException("设备id不能为空");
             }

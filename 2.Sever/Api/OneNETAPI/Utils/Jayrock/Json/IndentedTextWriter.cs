@@ -24,7 +24,6 @@ namespace Jayrock
 {
     #region Imports
 
-    using System;
     using System.Globalization;
     using System.IO;
     using System.Text;
@@ -45,10 +44,11 @@ namespace Jayrock
 
         public const string DefaultTabString = "\x20\x20\x20\x20";
 
-        public IndentedTextWriter(TextWriter writer) : 
-            this(writer, DefaultTabString) {}
+        public IndentedTextWriter(TextWriter writer) :
+            this(writer, DefaultTabString)
+        { }
 
-        public IndentedTextWriter(TextWriter writer, string tabString) : 
+        public IndentedTextWriter(TextWriter writer, string tabString) :
             base(CultureInfo.InvariantCulture)
         {
             _writer = writer;

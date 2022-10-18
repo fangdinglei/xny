@@ -12,7 +12,7 @@
         /// Command Response Too Large
         /// </summary>
         public int? Status;
-        public CmdStatus? CmdStatus 
+        public CmdStatus? CmdStatus
         {
             get
             {

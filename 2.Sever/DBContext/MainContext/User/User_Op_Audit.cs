@@ -14,7 +14,8 @@ namespace MyDBContext.Main
     /// <summary>
     /// 用户操作审计
     /// </summary>
-    public class User_Op_Audit {
+    public class User_Op_Audit
+    {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         /// <summary>
@@ -24,7 +25,7 @@ namespace MyDBContext.Main
         /// <summary>
         /// 操作数据
         /// </summary>
-        public string Data { get; set; } 
+        public string Data { get; set; }
         /// <summary>
         /// 操作时间
         /// </summary>
@@ -34,11 +35,11 @@ namespace MyDBContext.Main
         /// 发起人
         /// </summary>
         public long SponsorId { get; set; }
-        public virtual User Sponsor { get;   }
+        public virtual User Sponsor { get; }
         /// <summary>
         /// 审计人
         /// </summary>
         public long AuditorId { get; set; }
-        public virtual User Auditor { get;  }
+        public virtual User Auditor { get; }
     }
 }

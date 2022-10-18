@@ -21,26 +21,26 @@ namespace GrpcMain.InternalMail
             this.myEmailUtility = myEmailUtility;
         }
 
-        
+
         public override async Task<CommonResponse?> SendMail(Request_SendInternalMail request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
             request.Mail.Time = _timeutility.GetTicket();
             using (MainContext ct = new MainContext())
             {
-                var count=await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.Mail.ReceiverId).CountAsync();
-                if (count==0)
+                var count = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.Mail.ReceiverId).CountAsync();
+                if (count == 0)
                 {
-                    context.Status = new Status( StatusCode.PermissionDenied,"无权给该用户发邮件");
+                    context.Status = new Status(StatusCode.PermissionDenied, "无权给该用户发邮件");
                     return null;
                 }
 
                 ct.Internal_Mails.Add(
                     new Internal_Mail
                     {
-                        SenderId= id,
-                        LastEMailTime=0,
-                        ReceiverId=request.Mail.ReceiverId,
+                        SenderId = id,
+                        LastEMailTime = 0,
+                        ReceiverId = request.Mail.ReceiverId,
                         Readed = false,
                         Context = request.Mail.Context,
                         Title = request.Mail.Title,
@@ -51,7 +51,7 @@ namespace GrpcMain.InternalMail
             }
             return new CommonResponse() { Success = true };
         }
-        
+
         public override async Task<CommonResponse?> SetMailReaded(Request_SetMailReaded request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -69,7 +69,7 @@ namespace GrpcMain.InternalMail
             }
             return new CommonResponse() { Success = true };
         }
-        
+
         public override async Task<Response_GetMail> GetMail(Request_GetMail request, ServerCallContext context)
         {
             int maxcount = 100 + 1;
@@ -88,11 +88,12 @@ namespace GrpcMain.InternalMail
                 }
                 bd = bd.Take(maxcount);
                 var mails = await bd.AsNoTracking().ToListAsync();
-                 
-                IEnumerable<Internal_Mail> lsx 
-                    = _cursorUtility.Run(mails,   maxcount,(it)=> {
-                        res.Cursor = it==null?0:it.Id;
-                    });  
+
+                IEnumerable<Internal_Mail> lsx
+                    = _cursorUtility.Run(mails, maxcount, (it) =>
+                    {
+                        res.Cursor = it == null ? 0 : it.Id;
+                    });
                 res.Mails.AddRange(lsx.Select(
                     it => new DTODefine.Types.InternalMail()
                     {
@@ -106,7 +107,7 @@ namespace GrpcMain.InternalMail
             }
             return res;
         }
-        
+
         public override async Task<CommonResponse> SendEMail(Request_SendEMail request, ServerCallContext context)
         {
 
@@ -120,7 +121,7 @@ namespace GrpcMain.InternalMail
                     context.Status = new Status(StatusCode.PermissionDenied, "没有该信件");
                     return null;
                 }
-                if ((_timeutility.GetTicket() - mail.LastEMailTime)<60)
+                if ((_timeutility.GetTicket() - mail.LastEMailTime) < 60)
                 {//上次发是60s内
                     return new CommonResponse()
                     {
@@ -142,8 +143,8 @@ namespace GrpcMain.InternalMail
                         Message = "用户未设置正确的邮件地址",
                     };
                 }
-                    
-                var sendsuc= await myEmailUtility.Send(user.EMail,mail.Title,mail.Context );
+
+                var sendsuc = await myEmailUtility.Send(user.EMail, mail.Title, mail.Context);
                 if (sendsuc)
                 {
                     mail.LastEMailTime = _timeutility.GetTicket();
@@ -151,8 +152,8 @@ namespace GrpcMain.InternalMail
                     return new CommonResponse()
                     {
                         Success = true,
-                        Message =null,
-                    }; 
+                        Message = null,
+                    };
                 }
                 else
                 {

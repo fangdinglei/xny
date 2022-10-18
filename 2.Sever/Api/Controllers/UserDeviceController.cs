@@ -3,8 +3,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using XNYAPI.DAL;
-using XNYAPI.Model;
-using XNYAPI.Model.Account;
 using XNYAPI.Model.Device;
 using XNYAPI.Model.UserDevice;
 using XNYAPI.Response;
@@ -14,7 +12,7 @@ namespace XNYAPI.Controllers
 {
     [TokenCheckFilter(new string[] { })]
     public class UserDeviceController : Controller
-    { 
+    {
 
         /// <summary>
         /// 添加用户设备 
@@ -74,7 +72,7 @@ namespace XNYAPI.Controllers
                     foreach (var item in ids)
                     {
                         UserDeviceDAL.SetUserDevice(uid, item, true, cmd);
-                    } 
+                    }
 
                 }
                 return this.Error(XNYResponseBase.EErrorCode.Non);
@@ -90,17 +88,18 @@ namespace XNYAPI.Controllers
         /// 获取用户设备分组信息
         /// </summary>
         /// <returns></returns>
-        public string GetGroupInfo() {
+        public string GetGroupInfo()
+        {
             UserPayLoad payload = this.ViewBag.payload;
             try
             {
                 using (var cnn = DBCnn.GetCnn())
                 {
                     var cmd = cnn.CreateCommand();
-                    var devicegroups= UserDeviceDAL.GetAllDeviceGroup(payload.UserID);
+                    var devicegroups = UserDeviceDAL.GetAllDeviceGroup(payload.UserID);
 
                     return JsonConvert.SerializeObject(new DataListResponse<DeviceGroup>(devicegroups));
-                } 
+                }
             }
             catch (Exception)
             {
@@ -112,14 +111,15 @@ namespace XNYAPI.Controllers
         /// 获取用户的所有设备的信息
         /// </summary>
         /// <returns></returns>
-        public string GetUserAllDeviceInfo() {
+        public string GetUserAllDeviceInfo()
+        {
             UserPayLoad payload = this.ViewBag.payload;
             try
             {
                 using (var cnn = DBCnn.GetCnn())
                 {
                     var cmd = cnn.CreateCommand();
-                    var res = UserDeviceDAL.GetUserAllDeviceInfo(payload.UserID); 
+                    var res = UserDeviceDAL.GetUserAllDeviceInfo(payload.UserID);
                     return JsonConvert.SerializeObject(new DataListResponse<DeviceInfo>(res));
                 }
             }
@@ -133,26 +133,27 @@ namespace XNYAPI.Controllers
         /// 获取用户所有设备的ID
         /// </summary>
         /// <returns></returns>
-        public string GetUserAllDeviceID(uint uid=0) {
+        public string GetUserAllDeviceID(uint uid = 0)
+        {
             UserPayLoad payload = this.ViewBag.payload;
             try
             {
                 using (var cnn = DBCnn.GetCnn())
                 {
                     var cmd = cnn.CreateCommand();
-                    if (uid==0 || uid == payload.UserID)
+                    if (uid == 0 || uid == payload.UserID)
                     {
                         uid = payload.UserID;
                     }
                     else
                     {
-                        if (!AccountDAL.IsFatherOrFatherFather(payload.UserID, uid,cmd))
+                        if (!AccountDAL.IsFatherOrFatherFather(payload.UserID, uid, cmd))
                         {
                             return this.Error(XNYResponseBase.EErrorCode.PermissionDenied);
                         }
-                    } 
-                    var res = UserDeviceDAL.GetUserAllDeviceID(uid,cmd);
-                    return JsonConvert.SerializeObject(new DataResponse<ValueTuple<uint,List<uint>>> ((uid, res)));
+                    }
+                    var res = UserDeviceDAL.GetUserAllDeviceID(uid, cmd);
+                    return JsonConvert.SerializeObject(new DataResponse<ValueTuple<uint, List<uint>>>((uid, res)));
                 }
             }
             catch (Exception)
@@ -167,7 +168,8 @@ namespace XNYAPI.Controllers
         /// <param name="dvids"></param>
         /// <param name="groupid"></param>
         /// <returns></returns>
-        public string SetDeviceGroup(string dvids, uint groupid=0) {
+        public string SetDeviceGroup(string dvids, uint groupid = 0)
+        {
             UserPayLoad payload = this.ViewBag.payload;
             var dvs = Utility.Utility.PraseIDS(dvids);
             try
@@ -175,19 +177,19 @@ namespace XNYAPI.Controllers
                 using (var cnn = DBCnn.GetCnn())
                 {
                     var cmd = cnn.CreateCommand();
-                    
-                    if (groupid>0&&!UserDeviceDAL.HasGroup(payload.UserID,groupid,cmd))
+
+                    if (groupid > 0 && !UserDeviceDAL.HasGroup(payload.UserID, groupid, cmd))
                         return this.Error(XNYResponseBase.EErrorCode.PermissionDenied);
                     List<uint> res = new List<uint>();
                     foreach (var dv in dvs)
                     {
-                        if (UserDeviceDAL.HasDevice(payload.UserID, dv,cmd))
+                        if (UserDeviceDAL.HasDevice(payload.UserID, dv, cmd))
                         {
                             var ok = UserDeviceDAL.SetUserDeviceGroup(payload.UserID, dv, groupid, cmd);
                             if (ok)
                             {
                                 res.Add(dv);
-                            } 
+                            }
                         }
                     }
                     return JsonConvert.SerializeObject(new DataListResponse<uint>(res));
@@ -202,20 +204,21 @@ namespace XNYAPI.Controllers
         /// 新的用户设备分组
         /// </summary>
         /// <returns></returns>
-        public string NewGroup(string name) {
+        public string NewGroup(string name)
+        {
             if (!name.IsSqlSafeString())
-                return this.Error( XNYResponseBase.EErrorCode.ParameterNotSafe);
+                return this.Error(XNYResponseBase.EErrorCode.ParameterNotSafe);
 
-            UserPayLoad payload = this.ViewBag.payload; 
+            UserPayLoad payload = this.ViewBag.payload;
             try
             {
                 using (var cnn = DBCnn.GetCnn())
                 {
                     var cmd = cnn.CreateCommand();
                     if (UserDeviceDAL.HasGroup(payload.UserID, name))
-                        return JsonConvert.SerializeObject(new TextResponse(false,"分组已经存在"));
-                    var gid= UserDeviceDAL.AddGroup(payload.UserID, name);
-                    return JsonConvert.SerializeObject(new TextResponse (true,gid+""));
+                        return JsonConvert.SerializeObject(new TextResponse(false, "分组已经存在"));
+                    var gid = UserDeviceDAL.AddGroup(payload.UserID, name);
+                    return JsonConvert.SerializeObject(new TextResponse(true, gid + ""));
                 }
             }
             catch (Exception ex)
@@ -224,7 +227,8 @@ namespace XNYAPI.Controllers
             }
         }
 
-        public string UpdateGroupInfo(uint groupid,string groupname="",bool delet=false) {
+        public string UpdateGroupInfo(uint groupid, string groupname = "", bool delet = false)
+        {
             groupname = groupname == null ? "" : groupname;
             if (!groupname.IsSqlSafeString())
                 return this.Error(XNYResponseBase.EErrorCode.ParameterNotSafe);
@@ -234,9 +238,9 @@ namespace XNYAPI.Controllers
                 using (var cnn = DBCnn.GetCnn())
                 {
                     var cmd = cnn.CreateCommand();
-                    var has= UserDeviceDAL.HasGroup(payload.UserID,groupid,cmd);
+                    var has = UserDeviceDAL.HasGroup(payload.UserID, groupid, cmd);
                     if (!has)
-                    return this.Error(XNYResponseBase.EErrorCode.PermissionDenied);
+                        return this.Error(XNYResponseBase.EErrorCode.PermissionDenied);
                     if (delet)
                     {
                         if (UserDeviceDAL.HasDeviceInGroup(groupid))
@@ -247,9 +251,9 @@ namespace XNYAPI.Controllers
                     {
                         UserDeviceDAL.UpdateDeviceGroup(new DeviceGroup(groupid, groupname), cmd);
                     }
-               
-                return JsonConvert.SerializeObject(new TextResponse(true,""));
-                   
+
+                    return JsonConvert.SerializeObject(new TextResponse(true, ""));
+
                 }
             }
             catch (Exception)

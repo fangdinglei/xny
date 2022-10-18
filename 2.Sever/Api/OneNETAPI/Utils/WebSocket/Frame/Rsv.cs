@@ -26,13 +26,12 @@
  */
 #endregion
 
-using System;
 
 namespace WebSocketSharp.Frame
 {
-  public enum Rsv : byte
-  {
-    OFF = 0x0,
-    ON  = 0x1
-  }
+    public enum Rsv : byte
+    {
+        OFF = 0x0,
+        ON = 0x1
+    }
 }

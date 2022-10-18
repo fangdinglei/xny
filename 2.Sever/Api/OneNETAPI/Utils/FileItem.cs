@@ -34,7 +34,7 @@ namespace OneNET.Api.Util
         /// 基于本地文件全路径的构造器。
         /// </summary>
         /// <param name="filePath">本地文件全路径</param>
-        public FileItem(string filePath)  : this(new FileInfo(filePath)) { }
+        public FileItem(string filePath) : this(new FileInfo(filePath)) { }
 
         /// <summary>
         /// 基于文件名和字节流的构造器。

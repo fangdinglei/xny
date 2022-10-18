@@ -33,11 +33,11 @@ namespace OneNET.Api
         {
             switch (method)
             {
-                 case HttpRequestMethod.Get: return "get";
-                 case HttpRequestMethod.Post: return "post";
-                 case HttpRequestMethod.Put: return "put";
-                 case HttpRequestMethod.Delete: return "delete";
-                 default: return method.ToString();
+                case HttpRequestMethod.Get: return "get";
+                case HttpRequestMethod.Post: return "post";
+                case HttpRequestMethod.Put: return "put";
+                case HttpRequestMethod.Delete: return "delete";
+                default: return method.ToString();
             }
         }
 
@@ -64,6 +64,6 @@ namespace OneNET.Api
             var rems = new MemoryStream();
             formatter.Serialize(rems, data);
             return rems.GetBuffer();
-        } 
+        }
     }
 }

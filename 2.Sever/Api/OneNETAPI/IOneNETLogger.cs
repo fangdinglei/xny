@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OneNET.Api
+﻿namespace OneNET.Api
 {
     /// <summary>
     /// 日志打点接口。

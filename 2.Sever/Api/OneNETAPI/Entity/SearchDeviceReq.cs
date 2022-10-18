@@ -11,7 +11,7 @@
         public string Tag;
         protected const string TAG = "tag";
 
-        
+
         public bool? OnLine;
         protected const string ONLINE = "online";
 

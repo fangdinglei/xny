@@ -27,7 +27,6 @@
 #endregion
 
 using System;
-using System.Collections.Specialized;
 using System.Text;
 using WebSocketSharp.Net;
 

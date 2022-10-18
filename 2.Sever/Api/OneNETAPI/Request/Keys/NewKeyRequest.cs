@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using OneNET.Api.Entity;
+﻿using OneNET.Api.Entity;
 using OneNET.Api.Response;
 using OneNET.Api.Util;
+using System;
+using System.Collections.Generic;
 
 namespace OneNET.Api.Request
 {
@@ -54,7 +54,7 @@ namespace OneNET.Api.Request
 
         public void Validate()
         {
-            
+
         }
 
         public bool IsRequestForByte() { return false; }

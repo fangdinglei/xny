@@ -15,8 +15,9 @@ namespace XNYAPI.Response.Data
             Current = current;
         }
     }
-    public class GetDeviceSocResponse  :XNYResponseBase {
+    public class GetDeviceSocResponse : XNYResponseBase
+    {
         public List<DeviceSoc> Data;
     }
-   
+
 }

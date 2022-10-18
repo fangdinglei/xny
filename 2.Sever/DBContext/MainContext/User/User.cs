@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 //Add-Migration [--context MainContext]
@@ -25,13 +24,13 @@ namespace MyDBContext.Main
         public long LastLogin { get; set; }
 
         [Required]
-        public string Authoritys { get; set; } 
+        public string Authoritys { get; set; }
 
         public virtual User? Creator { get; set; }
-        public long  CreatorId { get; set; }
+        public long CreatorId { get; set; }
 
         //public virtual ICollection< Device> Devices { get; set; }
-        
+
         //public virtual ICollection<User_Device_Group> User_Device_Groups { get; set; }
         //public virtual ICollection<User_Device> User_Devices { get; set; }
 

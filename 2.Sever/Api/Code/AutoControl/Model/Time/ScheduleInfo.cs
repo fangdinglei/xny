@@ -31,14 +31,15 @@ namespace XNYAPI.Model.AutoControl
         }
         public ScheduleInfo()
         {
-                
+
         }
         public ScheduleInfo(ServiceType Type)
         {
             this.Type = Type;
             Data = new List<ScheduleItem>();
         }
-        public bool Validate_Json() {
+        public bool Validate_Json()
+        {
             if (!Enum.IsDefined(typeof(ServiceType), Type))
                 return false;
             foreach (var item in Data)
@@ -46,7 +47,7 @@ namespace XNYAPI.Model.AutoControl
                 if (!item.Validate_Json())
                 {
                     return false;
-                }  
+                }
             }
             return true;
         }

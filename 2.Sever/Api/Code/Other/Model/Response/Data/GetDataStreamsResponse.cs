@@ -5,7 +5,7 @@ namespace XNYAPI.Response.Data
     public class DataPoint
     {
         public string Value;
-        public long Time; 
+        public long Time;
 
         public DataPoint(string value, long time)
         {
@@ -29,7 +29,8 @@ namespace XNYAPI.Response.Data
     }
 
 
-    public class DataPointWithName {
+    public class DataPointWithName
+    {
         public string Name;
         public string Value;
         public long Time;
@@ -41,7 +42,8 @@ namespace XNYAPI.Response.Data
             Time = time;
         }
     }
-    public class LatestData {
+    public class LatestData
+    {
         public uint DeviceID;
         public List<DataPointWithName> Datas;
 
@@ -90,6 +92,6 @@ namespace XNYAPI.Response.Data
         public List<DataStreamsFeatureData> Data;
     }
 
-   
-   
+
+
 }

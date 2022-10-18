@@ -18,7 +18,7 @@ namespace MyDBContext.Main
         public long Id { get; set; }
         public long DeviceId { get; set; }
         public long StreamId { get; set; }
-        public long Time  { get; set; }
-        public float Value  { get; set; }
+        public long Time { get; set; }
+        public float Value { get; set; }
     }
 }

@@ -8,18 +8,19 @@ namespace XNYAPI.Controllers
     [TokenCheckFilter(new string[] { })]
     public class PowerController : Controller
     {
-        public string   GetSocRate( ){ 
+        public string GetSocRate()
+        {
             UserPayLoad payload = this.ViewBag.payload;
             try
             {
-                var res=DAL.PowerServiceDAL.GetPowerRates(payload.UserID); 
+                var res = DAL.PowerServiceDAL.GetPowerRates(payload.UserID);
                 return JsonConvert.SerializeObject(res); ;
             }
             catch (Exception e)
             {
                 return this.Error(XNYResponseBase.EErrorCode.InternalError);
             }
-            
+
         }
 
         ////todo 开启或者关闭全局电量计算服务

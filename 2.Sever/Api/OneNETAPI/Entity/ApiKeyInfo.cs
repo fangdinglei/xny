@@ -27,7 +27,7 @@ namespace OneNET.Api.Entity
         /// 权限,包含资源和授权命令
         /// </summary>
         public List<Permission> Permissions;
-        
+
         /// <summary>
         /// Api Key基础实体
         /// </summary>
@@ -56,7 +56,7 @@ namespace OneNET.Api.Entity
         /// <summary>
         /// 权限实体
         /// </summary>
-        public Permission() 
+        public Permission()
         {
             Resources = new List<KeyResource>();
         }

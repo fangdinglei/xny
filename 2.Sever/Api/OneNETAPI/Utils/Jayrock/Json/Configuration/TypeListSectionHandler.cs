@@ -24,10 +24,6 @@ namespace Jayrock.Configuration
 {
     #region Imports
 
-    using System;
-    using System.Collections;
-    using System.Configuration;
-    using System.Xml;
 
     #endregion
 

@@ -1,10 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-
-namespace MyClient.Utility
+﻿namespace MyClient.Utility
 {
     public class Utility
     {
@@ -25,7 +19,8 @@ namespace MyClient.Utility
         /// <param name="maxlen"></param>
         /// <param name="split"></param>
         /// <returns></returns>
-        static public string BuildLongString(IEnumerable <string> sarr,int maxlen,string split=",") {
+        static public string BuildLongString(IEnumerable<string> sarr, int maxlen, string split = ",")
+        {
             string s = "";
             foreach (var item in sarr)
             {
@@ -34,9 +29,9 @@ namespace MyClient.Utility
                 {
                     break;
                 }
-            } 
+            }
             if (s.Length > maxlen)
-                s = s.Substring(0, maxlen-3) + "...";
+                s = s.Substring(0, maxlen - 3) + "...";
             else
                 s = s.Substring(0, s.Length - 1);
             return s;

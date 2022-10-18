@@ -26,13 +26,12 @@
  */
 #endregion
 
-using System;
 
 namespace WebSocketSharp.Frame
 {
-  public enum Fin : byte
-  {
-    MORE  = 0x0,
-    FINAL = 0x1
-  }
+    public enum Fin : byte
+    {
+        MORE = 0x0,
+        FINAL = 0x1
+    }
 }

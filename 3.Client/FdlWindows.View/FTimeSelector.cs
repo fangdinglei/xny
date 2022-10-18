@@ -1,15 +1,4 @@
 ﻿using FdlWindows.View;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace MyClient.FdlWindows.View
 {
@@ -32,12 +21,12 @@ namespace MyClient.FdlWindows.View
             {
                 //FormExitEventArg arg = pars[0] as FormExitEventArg;
                 //arg.Cancel =true; 
-            }   
+            }
         }
 
         public void PrePare(params object[] par)
         {
-            okcall = par[0] as Action<DateTime, DateTime>; 
+            okcall = par[0] as Action<DateTime, DateTime>;
         }
 
         public void SetViewHolder(IViewHolder viewholder)
@@ -54,8 +43,8 @@ namespace MyClient.FdlWindows.View
         {
             var vs = dateTimePicker1.Value;
             var ve = dateTimePicker2.Value;
-            okcall.Invoke(new DateTime(vs.Year,vs.Month,vs.Day)
-                , new DateTime(ve.Year, ve.Month, ve.Day,23,59,59));
+            okcall.Invoke(new DateTime(vs.Year, vs.Month, vs.Day)
+                , new DateTime(ve.Year, ve.Month, ve.Day, 23, 59, 59));
         }
     }
-} 
+}

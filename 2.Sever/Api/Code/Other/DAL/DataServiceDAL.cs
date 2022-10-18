@@ -1,6 +1,5 @@
-﻿ 
+﻿
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using XNYAPI.Utility;
@@ -19,7 +18,7 @@ namespace XNYAPI.DAL
         /// <param name="maxcount"></param>
         /// <returns></returns>
         /// <exception cref = "Exception" />
-        static public List<ValueTuple<DateTime, string>> GetDataPoints(uint dvid, string streamname, long starttime,long endtime, int maxcount = 1)
+        static public List<ValueTuple<DateTime, string>> GetDataPoints(uint dvid, string streamname, long starttime, long endtime, int maxcount = 1)
         {
             using (var cnn = DBCnn.GetCnn())
             {
@@ -29,8 +28,8 @@ namespace XNYAPI.DAL
                     $"WHERE DeviceID={dvid}AND Time>={starttime} AND Time<={endtime} AND DataName='{streamname}'  ORDER by Time DESC LIMIT {maxcount}";
                 var rd = cmd.ExecuteReader();
                 while (rd.Read())
-                { 
-                    res.Add((rd.GetInt64(0).JavaTicketToBeijingTime(),rd.GetString(1)));
+                {
+                    res.Add((rd.GetInt64(0).JavaTicketToBeijingTime(), rd.GetString(1)));
                 }
                 return res;
             }
@@ -42,7 +41,7 @@ namespace XNYAPI.DAL
         /// <param name="starttime">java时间戳</param>
         /// <returns></returns>
         /// <exception cref="Exception" />
-        static public List<ValueTuple<DateTime, double>> GetDoubleDataPoints(uint dvid, string streamname, long starttime,int maxcount=1)
+        static public List<ValueTuple<DateTime, double>> GetDoubleDataPoints(uint dvid, string streamname, long starttime, int maxcount = 1)
         {
             using (var cnn = DBCnn.GetCnn())
             {
@@ -55,7 +54,7 @@ namespace XNYAPI.DAL
                 {
                     string v = rd.GetString(0);
                     double dv;
-                    if (!double.TryParse(v.Replace("\"",""), out dv))
+                    if (!double.TryParse(v.Replace("\"", ""), out dv))
                         continue;
                     long t = rd.GetInt64(1);
                     res.Add((t.JavaTicketToBeijingTime(), dv));
@@ -86,8 +85,8 @@ namespace XNYAPI.DAL
                 {
                     string v = rd.GetString(0);
                     double dv;
-                    if (!double.TryParse(v.Replace("\"",""), out dv))
-                        continue; 
+                    if (!double.TryParse(v.Replace("\"", ""), out dv))
+                        continue;
                     res.Add(dv);
                 }
                 res.Reverse();
@@ -102,28 +101,30 @@ namespace XNYAPI.DAL
         /// <param name="dpname"></param>
         /// <param name="dps"></param>
         /// <exception cref="Exception" />
-        static public void AddDataPoints(uint dvid,string dpname,List<ValueTuple<DateTime,string>> dps ) {
+        static public void AddDataPoints(uint dvid, string dpname, List<ValueTuple<DateTime, string>> dps)
+        {
             using (var cnn = DBCnn.GetCnn())
             {
                 List<double> res = new List<double>();
                 var cmd = cnn.CreateCommand();
                 StringBuilder sb = new StringBuilder();
-                dps.RunByBatch(50,(ls,s,e)=> {
+                dps.RunByBatch(50, (ls, s, e) =>
+                {
                     sb.Clear();
                     sb.Append("INSERT IGNORE INTO device_datapoints(DeviceID,DataName,Value,Time)VALUES");
-                    for (int i = s; i <e; i++)
+                    for (int i = s; i < e; i++)
                     {
                         var dp = ls[i];
                         sb.Append($"({dvid},'{dpname}','{dp.Item2}',{dp.Item1.BeijingTimeToJavaTicket()}),");
-                          
+
                     }
-                    sb.Remove(sb.Length-1,1);
+                    sb.Remove(sb.Length - 1, 1);
                     cmd.CommandText = sb.ToString();
                     cmd.ExecuteNonQuery();
-                }); 
+                });
             }
         }
     }
 
-   
+
 }

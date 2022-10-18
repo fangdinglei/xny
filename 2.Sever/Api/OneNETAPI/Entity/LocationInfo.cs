@@ -6,7 +6,7 @@ namespace OneNET.Api.Entity
     /// 设备位置描述信息
     /// @author Philo
     /// </summary>
-   public class LocationInfo
+    public class LocationInfo
     {
         /// <summary>
         /// 高度

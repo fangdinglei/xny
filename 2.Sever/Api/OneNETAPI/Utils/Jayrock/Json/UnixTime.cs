@@ -32,7 +32,7 @@ namespace Jayrock
     {
         private static readonly int[] _days = { -1, 30, 58, 89, 119, 150, 180, 211, 242, 272, 303, 333, 364 };
         private static readonly int[] _leapDays = { -1, 30, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
-        
+
         /// <summary>
         /// Converts a 64-bit Unix time (UTC) into a DateTime instance that
         /// represents the same time in local time.
@@ -50,28 +50,28 @@ namespace Jayrock
             //
             // Determine the years since 1900. Start by ignoring leap years.
             //
-            
-            int tmp = (int) (time / secondsPerYear) + 70;
+
+            int tmp = (int)(time / secondsPerYear) + 70;
             time -= ((tmp - 70) * secondsPerYear);
 
             //
             // Correct for elapsed leap years
             //
-            
+
             time -= (ElapsedLeapYears(tmp) * secondsPerDay);
 
             //
             // If we have underflowed the long range (i.e., if time < 0),
             // back up one year, adjusting the correction if necessary.
             //
-            
+
             bool isLeapYear = false;
 
             if (time < 0)
             {
                 time += secondsPerYear;
                 tmp--;
-                
+
                 if (IsLeapYear(tmp))
                 {
                     time += secondsPerDay;
@@ -87,21 +87,21 @@ namespace Jayrock
             // tmp now holds the value for year. time now holds the
             // number of elapsed seconds since the beginning of that year.
             //
-            
+
             int year = tmp;
 
             //
             // Determine days since January 1 (0 - 365). 
             // Leave time with number of elapsed seconds in that day.
             //
-            
-            int yearDay = (int) (time / secondsPerDay);
+
+            int yearDay = (int)(time / secondsPerDay);
             time -= yearDay * secondsPerDay;
 
             //
             // Determine months since January (0 - 11) and day of month (1 - 31).
             //
-            
+
             int[] yearDaysByMonth = isLeapYear ? _leapDays : _days;
             int month = 1;
             while (yearDaysByMonth[month] < yearDay) month++;
@@ -112,13 +112,13 @@ namespace Jayrock
             // Determine hours since midnight (0 - 23), minutes after the hour
             // (0 - 59), and seconds after the minute (0 - 59).
             //
-            
-            int hour = (int) (time / 3600);
+
+            int hour = (int)(time / 3600);
             time -= hour * 3600L;
 
-            int min = (int) (time / 60);
-            int sec = (int) (time - (min) * 60);
-            
+            int min = (int)(time / 60);
+            int sec = (int)(time - (min) * 60);
+
             //
             // Finally construct a DateTime instance in UTC from the various 
             // components and then return it adjusted to local time.
@@ -132,7 +132,7 @@ namespace Jayrock
 
         public static long ToInt64(DateTime time)
         {
-            return (long) (time.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds;
+            return (long)(time.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds;
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Jayrock
         /// Number of leap years from 1970 up to, but not including, 
         /// the specified year expressed as the number of years since 1900.
         /// </summary>
-        
+
         private static long ElapsedLeapYears(int y)
         {
             return (((y - 1) / 4) - ((y - 1) / 100) + ((y + 299) / 400) - /* Leap years 1900 - 1970 = */ 17);

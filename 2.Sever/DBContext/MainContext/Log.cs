@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema; 
+using System.ComponentModel.DataAnnotations.Schema;
 //Add-Migration
 //Remove-Migration
 //Update-Database
@@ -23,7 +23,7 @@ namespace MyDBContext.Main
         public string Msg { get; set; }
         public long Time { get; set; }
 
-        
+
 
         [NotMapped]
         public LogLevel _Level
@@ -32,8 +32,8 @@ namespace MyDBContext.Main
                 ? (LogLevel)Level
                 : LogLevel.Unknown;
             set =>
-               Level = (byte) value;
+               Level = (byte)value;
         }
 
     }
-} 
+}

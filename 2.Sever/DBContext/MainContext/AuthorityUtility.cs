@@ -32,9 +32,9 @@ namespace MyDBContext.Main
         static public async Task<OwnerType> GetOwnerTypeAsync(this IHasCreator creator, MainContext ct, long uid)
         {
             var u1 = creator.Id;
-            var u2 = uid; 
+            var u2 = uid;
             var sf = await ct.User_SFs
-              .Where(it => it.User1Id == u1 && it.User2Id == u2 )
+              .Where(it => it.User1Id == u1 && it.User2Id == u2)
                .AsNoTracking().FirstOrDefaultAsync();
             if (sf != null)
             {
@@ -48,10 +48,10 @@ namespace MyDBContext.Main
             {
                 return OwnerType.FatherOfCreator;
             }
-            else  
+            else
             {
                 return OwnerType.SonOfCreator;
-            } 
+            }
 
         }
         /// <summary>
@@ -102,14 +102,14 @@ namespace MyDBContext.Main
                 var bd1 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                  (dt, us) => new { us, dt })
                  .Where(it => it.us.User2Id == uid)
-                 .Select(it => it.dt); 
-                bd = bd1 ;
+                 .Select(it => it.dt);
+                bd = bd1;
             }
             else if (fathervisitson)
             {
                 bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                    (dt, us) => new { us, dt })
-                   .Where(it => it.us.User2Id == uid &&(!it.us.IsFather ||it.us.IsSelf))
+                   .Where(it => it.us.User2Id == uid && (!it.us.IsFather || it.us.IsSelf))
                    .Select(it => it.dt);
             }
             else if (sonvisitfather)

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using OneNET.Api.Entity;
+﻿using OneNET.Api.Entity;
 using OneNET.Api.Response;
 using OneNET.Api.Util;
+using System;
+using System.Collections.Generic;
 
 namespace OneNET.Api.Request
 {
@@ -18,7 +18,7 @@ namespace OneNET.Api.Request
     public class NewTriggerRequest : IOneNETRequest<NewTriggerRsp>
     {
         private const String URI = "<scheme>://<API_ADDRESS>/triggers";
-        
+
         /// <summary>
         /// 要增加的触发器实体
         /// </summary>

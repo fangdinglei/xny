@@ -65,7 +65,7 @@ namespace XNYAPI.Utility
         {
             try
             {
-               var res= GetClient().Execute(new OneNET.Api.Request.SendCmdRequest()
+                var res = GetClient().Execute(new OneNET.Api.Request.SendCmdRequest()
                 {
                     CmdContent = cmd,
                     DeviceID = deviceid,
@@ -108,7 +108,7 @@ namespace XNYAPI.Utility
             OneNET.Api.DefaultOneNETClient cnt = new OneNET.Api.DefaultOneNETClient(url, appkey);
             var rsp = cnt.Execute(new OneNET.Api.Request.DeleteDeviceRequest()
             {
-                DeviceID = dvid 
+                DeviceID = dvid
             });
             return !rsp.IsError;
 

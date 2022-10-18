@@ -4,10 +4,7 @@
 using FDL.Program;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using XNYAPI.DAL;
-using XNYAPI.Model;
-using XNYAPI.Response.Device;
 
 namespace XNYAPI.Utility
 {
@@ -29,12 +26,12 @@ namespace XNYAPI.Utility
             {
 
                 var cmd = cnn.CreateCommand();
-               
+
                 foreach (var id in dvids)
                 {
                     if (sender != 1 && !UserDeviceDAL.HasDevice(sender, id))
                         continue;
-                    string realid = DeviceDAL.GetRealID(id,cmd);
+                    string realid = DeviceDAL.GetRealID(id, cmd);
                     bool suc;
                     try
                     {
@@ -49,16 +46,17 @@ namespace XNYAPI.Utility
                     {
                         suc = false;
                     }
-                    if (suc) {
+                    if (suc)
+                    {
                         re.Add(id);
-                        DeviceDAL.AddCMD(id,cmdstr,cmd);
-                    } 
+                        DeviceDAL.AddCMD(id, cmdstr, cmd);
+                    }
                 }
             }
             return re;
         }
 
- 
+
         ///// <summary>
         ///// 
         ///// </summary>

@@ -54,7 +54,7 @@ namespace XNYAPI.Controllers
                     foreach (var stream in streams)
                     {
                         cmd.CommandText = $"SELECT Value,Time FROM device_datapoints" +
-                        $" WHERE DeviceID={id} and  DataName='{ stream }' and Time >={starttimex } and Time <={endtimex } ";
+                        $" WHERE DeviceID={id} and  DataName='{stream}' and Time >={starttimex} and Time <={endtimex} ";
                         var rd = cmd.ExecuteReader();
                         List<DataPoint> points = new List<DataPoint>();
                         while (rd.Read())
@@ -103,14 +103,14 @@ namespace XNYAPI.Controllers
                             }
                             rd.Close();
                         }
-                        latestDatas.Add(new LatestData(id,dpwn));
+                        latestDatas.Add(new LatestData(id, dpwn));
                     }
                     return JsonConvert.SerializeObject(new GetLatestDataResponse(latestDatas));
                 }
             }
             catch (Exception)
             {
-                return this.Error( XNYResponseBase.EErrorCode.InternalError);
+                return this.Error(XNYResponseBase.EErrorCode.InternalError);
             }
         }
         //public string GetDataStreamsFeature(string deviceids, string streamnames, string starttime, string endtime)

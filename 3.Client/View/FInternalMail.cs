@@ -1,14 +1,5 @@
 ﻿using FdlWindows.View;
 using GrpcMain.Device;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace MyClient.View
 {
@@ -24,7 +15,7 @@ namespace MyClient.View
         }
 
 
-     
+
         public Control View => this;
 
         public void OnEvent(string name, params object[] pars)
@@ -34,7 +25,7 @@ namespace MyClient.View
 
         public void PrePare(params object[] par)
         {
-            
+
         }
 
         public void SetViewHolder(IViewHolder viewholder)
@@ -46,5 +37,5 @@ namespace MyClient.View
         {
 
         }
-    } 
+    }
 }

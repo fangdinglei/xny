@@ -8,14 +8,13 @@
 //dotnet ef -h
 //
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace MyDBContext.Main
 {
- 
-    public class User_Device 
-    { 
-        public long UserId { get; set; } 
+
+    public class User_Device
+    {
+        public long UserId { get; set; }
         public long DeviceId { get; set; }
         public long User_Device_GroupId { get; set; }
         //数据读取权限
@@ -30,9 +29,9 @@ namespace MyDBContext.Main
         public virtual User_Device_Group User_Device_Group { get; set; }
         //todo
 
-       static internal void OnModelCreating(ModelBuilder modelBuilder)
+        static internal void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User_Device>().HasKey(it=>new { it.UserId,it.DeviceId});
+            modelBuilder.Entity<User_Device>().HasKey(it => new { it.UserId, it.DeviceId });
         }
     }
 }

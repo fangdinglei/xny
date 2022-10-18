@@ -38,12 +38,12 @@ namespace Jayrock
 
         public readonly static object True = true;
         public readonly static object False = false;
-        
+
         public static object Box(bool value)
         {
             return value ? True : False;
         }
-        
+
         private BooleanObject()
         {
             throw new NotSupportedException();

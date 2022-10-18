@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using OneNET.Api.Response;
+﻿using OneNET.Api.Response;
 using OneNET.Api.Util;
+using System;
+using System.Collections.Generic;
 
 namespace OneNET.Api.Request
 {
@@ -15,7 +15,7 @@ namespace OneNET.Api.Request
         private const String URI = "<scheme>://<API_ADDRESS>/devices/<device_id>/datastreams/<datastream_id>";
         private const String DEVICE_ID = "device_id";
         private const String DATASTREAM_ID = "datastream_id";
-        
+
         /// <summary>
         /// 目的设备ID
         /// </summary>
@@ -66,7 +66,7 @@ namespace OneNET.Api.Request
 
         public void Validate()
         {
-            
+
         }
 
         public bool IsRequestForByte()

@@ -80,7 +80,7 @@ namespace OneNET.Api.Response
         /// 数据流的uuid
         /// </summary>
         public String Uuid;
-        
+
         /// <summary>
         /// 数据流的创建时间
         /// </summary>

@@ -2,8 +2,6 @@
 using MySqlConnector;
 using System;
 using System.Collections.Generic;
-using XNYAPI.Model;
-using XNYAPI.Model.Account;
 using XNYAPI.Model.Device;
 using XNYAPI.Model.UserDevice;
 using XNYAPI.Utility;
@@ -11,7 +9,8 @@ using XNYAPI.Utility;
 namespace XNYAPI.DAL
 {
 
-    public class UserDeviceDAL {
+    public class UserDeviceDAL
+    {
         public const uint DeviceGroupPtrID = 4;
 
 
@@ -28,7 +27,7 @@ namespace XNYAPI.DAL
                 return HasDevice(uid, id, cmd);
             }
         }
-        
+
         static public bool HasDevice(uint uid, uint id, MySqlCommand cmd)
         {
             cmd.CommandText = $"SELECT 1 FROM userdevice " +
@@ -39,7 +38,7 @@ namespace XNYAPI.DAL
             else
                 return true;
         }
-        
+
         /// <summary>
         /// 将设备给用户或者删除
         /// </summary> 
@@ -53,7 +52,7 @@ namespace XNYAPI.DAL
                 SetUserDevice(uid, dvid, delet, cmd);
             }
         }
-        
+
         static public void SetUserDevice(uint uid, uint dvid, bool delet, MySqlCommand cmd)
         {
             if (delet)
@@ -67,12 +66,12 @@ namespace XNYAPI.DAL
             else
             {
                 cmd.CommandText = $"INSERT IGNORE INTO userdevice(UserID,DeviceID,GroupID)  VALUES(" +
-                      $"{uid}, { dvid},0 )";
+                      $"{uid}, {dvid},0 )";
             }
 
             cmd.ExecuteNonQuery();
         }
-       
+
         /// <summary>
         /// 删除用户所有设备，设备分组，设备分组信息
         /// </summary>
@@ -101,7 +100,7 @@ namespace XNYAPI.DAL
         {
             cmd.CommandText = $"UPDATE userdevice SET GroupID={groupid} " +
                 $"WHERE UserID={uid} AND DeviceID={deviceid};";
-           return cmd.ExecuteNonQuery() >0;
+            return cmd.ExecuteNonQuery() > 0;
         }
 
         /// <summary>
@@ -133,17 +132,17 @@ namespace XNYAPI.DAL
             return res;
         }
 
-      
+
 
         /// <summary>
         /// 更新设备分组信息 
         /// </summary> 
         /// <param name="group"></param> 
         ///  <exception cref="Exception"/>
- 
+
         static public void UpdateDeviceGroup(DeviceGroup group, MySqlCommand cmd)
         {
- 
+
             cmd.CommandText = $"Update userdevice_group SET Name='{group.Name}' WHERE ID={group.GroupID}";
             cmd.ExecuteNonQuery();
             return;
@@ -181,7 +180,7 @@ namespace XNYAPI.DAL
                 return false;
             return true;
         }
- 
+
 
         /// <summary>
         /// 是否拥有分组
@@ -189,7 +188,7 @@ namespace XNYAPI.DAL
         /// <param name="userid"></param>
         /// <param name="groupname"></param>
         /// <returns></returns>
-        static public bool HasGroup (uint userid, string groupname)
+        static public bool HasGroup(uint userid, string groupname)
         {
             using (var cnn = DBCnn.GetCnn())
             {
@@ -204,14 +203,14 @@ namespace XNYAPI.DAL
                 return false;
             return true;
         }
-        static public bool HasGroup(uint userid,uint groupid,  MySqlCommand cmd)
+        static public bool HasGroup(uint userid, uint groupid, MySqlCommand cmd)
         {
-            cmd.CommandText = $"SELECT 1 FROM userdevice_group WHERE UserID={userid} AND   ID={ groupid}  ";
+            cmd.CommandText = $"SELECT 1 FROM userdevice_group WHERE UserID={userid} AND   ID={groupid}  ";
             if (cmd.ExecuteScalar() == null)
                 return false;
             return true;
         }
-         
+
 
         /// <summary>
         /// 添加分组
@@ -219,38 +218,39 @@ namespace XNYAPI.DAL
         /// <param name="groupname"></param>
         /// <returns></returns>
         /// <exception cref="Exception" />
-        static public uint AddGroup(uint uid, string groupname) {
+        static public uint AddGroup(uint uid, string groupname)
+        {
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
-                return AddGroup(uid,groupname, cmd);
+                return AddGroup(uid, groupname, cmd);
             }
         }
         static public uint AddGroup(uint uid, string groupname, MySqlCommand cmd)
         {
-           var id= DALUtility.GetID(DeviceGroupPtrID,cmd);
+            var id = DALUtility.GetID(DeviceGroupPtrID, cmd);
             cmd.CommandText = $"INSERT INTO userdevice_group(ID,Name,UserID) VALUES({id},'{groupname}',{uid})";
             cmd.ExecuteNonQuery();
-            return id;  
+            return id;
         }
         static public List<DeviceInfo> GetUserAllDeviceInfo(uint uid)
         {
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
-                return GetUserAllDeviceInfo(uid,  cmd);
+                return GetUserAllDeviceInfo(uid, cmd);
             }
         }
         static public List<DeviceInfo> GetUserAllDeviceInfo(uint uid, MySqlCommand cmd)
         {
             List<DeviceInfo> res = new List<DeviceInfo>();
             cmd.CommandText = $"SELECT userdevice.DeviceID,GroupID,Location,DeviceName,Type FROM userdevice inner join deviceinfo on userdevice.DeviceID= deviceinfo.DeviceID  WHERE UserID={uid} ";
-            using (var rd=cmd.ExecuteReader())
+            using (var rd = cmd.ExecuteReader())
             {
                 while (rd.Read())
                 {
-                    res.Add(new DeviceInfo(rd.GetUInt32(0),rd.GetUInt32(1)
-                        ,rd.GetString(3),rd.GetString(2),rd.GetUInt32(4)));
+                    res.Add(new DeviceInfo(rd.GetUInt32(0), rd.GetUInt32(1)
+                        , rd.GetString(3), rd.GetString(2), rd.GetUInt32(4)));
                 }
             }
             return res;

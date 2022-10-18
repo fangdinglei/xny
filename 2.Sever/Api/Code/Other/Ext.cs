@@ -27,7 +27,8 @@ static class Ext
     /// <param name="ls"></param>
     /// <param name="batchsize"></param>
     /// <param name="call">[from,end)</param>
-    static public void RunByBatch<T>(this List<T> ls, int batchsize, Action<List<T>, int, int> call) {
+    static public void RunByBatch<T>(this List<T> ls, int batchsize, Action<List<T>, int, int> call)
+    {
         if (ls == null)
             throw new NullReferenceException();
         if (batchsize <= 0)
@@ -45,7 +46,8 @@ static class Ext
         }
     }
 
-    static public long BeijingTimeToJavaTicket(this DateTime dt) {
+    static public long BeijingTimeToJavaTicket(this DateTime dt)
+    {
         return dt.Ticks / 10000 - 62135625600000;
     }
     static public DateTime JavaTicketToBeijingTime(this long tic)
@@ -53,27 +55,30 @@ static class Ext
         return new DateTime((tic + 62135625600000) * 10000);
     }
 
-    static public string ToBase64(this string str){
+    static public string ToBase64(this string str)
+    {
         var bts = System.Text.Encoding.UTF8.GetBytes(str);
         return Convert.ToBase64String(bts);
     }
-    static public string FromBase64(this string str,string b64)
-    { 
-        return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(b64)); 
+    static public string FromBase64(this string str, string b64)
+    {
+        return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(b64));
     }
 
     static public Dictionary<EErrorCode, string> errdic = new Dictionary<EErrorCode, string>();
-    static public string Error(this Controller controller, EErrorCode error) {
+    static public string Error(this Controller controller, EErrorCode error)
+    {
         return errdic[error];
     }
-    static public string Error(this Controller controller, EErrorCode error,string info)
+    static public string Error(this Controller controller, EErrorCode error, string info)
     {
         return Newtonsoft.Json.JsonConvert.SerializeObject(new XNYAPI.Response.XNYResponseBase(info, error));
     }
-    static Ext(){
+    static Ext()
+    {
         for (int i = 0; i < (int)EErrorCode.Count; i++)
         {
-            errdic.Add((EErrorCode)i,Newtonsoft.Json.JsonConvert.SerializeObject(new XNYAPI.Response.XNYResponseBase((EErrorCode)i)));
+            errdic.Add((EErrorCode)i, Newtonsoft.Json.JsonConvert.SerializeObject(new XNYAPI.Response.XNYResponseBase((EErrorCode)i)));
         }
     }
 

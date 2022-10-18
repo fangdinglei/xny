@@ -31,7 +31,7 @@ namespace XNYAPI.Model.AutoControl
         /// <summary>
         /// 电量最大值
         /// </summary>
-        public double MaxSOC; 
+        public double MaxSOC;
         public double SocRate
         {
             get

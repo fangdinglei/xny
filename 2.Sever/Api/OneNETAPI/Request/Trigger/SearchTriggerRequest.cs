@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using OneNET.Api.Response;
+﻿using OneNET.Api.Response;
 using OneNET.Api.Util;
+using System;
+using System.Collections.Generic;
 
 namespace OneNET.Api.Request
 {
@@ -11,7 +11,7 @@ namespace OneNET.Api.Request
     public class SearchTriggerRequest : IOneNETRequest<SearchTriggerRsp>
     {
         private const String URI = "<scheme>://<API_ADDRESS>/triggers";
-        
+
         /// <summary>
         /// 触发器名称
         /// </summary>

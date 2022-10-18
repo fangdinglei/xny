@@ -1,12 +1,12 @@
-﻿ 
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 using System;
-using System.Collections.Generic; 
-using XNYAPI.DAL; 
+using System.Collections.Generic;
+using XNYAPI.DAL;
 using XNYAPI.Model.Device;
-using XNYAPI.Response; 
+using XNYAPI.Response;
 using XNYAPI.Response.Device;
 using XNYAPI.Utility;
 
@@ -59,17 +59,17 @@ namespace XNYAPI.Controllers
         /// <returns></returns>
         public string SendCMD(string dvids, string cmd)
         {
-            if (dvids==null)
+            if (dvids == null)
                 return this.Error(XNYResponseBase.EErrorCode.ParameterWrong);
             if (!cmd.IsSqlSafeString())
                 return this.Error(XNYResponseBase.EErrorCode.ParameterNotSafe);
             List<uint> dvidsx = Utility.Utility.PraseIDS(dvids);
 
             UserPayLoad payload = this.ViewBag.payload;
-           
+
             try
             {
-                var res = DeviceUtility.SendCMD(dvidsx, cmd, payload.UserID); 
+                var res = DeviceUtility.SendCMD(dvidsx, cmd, payload.UserID);
                 return JsonConvert.SerializeObject(new DataListResponse<uint>(res));
             }
             catch (Exception ex)
@@ -198,7 +198,7 @@ namespace XNYAPI.Controllers
             {
                 string s = Utility.Utility.GetUTF8String(HttpContext.Request.Body);
                 if (string.IsNullOrWhiteSpace(s))
-                    return this.Error( XNYResponseBase.EErrorCode.ParameterWrong);
+                    return this.Error(XNYResponseBase.EErrorCode.ParameterWrong);
                 List<DeviceInfo> dts = JsonConvert.DeserializeObject<List<DeviceInfo>>(s);
                 using (var cnn = DBCnn.GetCnn())
                 {
@@ -220,7 +220,7 @@ namespace XNYAPI.Controllers
 
                             throw;
                         }
-                       
+
                     }
                 }
                 return JsonConvert.SerializeObject(new DataListResponse<uint>(res));
@@ -228,8 +228,8 @@ namespace XNYAPI.Controllers
             }
             catch (Exception ex)
             {
-                return this.Error( XNYResponseBase.EErrorCode.InternalError);
-            } 
+                return this.Error(XNYResponseBase.EErrorCode.InternalError);
+            }
         }
 
     }

@@ -1,38 +1,29 @@
-﻿using Grpc.Core.Interceptors;
-using Grpc.Core;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
-using GrpcMain.Common;
-using Grpc.AspNetCore.Server.Model;
+﻿using Grpc.Core;
+using Grpc.Core.Interceptors;
 
 namespace GrpcMain
 {
     public class GrpcInterceptor : Interceptor
     {
         static public Dictionary<string, GrpcRequireAuthorityAttribute> AuthorityAttributes = new Dictionary<string, GrpcRequireAuthorityAttribute>();
-        IGrpcHandle _Handle; 
-        public GrpcInterceptor(IGrpcHandle handle )
+        IGrpcHandle _Handle;
+        public GrpcInterceptor(IGrpcHandle handle)
         {
-            _Handle = handle; 
+            _Handle = handle;
         }
 
         public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
             TRequest request,
             ServerCallContext context,
             UnaryServerMethod<TRequest, TResponse> continuation)
-        { 
+        {
             try
-            { 
+            {
                 GrpcRequireAuthorityAttribute? at;
                 if (!AuthorityAttributes.TryGetValue(context.Method, out at) || at == null)
                 {  //默认鉴权 不审计
                     string? errormsg;
-                    (var canvisit, errormsg) =await _Handle.Authorize(context, at);
+                    (var canvisit, errormsg) = await _Handle.Authorize(context, at);
                     if (canvisit == false)
                     {
                         context.Status = new Status(StatusCode.PermissionDenied, errormsg);
@@ -48,7 +39,7 @@ namespace GrpcMain
                 else if (!at.NeedLogin)
                 {
                     //不要鉴权
-                    var r= await continuation(request, context);
+                    var r = await continuation(request, context);
                     if (r == null)
                     {
                         return Activator.CreateInstance<TResponse>();
@@ -58,7 +49,7 @@ namespace GrpcMain
                 else
                 {
                     string? errormsg;
-                    (var canvisit, errormsg) = await _Handle.Authorize(context, at );
+                    (var canvisit, errormsg) = await _Handle.Authorize(context, at);
                     if (canvisit == false)
                     {
                         context.Status = new Status(StatusCode.PermissionDenied, errormsg);
@@ -74,7 +65,7 @@ namespace GrpcMain
                             context.Status = Status.DefaultSuccess;
                         }
                     }
-                    if (r==null)
+                    if (r == null)
                     {
                         return Activator.CreateInstance<TResponse>();
                     }

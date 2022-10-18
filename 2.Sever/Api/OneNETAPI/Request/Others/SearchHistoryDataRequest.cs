@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using OneNET.Api.Response;
+﻿using OneNET.Api.Response;
 using OneNET.Api.Util;
+using System;
+using System.Collections.Generic;
 
 namespace OneNET.Api.Request
 {
@@ -77,7 +77,7 @@ namespace OneNET.Api.Request
             otherParameters.Add("cursor", Cursor);
             if (Duration.HasValue)
             {
-                otherParameters.Add("duration", Duration.ToString());    
+                otherParameters.Add("duration", Duration.ToString());
             }
             otherParameters.Add("page", Page.ToString());
 

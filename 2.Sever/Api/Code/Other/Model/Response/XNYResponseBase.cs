@@ -1,24 +1,24 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace XNYAPI.Response 
+namespace XNYAPI.Response
 {
-     
+
     public class XNYResponseBase
     {
-        public  enum EErrorCode
+        public enum EErrorCode
         {
             Non = 0,
             PermissionDenied = 1,
             ParameterNotSafe = 2,
             InvalidQuery = 3,
-            SeverBusy=4,
-            ParameterWrong=5,
-            InternalError =6,
-            Other = 7, 
-            Count =8,
+            SeverBusy = 4,
+            ParameterWrong = 5,
+            InternalError = 6,
+            Other = 7,
+            Count = 8,
         }
- 
+
         /// <summary>
         /// 错误信息
         /// </summary>
@@ -67,7 +67,7 @@ namespace XNYAPI.Response
                 return ErrCode != "0";
             }
         }
-    
+
         public XNYResponseBase()
         {
             Error = "";
@@ -147,7 +147,7 @@ namespace XNYAPI.Response
     {
         public List<T> Data;
 
- 
+
         public DataListResponse(List<T> data)
         {
             Data = data;

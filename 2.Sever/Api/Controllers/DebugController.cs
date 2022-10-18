@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using XNYAPI.DAL;
 using XNYAPI.Utility;
 
 namespace XNYAPI.Controllers
@@ -44,8 +43,8 @@ namespace XNYAPI.Controllers
                 + "(4,'UserDeviceGroupID',2,4294967290,2,'用户设备分组ID分配'),"
                 + "(5,'DeviceTypeID',1,4294967290,1,'设备类型ID分配');"
                 + "INSERT INTO devicetype(ID,Name,Script,DataNames)"
-                 + $"VALUES(2, '标准设备', '{ script }','Temperature,Lumination,Humidity,eCO2,Power_in,Power_out'),"
-                + $"(1, '测试',   '{ script }','Temperature,Lumination,Humidity,eCO2,Power_in,Power_out'),(0, '默认设备',  '{ script }','Temperature,Lumination,Humidity,eCO2,Power_in,Power_out');"
+                 + $"VALUES(2, '标准设备', '{script}','Temperature,Lumination,Humidity,eCO2,Power_in,Power_out'),"
+                + $"(1, '测试',   '{script}','Temperature,Lumination,Humidity,eCO2,Power_in,Power_out'),(0, '默认设备',  '{script}','Temperature,Lumination,Humidity,eCO2,Power_in,Power_out');"
                 + "INSERT INTO user_authority VALUES(1,255,0,0); " +
                 "INSERT INTO user_authority VALUES(2,255,0,0);" +
                 "INSERT INTO user_authority VALUES(3,255,0,0);" +

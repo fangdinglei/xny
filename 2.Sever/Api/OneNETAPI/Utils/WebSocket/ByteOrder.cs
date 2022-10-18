@@ -26,13 +26,12 @@
  */
 #endregion
 
-using System;
 
 namespace WebSocketSharp
 {
-  public enum ByteOrder : byte
-  {
-    LITTLE = 0x0,
-    BIG    = 0x1
-  }
+    public enum ByteOrder : byte
+    {
+        LITTLE = 0x0,
+        BIG = 0x1
+    }
 }

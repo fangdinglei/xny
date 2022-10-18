@@ -1,7 +1,8 @@
 ﻿namespace XNYAPI.Model.Device
 {
-    public class DeviceInfo {
-        public uint  ID;
+    public class DeviceInfo
+    {
+        public uint ID;
         public uint TypeID;
         public uint GroupID;
         public string Name;
@@ -11,13 +12,13 @@
         {
         }
 
-        public DeviceInfo(uint iD, uint groupID, string name, string location,uint typeid)
+        public DeviceInfo(uint iD, uint groupID, string name, string location, uint typeid)
         {
             ID = iD;
             GroupID = groupID;
             Name = name;
             Location = location;
-            TypeID = typeid  ;
+            TypeID = typeid;
         }
     }
 }

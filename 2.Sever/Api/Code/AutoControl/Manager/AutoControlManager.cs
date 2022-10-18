@@ -1,11 +1,11 @@
 ﻿
 using System;
 using System.Collections.Generic;
- 
+
 using TimerMvcWeb.Filters;
 using XNYAPI.AutoControl.Script;
 using XNYAPI.DAL;
- 
+
 using XNYAPI.Model.AutoControl;
 using XNYAPI.Model.Device;
 using XNYAPI.Utility;

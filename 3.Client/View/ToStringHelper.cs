@@ -3,9 +3,10 @@
 /// 用于绑定物体的显示
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class ToStringHelper<T> { 
+public class ToStringHelper<T>
+{
     public T Value { get; private set; }
-     Func<T, string> tostringcall;
+    Func<T, string> tostringcall;
 
     public ToStringHelper(T value, Func<T, string> call)
     {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Xml.Serialization;
 
 namespace OneNET.Api
@@ -33,8 +32,8 @@ namespace OneNET.Api
         /// </summary>
         [XmlElement("sub_msg")]
         public string SubErrMsg { get; set; }
-		
-		/// <summary>
+
+        /// <summary>
         /// 禁止访问字段
         /// </summary>
         [XmlElement("OneNET_forbidden_fields")]

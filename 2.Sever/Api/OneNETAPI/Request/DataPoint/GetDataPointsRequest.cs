@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using OneNET.Api.Entity;
+﻿using OneNET.Api.Entity;
 using OneNET.Api.Response;
 using OneNET.Api.Util;
+using System;
+using System.Collections.Generic;
 
 namespace OneNET.Api.Request
 {
@@ -12,11 +12,11 @@ namespace OneNET.Api.Request
     /// @author Philo
     /// </summary>
     public class GetDataPointsRequest : SearchDataPointReq, IOneNETRequest<GetDataPointsRsp>
-        //:IOneNETRequest<SearchDataPointReq, SearchDataPointRsp>
+    //:IOneNETRequest<SearchDataPointReq, SearchDataPointRsp>
     {
         public const String URI = "<scheme>://<API_ADDRESS>/devices/<device_id>/datapoints";
         public const String DEVICE_ID = "device_id";
-        
+
         /// <summary>
         /// 目的设备ID
         /// </summary>
@@ -47,7 +47,7 @@ namespace OneNET.Api.Request
             otherParameters.Add(INTERVAL, Interval);
             otherParameters.Add(METHOD, Method);
             otherParameters.Add(FIRST, First);
-            otherParameters.Add("sort", ASC? "ASC" : "DESC");
+            otherParameters.Add("sort", ASC ? "ASC" : "DESC");
 
             var url = URIUtils.fmtURI(URI, context);
             var webUtils = new WebUtils();

@@ -1,16 +1,16 @@
-﻿ 
+﻿
 
 #if !DEBUG
 using MySqlConnector;
 #endif
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
-using Newtonsoft.Json;
 
 
 
@@ -53,7 +53,7 @@ namespace XNYAPI.Utility
         }
     }
 
-    
+
     public static class Logger
     {
         /// <summary>
@@ -106,10 +106,10 @@ namespace XNYAPI.Utility
                 Msg = msg;
                 Time = DateTime.Now;
             }
-            public LogMessage(  string title, string msg)
+            public LogMessage(string title, string msg)
             {
                 StackTrace = null;
-                   ID = null;
+                ID = null;
                 Title = title;
                 SubTitle = "Non";
                 Msg = msg;
@@ -125,27 +125,27 @@ namespace XNYAPI.Utility
                 Time = DateTime.Now;
             }
 
-  
+
             public override string ToString()
             {
-                return  JsonConvert.SerializeObject(this);
+                return JsonConvert.SerializeObject(this);
             }
 
         }
 
 
 
-        public static string GetCodeInfo ( )
+        public static string GetCodeInfo()
         {
             try
             {
-                 StackTrace st = new  StackTrace( true );
+                StackTrace st = new StackTrace(true);
                 var f = st.GetFrame(3);
                 string fullfile = f.GetFileName();
                 fullfile = fullfile.Substring(fullfile.LastIndexOf("\\") + 1);
-                return $"{  fullfile}:{f.GetFileLineNumber()}@{f.GetMethod().Name}";
+                return $"{fullfile}:{f.GetFileLineNumber()}@{f.GetMethod().Name}";
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return "";
             }
@@ -267,8 +267,8 @@ namespace XNYAPI.Utility
         {
             if (MSGS.Count == 0)
                 return;
-          
-            if (LeftMsgToChangeNextFile<=0)
+
+            if (LeftMsgToChangeNextFile <= 0)
             {
                 LeftMsgToChangeNextFile = 500;
                 LogName = "LOGS/" + DateTime.Now.ToString().Replace(":", ".").Replace("/", ".") + ".txt";
@@ -284,8 +284,8 @@ namespace XNYAPI.Utility
                 sb.Append(msg.ToString());
                 sb.Append(",\r\n");
             }
-           
-            sb.Remove(sb.Length-3,3);
+
+            sb.Remove(sb.Length - 3, 3);
             sb.Append("]\r\n");
             try
             {
@@ -294,16 +294,17 @@ namespace XNYAPI.Utility
             }
             catch (Exception)
             {
-                 
+
             }
-          
+
         }
-        
+
         static void StartLogerWriteThread()
         {
             if (logwtirethread == null)
             {
-                logwtirethread = new Thread(()=> {
+                logwtirethread = new Thread(() =>
+                {
                     while (true)
                     {
                         Thread.Sleep(10000);
@@ -319,16 +320,17 @@ namespace XNYAPI.Utility
 
         }
 
-        static void AddMsg(LogMessage msg) {
+        static void AddMsg(LogMessage msg)
+        {
             msg.ID = "" + (++ID);
-            msg.StackTrace= GetCodeInfo();
+            msg.StackTrace = GetCodeInfo();
             lock (obj)
             {
                 StartLogerWriteThread();
                 MSGS.Add(msg);
 
             }
-          
+
         }
         static public void Log(string title, string msg)
         {
@@ -373,11 +375,11 @@ namespace XNYAPI.Utility
             lock (obj)
             {
                 logwtirethread.Interrupt();
-                PersistenceLog(); 
+                PersistenceLog();
             }
         }
 
-        
+
 #endif
     }
 }

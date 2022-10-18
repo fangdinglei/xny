@@ -26,16 +26,17 @@
  */
 #endregion
 
-using System;
 
-namespace WebSocketSharp.Server {
+namespace WebSocketSharp.Server
+{
 
-  public interface IServiceHost {
+    public interface IServiceHost
+    {
 
-    bool Sweeped { get; set; }
-    void BindWebSocket(WebSocket socket);
-    void Broadcast(string data);
-    void Start();
-    void Stop();
-  }
+        bool Sweeped { get; set; }
+        void BindWebSocket(WebSocket socket);
+        void Broadcast(string data);
+        void Start();
+        void Stop();
+    }
 }

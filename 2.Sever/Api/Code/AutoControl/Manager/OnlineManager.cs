@@ -6,7 +6,8 @@ namespace XNYAPI.AutoControl
     [AutoService(Name = "online", OnScript = "Run")]
     public class OnlineManager
     {
-        public void Run(ScriptContext context, PageItem item) {
+        public void Run(ScriptContext context, PageItem item)
+        {
             //TODO
             context.Online = true;
         }

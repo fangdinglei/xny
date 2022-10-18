@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using OneNET.Api.Entity;
+﻿using OneNET.Api.Entity;
 using OneNET.Api.Response;
 using OneNET.Api.Util;
+using System;
+using System.Collections.Generic;
 
 namespace OneNET.Api.Request
 {
@@ -26,7 +26,7 @@ namespace OneNET.Api.Request
         /// </summary>
         public CreateDeviceRequest()
         {
-            NewDevice = new DeviceBasicInfo {Private = false};//新设备默认为私有
+            NewDevice = new DeviceBasicInfo { Private = false };//新设备默认为私有
             otherParameters = new Dictionary<string, string>();
         }
 

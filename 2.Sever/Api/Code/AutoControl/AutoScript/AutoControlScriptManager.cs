@@ -14,7 +14,7 @@ namespace XNYAPI.AutoControl.Script
         /// </summary> 
         /// <returns></returns>
         /// <exception cref="Exception">
-        static public void  RegistServices()
+        static public void RegistServices()
         {
             Services = new Dictionary<string, AutoServiceAttribute>();
             foreach (var item in AutoServiceAttribute.GetServices())
@@ -23,7 +23,7 @@ namespace XNYAPI.AutoControl.Script
 
             }
             Inited = true;
-        } 
+        }
         /// <summary>
         /// 解析脚本
         /// </summary>
@@ -60,7 +60,7 @@ namespace XNYAPI.AutoControl.Script
                         if (!Services.ContainsKey(arr[0]))
                             throw new Exception($"没有合适的服务：{arr[0]}");
                         items.Add(new PageItem() { Name = arr[0], Parm = null });
-                    } 
+                    }
                     else if (arr.Length == 2)
                     {
                         if (!Services.ContainsKey(arr[0]))
@@ -75,11 +75,12 @@ namespace XNYAPI.AutoControl.Script
         }
 
 
-        static public void OnStart(int step) {
+        static public void OnStart(int step)
+        {
             foreach (var sv in Services.Values)
             {
                 sv.StartCall?.Invoke(step);
-            } 
+            }
         }
         static public void OnEnd(int step)
         {
@@ -95,15 +96,15 @@ namespace XNYAPI.AutoControl.Script
         /// <param name="ownerid">执行对象的id</param>
         /// <param name="step">时间s</param>
         /// <exception cref="Exception">
-        static public void RunScript(AutoScript script, uint ownerid,string realid,DeviceTypeInfo typeInfo, int step)
+        static public void RunScript(AutoScript script, uint ownerid, string realid, DeviceTypeInfo typeInfo, int step)
         {
             if (!Inited)
                 throw new Exception("请先初始化");
             foreach (var page in script.Pages)
             {
-                if ( step % page.Step  != 0)
+                if (step % page.Step != 0)
                     continue;
-                ScriptContext context = new ScriptContext( ownerid,realid, step);
+                ScriptContext context = new ScriptContext(ownerid, realid, step);
                 context.Type = typeInfo;
                 foreach (var item in page.Items)
                 {

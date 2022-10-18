@@ -1,14 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure.Internal;
-using Pomelo.EntityFrameworkCore.MySql.Migrations;
 using System;
-using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.Extensions.Options;
 using System.Diagnostics;
 //Add-Migration [--context MainContext]
 //Remove-Migration 取消最近一次迁移
@@ -72,11 +66,11 @@ namespace MyDBContext.Main
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.ReplaceService<IMigrationsModelDiffer, MigrationsModelDifferWithoutForeignKey>();
-            if (_connection==null)
+            if (_connection == null)
             {
                 _connection = new SqliteConnection("Filename=:memory:");
                 _connection.Open();
-            }  
+            }
             base.OnConfiguring(optionsBuilder);
             string s = "server=fdlmaindb.mysql.rds.aliyuncs.com;database=dbbs;user id=fangdinglei;password=FdlMainDB@;port=3306;sslmode=None";
             //optionsBuilder.UseMySql(s, ServerVersion.AutoDetect(s));
@@ -85,7 +79,7 @@ namespace MyDBContext.Main
         }
         [DebuggerStepThrough]
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        { 
+        {
             base.OnModelCreating(modelBuilder);
             User_Device.OnModelCreating(modelBuilder);
             User_SF.OnModelCreating(modelBuilder);
@@ -133,8 +127,8 @@ namespace MyDBContext.Main
                 LastLogin = 0,
                 Pass = "123",
                 Phone = "15850798245",
-                CreatorId =0,
-                Authoritys= "[\"SystemUser\",\"测试权限1\"]"
+                CreatorId = 0,
+                Authoritys = "[\"SystemUser\",\"测试权限1\"]"
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -216,7 +210,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
-                Id =13,
+                Id = 13,
                 Name = "user13",
                 EMail = "2432114474@qq.com",
                 LastLogin = 0,
@@ -299,7 +293,7 @@ namespace MyDBContext.Main
                 IsSelf = false,
                 User1Id = 5,
                 User2Id = 3,
-            }); 
+            });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
                 IsFather = false,
@@ -385,7 +379,7 @@ namespace MyDBContext.Main
                 IsSelf = false,
                 User1Id = 13,
                 User2Id = 11,
-            }); 
+            });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
                 IsFather = false,
@@ -411,12 +405,13 @@ namespace MyDBContext.Main
 
             #region 设备添加
             modelBuilder.Entity<Device_Type>().HasData(
-                new Device_Type() { 
-                    Id=1,
-                    Name="测试类型1",
-                    CreatorId=2,
-                    DataPoints="[]",
-                    Script="",
+                new Device_Type()
+                {
+                    Id = 1,
+                    Name = "测试类型1",
+                    CreatorId = 2,
+                    DataPoints = "[]",
+                    Script = "",
                 }
                 , new Device_Type()
                 {
@@ -433,8 +428,8 @@ namespace MyDBContext.Main
               {
                   Id = 1,
                   Name = "测试分组1",
-                  CreatorId = 2, 
-              } ,
+                  CreatorId = 2,
+              },
                new User_Device_Group()
                {
                    Id = 2,
@@ -443,18 +438,19 @@ namespace MyDBContext.Main
                }
               );
             modelBuilder.Entity<Device>().HasData(
-                new Device() { 
-                    Id=1,
-                    Name="设备1",
-                    CreatorId=2,
-                    DeviceTypeId=1,
-                    LatestData="{}",
-                    LocationStr="",
-                    Status=2,
+                new Device()
+                {
+                    Id = 1,
+                    Name = "设备1",
+                    CreatorId = 2,
+                    DeviceTypeId = 1,
+                    LatestData = "{}",
+                    LocationStr = "",
+                    Status = 2,
                 }
                 , new Device()
                 {
-                    Id = 2, 
+                    Id = 2,
                     Name = "设备2",
                     CreatorId = 2,
                     DeviceTypeId = 1,
@@ -471,7 +467,7 @@ namespace MyDBContext.Main
                     LatestData = "{}",
                     LocationStr = "",
                     Status = 2,
-                } 
+                }
             );
             modelBuilder.Entity<User_Device>().HasData(
                 new User_Device()
@@ -481,7 +477,7 @@ namespace MyDBContext.Main
                     PControl = true,
                     PData = true,
                     PStatus = true,
-                    User_Device_GroupId =1,
+                    User_Device_GroupId = 1,
                 }
                 , new User_Device()
                 {
@@ -527,7 +523,7 @@ namespace MyDBContext.Main
                     PData = true,
                     PStatus = true,
                     User_Device_GroupId = 0,
-                } 
+                }
             );
             #endregion
 
@@ -536,4 +532,4 @@ namespace MyDBContext.Main
         }
     }
 
-} 
+}

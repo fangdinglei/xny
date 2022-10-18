@@ -1,5 +1,3 @@
-using System;
-
 namespace XNYAPI.Models
 {
     public class ErrorViewModel

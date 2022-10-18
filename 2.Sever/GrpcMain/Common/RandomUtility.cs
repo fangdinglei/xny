@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GrpcMain.Common
+﻿namespace GrpcMain.Common
 {
     public class RandomUtility
     {

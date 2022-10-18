@@ -33,144 +33,154 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Net;
-using System.Runtime.Serialization;
 
-namespace WebSocketSharp.Net {
+namespace WebSocketSharp.Net
+{
 
-	[Serializable]
-	public class CookieCollection : ICollection, IEnumerable
-	{
-		// not 100% identical to MS implementation
-		sealed class CookieCollectionComparer : IComparer<Cookie>
-		{
-			public int Compare (Cookie x, Cookie y)
-			{
-				if (x == null || y == null)
-					return 0;
-				
-				int c1 = x.Name.Length + x.Value.Length;
-				int c2 = y.Name.Length + y.Value.Length;
+    [Serializable]
+    public class CookieCollection : ICollection, IEnumerable
+    {
+        // not 100% identical to MS implementation
+        sealed class CookieCollectionComparer : IComparer<Cookie>
+        {
+            public int Compare(Cookie x, Cookie y)
+            {
+                if (x == null || y == null)
+                    return 0;
 
-				return (c1 - c2);
-			}
-		}
+                int c1 = x.Name.Length + x.Value.Length;
+                int c2 = y.Name.Length + y.Value.Length;
 
-		static CookieCollectionComparer Comparer = new CookieCollectionComparer ();
+                return (c1 - c2);
+            }
+        }
 
-		List<Cookie> list = new List<Cookie> ();
+        static CookieCollectionComparer Comparer = new CookieCollectionComparer();
 
-		internal IList<Cookie> List {
-			get { return list; }
-		}
-		// ICollection
-		public int Count {
-			get { return list.Count; }
-		}
+        List<Cookie> list = new List<Cookie>();
 
-		public bool IsSynchronized {
-			get { return false; }
-		}
+        internal IList<Cookie> List
+        {
+            get { return list; }
+        }
+        // ICollection
+        public int Count
+        {
+            get { return list.Count; }
+        }
 
-		public Object SyncRoot {
-			get { return this; }
-		}
+        public bool IsSynchronized
+        {
+            get { return false; }
+        }
 
-		public void CopyTo (Array array, int index)
-		{
-			(list as IList).CopyTo (array, index);
-		}
+        public Object SyncRoot
+        {
+            get { return this; }
+        }
 
-		public void CopyTo (Cookie [] array, int index)
-		{
-			list.CopyTo (array, index);
-		}
+        public void CopyTo(Array array, int index)
+        {
+            (list as IList).CopyTo(array, index);
+        }
 
-		// IEnumerable
-		public IEnumerator GetEnumerator ()
-		{
-			return list.GetEnumerator ();
-		}
+        public void CopyTo(Cookie[] array, int index)
+        {
+            list.CopyTo(array, index);
+        }
 
-		// This
+        // IEnumerable
+        public IEnumerator GetEnumerator()
+        {
+            return list.GetEnumerator();
+        }
 
-		// LAMESPEC: So how is one supposed to create a writable CookieCollection 
-		// instance?? We simply ignore this property, as this collection is always
-		// writable.
-		public bool IsReadOnly {
-			get { return true; }
-		}		
+        // This
 
-		public void Add (Cookie cookie) 
-		{
-			if (cookie == null)
-				throw new ArgumentNullException ("cookie");
+        // LAMESPEC: So how is one supposed to create a writable CookieCollection 
+        // instance?? We simply ignore this property, as this collection is always
+        // writable.
+        public bool IsReadOnly
+        {
+            get { return true; }
+        }
 
-			int pos = SearchCookie (cookie);
-			if (pos == -1)
-				list.Add (cookie);
-			else
-				list [pos] = cookie;
-		}
+        public void Add(Cookie cookie)
+        {
+            if (cookie == null)
+                throw new ArgumentNullException("cookie");
 
-		internal void Sort ()
-		{
-			if (list.Count > 0)
-				list.Sort (Comparer);
-		}
-		
-		int SearchCookie (Cookie cookie)
-		{
-			string name = cookie.Name;
-			string domain = cookie.Domain;
-			string path = cookie.Path;
+            int pos = SearchCookie(cookie);
+            if (pos == -1)
+                list.Add(cookie);
+            else
+                list[pos] = cookie;
+        }
 
-			for (int i = list.Count - 1; i >= 0; i--) {
-				Cookie c = list [i];
-				if (c.Version != cookie.Version)
-					continue;
+        internal void Sort()
+        {
+            if (list.Count > 0)
+                list.Sort(Comparer);
+        }
 
-				if (0 != String.Compare (domain, c.Domain, true, CultureInfo.InvariantCulture))
-					continue;
+        int SearchCookie(Cookie cookie)
+        {
+            string name = cookie.Name;
+            string domain = cookie.Domain;
+            string path = cookie.Path;
 
-				if (0 != String.Compare (name, c.Name, true, CultureInfo.InvariantCulture))
-					continue;
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                Cookie c = list[i];
+                if (c.Version != cookie.Version)
+                    continue;
 
-				if (0 != String.Compare (path, c.Path, true, CultureInfo.InvariantCulture))
-					continue;
+                if (0 != String.Compare(domain, c.Domain, true, CultureInfo.InvariantCulture))
+                    continue;
 
-				return i;
-			}
+                if (0 != String.Compare(name, c.Name, true, CultureInfo.InvariantCulture))
+                    continue;
 
-			return -1;
-		}
+                if (0 != String.Compare(path, c.Path, true, CultureInfo.InvariantCulture))
+                    continue;
 
-		public void Add (CookieCollection cookies) 
-		{
-			if (cookies == null)
-				throw new ArgumentNullException ("cookies");
+                return i;
+            }
 
-			foreach (Cookie c in cookies)
-				Add (c);
-		}
+            return -1;
+        }
 
-		public Cookie this [int index] {
-			get {
-				if (index < 0 || index >= list.Count)
-					throw new ArgumentOutOfRangeException ("index");
+        public void Add(CookieCollection cookies)
+        {
+            if (cookies == null)
+                throw new ArgumentNullException("cookies");
 
-				return list [index];
-			}
-		}
+            foreach (Cookie c in cookies)
+                Add(c);
+        }
 
-		public Cookie this [string name] {
-			get {
-				foreach (Cookie c in list) {
-					if (0 == String.Compare (c.Name, name, true, CultureInfo.InvariantCulture))
-						return c;
-				}
-				return null;
-			}
-		}
-	}
+        public Cookie this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= list.Count)
+                    throw new ArgumentOutOfRangeException("index");
+
+                return list[index];
+            }
+        }
+
+        public Cookie this[string name]
+        {
+            get
+            {
+                foreach (Cookie c in list)
+                {
+                    if (0 == String.Compare(c.Name, name, true, CultureInfo.InvariantCulture))
+                        return c;
+                }
+                return null;
+            }
+        }
+    }
 }

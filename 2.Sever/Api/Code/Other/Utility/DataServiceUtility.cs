@@ -1,31 +1,26 @@
-﻿ 
+﻿
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
- 
+
 using XNYAPI.DAL;
-using XNYAPI.Response;
-using XNYAPI.Response.Device;
 
 namespace XNYAPI.Utility
 {
     [TimerMvcWeb.Filters.AutoTask(Name = "RefreshDevices", OnLoadCall = "RefreshDevices")]
     public class DataServiceUtility
-    { 
+    {
 
-       /// <summary>
-       /// 从平台拉取数据 
-       /// 设备表添加新设备 system用户添加设备映射
-       /// </summary>
-       /// <returns></returns>
-       static public bool RefreshDevices()
+        /// <summary>
+        /// 从平台拉取数据 
+        /// 设备表添加新设备 system用户添加设备映射
+        /// </summary>
+        /// <returns></returns>
+        static public bool RefreshDevices()
         {
-          
+
             try
             {
-               
-            
+
+
                 using (var cnn = DBCnn.GetCnn())
                 {
                     var cmd = cnn.CreateCommand();
@@ -35,7 +30,7 @@ namespace XNYAPI.Utility
                     try
                     {
                         var pdvs = OneNetUtility.GetDevices();
-                  
+
                         //cmd.Transaction = cnn.BeginTransaction();
                         var sysid = AccountDAL.GetSystemUserID();
                         foreach (var dv in pdvs)
@@ -45,12 +40,12 @@ namespace XNYAPI.Utility
                             if (!DeviceDAL.HasDeviceOfRealID(dv.Id, cmd))
                             {
                                 var iddv = DALUtility.GetID(2, cmd);
-                                cmd.CommandText = $"INSERT IGNORE INTO deviceinfo (DeviceID,DeviceName,Location,DeviceRealID,Type)VALUES({iddv } ,'{dv.Title}','未知','{dv.Id}',0);" +
-                                $"INSERT IGNORE INTO userdevice (UserID,DeviceID,GroupID)VALUES({sysid},{ iddv },0); ";
+                                cmd.CommandText = $"INSERT IGNORE INTO deviceinfo (DeviceID,DeviceName,Location,DeviceRealID,Type)VALUES({iddv} ,'{dv.Title}','未知','{dv.Id}',0);" +
+                                $"INSERT IGNORE INTO userdevice (UserID,DeviceID,GroupID)VALUES({sysid},{iddv},0); ";
 
                                 cmd.ExecuteNonQuery();
                             }
-                          
+
                         }
                         //cmd.Transaction.Commit();
                         return true;

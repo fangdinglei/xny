@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using XNYAPI.Model.Device;
-using static XNYAPI.Model.AutoControl.DeviceData;
 
 namespace XNYAPI.AutoControl.Script.Model
 {
@@ -10,7 +8,7 @@ namespace XNYAPI.AutoControl.Script.Model
         /// <summary>
         /// 设备当前是否在线
         /// </summary>
-        public bool Online ;
+        public bool Online;
         /// <summary>
         /// 设备在OneNet平台上的ID
         /// </summary>

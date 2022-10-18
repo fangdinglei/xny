@@ -4,7 +4,6 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
-using System.Linq;
 using static GrpcMain.UserDevice.DTODefine.Types;
 
 namespace GrpcMain.UserDevice
@@ -14,29 +13,29 @@ namespace GrpcMain.UserDevice
         ITimeUtility _timeutility;
         IGrpcCursorUtility _cursorUtility;
 
- 
+
 
         public UserDeviceServiceImp(ITimeUtility time, IGrpcCursorUtility cursorUtility)
         {
-            _timeutility = time; 
+            _timeutility = time;
             _cursorUtility = cursorUtility;
         }
-        
+
         public override async Task<CommonResponse?> UpdateUserDevice(Request_UpdateUserDevice request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
 
             using (MainContext ct = new MainContext())
             {
-                if (!request.UserDevice.HasUserId || 
-                    await id.GetOwnerTypeAsync(ct, request.UserDevice.UserId) != AuthorityUtility.OwnerType.SonOfCreator)    
-                                      
+                if (!request.UserDevice.HasUserId ||
+                    await id.GetOwnerTypeAsync(ct, request.UserDevice.UserId) != AuthorityUtility.OwnerType.SonOfCreator)
+
                 {
                     return new CommonResponse()
                     {
                         Success = false,
                         Message = "指定了无效的接收用户",
-                    }; 
+                    };
                 }
                 //TODO 优化
                 var count = await ct.Devices.Join(ct.User_Devices, it => it.Id, it => it.DeviceId, (dv, udv) => new { dv, udv })
@@ -49,7 +48,7 @@ namespace GrpcMain.UserDevice
                         Message = "参数错误或者使用非法的设备ID或不是子用户ID",
                     };
                 }
-               
+
                 if (!request.UserDevice.PStatus
                         && !request.UserDevice.PData
                         && !request.UserDevice.PControl)
@@ -63,7 +62,8 @@ namespace GrpcMain.UserDevice
                     //请求的用户的已有权限  用于拦截对子用户添加其他未拥有的权限
                     Dictionary<long, MyDBContext.Main.User_Device> dic = new();
                     (await ct.User_Devices.Where(it => request.Dvids.Contains(it.DeviceId) && it.UserId == id)
-                        .AsNoTracking().ToListAsync()).ForEach(it => {
+                        .AsNoTracking().ToListAsync()).ForEach(it =>
+                        {
                             dic.Add(it.DeviceId, it);
                         });
                     foreach (var item in request.Dvids)
@@ -100,7 +100,7 @@ namespace GrpcMain.UserDevice
                         });
                     }
                 }
-               
+
                 await ct.SaveChangesAsync();
 
             }
@@ -188,9 +188,10 @@ namespace GrpcMain.UserDevice
                 var ls = await ct.User_Device_Groups.Where(it => it.CreatorId == id).AsNoTracking().ToListAsync();
                 foreach (var item in ls)
                 {
-                    res.Groups.Add(new DTODefine.Types.User_Device_Group() { 
-                        Id=item.Id,
-                        Name=item.Name,
+                    res.Groups.Add(new DTODefine.Types.User_Device_Group()
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
                     });
                 }
             }
@@ -241,7 +242,7 @@ namespace GrpcMain.UserDevice
                 await ct.SaveChangesAsync();
                 return new CommonResponse() { Success = true };
             }
-        } 
+        }
         public override async Task<CommonResponse> NewGroup(Request_NewGroup request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -255,7 +256,8 @@ namespace GrpcMain.UserDevice
                 await ct.SaveChangesAsync();
             }
             return new CommonResponse() { Success = true };
-        } public override async Task<CommonResponse?> SetDeviceGroup(Request_SetDeviceGroup request, ServerCallContext context)
+        }
+        public override async Task<CommonResponse?> SetDeviceGroup(Request_SetDeviceGroup request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
@@ -265,7 +267,7 @@ namespace GrpcMain.UserDevice
                     context.Status = new Status(StatusCode.PermissionDenied, "用户无该分组");
                     return null;
                 }
-                var bd = ct.User_Devices.Where(it =>it.UserId==id&& request.Dvids.ToList().Contains(it.DeviceId));
+                var bd = ct.User_Devices.Where(it => it.UserId == id && request.Dvids.ToList().Contains(it.DeviceId));
                 var count = await bd.CountAsync();
                 if (count != request.Dvids.Count)
                 {
@@ -286,12 +288,12 @@ namespace GrpcMain.UserDevice
                         item.User_Device_GroupId = 0;
                     }
                 }
-                
+
                 await ct.SaveChangesAsync();
                 return new CommonResponse() { Success = true };
             }
-        } 
-         
+        }
+
 
         public override async Task<Response_GetUserDevices> GetUserDevices(Request_GetUserDevices request, ServerCallContext context)
         {
@@ -305,7 +307,7 @@ namespace GrpcMain.UserDevice
                 IQueryable<MyDBContext.Main.User_Device> bd;
                 if (qid != id)
                 {
-                    var count = await ct.User_SFs.Where(it => it.User1Id== id && it.User2Id== qid&&it.IsFather).CountAsync();
+                    var count = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == qid && it.IsFather).CountAsync();
                     if (count == 0)
                     {
                         context.Status = new Status(StatusCode.PermissionDenied, "只能查询自己和子用户");
@@ -324,7 +326,7 @@ namespace GrpcMain.UserDevice
                     UserId = request.UserId,
                 };
                 IEnumerable<MyDBContext.Main.User_Device> lsx;
-                if (  maxcount == r.Count)
+                if (maxcount == r.Count)
                 {
                     res.Cursor = r.Last().DeviceId;
                     lsx = r.Take(maxcount - 1);
@@ -349,5 +351,5 @@ namespace GrpcMain.UserDevice
             }
         }
 
-      }
+    }
 }

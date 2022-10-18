@@ -1,26 +1,22 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using GrpcMain;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting; 
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models; 
-using System;
-using System.IO;
-using System.Reflection;
-using GrpcMain; 
 using MyEmailUtility;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
- builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews();
 //添加工具类
 builder.Services.TryAddSingleton<MyUtility.IRandomUtility, MyUtility.RandomUtility>();
 builder.Services.TryAddSingleton<MyUtility.ITimeUtility, MyUtility.TimeUtility>();
 builder.Services.UseMyGrpc("2432114474");
-builder.Services.UseMyEmail(); 
+builder.Services.UseMyEmail();
 
 #region 禁用模型校验
 
@@ -97,7 +93,7 @@ app.RegistMyGrpc();
 app.UseRouting();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"); 
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 #if DEBUG
 app.Urls.Add("https://localhost:8089");
 #else

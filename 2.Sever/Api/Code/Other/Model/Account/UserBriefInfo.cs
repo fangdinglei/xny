@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace XNYAPI.Model.Account
 {
@@ -14,7 +12,7 @@ namespace XNYAPI.Model.Account
         {
 
         }
-        public UserBriefInfo(uint iD, string name )
+        public UserBriefInfo(uint iD, string name)
         {
             ID = iD;
             Name = name;

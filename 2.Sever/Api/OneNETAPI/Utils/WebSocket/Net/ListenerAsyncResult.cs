@@ -28,159 +28,182 @@
 //
 
 using System;
-using System.Net;
 using System.Threading;
 
-namespace WebSocketSharp.Net {
+namespace WebSocketSharp.Net
+{
 
-	class ListenerAsyncResult : IAsyncResult
-	{
-		static WaitCallback InvokeCB = new WaitCallback (InvokeCallback);
+    class ListenerAsyncResult : IAsyncResult
+    {
+        static WaitCallback InvokeCB = new WaitCallback(InvokeCallback);
 
-		AsyncCallback       cb;
-		bool                completed;
-		HttpListenerContext context;
-		Exception           exception;
-		ListenerAsyncResult forward;
-		ManualResetEvent    handle;
-		object              locker;
-		object              state;
-		bool                synch;
+        AsyncCallback cb;
+        bool completed;
+        HttpListenerContext context;
+        Exception exception;
+        ListenerAsyncResult forward;
+        ManualResetEvent handle;
+        object locker;
+        object state;
+        bool synch;
 
-		internal bool EndCalled;
-		internal bool InGet;
+        internal bool EndCalled;
+        internal bool InGet;
 
-		public ListenerAsyncResult (AsyncCallback cb, object state)
-		{
-			this.cb     = cb;
-			this.state  = state;
-			this.locker = new object();
-		}
+        public ListenerAsyncResult(AsyncCallback cb, object state)
+        {
+            this.cb = cb;
+            this.state = state;
+            this.locker = new object();
+        }
 
-		public object AsyncState {
-			get {
-				if (forward != null)
-					return forward.AsyncState;
-				return state;
-			}
-		}
+        public object AsyncState
+        {
+            get
+            {
+                if (forward != null)
+                    return forward.AsyncState;
+                return state;
+            }
+        }
 
-		public WaitHandle AsyncWaitHandle {
-			get {
-				if (forward != null)
-					return forward.AsyncWaitHandle;
+        public WaitHandle AsyncWaitHandle
+        {
+            get
+            {
+                if (forward != null)
+                    return forward.AsyncWaitHandle;
 
-				lock (locker) {
-					if (handle == null)
-						handle = new ManualResetEvent (completed);
-				}
-				
-				return handle;
-			}
-		}
+                lock (locker)
+                {
+                    if (handle == null)
+                        handle = new ManualResetEvent(completed);
+                }
 
-		public bool CompletedSynchronously {
-			get {
-				if (forward != null)
-					return forward.CompletedSynchronously;
-				return synch;
-			}
+                return handle;
+            }
+        }
 
-		}
+        public bool CompletedSynchronously
+        {
+            get
+            {
+                if (forward != null)
+                    return forward.CompletedSynchronously;
+                return synch;
+            }
 
-		public bool IsCompleted {
-			get {
-				if (forward != null)
-					return forward.IsCompleted;
+        }
 
-				lock (locker) {
-					return completed;
-				}
-			}
-		}
+        public bool IsCompleted
+        {
+            get
+            {
+                if (forward != null)
+                    return forward.IsCompleted;
 
-		static void InvokeCallback (object o)
-		{
-			ListenerAsyncResult ares = (ListenerAsyncResult) o;
-			if (ares.forward != null) {
-				InvokeCallback (ares.forward);
-				return;
-			}
-			try {
-				ares.cb (ares);
-			} catch {
-			}
-		}
+                lock (locker)
+                {
+                    return completed;
+                }
+            }
+        }
 
-		internal void Complete (Exception exc)
-		{
-			if (forward != null) {
-				forward.Complete (exc);
-				return;
-			}
-			exception = exc;
-			if (InGet && (exc is ObjectDisposedException))
-				exception = new HttpListenerException (500, "Listener closed");
-			lock (locker) {
-				completed = true;
-				if (handle != null)
-					handle.Set ();
+        static void InvokeCallback(object o)
+        {
+            ListenerAsyncResult ares = (ListenerAsyncResult)o;
+            if (ares.forward != null)
+            {
+                InvokeCallback(ares.forward);
+                return;
+            }
+            try
+            {
+                ares.cb(ares);
+            }
+            catch
+            {
+            }
+        }
 
-				if (cb != null)
-					ThreadPool.UnsafeQueueUserWorkItem (InvokeCB, this);
-			}
-		}
+        internal void Complete(Exception exc)
+        {
+            if (forward != null)
+            {
+                forward.Complete(exc);
+                return;
+            }
+            exception = exc;
+            if (InGet && (exc is ObjectDisposedException))
+                exception = new HttpListenerException(500, "Listener closed");
+            lock (locker)
+            {
+                completed = true;
+                if (handle != null)
+                    handle.Set();
 
-		internal void Complete (HttpListenerContext context)
-		{
-			Complete (context, false);
-		}
+                if (cb != null)
+                    ThreadPool.UnsafeQueueUserWorkItem(InvokeCB, this);
+            }
+        }
 
-		internal void Complete (HttpListenerContext context, bool synch)
-		{
-			if (forward != null) {
-				forward.Complete (context, synch);
-				return;
-			}
-			this.synch = synch;
-			this.context = context;
-			lock (locker) {
-				AuthenticationSchemes schemes = context.Listener.SelectAuthenticationScheme (context);
-				if ((schemes == AuthenticationSchemes.Basic || context.Listener.AuthenticationSchemes == AuthenticationSchemes.Negotiate) && context.Request.Headers ["Authorization"] == null) {
-					context.Response.StatusCode = 401;
-					context.Response.Headers ["WWW-Authenticate"] = schemes + " realm=\"" + context.Listener.Realm + "\"";
-					context.Response.OutputStream.Close ();
-					IAsyncResult ares = context.Listener.BeginGetContext (cb, state);
-					this.forward = (ListenerAsyncResult) ares;
-					lock (forward.locker) {
-						if (handle != null)
-							forward.handle = handle;
-					}
-					ListenerAsyncResult next = forward;
-					for (int i = 0; next.forward != null; i++) {
-						if (i > 20)
-							Complete (new HttpListenerException (400, "Too many authentication errors"));
-						next = next.forward;
-					}
-				} else {
-					completed = true;
-					if (handle != null)
-						handle.Set ();
+        internal void Complete(HttpListenerContext context)
+        {
+            Complete(context, false);
+        }
 
-					if (cb != null)
-						ThreadPool.UnsafeQueueUserWorkItem (InvokeCB, this);
-				}
-			}
-		}
+        internal void Complete(HttpListenerContext context, bool synch)
+        {
+            if (forward != null)
+            {
+                forward.Complete(context, synch);
+                return;
+            }
+            this.synch = synch;
+            this.context = context;
+            lock (locker)
+            {
+                AuthenticationSchemes schemes = context.Listener.SelectAuthenticationScheme(context);
+                if ((schemes == AuthenticationSchemes.Basic || context.Listener.AuthenticationSchemes == AuthenticationSchemes.Negotiate) && context.Request.Headers["Authorization"] == null)
+                {
+                    context.Response.StatusCode = 401;
+                    context.Response.Headers["WWW-Authenticate"] = schemes + " realm=\"" + context.Listener.Realm + "\"";
+                    context.Response.OutputStream.Close();
+                    IAsyncResult ares = context.Listener.BeginGetContext(cb, state);
+                    this.forward = (ListenerAsyncResult)ares;
+                    lock (forward.locker)
+                    {
+                        if (handle != null)
+                            forward.handle = handle;
+                    }
+                    ListenerAsyncResult next = forward;
+                    for (int i = 0; next.forward != null; i++)
+                    {
+                        if (i > 20)
+                            Complete(new HttpListenerException(400, "Too many authentication errors"));
+                        next = next.forward;
+                    }
+                }
+                else
+                {
+                    completed = true;
+                    if (handle != null)
+                        handle.Set();
 
-		internal HttpListenerContext GetContext ()
-		{
-			if (forward != null)
-				return forward.GetContext ();
-			if (exception != null)
-				throw exception;
+                    if (cb != null)
+                        ThreadPool.UnsafeQueueUserWorkItem(InvokeCB, this);
+                }
+            }
+        }
 
-			return context;
-		}
-	}
+        internal HttpListenerContext GetContext()
+        {
+            if (forward != null)
+                return forward.GetContext();
+            if (exception != null)
+                throw exception;
+
+            return context;
+        }
+    }
 }

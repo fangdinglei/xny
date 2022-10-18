@@ -6,7 +6,7 @@ using XNYAPI.AutoControl.Script.Model;
 
 namespace XNYAPI.AutoControl.Script
 {
-    [AttributeUsage(AttributeTargets.Class,AllowMultiple =true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class AutoServiceAttribute : Attribute
     {
         /// <summary>
@@ -26,11 +26,11 @@ namespace XNYAPI.AutoControl.Script
         /// </summary>
         public string OnEnd { get; set; }
 
-        public Action<ScriptContext, PageItem > ScriptCall;
+        public Action<ScriptContext, PageItem> ScriptCall;
         /// <summary>
         /// par step
         /// </summary>
-        public Action< int> StartCall;
+        public Action<int> StartCall;
         /// <summary>
         /// par step
         /// </summary>
@@ -42,7 +42,7 @@ namespace XNYAPI.AutoControl.Script
         /// <returns>回调集合 ScriptContext, PageItem,作用对象,step step用于区分刷新的时间，销毁过期缓存</returns>
         public static List<AutoServiceAttribute> GetServices()
         {
-            var res = new List<AutoServiceAttribute>() ;
+            var res = new List<AutoServiceAttribute>();
             var types = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => Attribute.IsDefined(t, typeof(AutoServiceAttribute))).ToList();
             foreach (var t in types)
             {
@@ -59,7 +59,7 @@ namespace XNYAPI.AutoControl.Script
                 }
                 catch (Exception ex)
                 {
-                    throw  ;
+                    throw;
                 }
             }
             return res;
@@ -71,7 +71,7 @@ namespace XNYAPI.AutoControl.Script
         /// <param name="t"></param>
         /// <exception cref="Exception">
         static void GetService(AutoServiceAttribute att, Type t)
-        { 
+        {
             object obj = null;
             if (string.IsNullOrWhiteSpace(att.Name))
             {
@@ -82,25 +82,26 @@ namespace XNYAPI.AutoControl.Script
                 MethodInfo method = t.GetMethod(att.OnScript);
                 if (method == null)
                     throw new Exception($"{att.Name}未找到OnScript函数，请检查名称是否正确");
-                
-                if (method.IsStatic) {
-                    att.ScriptCall = (context, item ) =>
+
+                if (method.IsStatic)
+                {
+                    att.ScriptCall = (context, item) =>
                     {
                         method.Invoke(null, new object[] { context, item });
                     };
                 }
                 else
                 {
-                    if (obj==null)
+                    if (obj == null)
                         obj = Activator.CreateInstance(t);
                     var o = obj;
-                    att.ScriptCall = (context, item ) =>
+                    att.ScriptCall = (context, item) =>
                     {
-                        method.Invoke(o, new object[] { context, item  });
-                    }; 
+                        method.Invoke(o, new object[] { context, item });
+                    };
                 }
-                     
-             
+
+
             }
             if (!string.IsNullOrWhiteSpace(att.OnStart))
             {
@@ -124,15 +125,15 @@ namespace XNYAPI.AutoControl.Script
                         method.Invoke(o, new object[] { step });
                     };
                 }
-                 
-             
+
+
             }
             if (!string.IsNullOrWhiteSpace(att.OnEnd))
             {
                 MethodInfo method = t.GetMethod(att.OnEnd);
                 if (method == null)
                     throw new Exception($"{att.Name}未找到OnEnd函数，请检查名称是否正确");
-               
+
                 if (method.IsStatic)
                 {
                     att.EndCall = (step) =>
@@ -150,8 +151,8 @@ namespace XNYAPI.AutoControl.Script
                         method.Invoke(o, new object[] { step });
                     };
                 }
-               
-            } 
+
+            }
         }
     }
 }

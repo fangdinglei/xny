@@ -16,7 +16,7 @@ namespace XNYAPI.AutoControl.Script.Model
         {
             double sum = 0;
             foreach (var pt in points)
-                sum += pt ;
+                sum += pt;
             return sum / points.Count;
         }
 

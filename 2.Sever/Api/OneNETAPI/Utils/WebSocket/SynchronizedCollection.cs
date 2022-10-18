@@ -1,11 +1,10 @@
-﻿    //------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //-----------------------------------------------------------------------------
 namespace System.Collections.Generic
 {
     using System;
     using System.Collections;
-    using System.Diagnostics;
 
     [System.Runtime.InteropServices.ComVisible(false)]
     public class SynchronizedCollection<T> : IList<T>, IList
@@ -303,6 +302,6 @@ namespace System.Collections.Generic
         }
     }
 }
- 
+
 // File provided for Reference Use Only by Microsoft Corporation (c) 2007.
 // Copyright (c) Microsoft Corporation. All rights reserved.

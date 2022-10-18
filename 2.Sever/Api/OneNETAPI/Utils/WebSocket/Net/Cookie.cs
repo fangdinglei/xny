@@ -31,320 +31,353 @@
 //
 
 using System;
-using System.Text;
 using System.Globalization;
-using System.Collections;
-using System.Net;
+using System.Text;
 
-namespace WebSocketSharp.Net {
+namespace WebSocketSharp.Net
+{
 
-	// Supported cookie formats are:
-	// Netscape: http://home.netscape.com/newsref/std/cookie_spec.html
-	// RFC 2109: http://www.ietf.org/rfc/rfc2109.txt
-	// RFC 2965: http://www.ietf.org/rfc/rfc2965.txt
-	[Serializable]
-	public sealed class Cookie 
-	{
-		string comment;
-		Uri commentUri;
-		bool discard;
-		string domain;
-		DateTime expires;
-		bool httpOnly;
-		string name;
-		string path;
-		string port;
-		int [] ports;
-		bool secure;
-		DateTime timestamp;
-		string val;
-		int version;
-		
-		static char [] reservedCharsName = new char [] {' ', '=', ';', ',', '\n', '\r', '\t'};
-		static char [] portSeparators = new char [] {'"', ','};
-                static string tspecials = "()<>@,;:\\\"/[]?={} \t";   // from RFC 2965, 2068
+    // Supported cookie formats are:
+    // Netscape: http://home.netscape.com/newsref/std/cookie_spec.html
+    // RFC 2109: http://www.ietf.org/rfc/rfc2109.txt
+    // RFC 2965: http://www.ietf.org/rfc/rfc2965.txt
+    [Serializable]
+    public sealed class Cookie
+    {
+        string comment;
+        Uri commentUri;
+        bool discard;
+        string domain;
+        DateTime expires;
+        bool httpOnly;
+        string name;
+        string path;
+        string port;
+        int[] ports;
+        bool secure;
+        DateTime timestamp;
+        string val;
+        int version;
 
-		public Cookie ()
-		{
-			expires = DateTime.MinValue;
-			timestamp = DateTime.Now;
-			domain = String.Empty;
-			name = String.Empty;
-			val = String.Empty;
-			comment = String.Empty;
-			port = String.Empty;
-		}
+        static char[] reservedCharsName = new char[] { ' ', '=', ';', ',', '\n', '\r', '\t' };
+        static char[] portSeparators = new char[] { '"', ',' };
+        static string tspecials = "()<>@,;:\\\"/[]?={} \t";   // from RFC 2965, 2068
 
-		public Cookie (string name, string value)
-			: this ()
-		{
-			Name = name;
-			Value = value;
-		}
+        public Cookie()
+        {
+            expires = DateTime.MinValue;
+            timestamp = DateTime.Now;
+            domain = String.Empty;
+            name = String.Empty;
+            val = String.Empty;
+            comment = String.Empty;
+            port = String.Empty;
+        }
 
-		public Cookie (string name, string value, string path) 
-			: this (name, value) 
-		{
-			Path = path;
-		}
+        public Cookie(string name, string value)
+            : this()
+        {
+            Name = name;
+            Value = value;
+        }
 
-		public Cookie (string name, string value, string path, string domain)
-			: this (name, value, path)
-		{
-			Domain = domain;
-		}
+        public Cookie(string name, string value, string path)
+            : this(name, value)
+        {
+            Path = path;
+        }
 
-		public string Comment {
-			get { return comment; }
-			set { comment = value == null ? String.Empty : value; }
-		}
+        public Cookie(string name, string value, string path, string domain)
+            : this(name, value, path)
+        {
+            Domain = domain;
+        }
 
-		public Uri CommentUri {
-			get { return commentUri; }
-			set { commentUri = value; }
-		}
+        public string Comment
+        {
+            get { return comment; }
+            set { comment = value == null ? String.Empty : value; }
+        }
 
-		public bool Discard {
-			get { return discard; }
-			set { discard = value; }
-		}
+        public Uri CommentUri
+        {
+            get { return commentUri; }
+            set { commentUri = value; }
+        }
 
-		public string Domain {
-			get { return domain; }
-			set {
-				if (String.IsNullOrEmpty (value)) {
-					domain = String.Empty;
-					ExactDomain = true;
-				} else {
-					domain = value;
-					ExactDomain = (value [0] != '.');
-				}
-			}
-		}
+        public bool Discard
+        {
+            get { return discard; }
+            set { discard = value; }
+        }
 
-		internal bool ExactDomain { get; set; }
+        public string Domain
+        {
+            get { return domain; }
+            set
+            {
+                if (String.IsNullOrEmpty(value))
+                {
+                    domain = String.Empty;
+                    ExactDomain = true;
+                }
+                else
+                {
+                    domain = value;
+                    ExactDomain = (value[0] != '.');
+                }
+            }
+        }
 
-		public bool Expired {
-			get { 
-				return expires <= DateTime.Now && 
-				       expires != DateTime.MinValue;
-			}
-			set {  
-				if (value)
-					expires = DateTime.Now;
-			}
-		}
+        internal bool ExactDomain { get; set; }
 
-		public DateTime Expires {
-			get { return expires; }
-			set { expires = value; }
-		}
+        public bool Expired
+        {
+            get
+            {
+                return expires <= DateTime.Now &&
+                       expires != DateTime.MinValue;
+            }
+            set
+            {
+                if (value)
+                    expires = DateTime.Now;
+            }
+        }
 
-		public bool HttpOnly {
-			get { return httpOnly; }
-			set { httpOnly = value; }
-		}
+        public DateTime Expires
+        {
+            get { return expires; }
+            set { expires = value; }
+        }
 
-		public string Name {
-			get { return name; }
-			set { 
-				if (String.IsNullOrEmpty (value))
-					throw new CookieException ("Name cannot be empty");
-				
-				if (value [0] == '$' || value.IndexOfAny (reservedCharsName) != -1) {
-					// see CookieTest, according to MS implementation
-					// the name value changes even though it's incorrect
-					name = String.Empty;
-					throw new CookieException ("Name contains invalid characters");
-				}
-					
-				name = value; 
-			}
-		}
+        public bool HttpOnly
+        {
+            get { return httpOnly; }
+            set { httpOnly = value; }
+        }
 
-		public string Path {
-			get { return (path == null) ? String.Empty : path; }
-			set { path = (value == null) ? String.Empty : value; }
-		}
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                if (String.IsNullOrEmpty(value))
+                    throw new CookieException("Name cannot be empty");
 
-		public string Port {
-			get { return port; }
-			set { 
-				if (String.IsNullOrEmpty (value)) {
-					port = String.Empty;
-					return;
-				}
-				if (value [0] != '"' || value [value.Length - 1] != '"') {
-					throw new CookieException("The 'Port'='" + value + "' part of the cookie is invalid. Port must be enclosed by double quotes.");
-				}
-				port = value; 
-				string [] values = port.Split (portSeparators);
-				ports = new int[values.Length];
-				for (int i = 0; i < ports.Length; i++) {
-					ports [i] = Int32.MinValue;
-					if (values [i].Length == 0)
-						continue;
-					try {						
-						ports [i] = Int32.Parse (values [i]);
-					} catch (Exception e) {
-						throw new CookieException("The 'Port'='" + value + "' part of the cookie is invalid. Invalid value: " + values [i], e);
-					}
-				}
-				Version = 1;
-			}
-		}
+                if (value[0] == '$' || value.IndexOfAny(reservedCharsName) != -1)
+                {
+                    // see CookieTest, according to MS implementation
+                    // the name value changes even though it's incorrect
+                    name = String.Empty;
+                    throw new CookieException("Name contains invalid characters");
+                }
 
-		internal int [] Ports {
-			get { return ports; }
-		}
+                name = value;
+            }
+        }
 
-		public bool Secure {
-			get { return secure; }
-			set { secure = value; }
-		}
+        public string Path
+        {
+            get { return (path == null) ? String.Empty : path; }
+            set { path = (value == null) ? String.Empty : value; }
+        }
 
-		public DateTime TimeStamp {
-			get { return timestamp; }
-		}
+        public string Port
+        {
+            get { return port; }
+            set
+            {
+                if (String.IsNullOrEmpty(value))
+                {
+                    port = String.Empty;
+                    return;
+                }
+                if (value[0] != '"' || value[value.Length - 1] != '"')
+                {
+                    throw new CookieException("The 'Port'='" + value + "' part of the cookie is invalid. Port must be enclosed by double quotes.");
+                }
+                port = value;
+                string[] values = port.Split(portSeparators);
+                ports = new int[values.Length];
+                for (int i = 0; i < ports.Length; i++)
+                {
+                    ports[i] = Int32.MinValue;
+                    if (values[i].Length == 0)
+                        continue;
+                    try
+                    {
+                        ports[i] = Int32.Parse(values[i]);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new CookieException("The 'Port'='" + value + "' part of the cookie is invalid. Invalid value: " + values[i], e);
+                    }
+                }
+                Version = 1;
+            }
+        }
 
-		public string Value {
-			get { return val; }
-			set { 
-				if (value == null) {
-					val = String.Empty;
-					return;
-				}
-				
-				// LAMESPEC: According to .Net specs the Value property should not accept 
-				// the semicolon and comma characters, yet it does. For now we'll follow
-				// the behaviour of MS.Net instead of the specs.
-				/*
+        internal int[] Ports
+        {
+            get { return ports; }
+        }
+
+        public bool Secure
+        {
+            get { return secure; }
+            set { secure = value; }
+        }
+
+        public DateTime TimeStamp
+        {
+            get { return timestamp; }
+        }
+
+        public string Value
+        {
+            get { return val; }
+            set
+            {
+                if (value == null)
+                {
+                    val = String.Empty;
+                    return;
+                }
+
+                // LAMESPEC: According to .Net specs the Value property should not accept 
+                // the semicolon and comma characters, yet it does. For now we'll follow
+                // the behaviour of MS.Net instead of the specs.
+                /*
 				if (value.IndexOfAny(reservedCharsValue) != -1)
 					throw new CookieException("Invalid value. Value cannot contain semicolon or comma characters.");
 				*/
-				
-				val = value; 
-			}
-		}
 
-		public int Version {
-			get { return version; }
-			set { 
-				if ((value < 0) || (value > 10)) 
-					version = 0;
-				else 
-					version = value; 
-			}
-		}
+                val = value;
+            }
+        }
 
-		public override bool Equals (Object obj) 
-		{
-			System.Net.Cookie c = obj as System.Net.Cookie;
+        public int Version
+        {
+            get { return version; }
+            set
+            {
+                if ((value < 0) || (value > 10))
+                    version = 0;
+                else
+                    version = value;
+            }
+        }
 
-			return c != null &&
-			       String.Compare (this.name, c.Name, true, CultureInfo.InvariantCulture) == 0 &&
-			       String.Compare (this.val, c.Value, false, CultureInfo.InvariantCulture) == 0 &&
-			       String.Compare (this.Path, c.Path, false, CultureInfo.InvariantCulture) == 0 &&
-			       String.Compare (this.domain, c.Domain, true, CultureInfo.InvariantCulture) == 0 &&
-			       this.version == c.Version;
-		}
+        public override bool Equals(Object obj)
+        {
+            System.Net.Cookie c = obj as System.Net.Cookie;
 
-		public override int GetHashCode ()
-		{
-			return hash (
-				StringComparer.InvariantCultureIgnoreCase.GetHashCode (name),
-				val.GetHashCode (),
-				Path.GetHashCode (),
-				StringComparer.InvariantCultureIgnoreCase.GetHashCode (domain),
-				version);
-		}
+            return c != null &&
+                   String.Compare(this.name, c.Name, true, CultureInfo.InvariantCulture) == 0 &&
+                   String.Compare(this.val, c.Value, false, CultureInfo.InvariantCulture) == 0 &&
+                   String.Compare(this.Path, c.Path, false, CultureInfo.InvariantCulture) == 0 &&
+                   String.Compare(this.domain, c.Domain, true, CultureInfo.InvariantCulture) == 0 &&
+                   this.version == c.Version;
+        }
 
-		private static int hash (int i, int j, int k, int l, int m) 
-		{
-			return i ^ (j << 13 | j >> 19) ^ (k << 26 | k >> 6) ^ (l << 7 | l >> 25) ^ (m << 20 | m >> 12);
-		}
+        public override int GetHashCode()
+        {
+            return hash(
+                StringComparer.InvariantCultureIgnoreCase.GetHashCode(name),
+                val.GetHashCode(),
+                Path.GetHashCode(),
+                StringComparer.InvariantCultureIgnoreCase.GetHashCode(domain),
+                version);
+        }
 
-		// returns a string that can be used to send a cookie to an Origin Server
-		// i.e., only used for clients
-		// see para 4.2.2 of RFC 2109 and para 3.3.4 of RFC 2965
-		// see also bug #316017
-		public override string ToString () 
-		{
-			return ToString (null);
-		}
+        private static int hash(int i, int j, int k, int l, int m)
+        {
+            return i ^ (j << 13 | j >> 19) ^ (k << 26 | k >> 6) ^ (l << 7 | l >> 25) ^ (m << 20 | m >> 12);
+        }
 
-		internal string ToString (Uri uri)
-		{
-			if (name.Length == 0) 
-				return String.Empty;
+        // returns a string that can be used to send a cookie to an Origin Server
+        // i.e., only used for clients
+        // see para 4.2.2 of RFC 2109 and para 3.3.4 of RFC 2965
+        // see also bug #316017
+        public override string ToString()
+        {
+            return ToString(null);
+        }
 
-			StringBuilder result = new StringBuilder (64);
-	
-			if (version > 0)
-				result.Append ("$Version=").Append (version).Append ("; ");		
-				
-			result.Append (name).Append ("=").Append (val);
-			
-			if (version == 0)
-				return result.ToString ();
+        internal string ToString(Uri uri)
+        {
+            if (name.Length == 0)
+                return String.Empty;
 
-			if (!String.IsNullOrEmpty (path))
-				result.Append ("; $Path=").Append (path);
-			else if (uri != null)
-				result.Append ("; $Path=/").Append (path);
+            StringBuilder result = new StringBuilder(64);
 
-			bool append_domain = (uri == null) || (uri.Host != domain);
-			if (append_domain && !String.IsNullOrEmpty (domain))
-				result.Append ("; $Domain=").Append (domain);			
-	
-			if (port != null && port.Length != 0)
-				result.Append ("; $Port=").Append (port);	
-						
-			return result.ToString ();
-		}
+            if (version > 0)
+                result.Append("$Version=").Append(version).Append("; ");
 
-		internal string ToClientString () 
-		{
-			if (name.Length == 0) 
-				return String.Empty;
+            result.Append(name).Append("=").Append(val);
 
-			StringBuilder result = new StringBuilder (64);
-	
-			if (version > 0) 
-				result.Append ("Version=").Append (version).Append (";");
-				
-			result.Append (name).Append ("=").Append (val);
+            if (version == 0)
+                return result.ToString();
 
-			if (path != null && path.Length != 0)
-				result.Append (";Path=").Append (QuotedString (path));
-				
-			if (domain != null && domain.Length != 0)
-				result.Append (";Domain=").Append (QuotedString (domain));			
-	
-			if (port != null && port.Length != 0)
-				result.Append (";Port=").Append (port);	
-						
-			return result.ToString ();
-		}
+            if (!String.IsNullOrEmpty(path))
+                result.Append("; $Path=").Append(path);
+            else if (uri != null)
+                result.Append("; $Path=/").Append(path);
 
-		// See par 3.6 of RFC 2616
-  	    	string QuotedString (string value)
-	    	{
-			if (version == 0 || IsToken (value))
-				return value;
-			else 
-				return "\"" + value.Replace("\"", "\\\"") + "\"";
-	    	}			    	    
+            bool append_domain = (uri == null) || (uri.Host != domain);
+            if (append_domain && !String.IsNullOrEmpty(domain))
+                result.Append("; $Domain=").Append(domain);
 
-	    	bool IsToken (string value) 
-	    	{
-			int len = value.Length;
-			for (int i = 0; i < len; i++) {
-			    	char c = value [i];
-				if (c < 0x20 || c >= 0x7f || tspecials.IndexOf (c) != -1)
-			      		return false;
-			}
-			return true;
-	    	}	    
-	}
+            if (port != null && port.Length != 0)
+                result.Append("; $Port=").Append(port);
+
+            return result.ToString();
+        }
+
+        internal string ToClientString()
+        {
+            if (name.Length == 0)
+                return String.Empty;
+
+            StringBuilder result = new StringBuilder(64);
+
+            if (version > 0)
+                result.Append("Version=").Append(version).Append(";");
+
+            result.Append(name).Append("=").Append(val);
+
+            if (path != null && path.Length != 0)
+                result.Append(";Path=").Append(QuotedString(path));
+
+            if (domain != null && domain.Length != 0)
+                result.Append(";Domain=").Append(QuotedString(domain));
+
+            if (port != null && port.Length != 0)
+                result.Append(";Port=").Append(port);
+
+            return result.ToString();
+        }
+
+        // See par 3.6 of RFC 2616
+        string QuotedString(string value)
+        {
+            if (version == 0 || IsToken(value))
+                return value;
+            else
+                return "\"" + value.Replace("\"", "\\\"") + "\"";
+        }
+
+        bool IsToken(string value)
+        {
+            int len = value.Length;
+            for (int i = 0; i < len; i++)
+            {
+                char c = value[i];
+                if (c < 0x20 || c >= 0x7f || tspecials.IndexOf(c) != -1)
+                    return false;
+            }
+            return true;
+        }
+    }
 }

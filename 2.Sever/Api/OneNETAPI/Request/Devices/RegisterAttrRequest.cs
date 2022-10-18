@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OneNET.Api.Entity;
+﻿using OneNET.Api.Entity;
 using OneNET.Api.Response;
 using OneNET.Api.Util;
+using System;
+using System.Collections.Generic;
 
 namespace OneNET.Api.Request
 {
     /// <summary>
     /// 
     /// </summary>
-    public class RegisterAttrRequest: IOneNETRequest<CommonResponse>
+    public class RegisterAttrRequest : IOneNETRequest<CommonResponse>
     {
         private const String URI = "<scheme>://<API_ADDRESS>/register_attr";
 

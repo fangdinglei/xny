@@ -1,8 +1,4 @@
-﻿ 
-using System;
-using System.Collections.Generic; 
-
-static class Ext
+﻿static class Ext
 {
     static public bool IsSqlSafeString(this string s)
     {
@@ -64,7 +60,7 @@ static class Ext
         return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(b64));
     }
 
-   
+
 
 
 }

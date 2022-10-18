@@ -64,7 +64,7 @@ namespace OneNET.Api
     {
         Get = 0,
         Post = 1,
-        Put =2,
+        Put = 2,
         Delete = 3
     }
 
@@ -87,7 +87,7 @@ namespace OneNET.Api
         SmallerOrEqual = 4,
         Equal = 5,
         InOut = 6,
-        In = 7, 
+        In = 7,
         Out = 8,
         Exp = 9,
         Change = 10,

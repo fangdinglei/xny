@@ -1,21 +1,13 @@
 ﻿//#define TEST
- 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms; 
+
 using FdlWindows.View;
-using CefSharp.WinForms; 
-using CefSharp;
 
 namespace MyClient.View
 {
-    [AutoDetectView("FDataPoints", "数据","",true)]
+    [AutoDetectView("FDataPoints", "数据", "", true)]
     [System.Runtime.InteropServices.ComVisibleAttribute(true)]//标记对com可见
     public partial class FDataPoints : Form, IView
-    { 
+    {
 
         public Control View => this;
 
@@ -53,9 +45,9 @@ namespace MyClient.View
         //        } 
         //        return;
         //    }
-                
-            
-           
+
+
+
         //    string htmlstr = GetDataStr(res.Data[0].Streams[0].Points); 
         //    while (!chromiumWebBrowser1.IsBrowserInitialized || chromiumWebBrowser1.IsLoading)
         //    {
@@ -80,7 +72,7 @@ namespace MyClient.View
         //    {
         //        MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
         //    }
-        
+
         //    //if (ls.Count > 0)
         //    //    LoadAllStreamName(ls[0]);
         //}
@@ -117,62 +109,62 @@ namespace MyClient.View
         //    return sb.ToString();
         //} 
 
-         public void PrePare(params object[] par)
-         {
-             if (par.Count() == 1)
-             {
-                 string id = par[0] as string;
-                 for (int i = 0; i < CDevice.Items.Count; i++)
-                 {
-                     var item = CDevice.Items[i];
-                     if (item.ToString() == id)
-                     {
-                         CDevice.SelectedIndex = i;
-                         break;
-                     }
-                 }
-             }
-         
-         }
+        public void PrePare(params object[] par)
+        {
+            if (par.Count() == 1)
+            {
+                string id = par[0] as string;
+                for (int i = 0; i < CDevice.Items.Count; i++)
+                {
+                    var item = CDevice.Items[i];
+                    if (item.ToString() == id)
+                    {
+                        CDevice.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
 
-         private void CDevice_SelectedIndexChanged(object sender, EventArgs e)
-         {
-             //if (CDevice.SelectedIndex < 0)
-             //    return;
-             //LoadAllStreamName(CDevice.SelectedItem.ToString());
-         }
-
-         private void CStreamName_SelectedIndexChanged(object sender, EventArgs e)
-         {
-             //if (CStreamName.SelectedIndex < 0)
-             //    return;
-             //RefreshChart(); 
-         }
-
-         public void SetContainer(Control container)
-         {
-         
-         }
-
-         public void OnEvent(string name, params object[] pars)
-         {
-         }
-
-        private void dateTimePicker_ValueChanged(object sender, EventArgs e)
-         {
-        //    if (CStreamName.SelectedIndex < 0)
-        //        return;
-        //    RefreshChart();
         }
 
-         public void SetViewHolder(IViewHolder viewholder)
-         {
-         
-         }
-         
-         public void OnTick()
-         {
-           
-         }
+        private void CDevice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //if (CDevice.SelectedIndex < 0)
+            //    return;
+            //LoadAllStreamName(CDevice.SelectedItem.ToString());
+        }
+
+        private void CStreamName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //if (CStreamName.SelectedIndex < 0)
+            //    return;
+            //RefreshChart(); 
+        }
+
+        public void SetContainer(Control container)
+        {
+
+        }
+
+        public void OnEvent(string name, params object[] pars)
+        {
+        }
+
+        private void dateTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+            //    if (CStreamName.SelectedIndex < 0)
+            //        return;
+            //    RefreshChart();
+        }
+
+        public void SetViewHolder(IViewHolder viewholder)
+        {
+
+        }
+
+        public void OnTick()
+        {
+
+        }
     }
 }

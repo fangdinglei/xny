@@ -1,7 +1,7 @@
-﻿ 
+﻿
 using System;
 using System.Collections.Generic;
-using XNYAPI.Model.AutoControl; 
+using XNYAPI.Model.AutoControl;
 using XNYAPI.Utility;
 
 namespace XNYAPI.DAL
@@ -38,7 +38,7 @@ namespace XNYAPI.DAL
         /// <exception cref="Exception" />
         static public List<Response.Power.PowerRate> GetPowerRates(uint uid)
         {
-            List< Response.Power.PowerRate> res = new List<Response.Power.PowerRate>();
+            List<Response.Power.PowerRate> res = new List<Response.Power.PowerRate>();
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
@@ -48,13 +48,13 @@ namespace XNYAPI.DAL
                 while (rd.Read())
                 {
                     double soc = rd.GetDouble(1);
-                    double max= rd.GetDouble(2);
+                    double max = rd.GetDouble(2);
                     float rt;
                     if (max == 0 || soc <= 0 || soc > max)
                         rt = 0;
                     else
-                        rt =(float)(soc / max) ;
-                    res.Add(new  Response.Power.PowerRate(rd.GetUInt32(0),rt));
+                        rt = (float)(soc / max);
+                    res.Add(new Response.Power.PowerRate(rd.GetUInt32(0), rt));
                 }
             }
             return res;
@@ -65,7 +65,7 @@ namespace XNYAPI.DAL
         /// <returns>null if not find</returns>
         /// <exception cref="Exception" />
         static public Response.Power.PowerRate GetPowerRate(uint dvid)
-        { 
+        {
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
@@ -81,8 +81,8 @@ namespace XNYAPI.DAL
                     rt = 0;
                 else
                     rt = (float)(soc / max);
-                return new Response.Power.PowerRate(rd.GetUInt32(0), rt); 
-            } 
+                return new Response.Power.PowerRate(rd.GetUInt32(0), rt);
+            }
         }
 
 
@@ -154,7 +154,7 @@ namespace XNYAPI.DAL
             {
                 var cmd = cnn.CreateCommand();
                 var tran = cnn.BeginTransaction();
-                cmd.Transaction = tran; 
+                cmd.Transaction = tran;
                 cmd.CommandText = $"SELECT 1 FROM powerservice_info WHERE DeviceId='{info.DeviceId}' LIMIT 1";
                 if (cmd.ExecuteScalar() == null)
                 {//数据不存在
@@ -169,7 +169,7 @@ namespace XNYAPI.DAL
                         $"SET Soc={info.SOC},LastChargeP={info.LastChargeP},LastChargeUpdate={info.LastChargePUpdate.Ticks}," +
                         $" LastDisChargeUpdate= {info.LastDisChargePUpdate.Ticks} ,LastDisChargeP= {info.LastDischargeP}" +
                         $" WHERE DeviceId='{info.DeviceId}'";
-                    cmd.ExecuteNonQuery(); 
+                    cmd.ExecuteNonQuery();
                     tran.Commit();
                 }
             }

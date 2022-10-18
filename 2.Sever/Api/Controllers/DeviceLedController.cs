@@ -28,7 +28,7 @@ namespace XNYAPI.Controllers
         /// <param name="TimeScheduleEnabled"></param>
         /// <param name="AdvancedControlEnabled"></param>
         /// <returns></returns>
-        public string SetAutoControlSetting(string dvids, bool TimeScheduleEnabled, bool AdvancedControlEnabled, bool isgroup=false,uint groupid = 0)
+        public string SetAutoControlSetting(string dvids, bool TimeScheduleEnabled, bool AdvancedControlEnabled, bool isgroup = false, uint groupid = 0)
         {
             if (isgroup)
             {
@@ -56,9 +56,9 @@ namespace XNYAPI.Controllers
                     cmd.Transaction = cnn.BeginTransaction();
                     try
                     {
-                        LedServiceDAL.SetAutoControlSetting(vd, 
-                            new AutoControlSettings(0, groupid, TimeScheduleEnabled, AdvancedControlEnabled,isgroup, ServiceType.DeviceLEDControl)
-                            ,isgroup, cmd);
+                        LedServiceDAL.SetAutoControlSetting(vd,
+                            new AutoControlSettings(0, groupid, TimeScheduleEnabled, AdvancedControlEnabled, isgroup, ServiceType.DeviceLEDControl)
+                            , isgroup, cmd);
                         cmd.Transaction.Commit();
                         return JsonConvert.SerializeObject(new DataListResponse<uint>(vd));
                     }
@@ -82,7 +82,7 @@ namespace XNYAPI.Controllers
         /// <param name="TimeScheduleEnabled"></param>
         /// <param name="AdvancedControlEnabled"></param>
         /// <returns></returns>
-        public string GetAutoControlSetting(string dvids,bool isgroup=false)
+        public string GetAutoControlSetting(string dvids, bool isgroup = false)
         {
             if (isgroup)
             {
@@ -98,7 +98,7 @@ namespace XNYAPI.Controllers
                 {
                     try
                     {
-                        res.Add(LedServiceDAL.GetAutoControlSetting(ids_uint[i],isgroup));
+                        res.Add(LedServiceDAL.GetAutoControlSetting(ids_uint[i], isgroup));
                     }
                     catch (Exception ex)
                     {
@@ -106,20 +106,20 @@ namespace XNYAPI.Controllers
                 }
 
             }
-            return JsonConvert.SerializeObject(new DataListResponse<AutoControlSettings>(res) );
+            return JsonConvert.SerializeObject(new DataListResponse<AutoControlSettings>(res));
 
         }
-       
+
         /// <summary>
         /// 获取定时控制信息
         /// </summary>
         /// <param name="dvids"></param>
         /// <returns></returns>
-        public string GetAutoControlScheduleData(string dvids,bool isgroup=false)
+        public string GetAutoControlScheduleData(string dvids, bool isgroup = false)
         {
             if (isgroup)
             {
-                return this.Error( XNYResponseBase.EErrorCode.InternalError,"敬请期待");
+                return this.Error(XNYResponseBase.EErrorCode.InternalError, "敬请期待");
             }
             UserPayLoad payload = this.ViewBag.payload;
             List<ScheduleInfo> res = new List<ScheduleInfo>();
@@ -131,7 +131,7 @@ namespace XNYAPI.Controllers
                 {
                     try
                     {
-                        res.Add(LedServiceDAL.GetAutoControlScheduleData(ids_uint[i], isgroup,ServiceType.DeviceLEDControl));
+                        res.Add(LedServiceDAL.GetAutoControlScheduleData(ids_uint[i], isgroup, ServiceType.DeviceLEDControl));
                     }
                     catch (Exception)
                     {
@@ -168,7 +168,8 @@ namespace XNYAPI.Controllers
                 {
                     var cmd = cnn.CreateCommand();
 
-                    Func<uint,bool, bool> hasit = (id,isgroup) => {
+                    Func<uint, bool, bool> hasit = (id, isgroup) =>
+                    {
                         if (isgroup)
                         {
                             return ServiceDAL.HasGroup(payload.UserID, id, cmd);
@@ -188,7 +189,7 @@ namespace XNYAPI.Controllers
                             {
                                 return this.Error(XNYResponseBase.EErrorCode.InternalError, "敬请期待");
                             }
-                            if (!hasit(schedule.OwnerID,schedule.IsGroup)|| schedule.Data==null  )
+                            if (!hasit(schedule.OwnerID, schedule.IsGroup) || schedule.Data == null)
                                 continue;
                             LedServiceDAL.SetAutoControlScheduleData(schedule, payload.UserID, cmd);
                         }
@@ -199,13 +200,13 @@ namespace XNYAPI.Controllers
                         cmd.Transaction.Rollback();
                         throw;
                     }
-                  
+
                     return this.Error(XNYResponseBase.EErrorCode.Non);
                 }
             }
             catch (Exception ex)
             {
-                return this.Error( XNYResponseBase.EErrorCode.InternalError);
+                return this.Error(XNYResponseBase.EErrorCode.InternalError);
             }
 
         }

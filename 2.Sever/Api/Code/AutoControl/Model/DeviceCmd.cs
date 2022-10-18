@@ -1,11 +1,12 @@
 ﻿using System;
- 
+
 
 namespace XNYAPI.Model.AutoControl
 {
-    public enum CmdType : byte { 
-        Non=0,
-        LedStatusChange=1,
+    public enum CmdType : byte
+    {
+        Non = 0,
+        LedStatusChange = 1,
         LedStatusChange_Group = 2,
     }
     public class DeviceCmd
@@ -22,7 +23,7 @@ namespace XNYAPI.Model.AutoControl
         {
         }
 
-        public DeviceCmd(CmdType type, uint ownerID, string cMDString, DateTime creatTime, DateTime timeOut )
+        public DeviceCmd(CmdType type, uint ownerID, string cMDString, DateTime creatTime, DateTime timeOut)
         {
             Type = type;
             OwnerID = ownerID;

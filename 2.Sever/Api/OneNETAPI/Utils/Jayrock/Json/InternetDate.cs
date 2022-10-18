@@ -112,43 +112,43 @@ namespace Jayrock
                 // Greenwich Mean Time (GMT) or Universal Time (UT)
                 //
 
-                case "UT" :
-                case "GMT" : zzz = +0000; break;
+                case "UT":
+                case "GMT": zzz = +0000; break;
 
                 //
                 // Common North American time zones
                 //
-                
-                case "EDT" : zzz = -0400; break;
-                case "EST" : 
-                case "CDT" : zzz = -0500; break;
-                case "CST" : 
-                case "MDT" : zzz = -0600; break;
-                case "MST" : 
-                case "PDT" : zzz = -0700; break;
-                case "PST" : zzz = -0800; break;
+
+                case "EDT": zzz = -0400; break;
+                case "EST":
+                case "CDT": zzz = -0500; break;
+                case "CST":
+                case "MDT": zzz = -0600; break;
+                case "MST":
+                case "PDT": zzz = -0700; break;
+                case "PST": zzz = -0800; break;
 
                 //
                 // Local differential = ( "+" / "-" ) HHMM
                 //
 
-                default :
-                {
-                    if (zone.Length < 4)
-                        throw new FormatException("Length of local differential component must be at least 4 characters (HHMM).");
-
-                    try
+                default:
                     {
-                        zzz = int.Parse(zone, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
-                    }
-                    catch (FormatException e)
-                    {
-                        throw new FormatException("Invalid local differential.", e);
-                    }
+                        if (zone.Length < 4)
+                            throw new FormatException("Length of local differential component must be at least 4 characters (HHMM).");
 
-                    break;
-                }
-            }                
+                        try
+                        {
+                            zzz = int.Parse(zone, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
+                        }
+                        catch (FormatException e)
+                        {
+                            throw new FormatException("Invalid local differential.", e);
+                        }
+
+                        break;
+                    }
+            }
 
             //
             // Strip the time zone component along with any trailing space 
@@ -164,13 +164,13 @@ namespace Jayrock
             // result as local time.
             //
 
-            TimeSpan offset = new TimeSpan(zzz / 100, zzz % 100, 0);                    
+            TimeSpan offset = new TimeSpan(zzz / 100, zzz % 100, 0);
             return time.Subtract(offset).ToLocalTime();
         }
 
         private InternetDate()
         {
-            throw new NotSupportedException();   
+            throw new NotSupportedException();
         }
     }
 }

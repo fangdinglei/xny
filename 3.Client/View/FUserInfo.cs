@@ -1,21 +1,15 @@
 ﻿using FdlWindows.View;
 using GrpcMain.Account;
 using GrpcMain.Device;
+using GrpcMain.History;
 using GrpcMain.UserDevice;
 using MyClient.Grpc;
-using MyClient;
-using System;
-using System.Collections.Generic;
+using MyDBContext;
+using MyUtility;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using static GrpcMain.Account.DTODefine.Types;
 using static GrpcMain.UserDevice.DTODefine.Types;
-using System.Collections.ObjectModel;
-using GrpcMain.History;
-using MyDBContext;
-using MyUtility;
-using static System.Net.Mime.MediaTypeNames;
-using System.Windows.Forms;
-using System.Linq;
 
 namespace MyClient.View
 {
@@ -53,9 +47,9 @@ namespace MyClient.View
                 group_priority_list, group_priority_btn_ok, tabControl1, getUserInfos: () => _userInfos, accountServiceClient);
             _userLoginHistoryManager = new UserLoginHistoryManager(list_user, tabControl1, group_loginhistory_list,
                 group_loginhistory_text, group_loginhistory_maxcount, group_loginhistory_usetimes, group_loginhistory_getinfos,
-                _accountServiceClient, _historyServiceClient, () => _userInfos, _timeUtility,group_loginhistory_multidelet,group_loginhistory_delet,
-               _viewholder, this,group_loginhistory_datepicker1,group_loginhistory_datepicker2);
-      
+                _accountServiceClient, _historyServiceClient, () => _userInfos, _timeUtility, group_loginhistory_multidelet, group_loginhistory_delet,
+               _viewholder, this, group_loginhistory_datepicker1, group_loginhistory_datepicker2);
+
         }
 
         public Control View => this;
@@ -73,7 +67,7 @@ namespace MyClient.View
                 {
                     SubUser = true,
                 });
-                _userInfos =new BindingList<UserInfo>(r1.UserInfo) ;
+                _userInfos = new BindingList<UserInfo>(r1.UserInfo);
 
                 //devicewithuserdeviceinfos = null;
                 //var r2 = await userDeviceServiceClient.GetDevicesAsync(new GrpcMain.UserDevice.DTODefine.Types.Request_GetDevices
@@ -341,7 +335,8 @@ namespace MyClient.View
                 FatherInfo = fatherinfo;
             }
 
-            public void SetViewHolder(IViewHolder viewHolder) {
+            public void SetViewHolder(IViewHolder viewHolder)
+            {
                 _viewHolder = viewHolder;
             }
         }
@@ -407,7 +402,7 @@ namespace MyClient.View
                     if (_tuname.Text != SelectedUser.UserName)
                     {
                         req.UserInfo.UserName = _tuname.Text;
-                        uclone.UserName= _tuname.Text;
+                        uclone.UserName = _tuname.Text;
                     }
                     if (_tphone.Text != SelectedUser.Phone)
                     {
@@ -416,22 +411,22 @@ namespace MyClient.View
                     }
                     if (_temail.Text != SelectedUser.Email)
                     {
-                        uclone.Email=req.UserInfo.Email = _temail.Text;
+                        uclone.Email = req.UserInfo.Email = _temail.Text;
                     }
 
                     var rsp = await _client.UpdateUserInfoAsync(req);
                     rsp.ThrowIfNotSuccess();
                     MessageBox.Show("修改成功", "提示");
-                    var idx =-1; 
+                    var idx = -1;
                     foreach (var item in _getUserInfos())
                     {
                         idx++;
-                        if (item.ID==uclone.ID)
+                        if (item.ID == uclone.ID)
                         {
                             break;
                         }
                     }
-                    _getUserInfos()[idx] =uclone; 
+                    _getUserInfos()[idx] = uclone;
                 }
                 catch (Exception ex)
                 {
@@ -467,11 +462,6 @@ namespace MyClient.View
                 Refresh();
             }
         }
-        class UserPriorityManagerx
-        {
-            private ListBox _list_user;
-            private Func<List<UserInfo>?> _getUserInfos;
-        }
         class UserPriorityManager : BaseManager
         {
             private CheckedListBox _group_priority_list;
@@ -494,7 +484,7 @@ namespace MyClient.View
             protected override void SetUserInfo(UserInfo? sonInfo, UserInfo? fatherinfo)
             {
                 base.SetUserInfo(sonInfo, fatherinfo);
-                if (sonInfo==null||fatherinfo==null)
+                if (sonInfo == null || fatherinfo == null)
                 {
                     return;
                 }
@@ -523,7 +513,7 @@ namespace MyClient.View
                 }
                 lock_group_priority_list_SelectedValueChanged = true;
 
-                var list =  _group_priority_list.DataSource as List<string>; 
+                var list = _group_priority_list.DataSource as List<string>;
                 //原本具有的
                 var has = SelectedUserPriority.Contains(FatherPrioritys[e.Index]);
                 //现在的 lock_group_priority_list_SelectedValueChanged = false;
@@ -541,7 +531,7 @@ namespace MyClient.View
                     list[e.Index] = FatherPrioritys[e.Index];
                 }
                 var selid = _group_priority_list.SelectedIndex;
-                var idxs =new List<int>();
+                var idxs = new List<int>();
                 foreach (int item in _group_priority_list.CheckedIndices)
                 {
                     idxs.Add(item);
@@ -550,7 +540,7 @@ namespace MyClient.View
                 _group_priority_list.DataSource = list;
                 foreach (int item in idxs)
                 {
-                    _group_priority_list.SetItemChecked(item,true);
+                    _group_priority_list.SetItemChecked(item, true);
                 }
                 _group_priority_list.SelectedIndex = selid;
                 lock_group_priority_list_SelectedValueChanged = false;
@@ -588,10 +578,11 @@ namespace MyClient.View
             /// <summary>
             /// 提交变更
             /// </summary>
-            public async void Submit() {
+            public async void Submit()
+            {
                 try
                 {
-                    List<string> prioritys = new List<string>(  );
+                    List<string> prioritys = new List<string>();
                     for (int i = 0; i < FatherPrioritys.Count; i++)
                     {
                         if (_group_priority_list.GetItemChecked(i))
@@ -599,21 +590,22 @@ namespace MyClient.View
                             prioritys.Add(FatherPrioritys[i]);
                         }
                     }
-                    var r=await _client.UpdateUserInfoAsync(new Request_UpdateUserInfo()
+                    var r = await _client.UpdateUserInfoAsync(new Request_UpdateUserInfo()
                     {
-                        UserInfo = new UserInfo() { 
-                            ID=SelectedUser.ID,
-                            Authoritys=Newtonsoft.Json.JsonConvert.SerializeObject(prioritys)
+                        UserInfo = new UserInfo()
+                        {
+                            ID = SelectedUser.ID,
+                            Authoritys = Newtonsoft.Json.JsonConvert.SerializeObject(prioritys)
                         }
                     });
                     r.ThrowIfNotSuccess();
                     SelectedUser.Authoritys = Newtonsoft.Json.JsonConvert.SerializeObject(prioritys);
-                    MessageBox.Show("更新成功","提示");
-                    SetUserInfo(SelectedUser, FatherInfo );
+                    MessageBox.Show("更新成功", "提示");
+                    SetUserInfo(SelectedUser, FatherInfo);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("错误:"+ex.Message, "错误");
+                    MessageBox.Show("错误:" + ex.Message, "错误");
                 }
 
             }
@@ -633,7 +625,7 @@ namespace MyClient.View
             private DateTimePicker _group_loginhistory_datepicker2;
             private AccountService.AccountServiceClient _accountServiceClient;
             private HistoryService.HistoryServiceClient _historyServiceClient;
-            private ITimeUtility _timeUtility; 
+            private ITimeUtility _timeUtility;
             private IView _father;
 
             private BindingList<ToStringHelper<GrpcMain.History.DTODefine.Types.History>> _histories;
@@ -641,7 +633,7 @@ namespace MyClient.View
             public ITimeUtility TimeUtility { get => _timeUtility; set => _timeUtility = value; }
 
             public UserLoginHistoryManager(ListBox list_user, TabControl tabControl1, ListBox group_loginhistory_list, TextBox group_loginhistory_text, ComboBox group_loginhistory_maxcount, CheckBox group_loginhistory_usetimes, Button group_loginhistory_getinfos, AccountService.AccountServiceClient accountServiceClient, HistoryService.HistoryServiceClient historyServiceClient, Func<Collection<UserInfo>?> getUserInfos, ITimeUtility timeUtility, Button group_loginhistory_multidelet, Button group_loginhistory_delet, IViewHolder viewHolder, IView father, DateTimePicker group_loginhistory_datepicker1, DateTimePicker group_loginhistory_datepicker2)
-            : base(tabControl1, 1, list_user, getUserInfos)
+            : base(tabControl1, 3, list_user, getUserInfos)
             {
                 _group_loginhistory_list = group_loginhistory_list;
                 _group_loginhistory_maxcount = group_loginhistory_maxcount;
@@ -674,15 +666,16 @@ namespace MyClient.View
             /// </summary>
             /// <param name="maxcount"></param>
             /// <param name="usertimes"></param>
-            void OnSearch(ComboBox maxcount, CheckBox usertimes ) {
+            void OnSearch(ComboBox maxcount, CheckBox usertimes)
+            {
                 var vs = _group_loginhistory_datepicker1.Value;
                 var ve = _group_loginhistory_datepicker2.Value;
                 vs = new DateTime(vs.Year, vs.Month, vs.Day);
-                ve= new DateTime(ve.Year, ve.Month, ve.Day, 23, 59, 59) ;
+                ve = new DateTime(ve.Year, ve.Month, ve.Day, 23, 59, 59);
 
-                long st =_timeUtility.GetTicket(vs);
+                long st = _timeUtility.GetTicket(vs);
                 long ed = _timeUtility.GetTicket(ve);
-
+                _group_loginhistory_list.DataSource = null;
                 _viewHolder.ShowLoading(_father, async () =>
                 {
                     try
@@ -700,18 +693,19 @@ namespace MyClient.View
                         req.MaxCount = int.Parse(maxcount.Text);
                         var rsp = await _historyServiceClient.GetHistoryAsync(req);
                         _histories = new BindingList<ToStringHelper<GrpcMain.History.DTODefine.Types.History>>(
-                            rsp.Historys.Select(it => new ToStringHelper<GrpcMain.History.DTODefine.Types.History>(it, (it) => {
+                            rsp.Historys.Select(it => new ToStringHelper<GrpcMain.History.DTODefine.Types.History>(it, (it) =>
+                            {
                                 return _timeUtility.GetDateTime(it.Time).ToString();
-                            }) ).ToList());
+                            })).ToList());
                         return true;
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show("错误:" + ex.Message, "错误");
                         return false;
-                    } 
+                    }
                 }, okcall: () =>
-                { 
+                {
                     _group_loginhistory_list.DataSource = _histories;
                     _group_loginhistory_list.DisplayMember = "Time";
                 }, exitcall: () =>
@@ -719,24 +713,26 @@ namespace MyClient.View
                 });
 
 
-              
+
             }
-            void OnSelectChanged(ListBox box,TextBox text) {
-                if (_histories!=null&&box.SelectedIndex>=0&&box.SelectedIndex<_histories.Count)
+            void OnSelectChanged(ListBox box, TextBox text)
+            {
+                if (_histories != null && box.SelectedIndex >= 0 && box.SelectedIndex < _histories.Count)
                 {
-                    text.Text =TimeUtility.GetDateTime(_histories[box.SelectedIndex].Value.Time)
+                    text.Text = TimeUtility.GetDateTime(_histories[box.SelectedIndex].Value.Time)
                         .ToString();
                 }
                 else
                 {
                     text.Text = "";
-                } 
+                }
             }
             /// <summary>
             /// 删除单个记录
             /// </summary>
             /// <param name="list"></param>
-            void OnDelet(ListBox list ) {
+            void OnDelet(ListBox list)
+            {
                 try
                 {
                     if (_histories != null && list.SelectedIndex >= 0 && list.SelectedIndex < _histories.Count)
@@ -754,18 +750,21 @@ namespace MyClient.View
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("错误:"+ex.Message, "错误");
+                    MessageBox.Show("错误:" + ex.Message, "错误");
                 }
             }
-            void OnMultiDelet() {
-                _viewHolder.ShowDatePicker((s, e) => {
+            void OnMultiDelet()
+            {
+                _viewHolder.ShowDatePicker((s, e) =>
+                {
                     try
                     {
-                        var rsp = _historyServiceClient.DeletHistorys(new GrpcMain.History.DTODefine.Types.Request_DeletHistorys() { 
-                            StartTime=TimeUtility.GetTicket(s),
-                            EndTime=TimeUtility.GetTicket(e),
-                            Type=(int)HistoryType.Login,
-                            UserId=SelectedUser.ID,
+                        var rsp = _historyServiceClient.DeletHistorys(new GrpcMain.History.DTODefine.Types.Request_DeletHistorys()
+                        {
+                            StartTime = TimeUtility.GetTicket(s),
+                            EndTime = TimeUtility.GetTicket(e),
+                            Type = (int)HistoryType.Login,
+                            UserId = SelectedUser.ID,
                         });
                         rsp.ThrowIfNotSuccess();
                     }
@@ -778,24 +777,26 @@ namespace MyClient.View
 
             protected override void SetUserInfo(UserInfo? sonInfo, UserInfo? fatherinfo)
             {
+                _group_loginhistory_usetimes.Checked = true;
                 base.SetUserInfo(sonInfo, fatherinfo);
-                _group_loginhistory_list.DataSource = _histories = null; 
+                _group_loginhistory_list.DataSource = _histories = null;
                 Refresh();
+
             }
 
-        
+
 
             public override void Refresh()
             {
                 if (!Active)
                     return;
-               
+
             }
 
-            
+
 
         }
         #endregion
 
-    } 
+    }
 }

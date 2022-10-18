@@ -1,16 +1,12 @@
 ﻿using FdlWindows.View;
 using GrpcMain.UserDevice;
 using MyClient.Grpc;
-using System;
-using System.Collections.Generic; 
-using System.Data; 
-using System.Linq; 
-using System.Windows.Forms;
+using System.Data;
 using static GrpcMain.UserDevice.DTODefine.Types;
 namespace MyClient.View
 {
-    [AutoDetectView("FDeviceGroupManager", "设备分组管理","",true)]
-    public partial class FDeviceGroupManager : Form,IView
+    [AutoDetectView("FDeviceGroupManager", "设备分组管理", "", true)]
+    public partial class FDeviceGroupManager : Form, IView
     {
         UserDeviceService.UserDeviceServiceClient userDeviceServiceClient;
         public FDeviceGroupManager(UserDeviceService.UserDeviceServiceClient userDeviceServiceClient)
@@ -25,7 +21,8 @@ namespace MyClient.View
         /// 刷新分组信息
         /// </summary>
         /// <param name="select">选中名称和此一样的条目</param>
-        void RefreshGroup(string select) {
+        void RefreshGroup(string select)
+        {
             var rsp = userDeviceServiceClient.GetGroupInfos(new Google.Protobuf.WellKnownTypes.Empty());
             groupinfo = rsp.Groups.ToList();
             var dl = groupinfo.Select(it => it.Name).ToList();
@@ -39,28 +36,30 @@ namespace MyClient.View
 
         }
 
-        public Control View =>this; 
+        public Control View => this;
         public void OnEvent(string name, params object[] pars)
         {
             if (name == "Exit")
             {
-                 }
-        } 
+            }
+        }
         public void PrePare(params object[] par)
         {
             RefreshGroup("");
         }
-        public void OnTick() {
+        public void OnTick()
+        {
             if (!Visible)
-                return; 
+                return;
         }
         public void SetViewHolder(IViewHolder viewholder)
         {
-             
+
         }
 
 
-       long GetSelectedGroupID() {
+        long GetSelectedGroupID()
+        {
             if (list_Group.SelectedIndex >= 0
                    && groupinfo != null
                    && list_Group.SelectedIndex < groupinfo.Count)
@@ -78,19 +77,20 @@ namespace MyClient.View
                 if (gid == long.MaxValue)
                     return;
                 var req = new Request_UpdateGroupInfos();
-                req.Groups.Add(new User_Device_Group() { 
-                    Delet=true,
-                    Id=gid,
+                req.Groups.Add(new User_Device_Group()
+                {
+                    Delet = true,
+                    Id = gid,
                 });
-                var res =userDeviceServiceClient.UpdateGroupInfos(req) ;
+                var res = userDeviceServiceClient.UpdateGroupInfos(req);
                 res.ThrowIfNotSuccess();
 
                 MessageBox.Show("删除成功", "提示");
-                RefreshGroup(""); 
+                RefreshGroup("");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("删除失败:"+ex.Message, "错误");
+                MessageBox.Show("删除失败:" + ex.Message, "错误");
             }
         }
 
@@ -101,23 +101,23 @@ namespace MyClient.View
                 var req = new Request_NewGroup();
                 tname.Text = tname.Text.Trim();
                 req.Name = tname.Text;
-                if (string.IsNullOrEmpty(tname.Text) )
+                if (string.IsNullOrEmpty(tname.Text))
                 {
                     tname.Focus();
-                    MessageBox.Show("名称不能为空"); 
+                    MessageBox.Show("名称不能为空");
                     return;
                 }
-                if (groupinfo != null&&groupinfo.Find(it=>it.Name==tname.Text)!=null)
+                if (groupinfo != null && groupinfo.Find(it => it.Name == tname.Text) != null)
                 {
                     tname.Focus();
                     MessageBox.Show("名称不能重复");
                     return;
                 }
                 var res = userDeviceServiceClient.NewGroup(req);
-                res.ThrowIfNotSuccess(); 
+                res.ThrowIfNotSuccess();
                 MessageBox.Show("创建成功", "错误");
                 RefreshGroup(tname.Text);
-                
+
             }
             catch (Exception ex)
             {
@@ -132,7 +132,7 @@ namespace MyClient.View
                 var gid = GetSelectedGroupID();
                 if (gid == long.MaxValue)
                     return;
-                tname.Text = tname.Text.Trim(); 
+                tname.Text = tname.Text.Trim();
                 if (string.IsNullOrEmpty(tname.Text))
                 {
                     tname.Focus();
@@ -147,7 +147,7 @@ namespace MyClient.View
                 }
                 var req = new Request_UpdateGroupInfos();
                 req.Groups.Add(new User_Device_Group()
-                { 
+                {
                     Id = gid,
                     Name = tname.Text,
                 });
@@ -165,22 +165,22 @@ namespace MyClient.View
 
         private void list_Group_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ( GetSelectedGroupID()==long.MaxValue)
+            if (GetSelectedGroupID() == long.MaxValue)
             {
-                tname.Text = ""; 
+                tname.Text = "";
                 btn_del.Enabled = false;
             }
             else
             {
-                tname.Text = list_Group.SelectedItem as string; 
-                btn_del.Enabled  = true;
+                tname.Text = list_Group.SelectedItem as string;
+                btn_del.Enabled = true;
             }
             btn_update.Enabled = false;
         }
 
         private void tname_TextChanged(object sender, EventArgs e)
         {
-            btn_update.Enabled=(sender as TextBox).Text!=list_Group.SelectedItem as string;
+            btn_update.Enabled = (sender as TextBox).Text != list_Group.SelectedItem as string;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using XNYAPI.AutoControl.Script;
 using XNYAPI.AutoControl.Script.Model;
 using XNYAPI.DAL;
@@ -11,7 +10,7 @@ using XNYAPI.Utility;
 
 namespace XNYAPI.AutoControl
 {
-    [AutoService(Name = "led", OnScript = "Run",OnEnd ="End")]
+    [AutoService(Name = "led", OnScript = "Run", OnEnd = "End")]
     public class LedManager
     {
         static public LedManager Instance = new LedManager();
@@ -29,7 +28,7 @@ namespace XNYAPI.AutoControl
                         //return data.Datas[name].Full;
                         return true;
                     };
-                bool c = checker("Temperature") && checker("Lumination") && checker("eCO2") && checker("Humidity")&&data.PowerRate>0  ;
+                bool c = checker("Temperature") && checker("Lumination") && checker("eCO2") && checker("Humidity") && data.PowerRate > 0;
                 if (!c)
                     return false;
                 double 光照强度 = data.Datas_double["Lumination"].Avg();
@@ -83,16 +82,16 @@ namespace XNYAPI.AutoControl
         {
         }
 
-        public List<uint> OpenList=new List<uint> ();
+        public List<uint> OpenList = new List<uint>();
         public List<uint> CloseList = new List<uint>();
         #region 控制器执行
         bool SetLedState()
         {
             try
             {
-             
+
                 DeviceUtility.SendCMD(OpenList, "status:2", 1);
-                DeviceUtility.SendCMD(CloseList, "status:3", 1); 
+                DeviceUtility.SendCMD(CloseList, "status:3", 1);
                 OpenList.Clear();
                 CloseList.Clear();
                 return true;
@@ -103,7 +102,7 @@ namespace XNYAPI.AutoControl
             }
 
         }
-        
+
         /// <summary>
         /// 定时计划
         /// </summary>
@@ -123,14 +122,14 @@ namespace XNYAPI.AutoControl
             }
             else if (evt == LEDAutoControlEvent.Open)
             {
-                OpenList.Add(dvid); 
+                OpenList.Add(dvid);
                 return;
             }
             else if (evt == LEDAutoControlEvent.Advanced)
             {
                 if (data.Settings.AdvancedControlEnabled)
                 {
-                    UpdateSingle_RunAdvancedAuto(context,dvid,data);
+                    UpdateSingle_RunAdvancedAuto(context, dvid, data);
                 }
                 return;
             }
@@ -155,21 +154,21 @@ namespace XNYAPI.AutoControl
             if (open)
                 OpenList.Add(dvid);
             else
-                CloseList.Add(dvid); 
+                CloseList.Add(dvid);
         }
         /// <summary>
         /// 更新单个设备的状态
         /// </summary>
-        void UpdateSingle(ScriptContext context,  Dictionary<uint, LedInfo> group)
+        void UpdateSingle(ScriptContext context, Dictionary<uint, LedInfo> group)
         {
             if (!context.Online)
                 return;
             var linfo = new LedInfo();
             var dvid = context.DeviceID;
-            linfo.Settings = LedServiceDAL.GetAutoControlSetting(dvid,false);
+            linfo.Settings = LedServiceDAL.GetAutoControlSetting(dvid, false);
             if (linfo.Settings.GroupID == 0)
             {
-                linfo.Schedule = LedServiceDAL.GetAutoControlScheduleData(dvid,false, ServiceType.DeviceLEDControl);
+                linfo.Schedule = LedServiceDAL.GetAutoControlScheduleData(dvid, false, ServiceType.DeviceLEDControl);
             }
             else
             {
@@ -179,22 +178,22 @@ namespace XNYAPI.AutoControl
                     group[gid] = new LedInfo()
                     {
                         LedOpen = false,
-                        Settings = LedServiceDAL.GetAutoControlSetting(gid,true),
-                        Schedule = LedServiceDAL.GetAutoControlScheduleData(gid, true,ServiceType.DeviceLEDControl)
-                    };  
+                        Settings = LedServiceDAL.GetAutoControlSetting(gid, true),
+                        Schedule = LedServiceDAL.GetAutoControlScheduleData(gid, true, ServiceType.DeviceLEDControl)
+                    };
                 }
                 //将信息设置为组的信息
                 linfo.Settings = group[gid].Settings;
-                linfo.Schedule= group[gid].Schedule; 
+                linfo.Schedule = group[gid].Schedule;
             }
-             
+
             if (linfo.Settings.TimeScheduleEnabled)
             {//优先使用定时控制
-                UpdateSingle_RunShedule(context,dvid,linfo);
+                UpdateSingle_RunShedule(context, dvid, linfo);
             }
             else if (linfo.Settings.AdvancedControlEnabled)
             {//使用控制器指定的算法控制
-                UpdateSingle_RunAdvancedAuto(context, dvid,linfo);
+                UpdateSingle_RunAdvancedAuto(context, dvid, linfo);
             }
             else
             {
@@ -203,12 +202,13 @@ namespace XNYAPI.AutoControl
         }
 
 
-        public void Run(ScriptContext context, PageItem item )
+        public void Run(ScriptContext context, PageItem item)
         {
             Dictionary<uint, LedInfo> groupinfos = new Dictionary<uint, LedInfo>();
-            UpdateSingle(context,  groupinfos); 
+            UpdateSingle(context, groupinfos);
         }
-        public void End(int step) {
+        public void End(int step)
+        {
             SetLedState();
         }
         #endregion

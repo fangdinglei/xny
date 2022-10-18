@@ -1,6 +1,6 @@
-﻿using System;
+﻿using OneNET.Api.Entity;
+using System;
 using System.Collections.Generic;
-using OneNET.Api.Entity;
 
 namespace OneNET.Api.Response
 {

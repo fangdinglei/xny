@@ -4,10 +4,11 @@
     /// GRPC方法权限
     /// <br/>当NeedAudit并且状态为Cancel并且包含AuditorId 自动记录审计
     /// </summary>
-    [AttributeUsage( AttributeTargets.Method,AllowMultiple =false)] 
-    public class GrpcRequireAuthorityAttribute : Attribute {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public class GrpcRequireAuthorityAttribute : Attribute
+    {
         public string[]? Authoritys;
-        public bool NeedLogin ;
+        public bool NeedLogin;
         /// <summary>
         ///  当NeedAudit并且状态为Cancel并且包含AuditorId 自动记录审计
         /// </summary>
@@ -25,7 +26,7 @@
 
         public GrpcRequireAuthorityAttribute(bool needAudit, string needAudit_OpName)
         {
-            if (!needAudit||string.IsNullOrWhiteSpace(needAudit_OpName))
+            if (!needAudit || string.IsNullOrWhiteSpace(needAudit_OpName))
             {
                 throw new Exception("错误的构造参数");
             }

@@ -1,7 +1,5 @@
 ﻿using Grpc.Core;
-using GrpcMain;
 using GrpcMain.Account;
-using GrpcMain.Common;
 using GrpcMain.Device;
 using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
@@ -32,15 +30,15 @@ namespace GrpcMain
             services.AddGrpc(op =>
             {
                 //全局错误处理 
-                 op.Interceptors.Add<GrpcInterceptor>(); 
-                    op.EnableDetailedErrors = true;  
+                op.Interceptors.Add<GrpcInterceptor>();
+                op.EnableDetailedErrors = true;
             });
             //Test 测试
             using (MainContext ct = new MainContext())
             {
                 ct.Database.EnsureCreated();
             }
-         
+
         }
         /// <summary>
         /// 注册grpc服务到路由
@@ -57,26 +55,26 @@ namespace GrpcMain
             app.MapGrpcService<HistoryServiceImp>();
             foreach (var item in typeof(IGrpcHandle).Assembly.GetTypes())
             {
-                var att= item.GetCustomAttribute< BindServiceMethodAttribute>();
+                var att = item.GetCustomAttribute<BindServiceMethodAttribute>();
                 if (att == null)
                     continue;
-                foreach (var func in item.GetMethods( ))
+                foreach (var func in item.GetMethods())
                 {
                     if (!func.IsVirtual)
                         continue;
                     var atx = func.GetCustomAttribute<GrpcRequireAuthorityAttribute>();
                     if (atx == null)
                         continue;
-                    var str="/" + att.BindType.FullName+"/"+func.Name;
+                    var str = "/" + att.BindType.FullName + "/" + func.Name;
                     GrpcInterceptor.AuthorityAttributes.Add(str, atx);
                 }
-               
+
             }
         }
 
-       static public  bool TryDeserializeObject<T>(this  string json,out T? obj)where T:class
+        static public bool TryDeserializeObject<T>(this string json, out T? obj) where T : class
         {
-           
+
             if (string.IsNullOrWhiteSpace(json))
             {
                 obj = null;
@@ -84,7 +82,7 @@ namespace GrpcMain
             }
             try
             {
-                 obj=Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json); 
+                obj = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
                 return obj != null;
             }
             catch (Exception)
@@ -111,34 +109,36 @@ namespace GrpcMain
                 _timeUtility = timeUtility;
             }
 
-            public async Task<(bool,string?  )> Authorize(ServerCallContext context, GrpcRequireAuthorityAttribute att )
+            public async Task<(bool, string?)> Authorize(ServerCallContext context, GrpcRequireAuthorityAttribute att)
             {
                 object token;
                 var et = context.RequestHeaders.Get("Token");
-                if (et == null|| (token = et.Value) == null)
+                if (et == null || (token = et.Value) == null)
                 {
-                    return (false, "请添加Token再访问"); 
+                    return (false, "请添加Token再访问");
                 }
                 var tokenstr = (string)token;
                 var jwt = _jwtHelper.Get<TokenClass>(tokenstr);
                 if (jwt == null)
-                { 
+                {
                     return (false, "token无效");
                 }
-                if (att!=null&&att.Authoritys!=null&&att.Authoritys.Count()>0)
+                if (att != null && att.Authoritys != null && att.Authoritys.Count() > 0)
                 {//校验高级权限
-                    using (MainContext ct = new MainContext()) {
-                       var authoritys=await ct.Users.Where(it => it.Id == jwt.Id).Select(it => it.Authoritys).FirstOrDefaultAsync();
+                    using (MainContext ct = new MainContext())
+                    {
+                        var authoritys = await ct.Users.Where(it => it.Id == jwt.Id).Select(it => it.Authoritys).FirstOrDefaultAsync();
                         List<string>? authoritysx;
-                        if (authoritys == null || !authoritys.TryDeserializeObject(out authoritysx)||authoritysx==null) {
-                            return (false, "需要高级权限 " + att.Authoritys[0]);  
+                        if (authoritys == null || !authoritys.TryDeserializeObject(out authoritysx) || authoritysx == null)
+                        {
+                            return (false, "需要高级权限 " + att.Authoritys[0]);
                         }
                         var nothave = att.Authoritys.Except(authoritysx);
-                        if (nothave.Count()!=0)
+                        if (nothave.Count() != 0)
                         {
                             return (false, "需要高级权限 " + nothave.First());
-                        } 
-                    }    
+                        }
+                    }
                 }
                 context.UserState["CreatorId"] = jwt.Id;
                 return (true, null);

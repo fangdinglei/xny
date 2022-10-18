@@ -1,11 +1,11 @@
-﻿using System;
+﻿using OneNET.Api.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using OneNET.Api.Utils;
 using WebSocketSharp.Net;
 
 namespace OneNET.Api.Util
@@ -123,7 +123,7 @@ namespace OneNET.Api.Util
                 var data = LowercaseJsonSerializer.SerializeObject(postBody);
                 postData = Encoding.UTF8.GetBytes(data);
             }
-            
+
             var reqStream = req.GetRequestStream();
             reqStream.Write(postData, 0, postData.Length);
             reqStream.Close();

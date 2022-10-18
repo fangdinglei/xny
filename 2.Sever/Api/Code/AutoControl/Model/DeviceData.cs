@@ -1,12 +1,10 @@
-﻿
-using System;
-using System.Collections.Generic;
-using XNYAPI.Model.Device;
+﻿using System.Collections.Generic;
 
 namespace XNYAPI.Model.AutoControl
 {
-    public class LedInfo {
-        public bool LedOpen=false;
+    public class LedInfo
+    {
+        public bool LedOpen = false;
         public ScheduleInfo Schedule;
         public AutoControlSettings Settings;
     }
@@ -16,16 +14,16 @@ namespace XNYAPI.Model.AutoControl
     //}
     public class DeviceData
     {
-       
+
         public uint DeviceID;
         public string DeviceRealID;
         public uint DeviceTypeID;
-        
+
         public DeviceData()
         {
-          
+
         }
-         
+
         public struct DataStream
         {
             public List<double> points;

@@ -1,6 +1,7 @@
 ﻿namespace XNYAPI.Model.UserDevice
 {
-    public class DeviceGroup {
+    public class DeviceGroup
+    {
         public uint GroupID;
         public string Name;
 

@@ -1,21 +1,16 @@
-﻿using Grpc.Core.Interceptors;
-using Grpc.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Grpc.Core;
+using Grpc.Core.Interceptors;
+using Grpc.Net.Client;
 using GrpcMain.Account;
-using GrpcMain.UserDevice;
+using GrpcMain.Common;
 using GrpcMain.Device;
-using GrpcMain.InternalMail;
 using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
-using GrpcMain.Common;
-using Grpc.Net.Client;
 using GrpcMain.History;
+using GrpcMain.InternalMail;
+using GrpcMain.UserDevice;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace MyClient.Grpc
 {

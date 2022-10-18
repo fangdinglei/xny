@@ -1,4 +1,3 @@
-using FdlWindows.View; 
 using Microsoft.Extensions.DependencyInjection;
 using MyClient.View;
 
@@ -11,7 +10,7 @@ namespace MyClient
         /// </summary>
         [STAThread]
         static void Main()
-        {  
+        {
             ApplicationConfiguration.Initialize();
             var f = Global.Collection.BuildServiceProvider().GetService<FLogin>();
             Application.Run(f);

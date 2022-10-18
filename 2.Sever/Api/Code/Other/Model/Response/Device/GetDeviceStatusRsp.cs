@@ -14,8 +14,8 @@ namespace XNYAPI.Response.Device
 
     public class GetAllDeviceStatusRsp : XNYResponseBase
     {
-        public List<DeviceStatusData>  Data;
+        public List<DeviceStatusData> Data;
     }
 
-  
+
 }

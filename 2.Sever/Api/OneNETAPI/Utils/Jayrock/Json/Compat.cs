@@ -39,7 +39,7 @@ namespace Jayrock
         {
             return Type.GetType(typeName, /* throwOnError = */ true, /* ignoreCase = */ false);
         }
-        
-        private Compat() {}
+
+        private Compat() { }
     }
 }

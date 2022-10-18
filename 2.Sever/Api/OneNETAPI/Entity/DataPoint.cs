@@ -30,7 +30,7 @@ namespace OneNET.Api.Entity
         {
             return Value.ToString();
         }
-        
+
         /// <summary>
         /// 描述一个数据点，在增加或者查看数据点时用
         /// </summary>

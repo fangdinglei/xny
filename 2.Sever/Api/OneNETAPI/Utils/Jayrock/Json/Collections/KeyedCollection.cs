@@ -29,7 +29,7 @@ namespace Jayrock.Collections
 
     #endregion
 
-    [ Serializable ]
+    [Serializable]
     public abstract class KeyedCollection : CollectionBase
     {
         private Hashtable _valueByKey; // TODO: Mark [ NonSerializable ] and implement IDeserializationCallback
@@ -38,7 +38,7 @@ namespace Jayrock.Collections
         {
             _valueByKey = new Hashtable();
         }
-        
+
         private Hashtable ValueByKey
         {
             get { return _valueByKey; }
@@ -53,7 +53,7 @@ namespace Jayrock.Collections
         {
             if (key == null)
                 throw new ArgumentNullException("key");
-            
+
             return ValueByKey[key];
         }
 
@@ -61,7 +61,7 @@ namespace Jayrock.Collections
         {
             if (key == null)
                 throw new ArgumentNullException("key");
-            
+
             return ValueByKey.ContainsKey(key);
         }
 
@@ -71,10 +71,10 @@ namespace Jayrock.Collections
                 throw new ArgumentNullException("key");
 
             object value = GetByKey(key);
-            
+
             if (value == null)
                 return false;
-            
+
             List.Remove(value);
             return true;
         }
@@ -82,7 +82,7 @@ namespace Jayrock.Collections
         protected override void OnValidate(object value)
         {
             base.OnValidate(value);
-            
+
             if (KeyFromValue(value) == null)
                 throw new ArgumentException("value");
         }
@@ -116,7 +116,7 @@ namespace Jayrock.Collections
         {
             if (keys == null)
                 throw new ArgumentNullException("keys");
-            
+
             if (keys.Rank != 1)
                 throw new ArgumentException("keys");
 

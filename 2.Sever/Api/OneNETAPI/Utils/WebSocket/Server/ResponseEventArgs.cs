@@ -29,17 +29,18 @@
 using System;
 using WebSocketSharp.Net;
 
-namespace WebSocketSharp.Server {
+namespace WebSocketSharp.Server
+{
 
-  public class ResponseEventArgs : EventArgs
-  {
-    public HttpListenerRequest  Request  { get; private set; }
-    public HttpListenerResponse Response { get; private set; }
-
-    public ResponseEventArgs(HttpListenerContext context)
+    public class ResponseEventArgs : EventArgs
     {
-      Request  = context.Request;
-      Response = context.Response;
+        public HttpListenerRequest Request { get; private set; }
+        public HttpListenerResponse Response { get; private set; }
+
+        public ResponseEventArgs(HttpListenerContext context)
+        {
+            Request = context.Request;
+            Response = context.Response;
+        }
     }
-  }
 }

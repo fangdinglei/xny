@@ -9,7 +9,7 @@ using XNYAPI.Utility;
 
 namespace XNYAPI.AutoControl
 {
-    [AutoService(Name = "power", OnScript = "Run" )]
+    [AutoService(Name = "power", OnScript = "Run")]
     public class PowerManager
     {
         static public PowerManager Instance = new PowerManager();
@@ -45,7 +45,7 @@ namespace XNYAPI.AutoControl
 
         }
 
-        
+
         /// <summary>
         /// 获取设备剩余电量
         /// </summary>
@@ -135,8 +135,9 @@ namespace XNYAPI.AutoControl
                     throw new Exception("参数2异常");
                 if (!double.TryParse(item.Parm[2], out maxsoc))
                     throw new Exception("参数3异常");
-                 info = PowerServiceDAL.LoadPowerInfo(dvid);
-                if (info == null) {
+                info = PowerServiceDAL.LoadPowerInfo(dvid);
+                if (info == null)
+                {
                     info = new PowerInfo(dvid, DateTime.Now, DateTime.Now, maxsoc, maxsoc);
                     PowerServiceDAL.SetPowerInfo(info);
                     dv.PowerRate = info.SocRate;
@@ -155,7 +156,7 @@ namespace XNYAPI.AutoControl
                 int i;
                 for (i = pin.Count - 1; i >= 1; i++)
                 {
-                    if ((pin[i].Item1 - pin[i - 1].Item1).TotalMinutes>timeout)
+                    if ((pin[i].Item1 - pin[i - 1].Item1).TotalMinutes > timeout)
                     {
                         bk = true;
                         break;
@@ -166,8 +167,10 @@ namespace XNYAPI.AutoControl
                     pin = pin.Skip(i).ToList();
                     info.SOC = maxsoc;
                 }
-                else {
-                    if ((pin[0].Item1 - info.LastChargePUpdate).TotalMinutes > timeout) {
+                else
+                {
+                    if ((pin[0].Item1 - info.LastChargePUpdate).TotalMinutes > timeout)
+                    {
                         info.SOC = maxsoc;
                     }
                 }
@@ -195,7 +198,8 @@ namespace XNYAPI.AutoControl
         }
 
 
-        public void Run(ScriptContext context, PageItem item) {
+        public void Run(ScriptContext context, PageItem item)
+        {
             if (!context.Online)
                 return;
 

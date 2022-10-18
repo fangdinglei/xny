@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using MyClient.Utility;
+﻿using MyClient.Utility;
 
 namespace FDL.Program
 {
@@ -47,9 +44,10 @@ namespace FDL.Program
             }
             try
             {
-                await Task.Run(()=> {
+                await Task.Run(() =>
+                {
                     action();
-                });  
+                });
                 lock (acts)
                     acts.Remove(name);
             }

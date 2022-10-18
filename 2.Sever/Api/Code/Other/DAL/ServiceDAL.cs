@@ -4,7 +4,8 @@ using System;
 
 namespace XNYAPI.DAL
 {
-    public class ServiceDAL {
+    public class ServiceDAL
+    {
         /// <summary>
         /// 判断用户是否是此分组的所有者或者是所有者的上级
         /// </summary>
@@ -12,7 +13,8 @@ namespace XNYAPI.DAL
         /// <param name="groupid"></param>
         /// <param name="cmd"></param>
         /// <returns></returns>
-        static public bool  HasGroup(uint userid,uint groupid, MySqlCommand cmd) {
+        static public bool HasGroup(uint userid, uint groupid, MySqlCommand cmd)
+        {
             //has group
             cmd.CommandText = $"SELECT OwnerUser FROM group_service WHERE  ID={groupid}";
             var sc = cmd.ExecuteScalar();
@@ -25,11 +27,11 @@ namespace XNYAPI.DAL
             sc = cmd.ExecuteScalar();
             return sc != null;
         }
-    
 
-  
-    
+
+
+
     }
 
-   
+
 }

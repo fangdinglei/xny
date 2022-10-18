@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic; 
+﻿using System.Collections.Generic;
 
 namespace XNYAPI.Response.Power
 {
-    public class PowerRate {
+    public class PowerRate
+    {
         public uint DeviceID;
         public float Rate;
 
@@ -12,9 +13,9 @@ namespace XNYAPI.Response.Power
             Rate = rate;
         }
     }
-    public class GetPowerRateResponse :  DataListResponse<PowerRate>
+    public class GetPowerRateResponse : DataListResponse<PowerRate>
     {
-        public GetPowerRateResponse(List<PowerRate> pr):base(pr)
+        public GetPowerRateResponse(List<PowerRate> pr) : base(pr)
         {
 
         }

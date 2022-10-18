@@ -7,7 +7,6 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
@@ -23,14 +22,14 @@ namespace MyDBContext.Main
         /// </summary>
         public int Status { get; set; }
         public string LatestData { get; set; }
-        public string  LocationStr { get; set; }
+        public string LocationStr { get; set; }
 
-        public long DeviceTypeId { get; set; } 
+        public long DeviceTypeId { get; set; }
         public virtual Device_Type DeviceType { get; set; }
 
-        public long CreatorId { get; set; } 
-        public virtual User Creator { get;   }
+        public long CreatorId { get; set; }
+        public virtual User Creator { get; }
 
         //public virtual Device_AutoControl Device_AutoControl { get; set; } 
-    } 
+    }
 }

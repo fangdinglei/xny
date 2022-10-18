@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Internal;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Update.Internal;
 using Microsoft.EntityFrameworkCore.Update;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -37,9 +37,9 @@ namespace MyDBContext.Main
             var operations = base.GetDifferences(source, target);
 
             foreach (var operation in operations.OfType<CreateTableOperation>())
-                operation.ForeignKeys?.Clear(); 
-            return operations; 
-        } 
+                operation.ForeignKeys?.Clear();
+            return operations;
+        }
     }
 
-} 
+}

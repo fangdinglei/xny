@@ -8,7 +8,7 @@ namespace XNYAPI.Response.Device
         public bool Success;
         public CMDSendResult()
         {
-            
+
         }
         public CMDSendResult(uint deviceID, bool success)
         {
@@ -16,7 +16,8 @@ namespace XNYAPI.Response.Device
             Success = success;
         }
     }
-    public class SendCMDRsp : XNYResponseBase {
+    public class SendCMDRsp : XNYResponseBase
+    {
         public List<CMDSendResult> Data;
     }
 }

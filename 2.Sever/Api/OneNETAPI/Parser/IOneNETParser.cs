@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OneNET.Api.Parser
+﻿namespace OneNET.Api.Parser
 {
     /// <summary>
     /// OneNET API响应解释器接口。响应格式可以是XML, JSON等等。

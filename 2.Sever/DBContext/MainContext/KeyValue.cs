@@ -8,14 +8,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MyDBContext.Main
 {
     [Table("t_kv")]
-    public class KeyValue { 
+    public class KeyValue
+    {
         [Key]
         [Required]
-        [StringLength(maximumLength:50, MinimumLength = 1)]
+        [StringLength(maximumLength: 50, MinimumLength = 1)]
         public string Key { get; set; }
 
         [Required]
-        [StringLength(maximumLength: 50,MinimumLength =1)]
+        [StringLength(maximumLength: 50, MinimumLength = 1)]
         public string Value { get; set; }
 
         [DefaultValue(1)]

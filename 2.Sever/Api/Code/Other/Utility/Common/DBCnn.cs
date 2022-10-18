@@ -1,7 +1,5 @@
 ﻿using FDL.Program;
 using MySqlConnector;
-using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace XNYAPI.Utility

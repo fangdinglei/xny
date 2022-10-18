@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using OneNET.Api.Parser;
+using OneNET.Api.Request;
+using OneNET.Api.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Newtonsoft.Json;
-using OneNET.Api.Parser;
-using OneNET.Api.Request;
-using OneNET.Api.Util;
 
 namespace OneNET.Api
 {
@@ -165,8 +165,8 @@ namespace OneNET.Api
             //txtParams.Add(SIGN, OneNETUtils.SignOneNETRequest(txtParams, appSecret));
 
             var paramStr = txtParams.Where(x => x.Value is string)
-                .ToDictionary(k=>k.Key,v=>v.Value.ToString());
-            
+                .ToDictionary(k => k.Key, v => v.Value.ToString());
+
             var requestUrl = request.GetURL(context);
             var reqUrl = webUtils.BuildGetUrl(requestUrl, paramStr);
             try
@@ -177,18 +177,18 @@ namespace OneNET.Api
                 switch (request.RequestMethod())
                 {
                     case HttpRequestMethod.Get:
-                    {
-                        if (request.IsRequestForByte())
                         {
-                            body = "";
-                            bytesBody = webUtils.DoGetBytes(reqUrl, paramStr, httpHeader);
+                            if (request.IsRequestForByte())
+                            {
+                                body = "";
+                                bytesBody = webUtils.DoGetBytes(reqUrl, paramStr, httpHeader);
+                            }
+                            else
+                            {
+                                body = webUtils.DoGet(reqUrl, paramStr, httpHeader);
+                            }
+                            break;
                         }
-                        else
-                        {
-                            body = webUtils.DoGet(reqUrl, paramStr, httpHeader);
-                        }
-                        break;
-                    }
 
                     case HttpRequestMethod.Post:
                         body = webUtils.DoPost(reqUrl, request.GetPostContent(), httpHeader); break;
@@ -198,9 +198,9 @@ namespace OneNET.Api
                         body = webUtils.DoDelete(reqUrl, httpHeader); break;
                     default: body = webUtils.DoGet(reqUrl, paramStr, httpHeader); break;
                 }
-                
+
                 // 解释响应结果
-                
+
                 T rsp;
                 if (disableParser)
                 {

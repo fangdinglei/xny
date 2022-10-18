@@ -26,15 +26,14 @@
  */
 #endregion
 
-using System;
 
 namespace WebSocketSharp
 {
-  public enum WsState
-  {
-    CONNECTING,
-    OPEN,
-    CLOSING,
-    CLOSED
-  }
+    public enum WsState
+    {
+        CONNECTING,
+        OPEN,
+        CLOSING,
+        CLOSED
+    }
 }

@@ -76,7 +76,7 @@ namespace XNYAPI.DAL
         //    }
         //}
 
-      
+
 
         /// <summary>
         /// 获取系统用户的名称
@@ -139,7 +139,7 @@ namespace XNYAPI.DAL
         /// <param name="cmd"></param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        static public bool IsFatherOrFatherFather(uint father, uint son )
+        static public bool IsFatherOrFatherFather(uint father, uint son)
         {
             using (var cnn = DBCnn.GetCnn())
             {
@@ -147,7 +147,7 @@ namespace XNYAPI.DAL
                 return IsFatherOrFatherFather(father, son, cmd);
             }
         }
-        static public bool  IsFatherOrFatherFather(uint father, uint son, MySqlCommand cmd)
+        static public bool IsFatherOrFatherFather(uint father, uint son, MySqlCommand cmd)
         {
             cmd.CommandText = $"SELECT 1 FROM user inner join user_sf on user.ID= user_sf.Son " +
              $"WHERE user.ID={son} AND  user_sf.Creator={father}";
@@ -164,7 +164,7 @@ namespace XNYAPI.DAL
         /// <param name="cmd"></param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        static public bool IsFather (uint father, uint son)
+        static public bool IsFather(uint father, uint son)
         {
             using (var cnn = DBCnn.GetCnn())
             {
@@ -172,7 +172,7 @@ namespace XNYAPI.DAL
                 return IsFatherOrFatherFather(father, son, cmd);
             }
         }
-        static public bool IsFather (uint father, uint son, MySqlCommand cmd)
+        static public bool IsFather(uint father, uint son, MySqlCommand cmd)
         {
             cmd.CommandText = $"SELECT 1 FROM user   WHERE ID={son} AND  Creator={father}";
             var sre = cmd.ExecuteScalar();
@@ -194,7 +194,7 @@ namespace XNYAPI.DAL
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
-                return  GetUserAuthority(uid, cmd);
+                return GetUserAuthority(uid, cmd);
             }
         }
         static public UserAuthority GetUserAuthority(uint uid, MySqlCommand cmd)
@@ -216,10 +216,10 @@ namespace XNYAPI.DAL
         /// <param name="newpass"></param> 
         /// <returns> false if oldpass mathch</returns>
         /// <exception cref="Exception"/> 
-        static public bool  ChangePassWord(uint uid, string newpass, MySqlCommand cmd)
+        static public bool ChangePassWord(uint uid, string newpass, MySqlCommand cmd)
         {
             cmd.CommandText = $"UPDATE user SET Pass='{newpass}' WHERE  ID={uid}  ";
-            return cmd.ExecuteNonQuery()>0; 
+            return cmd.ExecuteNonQuery() > 0;
         }
 
 
@@ -230,15 +230,15 @@ namespace XNYAPI.DAL
         /// <param name="cascade">是否获取子用户的子用户</param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        static public List<UserBriefInfo> GetSubUserBriefInfo(uint uid, bool cascade )
+        static public List<UserBriefInfo> GetSubUserBriefInfo(uint uid, bool cascade)
         {
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
-                return  GetSubUserBriefInfo(uid, cascade, cmd);
+                return GetSubUserBriefInfo(uid, cascade, cmd);
             }
         }
-        static public List<UserBriefInfo>  GetSubUserBriefInfo(uint uid, bool cascade, MySqlCommand cmd)
+        static public List<UserBriefInfo> GetSubUserBriefInfo(uint uid, bool cascade, MySqlCommand cmd)
         {
             List<UserBriefInfo> re = new List<UserBriefInfo>();
             cmd.CommandText = $"SELECT Name,ID  FROM user WHERE Creator={uid}";
@@ -247,7 +247,7 @@ namespace XNYAPI.DAL
                     re.Add(new UserBriefInfo(rd.GetUInt32(1), rd.GetString(0)));
             if (cascade)
                 foreach (var item in re)
-                    item.SubUsers =  GetSubUserBriefInfo(item.ID, true, cmd);
+                    item.SubUsers = GetSubUserBriefInfo(item.ID, true, cmd);
             return re;
 
         }
@@ -257,22 +257,23 @@ namespace XNYAPI.DAL
         /// </summary>
         /// <param name="uid"></param>
         /// <returns></returns>
-        static public List<UserInfo> GetAllSubUserInfo(uint uid ) {
+        static public List<UserInfo> GetAllSubUserInfo(uint uid)
+        {
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
-                return GetAllSubUserInfo(uid,  cmd);
+                return GetAllSubUserInfo(uid, cmd);
             }
         }
-        static public List<UserInfo> GetAllSubUserInfo(uint uid,  MySqlCommand cmd)
+        static public List<UserInfo> GetAllSubUserInfo(uint uid, MySqlCommand cmd)
         {
             List<UserInfo> res = new List<UserInfo>();
             cmd.CommandText = $"SELECT ID,Name,Phone FROM user WHERE Creator={uid}";
-            using (var rd=cmd.ExecuteReader())
+            using (var rd = cmd.ExecuteReader())
             {
                 while (rd.Read())
                 {
-                    res.Add(new UserInfo(rd.GetUInt32(0),rd.GetString(1),rd.GetString(2),uid));
+                    res.Add(new UserInfo(rd.GetUInt32(0), rd.GetString(1), rd.GetString(2), uid));
                 }
             }
             return res;
@@ -284,20 +285,20 @@ namespace XNYAPI.DAL
         /// <param name="uid"></param> 
         /// <returns>null if no this user</returns>
         /// <exception cref="Exception"/>
-        static public  UserInfo  GetUserInfo(uint uid )
+        static public UserInfo GetUserInfo(uint uid)
         {
             using (var cnn = DBCnn.GetCnn())
             {
                 var cmd = cnn.CreateCommand();
-                return GetUserInfo(uid,  cmd);
+                return GetUserInfo(uid, cmd);
             }
         }
-        static public  UserInfo  GetUserInfo(uint uid,  MySqlCommand cmd)
-        { 
+        static public UserInfo GetUserInfo(uint uid, MySqlCommand cmd)
+        {
             cmd.CommandText = $"SELECT Name,Phone,Creator  FROM user WHERE ID={uid}";
             using (var rd = cmd.ExecuteReader())
-               if(rd.Read())
-                    return new UserInfo(uid,rd.GetString(0), rd.GetString(1),rd.GetUInt32(2)) ;
+                if (rd.Read())
+                    return new UserInfo(uid, rd.GetString(0), rd.GetString(1), rd.GetUInt32(2));
             return null;
         }
 
@@ -312,7 +313,7 @@ namespace XNYAPI.DAL
         {
             List<uint> subusers = new List<uint>();
             cmd.CommandText = $"SELECT Son FROM user_sf WHERE Creator={deluid}";
-            using (var rd=cmd.ExecuteReader())
+            using (var rd = cmd.ExecuteReader())
             {
                 while (rd.Read())
                 {
@@ -325,9 +326,9 @@ namespace XNYAPI.DAL
             cmd.ExecuteNonQuery();
             return subusers;
         }
-       
 
-      
+
+
 
     }
 }

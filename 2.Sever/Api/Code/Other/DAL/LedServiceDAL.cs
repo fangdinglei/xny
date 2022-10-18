@@ -10,14 +10,14 @@ namespace XNYAPI.DAL
 {
     public class LedServiceDAL
     {
-       
+
 
         /// <summary>
         /// 获取设备定时任务
         /// </summary> 
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        static public ScheduleInfo GetAutoControlScheduleData(uint ownerid,bool isgroup,  ServiceType type)
+        static public ScheduleInfo GetAutoControlScheduleData(uint ownerid, bool isgroup, ServiceType type)
         {
             //TODO 加锁
             using (var cnn = DBCnn.GetCnn())
@@ -27,7 +27,7 @@ namespace XNYAPI.DAL
                     $"SELECT ID,TriggerType,TimeStart,TimeEnd," +
                     $"Week,OwnerID,Value,Priority," +
                     $"UpdateTime,OwnerUser " +
-                    $"FROM   time_schedule WHERE OwnerID={ownerid } AND Type={(int)type} AND IsGroup = {isgroup}" +
+                    $"FROM   time_schedule WHERE OwnerID={ownerid} AND Type={(int)type} AND IsGroup = {isgroup}" +
                     $" ORDER BY Priority";
                 var rd = cmd.ExecuteReader();
                 var re = new ScheduleInfo()
@@ -56,7 +56,7 @@ namespace XNYAPI.DAL
         static public void SetAutoControlScheduleData(ScheduleInfo schedule, uint updater, MySqlCommand cmd)
         {
             //TODO 加锁
-            cmd.CommandText = $"DELETE FROM  time_schedule WHERE OwnerID={schedule.OwnerID } AND IsGroup = {schedule.IsGroup}";
+            cmd.CommandText = $"DELETE FROM  time_schedule WHERE OwnerID={schedule.OwnerID} AND IsGroup = {schedule.IsGroup}";
             cmd.ExecuteNonQuery();
             StringBuilder sb = new StringBuilder();
             schedule.Data.RunByBatch(10, (ls, s, e) =>
@@ -103,7 +103,7 @@ namespace XNYAPI.DAL
         /// <param name="ownerid"></param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        static public AutoControlSettings GetAutoControlSetting(uint ownerid,bool isgroup,  ServiceType type= ServiceType.DeviceLEDControl)
+        static public AutoControlSettings GetAutoControlSetting(uint ownerid, bool isgroup, ServiceType type = ServiceType.DeviceLEDControl)
         {
             using (var cnn = DBCnn.GetCnn())
             {
@@ -132,7 +132,7 @@ namespace XNYAPI.DAL
                         AdvancedControlEnabled = false,
                         TimeScheduleEnabled = false,
                         GroupID = 0,
-                         Type = type
+                        Type = type
                     };
                 }
             }
@@ -143,7 +143,7 @@ namespace XNYAPI.DAL
         /// <param name="info"></param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        static public void SetAutoControlSetting(List<uint> dvs, AutoControlSettings info,bool isgroup, MySqlCommand cmd, ServiceType type = ServiceType.DeviceLEDControl)
+        static public void SetAutoControlSetting(List<uint> dvs, AutoControlSettings info, bool isgroup, MySqlCommand cmd, ServiceType type = ServiceType.DeviceLEDControl)
         {
 
             foreach (var dv in dvs)

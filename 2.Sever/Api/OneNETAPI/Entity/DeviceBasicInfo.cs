@@ -11,7 +11,7 @@ namespace OneNET.Api.Entity
         /// <summary>
         /// 设备基本信息描述
         /// </summary>
-        public DeviceBasicInfo() 
+        public DeviceBasicInfo()
         {
             Location = new LocationInfo();
         }
@@ -20,9 +20,9 @@ namespace OneNET.Api.Entity
         {
             DeviceBasicInfo re = new DeviceBasicInfo();
 
-           re. Id = Id;
-            re.OnLine =OnLine;
-            re.Title =Title;
+            re.Id = Id;
+            re.OnLine = OnLine;
+            re.Title = Title;
             return re;
         }
 

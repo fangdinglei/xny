@@ -5,9 +5,9 @@ namespace FDL.Program
 {
     public class ParameterWrongException : Exception
     {
-        public ParameterWrongException( ) :
-            base( )
+        public ParameterWrongException() :
+            base()
         { }
     }
-   
+
 }

@@ -28,71 +28,80 @@
 //
 
 using System;
-using System.Net;
 using System.Threading;
 
-namespace WebSocketSharp.Net {
+namespace WebSocketSharp.Net
+{
 
-	class HttpStreamAsyncResult : IAsyncResult
-	{
-		bool             completed;
-		ManualResetEvent handle;
-		object           locker = new object ();
+    class HttpStreamAsyncResult : IAsyncResult
+    {
+        bool completed;
+        ManualResetEvent handle;
+        object locker = new object();
 
-		internal AsyncCallback Callback;
-		internal int           Count;
-		internal byte []       Buffer;
-		internal Exception     Error;
-		internal int           Offset;
-		internal object        State;
-		internal int           SynchRead;
+        internal AsyncCallback Callback;
+        internal int Count;
+        internal byte[] Buffer;
+        internal Exception Error;
+        internal int Offset;
+        internal object State;
+        internal int SynchRead;
 
-		public object AsyncState {
-			get { return State; }
-		}
+        public object AsyncState
+        {
+            get { return State; }
+        }
 
-		public WaitHandle AsyncWaitHandle {
-			get {
-				lock (locker) {
-					if (handle == null)
-						handle = new ManualResetEvent (completed);
-				}
+        public WaitHandle AsyncWaitHandle
+        {
+            get
+            {
+                lock (locker)
+                {
+                    if (handle == null)
+                        handle = new ManualResetEvent(completed);
+                }
 
-				return handle;
-			}
-		}
+                return handle;
+            }
+        }
 
-		public bool CompletedSynchronously {
-			get { return (SynchRead == Count); }
-		}
+        public bool CompletedSynchronously
+        {
+            get { return (SynchRead == Count); }
+        }
 
-		public bool IsCompleted {
-			get {
-				lock (locker) {
-					return completed;
-				}
-			}
-		}
+        public bool IsCompleted
+        {
+            get
+            {
+                lock (locker)
+                {
+                    return completed;
+                }
+            }
+        }
 
-		public void Complete ()
-		{
-			lock (locker) {
-				if (completed)
-					return;
+        public void Complete()
+        {
+            lock (locker)
+            {
+                if (completed)
+                    return;
 
-				completed = true;
-				if (handle != null)
-					handle.Set ();
+                completed = true;
+                if (handle != null)
+                    handle.Set();
 
-				if (Callback != null)
-					Callback.BeginInvoke (this, null, null);
-			}
-		}
+                if (Callback != null)
+                    Callback.BeginInvoke(this, null, null);
+            }
+        }
 
-		public void Complete (Exception e)
-		{
-			Error = e;
-			Complete ();
-		}
-	}
+        public void Complete(Exception e)
+        {
+            Error = e;
+            Complete();
+        }
+    }
 }

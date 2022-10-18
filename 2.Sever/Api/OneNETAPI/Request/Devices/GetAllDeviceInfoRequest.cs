@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using OneNET.Api.Entity;
+﻿using OneNET.Api.Entity;
 using OneNET.Api.Response;
 using OneNET.Api.Util;
+using System;
+using System.Collections.Generic;
 
 namespace OneNET.Api.Request
 {
@@ -24,7 +24,7 @@ namespace OneNET.Api.Request
         {
             otherParameters = new Dictionary<string, string>();
         }
-        
+
         public String GetURL(OneNetContext context)
         {
             otherParameters.Add(Key_WORDS, Keywords);
@@ -32,14 +32,14 @@ namespace OneNET.Api.Request
             {
                 otherParameters.Add(ONLINE, OnLine.ToString());
             }
-            if (Private.HasValue) 
+            if (Private.HasValue)
             {
                 otherParameters.Add(PRIVATE, Private.ToString());
             }
             otherParameters.Add(PAGE, Page.ToString());
             otherParameters.Add(PER_PAGE, PageSize.ToString());
             otherParameters.Add(TAG, Tag);
-            
+
             context.setContext(DEVICE_ID, DeviceIds);
 
             var url = URIUtils.fmtURI(URI, context);

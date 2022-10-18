@@ -11,7 +11,7 @@ namespace XNYAPI.Utility
         static public List<uint> PraseIDS(string dvidstr)
         {
             List<uint> dvids = new List<uint>(); uint dvid;
-            if (dvidstr==null)
+            if (dvidstr == null)
                 return dvids;
             var ids = dvidstr.Split(',', StringSplitOptions.RemoveEmptyEntries);
             foreach (var item in ids)
@@ -24,7 +24,7 @@ namespace XNYAPI.Utility
         /// </summary>
         /// <param name="stream"></param>
         /// <returns>null if error</returns>
-        static public string GetUTF8String( Stream stream)
+        static public string GetUTF8String(Stream stream)
         {
             try
             {
@@ -36,8 +36,8 @@ namespace XNYAPI.Utility
                     buffer.Read(arr, 0, (int)buffer.Length);
                     string s = Encoding.UTF8.GetString(arr);
                     return s;
-                } 
-             
+                }
+
             }
             catch (Exception)
             {

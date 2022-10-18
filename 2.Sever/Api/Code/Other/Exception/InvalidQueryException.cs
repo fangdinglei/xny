@@ -3,7 +3,8 @@
 
 namespace FDL.Program
 {
-    public class InvalidQueryException : Exception {
+    public class InvalidQueryException : Exception
+    {
         public InvalidQueryException()
         {
 

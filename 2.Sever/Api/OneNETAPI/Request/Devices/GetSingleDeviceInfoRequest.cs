@@ -1,7 +1,7 @@
 ﻿using OneNET.Api.Response;
+using OneNET.Api.Util;
 using System;
 using System.Collections.Generic;
-using OneNET.Api.Util;
 
 namespace OneNET.Api.Request
 {

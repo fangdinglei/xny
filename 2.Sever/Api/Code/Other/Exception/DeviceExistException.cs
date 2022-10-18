@@ -12,5 +12,5 @@ namespace FDL.Program
             base($"设备 {deviceid} 已经存在")
         { }
     }
-   
+
 }

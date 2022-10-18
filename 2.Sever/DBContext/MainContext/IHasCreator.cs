@@ -9,9 +9,10 @@
 //
 namespace MyDBContext.Main
 {
-    public interface IHasCreator {
-        long Id { get;  }
-        User? Creator { get;  }
-        long  CreatorId { get;  }
+    public interface IHasCreator
+    {
+        long Id { get; }
+        User? Creator { get; }
+        long CreatorId { get; }
     }
 }

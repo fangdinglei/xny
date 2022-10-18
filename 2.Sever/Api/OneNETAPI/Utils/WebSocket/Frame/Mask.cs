@@ -26,13 +26,12 @@
  */
 #endregion
 
-using System;
 
 namespace WebSocketSharp.Frame
 {
-  public enum Mask : byte
-  {
-    UNMASK = 0x0,
-    MASK   = 0x1
-  }
+    public enum Mask : byte
+    {
+        UNMASK = 0x0,
+        MASK = 0x1
+    }
 }

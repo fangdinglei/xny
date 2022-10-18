@@ -30,13 +30,13 @@ using System;
 
 namespace WebSocketSharp
 {
-  public class ErrorEventArgs : EventArgs
-  {
-    public string Message { get; private set; }
-
-    public ErrorEventArgs(string message)
+    public class ErrorEventArgs : EventArgs
     {
-      Message = message;
+        public string Message { get; private set; }
+
+        public ErrorEventArgs(string message)
+        {
+            Message = message;
+        }
     }
-  }
 }

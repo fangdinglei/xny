@@ -1,7 +1,7 @@
 ﻿namespace FdlWindows.View
 {
     public interface IView
-    {  
+    {
         Control View { get; }
         /// <summary>
         /// 向界面传输数据

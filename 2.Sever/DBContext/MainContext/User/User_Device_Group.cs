@@ -14,7 +14,8 @@ namespace MyDBContext.Main
     /// <summary>
     /// 用户设备分组 仅对创建者可见
     /// </summary>
-    public class User_Device_Group:IHasCreator {
+    public class User_Device_Group : IHasCreator
+    {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public string Name { get; set; }

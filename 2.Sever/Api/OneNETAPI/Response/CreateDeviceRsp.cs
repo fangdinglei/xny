@@ -25,7 +25,7 @@
         }
     }
 
-    public class DeviceRegisterResult: NewDeviceResult
+    public class DeviceRegisterResult : NewDeviceResult
     {
         public string Key;
     }

@@ -32,56 +32,56 @@ using WebSocketSharp.Frame;
 
 namespace WebSocketSharp
 {
-  public class MessageEventArgs : EventArgs
-  {
-    private Opcode      _type;
-    private PayloadData _data;
-
-    public Opcode Type
+    public class MessageEventArgs : EventArgs
     {
-      get
-      {
-        return _type;
-      }
-    }
+        private Opcode _type;
+        private PayloadData _data;
 
-    public string Data
-    {
-      get
-      {
-        if (((Opcode.TEXT | Opcode.PING | Opcode.PONG) & _type) == _type)
+        public Opcode Type
         {
-          if (_data.Length > 0)
-          {
-            return Encoding.UTF8.GetString(_data.ToBytes());
-          }
-          else
-          {
-            return String.Empty;
-          }
+            get
+            {
+                return _type;
+            }
         }
 
-        return _type.ToString();
-      }
-    }
+        public string Data
+        {
+            get
+            {
+                if (((Opcode.TEXT | Opcode.PING | Opcode.PONG) & _type) == _type)
+                {
+                    if (_data.Length > 0)
+                    {
+                        return Encoding.UTF8.GetString(_data.ToBytes());
+                    }
+                    else
+                    {
+                        return String.Empty;
+                    }
+                }
 
-    public byte[] RawData
-    {
-      get
-      {
-        return _data.ToBytes();
-      }
-    }
+                return _type.ToString();
+            }
+        }
 
-    public MessageEventArgs(string data)
-    : this(Opcode.TEXT, new PayloadData(data))
-    {
-    }
+        public byte[] RawData
+        {
+            get
+            {
+                return _data.ToBytes();
+            }
+        }
 
-    public MessageEventArgs(Opcode type, PayloadData data)
-    {
-      _type = type;
-      _data = data;
+        public MessageEventArgs(string data)
+        : this(Opcode.TEXT, new PayloadData(data))
+        {
+        }
+
+        public MessageEventArgs(Opcode type, PayloadData data)
+        {
+            _type = type;
+            _data = data;
+        }
     }
-  }
 }

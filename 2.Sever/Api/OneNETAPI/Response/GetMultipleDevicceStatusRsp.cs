@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace OneNET.Api.Response
 {
     /// <summary>
     /// 批量查询在线情况的返回体
     /// </summary>
-  public  class GetMultipleDevicceStatusRsp : OneNETResponse
+    public class GetMultipleDevicceStatusRsp : OneNETResponse
     {
         /// <summary>
         /// 响应数据
@@ -15,7 +13,8 @@ namespace OneNET.Api.Response
         public MultipleDevicceStatusData Data;
     }
 
-    public class MultipleDevicceStatusData {
+    public class MultipleDevicceStatusData
+    {
         public class DevicceStatus
         {
             public string Title;

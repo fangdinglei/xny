@@ -12,11 +12,11 @@ namespace XNYAPI.Controllers
     public class TokenCheckFilterAttribute : ActionFilterAttribute
     {
         public const string DefaultSecret = "GADEtcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk";
-        static string PermissionDenied= JsonConvert.SerializeObject(new XNYResponseBase(XNYResponseBase.EErrorCode.PermissionDenied));
+        static string PermissionDenied = JsonConvert.SerializeObject(new XNYResponseBase(XNYResponseBase.EErrorCode.PermissionDenied));
         string secret;
         HashSet<string> ignores;
 
-        public TokenCheckFilterAttribute(string[] ignores )
+        public TokenCheckFilterAttribute(string[] ignores)
         {
             this.ignores = new HashSet<string>(ignores);
             this.secret = DefaultSecret;
@@ -31,13 +31,13 @@ namespace XNYAPI.Controllers
                 base.OnActionExecuting(filterContext);
                 return;
             }
- 
+
             string token;
-          
+
             if (!filterContext.HttpContext.Request.Cookies.TryGetValue("token", out token))
             {
                 Microsoft.Extensions.Primitives.StringValues stk;
-                if (!filterContext.HttpContext.Request.Query.TryGetValue("token",out stk) )
+                if (!filterContext.HttpContext.Request.Query.TryGetValue("token", out stk))
                 {
                     var res = new ContentResult();
                     res.Content = Newtonsoft.Json.JsonConvert.SerializeObject(new XNYResponseBase() { ErrCode = "1", Error = "Forbiden" });
@@ -45,7 +45,7 @@ namespace XNYAPI.Controllers
                 }
                 token = stk.ToString();
             }
- 
+
 
             string payload;
             try
@@ -54,10 +54,10 @@ namespace XNYAPI.Controllers
                      .WithAlgorithm(new HMACSHA256Algorithm()) // 使用算法
                      .WithSecret(secret) // 使用秘钥
                      .MustVerifySignature()
-                    .Decode(token );
+                    .Decode(token);
                 UserPayLoad p;
                 (filterContext.Controller as Controller).ViewBag.payload = p = JsonConvert.DeserializeObject<UserPayLoad>(payload); ;
-                (filterContext.Controller as Controller).ViewBag.token =token;
+                (filterContext.Controller as Controller).ViewBag.token = token;
                 //if (!p.UserName.IsSqlSafeString())
                 //{
                 //    var res = new ContentResult();
@@ -102,4 +102,3 @@ namespace XNYAPI.Controllers
 }
 
 
- 

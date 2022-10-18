@@ -3,14 +3,15 @@
 namespace XNYAPI.Controllers
 {
     //TODO
-    public class AutoControlController:Controller
+    public class AutoControlController : Controller
     {
         /// <summary>
         /// 获取自动控制状态
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public string GetState(string name="all") {
+        public string GetState(string name = "all")
+        {
             return null;
         }
 
@@ -30,7 +31,8 @@ namespace XNYAPI.Controllers
         /// <param name="name"></param>
         /// <param name="open"></param>
         /// <returns></returns>
-        public string SetState(string name = "all",bool open =true ) {
+        public string SetState(string name = "all", bool open = true)
+        {
             return null;
         }
 
@@ -39,7 +41,8 @@ namespace XNYAPI.Controllers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public string GetActions( string ids,string name = "all") {
+        public string GetActions(string ids, string name = "all")
+        {
             return null;
         }
 
