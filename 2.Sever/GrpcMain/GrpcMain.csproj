@@ -13,8 +13,9 @@
 
 	<ItemGroup>
 	  <None Remove="GrpcProto\Account\AccountService.proto" />
-	  <None Remove="GrpcProto\DeviceDataDervice\DeviceDataService.proto" />
-	  <None Remove="GrpcProto\DeviceTypeDervice\DeviceTypeService.proto" />
+	  <None Remove="GrpcProto\DeviceData\DeviceColdDataService.proto" />
+	  <None Remove="GrpcProto\DeviceData\DeviceDataService.proto" />
+	  <None Remove="GrpcProto\DeviceType\DeviceTypeService.proto" />
 	  <None Remove="GrpcProto\Device\DeviceService.proto" />
 	  <None Remove="GrpcProto\Histroy\Account\AccountService.proto" />
 	  <None Remove="GrpcProto\InternalMail\InternalMail.proto" />

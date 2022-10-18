@@ -1,8 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 //Add-Migration [--context MainContext]
 //Remove-Migration 取消最近一次迁移
@@ -15,34 +13,17 @@ using System.Diagnostics;
 //
 namespace MyDBContext.Main
 {
-
-    /// <summary>
-    /// 自动控制服务
-    /// </summary>
-    public enum DeviceServiceTypeEnum : int
+    public class Device_AutoControl_Settings_Item_Data
     {
-        Unknown = 0,
-        LedSever = 1,
+
     }
-    public class Device_AutoControl
+    public class Device_AutoControl_Settings_Item
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //public string Name { get; set; } 
         public long Id { get; set; }
-        public virtual Device Device { get; set; }
-
-        public int Type { get; set; }
-        [NotMapped]
-        public DeviceServiceTypeEnum _Type
-        {
-            get => Enum.IsDefined(typeof(DeviceServiceTypeEnum), Type)
-                ? (DeviceServiceTypeEnum)Type
-                : DeviceServiceTypeEnum.Unknown;
-            set =>
-              Type = (int)value;
-        }
-
-        public bool TimedControl { get; set; }
-        public string TimedControlSetting { get; set; }
+        public long DeviceId { get; set; }
+        public bool Open { get; set; }
+        public string Data { get; set; }
     }
 
 
@@ -55,7 +36,7 @@ namespace MyDBContext.Main
         public DbSet<Device> Devices { get; set; }
         public DbSet<User_Device_Group> User_Device_Groups { get; set; }
         public DbSet<User_Device> User_Devices { get; set; }
-        public DbSet<Device_AutoControl> Device_AutoControls { get; set; }
+        public DbSet<Device_AutoControl_Settings_Item> Device_AutoControl_Settings_Items { get; set; }
         public DbSet<User_Op_Audit> User_Op_Audits { get; set; }
         public DbSet<Device_DataPoint> Device_DataPoints { get; set; }
         public DbSet<Internal_Mail> Internal_Mails { get; set; }

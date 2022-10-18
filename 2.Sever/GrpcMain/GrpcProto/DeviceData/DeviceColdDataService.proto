@@ -1,0 +1,17 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.DeviceData.Cold"; 
+import "google/protobuf/empty.proto";
+import "Common/CommonResponse.proto";
+service ColdDataService {
+    //压缩数据
+    rpc CompressDeviceData( Request_CompressDeviceData)
+        returns (CommonResponse); 
+
+}
+
+message Request_CompressDeviceData{
+    int64 StartTime=1;
+    int64 EndTime=2; 
+    optional int64 MaxCountOneTime=3;
+}

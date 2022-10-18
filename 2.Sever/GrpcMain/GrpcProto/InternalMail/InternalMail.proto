@@ -8,16 +8,16 @@ service InternalMailService {
 
     //发送站内信
     rpc SendMail(DTODefine.Request_SendInternalMail)
-        returns (GrpcMain.Common.CommonResponse);
+        returns (CommonResponse);
     //设置站内信已读
     rpc SetMailReaded(DTODefine.Request_SetMailReaded)
-        returns (GrpcMain.Common.CommonResponse);
+        returns (CommonResponse);
     //获取站内信
     rpc GetMail(DTODefine.Request_GetMail)
         returns (DTODefine.Response_GetMail); 
     //发送站外信
     rpc SendEMail(DTODefine.Request_SendEMail)
-        returns (GrpcMain.Common.CommonResponse);
+        returns (CommonResponse);
 }
 
 

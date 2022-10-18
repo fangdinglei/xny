@@ -9,15 +9,15 @@ service DeviceService {
     
     //发送命令
     rpc SendCMD(DTODefine.Request_SendCMD)
-        returns (GrpcMain.Common.CommonResponse);
+        returns (CommonResponse);
 
     //删除设备
     rpc DeletDevice(DTODefine.Request_DeletDevice)
-        returns (GrpcMain.Common.CommonResponse);
+        returns (CommonResponse);
 
     //修改设备信息
     rpc UpdateDeviceInfo(DTODefine.Request_UpdateDeviceInfo)
-        returns (GrpcMain.Common.CommonResponse);
+        returns (CommonResponse);
     //获取全部设备状态
     rpc GetAllDeviceStatus(DTODefine.Request_GetAllDeviceStatus)
         returns (DTODefine.Response_GetAllDeviceStatus);
