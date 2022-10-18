@@ -19,12 +19,16 @@ namespace GrpcMain.Managers
         /// </summary>
         /// <param name="colddata"></param>
         /// <returns>null if not success</returns>
-        public abstract Task<byte[]?> Load(Device_DataPoint_Cold colddata);
+        public abstract Task<byte[]> Load(Device_DataPoint_Cold colddata);
 
         static Dictionary<string, ColdDataManagerBase> mgrs = new();
-        static public void DoStore(Device_DataPoint_Cold colddata)
+        static public async Task DoStore(Device_DataPoint_Cold colddata)
         {
-            mgrs[colddata.ManagerName].Store(colddata);
+            await mgrs[colddata.ManagerName].Store(colddata);
+        }
+        static public async Task<byte[]> DoLoad(Device_DataPoint_Cold colddata)
+        {
+            return await mgrs[colddata.ManagerName].Load(colddata);
         }
     }
 

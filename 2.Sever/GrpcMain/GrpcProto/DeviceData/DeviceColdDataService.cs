@@ -60,6 +60,7 @@ namespace GrpcMain.DeviceData
         }
         public override async Task<CommonResponse> CompressDeviceData(Request_CompressDeviceData request, ServerCallContext context)
         {
+            int maxcout1 = 100 + 1;
             if (!request.HasMaxCountOneTime ||
                 request.MaxCountOneTime == 0L)
             {
@@ -67,8 +68,7 @@ namespace GrpcMain.DeviceData
             }
             using (MainContext ct = new MainContext())
             {
-                long cursor1 = 0;
-                int maxcout1 = 200 + 1;
+                long cursor1 = 0; 
                 IQueryable<Device_DataPoint> bd = ct.Device_DataPoints;
                 //按时间筛选
                 bd = bd.Where(it => it.Time >= request.StartTime && it.Time < request.EndTime);
