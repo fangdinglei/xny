@@ -7,7 +7,7 @@ import "Common/CommonResponse.proto";
 import "Device/DeviceService.proto";
 service UserDeviceService { 
 
-    //只能直接父用户调用 修改设备权限 如果所有权限都false 则删除设备
+    //只能直接父用户调用 修改设备权限 如果所有权限都false 则删除设备 如果没有权限 则添加
     rpc UpdateUserDevice(DTODefine.Request_UpdateUserDevice)
         returns (CommonResponse);
 

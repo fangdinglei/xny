@@ -131,7 +131,10 @@ namespace GrpcMain.DeviceData
                     {
                         var t = br.ReadInt32();
                         var v = br.ReadSingle();
-                        res.Add((starttime + t, v));
+                        if (t>=starttime&&t<endtime)
+                        {
+                            res.Add((starttime + t, v));
+                        }
                     }
                 }
             }

@@ -28,7 +28,7 @@ namespace GrpcMain.UserDevice
             using (MainContext ct = new MainContext())
             {
                 if (!request.UserDevice.HasUserId ||
-                    await id.GetOwnerTypeAsync(ct, request.UserDevice.UserId) != AuthorityUtility.OwnerType.SonOfCreator)
+                    await id.IsDirectFatherAsync(ct, request.UserDevice.UserId)==false)
 
                 {
                     return new CommonResponse()
@@ -66,9 +66,19 @@ namespace GrpcMain.UserDevice
                         {
                             dic.Add(it.DeviceId, it);
                         });
+                    //被修改者已有的权限
+                    Dictionary<long, MyDBContext.Main.User_Device> dic2 = new();
+                    (await ct.User_Devices.Where(it => request.Dvids.Contains(it.DeviceId) && it.UserId == request.UserId)
+                        .ToListAsync()).ForEach(it =>
+                        {
+                            dic2.Add(it.DeviceId, it);
+                        });
+
                     foreach (var item in request.Dvids)
                     {
+                        //请求者的此记录
                         MyDBContext.Main.User_Device ud;
+                       
                         if (!dic.TryGetValue(item, out ud))
                         {
                             return new CommonResponse()
@@ -89,15 +99,29 @@ namespace GrpcMain.UserDevice
                                 Message = "设备:" + item + " 的权限不足,请添加你拥有的权限",
                             };
                         }
-                        ct.Add(new MyDBContext.Main.User_Device()
+
+                        //被请求者的此记录
+                        MyDBContext.Main.User_Device ud2;
+                        if (dic.TryGetValue(item, out ud2))
                         {
-                            DeviceId = item,
-                            UserId = request.UserId,
-                            User_Device_GroupId = 0,
-                            PStatus = request.UserDevice.PStatus,
-                            PData = request.UserDevice.PData,
-                            PControl = request.UserDevice.PControl,
-                        });
+                            ud2.PStatus = request.UserDevice.PStatus;
+                            ud2.PData = request.UserDevice.PData;
+                            ud2.PControl = request.UserDevice.PControl;
+                        }
+                        else
+                        {
+                            ct.Add(new MyDBContext.Main.User_Device()
+                            {
+                                DeviceId = item,
+                                UserId = request.UserId,
+                                User_Device_GroupId = 0,
+                                PStatus = request.UserDevice.PStatus,
+                                PData = request.UserDevice.PData,
+                                PControl = request.UserDevice.PControl,
+                            });
+                        }
+
+                      
                     }
                 }
 

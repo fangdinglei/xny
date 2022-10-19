@@ -86,6 +86,18 @@ namespace MyDBContext.Main
             }
 
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creator"></param>
+        /// <param name="ct"></param>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        static public async Task<bool> IsDirectFatherAsync(this long creator, MainContext ct, long uid)
+        { 
+            var r = await ct.Users.Where(it => it.Id == uid && it.CreatorId == creator).CountAsync();
+            return r != 0; 
+        }
 
         /// <summary>
         /// 获取所有用户可访问的实体
