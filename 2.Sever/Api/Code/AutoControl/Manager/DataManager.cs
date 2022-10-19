@@ -1,9 +1,7 @@
 ﻿
 using System;
-using System.Linq;
 using XNYAPI.AutoControl.Script;
 using XNYAPI.AutoControl.Script.Model;
-using XNYAPI.DAL;
 using XNYAPI.Utility;
 
 namespace XNYAPI.AutoControl
@@ -32,21 +30,21 @@ namespace XNYAPI.AutoControl
                 string cur = "";
                 while (cur != null)
                 {
-                    var onenetrsp2 = OneNetUtility.GetClient().Execute(new OneNET.Api.Request.GetDataPointsRequest()
-                    {
-                        DeviceID = realid,
-                        DataStreamId = streamids,
-                        StartTimeTxt = OneNetUtility.fmtDateTime(last),
-                        EndTimeTxt = OneNetUtility.fmtDateTime(now),
-                        Cursor = cur
-                    });
+                    //var onenetrsp2 = OneNetUtility.GetClient().Execute(new OneNET.Api.Request.GetDataPointsRequest()
+                    //{
+                    //    DeviceID = realid,
+                    //    DataStreamId = streamids,
+                    //    StartTimeTxt = OneNetUtility.fmtDateTime(last),
+                    //    EndTimeTxt = OneNetUtility.fmtDateTime(now),
+                    //    Cursor = cur
+                    //});
                     //todo error
-                    foreach (var stream in onenetrsp2.Data.Datastreams)
-                    {
-                        DataServiceDAL.AddDataPoints(ownerid, stream.ID, stream.Datapoints.Select((it) => (DateTime.Parse(it.At),
-                           valueselector((string)it.Value.Value))).ToList());
-                    }
-                    cur = onenetrsp2.Data.Cursor;
+                    //foreach (var stream in onenetrsp2.Data.Datastreams)
+                    //{
+                    //    DataServiceDAL.AddDataPoints(ownerid, stream.ID, stream.Datapoints.Select((it) => (DateTime.Parse(it.At),
+                    //       valueselector((string)it.Value.Value))).ToList());
+                    //}
+                    //cur = onenetrsp2.Data.Cursor;
                 }
             }
         }

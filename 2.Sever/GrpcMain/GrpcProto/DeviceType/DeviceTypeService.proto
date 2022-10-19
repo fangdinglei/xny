@@ -14,7 +14,7 @@ service DeviceTypeService {
 
     //更新设备类型信息
     rpc UpdateTypeInfo(DTODefine.Request_UpdateTypeInfo)
-        returns (GrpcMain.Common.CommonResponse);
+        returns (CommonResponse);
 
 }
 

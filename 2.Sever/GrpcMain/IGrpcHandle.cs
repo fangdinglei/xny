@@ -4,10 +4,14 @@ using MyJwtHelper;
 namespace GrpcMain
 {
 
+
+
+
+
     /// <summary>
     /// GRPC服务的鉴权\日志等处理器
     /// </summary>
-    public interface IGrpcHandle
+    public interface IGrpcAuthorityHandle
     {
         public string GetToken(TokenClass tokenClass);
         public Task<(bool, string?)> Authorize(ServerCallContext context, GrpcRequireAuthorityAttribute att);

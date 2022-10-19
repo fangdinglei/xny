@@ -39,6 +39,7 @@ namespace MyDBContext.Main
         public DbSet<Device_AutoControl_Settings_Item> Device_AutoControl_Settings_Items { get; set; }
         public DbSet<User_Op_Audit> User_Op_Audits { get; set; }
         public DbSet<Device_DataPoint> Device_DataPoints { get; set; }
+        public DbSet<Device_DataPoint_Cold> Device_DataPoint_Colds { get; set; }
         public DbSet<Internal_Mail> Internal_Mails { get; set; }
 
         static SqliteConnection? _connection;

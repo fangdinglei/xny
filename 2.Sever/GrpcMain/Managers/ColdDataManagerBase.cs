@@ -5,7 +5,6 @@ namespace GrpcMain.Managers
     public abstract class ColdDataManagerBase
     {
 
-
         public abstract string Name { get; }
 
         /// <summary>
@@ -22,13 +21,25 @@ namespace GrpcMain.Managers
         public abstract Task<byte[]> Load(Device_DataPoint_Cold colddata);
 
         static Dictionary<string, ColdDataManagerBase> mgrs = new();
+        static ColdDataManagerBase()
+        {
+            foreach (var tp in typeof(ColdDataManagerBase).Assembly.GetTypes())
+            {
+                if (tp.BaseType == typeof(ColdDataManagerBase))
+                {
+                    var mgr = (ColdDataManagerBase)Activator.CreateInstance(tp);
+                    mgrs.Add(mgr.Name, mgr);
+                }
+            }
+        }
         static public async Task DoStore(Device_DataPoint_Cold colddata)
         {
             await mgrs[colddata.ManagerName].Store(colddata);
         }
         static public async Task<byte[]> DoLoad(Device_DataPoint_Cold colddata)
         {
-            return await mgrs[colddata.ManagerName].Load(colddata);
+            var bytes = await mgrs[colddata.ManagerName].Load(colddata);
+            return bytes;
         }
     }
 

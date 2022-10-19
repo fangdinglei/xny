@@ -8,9 +8,9 @@ namespace GrpcMain.History
 {
     public class HistoryServiceImp : HistoryService.HistoryServiceBase
     {
-        IGrpcHandle _handle;
+        IGrpcAuthorityHandle _handle;
         ITimeUtility _timeutility;
-        public HistoryServiceImp(IGrpcHandle handle, ITimeUtility time)
+        public HistoryServiceImp(IGrpcAuthorityHandle handle, ITimeUtility time)
         {
             _handle = handle;
             _timeutility = time;

@@ -5,6 +5,7 @@ using GrpcMain.Managers;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using static GrpcMain.Managers.ColdDataManagerBase;
 
 namespace GrpcMain.DeviceData
 {
@@ -32,11 +33,11 @@ namespace GrpcMain.DeviceData
                     bd = bd.AsNoTracking().Take(maxcout);
                     cursor = 0;
                     var ls = _grpcCursorUtility.Run(await bd.ToListAsync(), maxcout, (it) => cursor = it.Id);
-                    if (ls.Count == 0)
+                    if (ls.Count() == 0)
                         continue;
                     Device_DataPoint_Cold cold = new Device_DataPoint_Cold()
                     {
-                        Count = ls.Count,
+                        Count = ls.Count(),
                         CreatTime = _timeutility.GetTicket(),
                         StartTime = ls.First().Time,
                         EndTime = ls.Last().Time,
@@ -45,10 +46,10 @@ namespace GrpcMain.DeviceData
                     };
                     using MemoryStream ms = new MemoryStream(ls.Count() * (4 + 4));
                     using BinaryWriter binaryWriter = new BinaryWriter(ms);
-                    foreach (var item in ls)
+                    foreach (var point in ls)
                     {
-                        binaryWriter.Write((int)(item.Time - cold.CreatTime));
-                        binaryWriter.Write(item.Value);
+                        binaryWriter.Write((int)(point.Time - cold.CreatTime));
+                        binaryWriter.Write(point.Value);
                     }
                     cold.Data = ms.GetBuffer();
                     res.Add(cold);
@@ -68,7 +69,7 @@ namespace GrpcMain.DeviceData
             }
             using (MainContext ct = new MainContext())
             {
-                long cursor1 = 0; 
+                long cursor1 = 0;
                 IQueryable<Device_DataPoint> bd = ct.Device_DataPoints;
                 //按时间筛选
                 bd = bd.Where(it => it.Time >= request.StartTime && it.Time < request.EndTime);
@@ -81,7 +82,7 @@ namespace GrpcMain.DeviceData
                     //先选择
                     var ls = await bdx.AsNoTracking().Take(maxcout1).ToListAsync();
                     cursor1 = 0;
-                    var newlist = _grpcCursorUtility.Run(ls, maxcout1, (it) => cursor1 = it.id);
+                    var newlist = _grpcCursorUtility.Run(ls, maxcout1, (it) => cursor1 = it.Id);
 
                     List<Device_DataPoint_Cold> reses = await CompressDeviceData(request.MaxCountOneTime + 1, newlist, bd);
                     foreach (var item in newlist)
@@ -91,12 +92,12 @@ namespace GrpcMain.DeviceData
                         foreach (var colditem in all)
                         {
                             colditem.ManagerName = "TODO";
-                            ColdDataManagerBase.DoStore(colditem);
+                            await ColdDataManagerBase.DoStore(colditem);
                             //TODO 执行压缩 添加冷数据条目
                             ct.Add(colditem);
                             await ct.SaveChangesAsync();
                         }
-                        if (all.Count != 0)
+                        if (all.Count() != 0)
                         {
                             //删除数据点
                             await ct.DeleteRangeAsync<Device_DataPoint>(
@@ -106,9 +107,35 @@ namespace GrpcMain.DeviceData
                         }
                     }
                 } while (cursor1 > 0);
-
+                return new CommonResponse()
+                {
+                    Success = true,
+                };
             }
         }
 
+        public async Task<List<(long, double)>> DeCompressDeviceData(long starttime, long endtime, long deviceid, long streamid)
+        {
+            List<(long, double)> res = new List<(long, double)>();
+            using (MainContext ct = new MainContext())
+            {
+                //时间有交叉部分
+                var colds = await ct.Device_DataPoint_Colds.Where(it => it.StartTime > endtime && it.EndTime <= starttime
+                     && it.DeviceId == deviceid && it.StreamId == streamid
+                 ).OrderBy(it => it.StartTime).AsNoTracking().ToListAsync();
+                foreach (var cold in colds)
+                {
+                    var bytes = await DoLoad(cold);
+                    var br = new BinaryReader(new MemoryStream(bytes));
+                    while (br.BaseStream.Position < br.BaseStream.Length)
+                    {
+                        var t = br.ReadInt32();
+                        var v = br.ReadSingle();
+                        res.Add((starttime + t, v));
+                    }
+                }
+            }
+            return res;
+        }
     }
 }

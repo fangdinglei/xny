@@ -25,7 +25,7 @@ namespace GrpcMain
             services.TryAddSingleton<IGrpcCursorUtility, GrpcCursorUtilityImp>();
 
             //添加处理器
-            services.TryAddSingleton<IGrpcHandle, MyGrpcHandle>();
+            services.TryAddSingleton<IGrpcAuthorityHandle, MyGrpcHandle>();
             //开启GRPC
             services.AddGrpc(op =>
             {
@@ -53,7 +53,7 @@ namespace GrpcMain
             app.MapGrpcService<DeviceTypeServiceImp>();
             app.MapGrpcService<InternalMailServiceImp>();
             app.MapGrpcService<HistoryServiceImp>();
-            foreach (var item in typeof(IGrpcHandle).Assembly.GetTypes())
+            foreach (var item in typeof(IGrpcAuthorityHandle).Assembly.GetTypes())
             {
                 var att = item.GetCustomAttribute<BindServiceMethodAttribute>();
                 if (att == null)
@@ -93,7 +93,7 @@ namespace GrpcMain
         }
 
 
-        internal class MyGrpcHandle : IGrpcHandle
+        internal class MyGrpcHandle : IGrpcAuthorityHandle
         {
             MyGrpcHandleCongig _config;
             IJwtHelper _jwtHelper;

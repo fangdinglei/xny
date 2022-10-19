@@ -6,52 +6,56 @@ import "google/protobuf/empty.proto";
 import "Common/CommonResponse.proto";
 service DeviceDataService {
     //获取设备最新的数据
-    rpc GetLatestData(DTODefine.Request_GetLatestData)
-        returns (DTODefine.Response_GetLatestData);
+    rpc GetLatestData(Request_GetLatestData)
+        returns (Response_GetLatestData);
 
     //获取设备数据
-    rpc GetDataPoints(DTODefine.Request_GetDataPoints)
-        returns (DTODefine.Response_GetDataPoints);
+    rpc GetDataPoints(Request_GetDataPoints)
+        returns (Response_GetDataPoints);
+    //获取设备冷数据
+    rpc GetColdDataPoints(Request_GetDataPoints)
+        returns (Response_GetDataPoints);
+
 
 }
 
-
-message DTODefine
-{  
-    message DataPoinet{
-        int64 Dvid=1;
-        int64 Time=2;
-        float Value=3;
-    }
-    message DataStream{
-        int64 StreamId=1;
-        string StreamName=2; 
-        repeated DataPoinet Points=3;
-    } 
-
-    message Request_GetLatestData{
-        int64 Dvid=1;
-    }   
-    message Response_GetLatestData{
-        int64 Dvid=1;
-        string Streams=2;
-    } 
-
-    message Request_GetDataPoints{
-        int64 Dvid=1;
-        optional int64 Starttime=2;
-        optional int64 Endtime=3;
-        repeated int64 StreamId=4;
-        optional int32 MaxCount=5;
-        optional int64 Cursor=6; 
-    }
-    message Response_GetDataPoints{
-        int64 Dvid=1;
-        repeated DataStream Streams=2;
-        //0则后续无数据
-        int64 Cursor=3; 
-    }
-    
-    
+message DataPoinet{
+   
+    int64 Time=2;
+    float Value=3;
 }
- 
+message DataStream{
+    int64 Dvid=1;
+    int64 StreamId=2;
+    string StreamName=3; 
+    repeated DataPoinet Points=4;
+} 
+
+message Request_GetLatestData{
+    int64 Dvid=1;
+}   
+message Response_GetLatestData{
+    int64 Dvid=1;
+    string Streams=2;
+} 
+
+message Request_GetDataPoints{
+    int64 Dvid=1;
+    optional int64 Starttime=2;
+    optional int64 Endtime=3;
+    int64 StreamId=4;
+    //对获取冷数据 该值只提供参考 具体返回数量和数据压缩数量有关
+    optional int32 MaxCount=5;
+    optional int64 Cursor=6; 
+    //传入是否使用冷数据
+    bool ColdData=7;
+}
+message Response_GetDataPoints{
+    int64 Dvid=1;
+    DataStream Stream=2;
+    //0则后续无数据
+    int64 Cursor=3; 
+    //下一次是否使用冷数据
+    bool ColdDataCursor=4;
+}
+    

@@ -9,9 +9,9 @@ namespace GrpcMain.Account
 {
     public class AccountServiceImp : AccountService.AccountServiceBase
     {
-        IGrpcHandle _handle;
+        IGrpcAuthorityHandle _handle;
         ITimeUtility _timeutility;
-        public AccountServiceImp(IGrpcHandle handle, ITimeUtility time)
+        public AccountServiceImp(IGrpcAuthorityHandle handle, ITimeUtility time)
         {
             _handle = handle;
             _timeutility = time;

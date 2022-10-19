@@ -38,7 +38,7 @@ namespace XNYAPI.Utility
 #if SEVERONLY
                         suc = true;
 #else
-                        suc = OneNetUtility.SendCMD(realid, cmdstr);
+                        //suc = OneNetUtility.SendCMD(realid, cmdstr);
 #endif
 
                     }
@@ -46,11 +46,11 @@ namespace XNYAPI.Utility
                     {
                         suc = false;
                     }
-                    if (suc)
-                    {
-                        re.Add(id);
-                        DeviceDAL.AddCMD(id, cmdstr, cmd);
-                    }
+                    //if (suc)
+                    //{
+                    //    re.Add(id);
+                    //    DeviceDAL.AddCMD(id, cmdstr, cmd);
+                    //}
                 }
             }
             return re;

@@ -6,8 +6,8 @@ namespace GrpcMain
     public class GrpcInterceptor : Interceptor
     {
         static public Dictionary<string, GrpcRequireAuthorityAttribute> AuthorityAttributes = new Dictionary<string, GrpcRequireAuthorityAttribute>();
-        IGrpcHandle _Handle;
-        public GrpcInterceptor(IGrpcHandle handle)
+        IGrpcAuthorityHandle _Handle;
+        public GrpcInterceptor(IGrpcAuthorityHandle handle)
         {
             _Handle = handle;
         }

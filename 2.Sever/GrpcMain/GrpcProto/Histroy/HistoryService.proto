@@ -8,10 +8,10 @@ service HistoryService {
         returns (DTODefine.Response_GetHistory);
 
     rpc DeletHistory(DTODefine.Request_DeletHistory)
-        returns (Common.CommonResponse);
+        returns (CommonResponse);
 
     rpc DeletHistorys(DTODefine.Request_DeletHistorys)
-        returns (Common.CommonResponse);
+        returns (CommonResponse);
 
 }
 

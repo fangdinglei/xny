@@ -1,8 +1,6 @@
 ﻿
 using System;
 
-using XNYAPI.DAL;
-
 namespace XNYAPI.Utility
 {
     [TimerMvcWeb.Filters.AutoTask(Name = "RefreshDevices", OnLoadCall = "RefreshDevices")]
@@ -29,24 +27,24 @@ namespace XNYAPI.Utility
 
                     try
                     {
-                        var pdvs = OneNetUtility.GetDevices();
+                        //var pdvs = OneNetUtility.GetDevices();
 
                         //cmd.Transaction = cnn.BeginTransaction();
-                        var sysid = AccountDAL.GetSystemUserID();
-                        foreach (var dv in pdvs)
-                        {
-                            if (!dv.Id.IsSqlSafeString() || !dv.Title.IsSqlSafeString())
-                                continue;
-                            if (!DeviceDAL.HasDeviceOfRealID(dv.Id, cmd))
-                            {
-                                var iddv = DALUtility.GetID(2, cmd);
-                                cmd.CommandText = $"INSERT IGNORE INTO deviceinfo (DeviceID,DeviceName,Location,DeviceRealID,Type)VALUES({iddv} ,'{dv.Title}','未知','{dv.Id}',0);" +
-                                $"INSERT IGNORE INTO userdevice (UserID,DeviceID,GroupID)VALUES({sysid},{iddv},0); ";
+                        //var sysid = AccountDAL.GetSystemUserID();
+                        //foreach (var dv in pdvs)
+                        //{
+                        //    if (!dv.Id.IsSqlSafeString() || !dv.Title.IsSqlSafeString())
+                        //        continue;
+                        //    if (!DeviceDAL.HasDeviceOfRealID(dv.Id, cmd))
+                        //    {
+                        //        var iddv = DALUtility.GetID(2, cmd);
+                        //        cmd.CommandText = $"INSERT IGNORE INTO deviceinfo (DeviceID,DeviceName,Location,DeviceRealID,Type)VALUES({iddv} ,'{dv.Title}','未知','{dv.Id}',0);" +
+                        //        $"INSERT IGNORE INTO userdevice (UserID,DeviceID,GroupID)VALUES({sysid},{iddv},0); ";
 
-                                cmd.ExecuteNonQuery();
-                            }
+                        //        cmd.ExecuteNonQuery();
+                        //    }
 
-                        }
+                        //}
                         //cmd.Transaction.Commit();
                         return true;
                     }

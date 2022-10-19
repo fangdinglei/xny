@@ -13,5 +13,5 @@ service ColdDataService {
 message Request_CompressDeviceData{
     int64 StartTime=1;
     int64 EndTime=2; 
-    optional int64 MaxCountOneTime=3;
+    optional int32 MaxCountOneTime=3;
 }
