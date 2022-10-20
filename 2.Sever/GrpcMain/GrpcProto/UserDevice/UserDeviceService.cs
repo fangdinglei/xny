@@ -144,6 +144,10 @@ namespace GrpcMain.UserDevice
                 {
                     bd = bd.Where(it => it.userdeive.User_Device_GroupId == request.GroupId);
                 }
+                if (request.HasTypeId)
+                {
+                    bd = bd.Where(it => it.device.DeviceTypeId == request.TypeId);
+                }
                 if (request.HasCursor)
                 {
                     bd = bd.Where(it => it.device.Id >= request.Cursor);

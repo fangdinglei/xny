@@ -66,7 +66,7 @@ message DTODefine
         int64 UserId=3;
     }
 
-    message Response_GetGroupInfos{
+    message Response_GetGroupInfos{ 
         repeated  User_Device_Group Groups=1; 
     }
 
@@ -93,6 +93,8 @@ message DTODefine
         //设备ID
         optional int64 Cursor=1;
         optional int64 GroupId=2;
+        optional int64 TypeId=3;
+
     }
     message DeviceWithUserDeviceInfo{
         GrpcMain.Device.DTODefine.Device Device=1;
