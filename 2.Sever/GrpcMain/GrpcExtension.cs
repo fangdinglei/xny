@@ -23,7 +23,7 @@ namespace GrpcMain
             services.Configure<MyGrpcHandleCongig>(op => op.JwtKey = jwtkey);
             services.TryAddSingleton<IJwtHelper, JwtHelper>();
             services.TryAddSingleton<IGrpcCursorUtility, GrpcCursorUtilityImp>();
-
+            services.TryAddSingleton<IDeviceColdDataHandle, DeviceColdDataHandleImp>();
             //添加处理器
             services.TryAddSingleton<IGrpcAuthorityHandle, MyGrpcHandle>();
             //开启GRPC

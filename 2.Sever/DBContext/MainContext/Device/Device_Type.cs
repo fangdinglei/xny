@@ -7,6 +7,7 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
@@ -15,11 +16,12 @@ namespace MyDBContext.Main
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-        public string Name { get; set; }
-        public string DataPoints { get; set; }
+        public string Name { get; set; } 
         public string Script { get; set; }
 
         public long CreatorId { get; set; }
         public virtual User Creator { get; }
+
+        public virtual List<ThingModel> ThingModels { get; set; }
     }
 }

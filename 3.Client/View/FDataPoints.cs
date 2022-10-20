@@ -95,7 +95,7 @@ namespace MyClient.View
                 Application.DoEvents();
             }
             var ds = new List<DeviceWithUserDeviceInfo>();
-            foreach (int item in CDevice.SelectedIndices)
+            foreach (int item in CDevice.CheckedIndices)
             {
                 ds.Add(devices[item].Value);
             }
@@ -124,7 +124,7 @@ namespace MyClient.View
                     Dvid = dev.Device.Id,
                     ColdData = false,
                 });
-                List<object[]> dps = res.Stream.Points.Select(it => new object[] { it.Time, it.Value }).ToList();
+                List<object[]> dps = res.Stream.Points.Select(it => new object[] { it.Time*1000, it.Value }).ToList();
                 obj.Add(new Dictionary<string, object>() {
                     { "Name",dev.Device.Name},
                     { "Data", dps },
@@ -134,17 +134,9 @@ namespace MyClient.View
         }
         void LoadAllStreamName(TypeInfo type)
         {
-            thingModels = null;
-            if (type.DataPoints.TryDeserializeObject(out thingModels))
-            {
-                CStreamName.DataSource =
-             thingModels.Select(it => it.Name).ToList();
-            }
-            else
-            {
-
-            }
-
+            thingModels =   type.ThingModels.ToList();
+            CStreamName.DataSource =
+            thingModels.Select(it => it.Name).ToList();
         }
 
 

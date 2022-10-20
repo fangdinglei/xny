@@ -9,7 +9,7 @@
 //
 
 
-namespace MyDBContext
+namespace MyDBContext.Main
 {
     public enum ThingModelValueType { 
         None,

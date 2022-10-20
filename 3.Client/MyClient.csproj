@@ -37,4 +37,16 @@
 	  <ProjectReference Include="..\1.Utility\MyUtility\MyUtility.csproj" />
 	  <ProjectReference Include="..\2.Sever\EnumDefines\EnumDefines.csproj" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="ECHART\echarts.js">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="ECHART\echarts.min.js">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="ECHART\index.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>

@@ -6,8 +6,7 @@ using GrpcMain.UserDevice;
 using System.Data;
 using System.Runtime.InteropServices;
 using static GrpcMain.DeviceType.DTODefine.Types;
-using static GrpcMain.UserDevice.DTODefine.Types;
-using TypeInfo = GrpcMain.DeviceType.DTODefine.Types.TypeInfo;
+using static GrpcMain.UserDevice.DTODefine.Types; 
 
 namespace MyClient.View
 {

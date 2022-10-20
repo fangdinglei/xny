@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -106,7 +107,7 @@ namespace MyDBContext.Main
         static public async Task<List<TEntity>> GetEntityOfAccessible<TEntity>(this DbSet<TEntity> dbset, MainContext ct, long uid
             , int takecount = -1, long cursor = -1
             , bool fathervisitson = false, bool sonvisitfather = false, bool trace = false
-            , ICollection<long> wantedids = null) where TEntity : class, IHasCreator
+            , ICollection<long> wantedids = null,Func<IQueryable<TEntity>, IQueryable<TEntity>>filter=null ) where TEntity : class, IHasCreator
         {
             IQueryable<TEntity> bd;
             if (fathervisitson && sonvisitfather)
@@ -147,6 +148,10 @@ namespace MyDBContext.Main
             if (takecount > 0)
             {
                 bd = bd.Take(takecount);
+            }
+            if (filter!=null)
+            {
+                bd = filter(bd);
             }
             if (!trace)
             {

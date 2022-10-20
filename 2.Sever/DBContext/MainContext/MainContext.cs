@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Org.BouncyCastle.Utilities.Date;
+using System.Collections.Generic;
 using System.Diagnostics;
 //Add-Migration [--context MainContext]
 //Remove-Migration 取消最近一次迁移
@@ -386,21 +388,31 @@ namespace MyDBContext.Main
             #endregion
 
             #region 设备添加
+            modelBuilder.Entity<ThingModel>().HasData(new ThingModel()
+            {
+                Id = 1,
+                DeviceTypeId = 1, 
+                MinValue = 0,
+                MaxValue = 100,
+                Name = "温度",
+                Remark = "备注温度",
+                Unit = "摄氏度",
+                Abandonted = false,
+            }); 
             modelBuilder.Entity<Device_Type>().HasData(
-                new Device_Type()
-                {
-                    Id = 1,
-                    Name = "测试类型1",
-                    CreatorId = 2,
-                    DataPoints = "[]",
-                    Script = "",
-                }
+               new Device_Type()
+               {
+                   Id = 1,
+                   Name = "测试类型1",
+                   CreatorId = 2,
+                   Script = "", 
+               }
                 , new Device_Type()
                 {
                     Id = 2,
                     Name = "测试类型2",
                     CreatorId = 2,
-                    DataPoints = "[]",
+                    ThingModels = new List<ThingModel>(),
                     Script = "",
                 }
 
@@ -509,7 +521,25 @@ namespace MyDBContext.Main
             );
             #endregion
 
-
+            #region 数据点
+            modelBuilder.Entity<Device_DataPoint>().HasData(
+                    new Device_DataPoint() { 
+                        Id=1,
+                        DeviceId = 1,
+                        StreamId = 1,
+                        Time=DateTimeUtilities.DateTimeToUnixMs( System.DateTime.Now.AddHours(-8))/1000,
+                        Value=90, 
+                    },
+                     new Device_DataPoint()
+                     {
+                         Id = 2,
+                         DeviceId =2,
+                         StreamId = 1,
+                         Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
+                         Value = 80,
+                     }
+                );
+            #endregion
 
         }
     }

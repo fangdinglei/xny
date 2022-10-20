@@ -17,16 +17,28 @@ service DeviceTypeService {
         returns (CommonResponse);
 
 }
+message  ThingModel{
+    int64 Id=1;
+    string Name=2;
+    int32 ValueType=3;
+    string Remark=4;
+    string  Unit=5;
+    float MinValue=6;
+    float MaxValue =7;
+    bool Abandonted=8;
+}   
+
+message TypeInfo{
+    int64 Id=1;
+    optional string Name=2;
+    repeated ThingModel ThingModels=3;
+    optional string Script=5;
+}
 
 
 message DTODefine
 {   
-    message TypeInfo{
-        int64 Id=1;
-        optional string Name=2;
-        optional string DataPoints=3;
-        optional string Script=4;
-    }
+    
     message Request_GetTypeInfos{ 
         //当不指定Ids才使用Cursor
        optional int64 Cursor=1; 

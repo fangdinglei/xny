@@ -8,7 +8,7 @@
 //dotnet ef -h
 //
 
-namespace MyDBContext
+namespace MyDBContext.Main
 {
     /// <summary>
     /// 用户历史记录类型

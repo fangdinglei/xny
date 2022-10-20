@@ -93,7 +93,7 @@ namespace MyClient.View
                     throw new Exception();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 OnFailure();
             }
