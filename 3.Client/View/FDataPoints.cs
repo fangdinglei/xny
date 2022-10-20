@@ -1,6 +1,19 @@
 ﻿//#define TEST
 
 using FdlWindows.View;
+using CefSharp.WinForms;
+using CefSharp.WinForms.Internals;
+using CefSharp;
+using System.Text;
+using GrpcMain.DeviceData;
+using GrpcMain.DeviceType;
+using GrpcMain.Device;
+using GrpcMain.UserDevice;
+using static GrpcMain.UserDevice.DTODefine.Types;
+using System.ComponentModel;
+using static GrpcMain.DeviceType.DTODefine.Types;
+using MyDBContext;
+using MyUtility;
 
 namespace MyClient.View
 {
@@ -10,105 +23,143 @@ namespace MyClient.View
     {
 
         public Control View => this;
-
-        public FDataPoints()
+        IViewHolder _viewHolder;
+        DeviceDataService.DeviceDataServiceClient _deviceDataServiceClient;
+        DeviceTypeService.DeviceTypeServiceClient _deviceTypeServiceClient;
+        DeviceService.DeviceServiceClient _deviceServiceClient;
+        UserDeviceService.UserDeviceServiceClient _userDeviceServiceClient;
+        ITimeUtility _timeUtility;
+        public FDataPoints(DeviceDataService.DeviceDataServiceClient deviceDataServiceClient, DeviceTypeService.DeviceTypeServiceClient deviceTypeServiceClient, DeviceService.DeviceServiceClient deviceServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, ITimeUtility timeUtility)
         {
-            //InitializeComponent(); 
-            //string curDir = Directory.GetCurrentDirectory();
-            //chromiumWebBrowser1.Load(String.Format("file:///{0}/ECHART/index.html", curDir)); 
-            //LoadAllDevcieID(); 
+            InitializeComponent();
+            string curDir = Directory.GetCurrentDirectory();
+            chromiumWebBrowser1.Load(String.Format("file:///{0}/ECHART/index.html", curDir));
+            _deviceDataServiceClient = deviceDataServiceClient;
+            _deviceTypeServiceClient = deviceTypeServiceClient;
+            _deviceServiceClient = deviceServiceClient;
+            _userDeviceServiceClient = userDeviceServiceClient;
+            _timeUtility = timeUtility;
         }
 
-        //void RefreshChart( )
-        //{
-        //    var ds =XNYAPI.Utilitys.Utility.GetTicket_S(dateTimePicker.Value.Date) ;
-        //    var de = XNYAPI.Utilitys.Utility.GetTicket_S(dateTimePicker.Value.Date.AddDays(1).AddMinutes(-1));
-        //    GetDataStreamsResponse res = null;
-        //    try
-        //    {
-        //        res= Global.client.Exec(
-        //            new GetDataStreamsRequest(
-        //                new List<uint>() { devices[CDevice.SelectedIndex].ID },
-        //            new List<string>() { CStreamName.SelectedItem.ToString() } ,
-        //        ds,de )); 
-        //    }
-        //    catch (Exception e)
-        //    { 
-        //        MessageBox.Show("错误：无法获取数据流");
-        //        return;
-        //    }
-        //    if (res.Data.Count == 0 || res.Data[0].Streams.Count == 0 ||
-        //        res.Data[0].Streams[0].Points.Count == 0) {
-        //        if (chromiumWebBrowser1.IsBrowserInitialized)
-        //        {
-        //            chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs", "[]");
-        //        } 
-        //        return;
-        //    }
+        BindingList<ToStringHelper<DeviceWithUserDeviceInfo>> devices;
+        List<TypeInfo> types;
+        List<ThingModel> thingModels;
+        async Task PreGetData()
+        {
+            var res2 = await _deviceTypeServiceClient.GetTypeInfosAsync(new GrpcMain.DeviceType.DTODefine.Types.Request_GetTypeInfos()
+            {
+
+            });
+            types = res2.TypeInfos.ToList();
+
+
+            var res = await _userDeviceServiceClient.GetDevicesAsync(new GrpcMain.UserDevice.DTODefine.Types.Request_GetDevices
+            { });
+            var lsx = res.Info.Select(it => new ToStringHelper<DeviceWithUserDeviceInfo>
+            (it, (it) => it.Device.Id + ":" + it.Device.Name)).ToList();
+            devices = new BindingList<ToStringHelper<DeviceWithUserDeviceInfo>>(lsx);
+            CDevice.DataSource = devices;
+
+            CDevice.SelectedIndex = -1;
+            CDevice.SelectedIndex = 0;
+        }
 
 
 
-        //    string htmlstr = GetDataStr(res.Data[0].Streams[0].Points); 
-        //    while (!chromiumWebBrowser1.IsBrowserInitialized || chromiumWebBrowser1.IsLoading)
-        //    {
-        //        Application.DoEvents();
-        //    }
-        //    chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs",htmlstr);
-        //}
-        //List<UserDeviceInfo> devices;
-        //void LoadAllDevcieID()
-        //{
-        //    try
-        //    {
-        //       var res = Global.client.Exec(
-        //           new  GetUserAllDeviceInfoRequest()
-        //           );
-        //        if (res.IsError)
-        //            throw new Exception();
-        //        devices = res.Data;
-        //        CDevice.DataSource = res.Data.Select(it=>it.Name).ToList();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
+        public void SetContainer(Control container)
+        {
 
-        //    //if (ls.Count > 0)
-        //    //    LoadAllStreamName(ls[0]);
-        //}
-        //void LoadAllStreamName(string deciceid)
-        //{  
-        //    //将数据流信息加载到数据流下拉框中
-        //    List<string> dataStreams = new List<string>() {  
-        //        "Temperature","Lumination","Humidity","eCO2","Power_in","Power_out"
-        //    }; 
-        //    //绑定数据源
-        //    CStreamName.DataSource = dataStreams;
-        //}
-        //string GetDataStr(List<DataPoint> points)
-        //{
-        //    if (points.Count == 0)
-        //        return "[];";
-        //    StringBuilder sb = new StringBuilder();
-        //    sb.Append("[");
-        //    foreach (var point in points)
-        //    {
-        //        sb.Append("{");
-        //        sb.Append("\'name\':");
-        //        sb.Append(point.Time);
-        //        sb.Append(",");
-        //        sb.Append("\'value\':[");
-        //        sb.Append(point.Time);
-        //        sb.Append(",");
-        //        sb.Append(Newtonsoft.Json.JsonConvert.DeserializeObject<float>(point.Value.ToString()));
-        //        sb.Append("]},");
-        //    }
-        //    sb.Remove(sb.Length - 1, 1);
-        //    sb.Append("]");
+        }
 
-        //    return sb.ToString();
-        //} 
+        public void OnEvent(string name, params object[] pars)
+        {
+        }
 
+
+        async void RefreshChart()
+        {
+            while (!chromiumWebBrowser1.IsBrowserInitialized || chromiumWebBrowser1.IsLoading)
+            {
+                Application.DoEvents();
+            }
+            string htmlstr = await GetDataStr(thingModels[CStreamName.SelectedIndex], devices[CDevice.SelectedIndex].Value);
+            chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs", htmlstr);
+        }
+
+        async Task<string> GetDataStr(ThingModel model, DeviceWithUserDeviceInfo devinfo)
+        {
+            DateTime ds = dateTimePicker.Value, de = dateTimePicker.Value;
+            ds = new DateTime(ds.Year, ds.Month, ds.Day);
+            de = ds.AddDays(1);
+            var res = await _deviceDataServiceClient.GetDataPointsAsync(new Request_GetDataPoints()
+            {
+                Starttime = _timeUtility.GetTicket(ds),
+                Endtime = _timeUtility.GetTicket(de),
+                StreamId = model.Id,
+                Dvid = devinfo.Device.Id,
+                ColdData = false,
+            });
+            var points = res.Stream.Points.ToList();
+            if (points.Count == 0)
+                return "[];";
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[");
+            foreach (var point in points)
+            {
+                sb.Append("{");
+                sb.Append("\'name\':");
+                sb.Append(point.Time);
+                sb.Append(",");
+                sb.Append("\'value\':[");
+                sb.Append(point.Time);
+                sb.Append(",");
+                sb.Append(point.Value);
+                sb.Append("]},");
+            }
+            sb.Remove(sb.Length - 1, 1);
+            sb.Append("]");
+
+            return sb.ToString();
+        }
+        void LoadAllStreamName(DeviceWithUserDeviceInfo dev)
+        {
+            var type = types.Where(it => it.Id == dev.Device.DeviceTypeId).FirstOrDefault();
+            if (type == null)
+            {
+                CStreamName.DataSource = null;
+            }
+            else
+            {
+                type.DataPoints.TryDeserializeObject(out thingModels);
+                if (thingModels != null)
+                {
+                    CStreamName.DataSource = thingModels.Select(it => it.Name).ToList();
+                }
+            }
+        }
+        //todo 异常校验
+        private void dateTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+             if (CStreamName.SelectedIndex < 0)
+                 return;
+             RefreshChart();
+        }
+        private void CDevice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (devices == null || CDevice.SelectedIndex < 0 || CDevice.SelectedIndex >= devices.Count)
+                return;
+
+            LoadAllStreamName(devices[CDevice.SelectedIndex].Value); 
+        }
+        private void CStreamName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (devices == null || CDevice.SelectedIndex < 0 || CDevice.SelectedIndex >= devices.Count || CStreamName.SelectedIndex < 0)
+                return;
+            RefreshChart();
+        }
+        
+        
+        
         public void PrePare(params object[] par)
         {
             if (par.Count() == 1)
@@ -124,42 +175,24 @@ namespace MyClient.View
                     }
                 }
             }
+            else
+            {
+                _viewHolder.ShowLoading(this, async () => { await PreGetData(); return true; },
+                    okcall: () =>
+                    {
 
-        }
+                    },
+                    exitcall: () =>
+                    {
+                        _viewHolder.Back();
+                    });
+            }
 
-        private void CDevice_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //if (CDevice.SelectedIndex < 0)
-            //    return;
-            //LoadAllStreamName(CDevice.SelectedItem.ToString());
-        }
-
-        private void CStreamName_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //if (CStreamName.SelectedIndex < 0)
-            //    return;
-            //RefreshChart(); 
-        }
-
-        public void SetContainer(Control container)
-        {
-
-        }
-
-        public void OnEvent(string name, params object[] pars)
-        {
-        }
-
-        private void dateTimePicker_ValueChanged(object sender, EventArgs e)
-        {
-            //    if (CStreamName.SelectedIndex < 0)
-            //        return;
-            //    RefreshChart();
         }
 
         public void SetViewHolder(IViewHolder viewholder)
         {
-
+            _viewHolder = viewholder;
         }
 
         public void OnTick()

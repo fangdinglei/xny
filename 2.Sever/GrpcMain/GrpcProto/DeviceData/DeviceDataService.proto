@@ -27,7 +27,7 @@ message DataPoinet{
 message DataStream{
     int64 Dvid=1;
     int64 StreamId=2;
-    string StreamName=3; 
+    //string StreamName=3; 
     repeated DataPoinet Points=4;
 } 
 

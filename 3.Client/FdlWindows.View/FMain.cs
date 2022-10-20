@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MyClient.View;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace FdlWindows.View
 {
@@ -166,6 +167,14 @@ namespace FdlWindows.View
                 }
             }
             var iname = NameofViewInstance[view];
+            if (highlighting != null && iname==highlighting.Tag)
+            {
+                highlighting.BackColor = Color.White;
+                highlighting.ForeColor = Color.Black;
+                highlighting = null;
+            }
+
+
             if (IsLoading(view) || Views[iname].Count > MaxSameViewInstance)
             {
                 NameofViewInstance.Remove(view);
@@ -173,8 +182,11 @@ namespace FdlWindows.View
             }
             else
             {
+                view.View.Visible = false;
                 Views[iname].Enqueue(view);
             }
+         
+
         }
         /// <summary>
         /// 获取一个界面或者创建一个界面
@@ -308,7 +320,7 @@ namespace FdlWindows.View
         public void Back()
         {
             FormExitEventArg arg;
-            if (Windows.Count > 1)
+            if (Windows.Count >= 1)
             {
                 IView view = Windows.Pop();
                 arg = new FormExitEventArg();

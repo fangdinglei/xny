@@ -44,7 +44,7 @@ namespace MyClient.FdlWindows.View
             var vs = dateTimePicker1.Value;
             var ve = dateTimePicker2.Value;
             okcall.Invoke(new DateTime(vs.Year, vs.Month, vs.Day)
-                , new DateTime(ve.Year, ve.Month, ve.Day, 23, 59, 59));
+                , new DateTime(ve.Year, ve.Month, ve.Day).AddDays(1));
         }
     }
 }

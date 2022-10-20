@@ -20,8 +20,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <PackageReference Include="CefSharp.WinForms" Version="106.0.260" />
-	  <PackageReference Include="CefSharp.WinForms.ChromiumWebBrowserExtensions" Version="83.4.20.2" />
+	  <PackageReference Include="CefSharp.WinForms.NETCore" Version="106.0.290" />
 	  <PackageReference Include="Google.Protobuf" Version="3.21.7" />
 	  <PackageReference Include="Grpc.Core" Version="2.46.5" />
 	  <PackageReference Include="Grpc.Net.Client" Version="2.49.0" />

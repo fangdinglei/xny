@@ -8,17 +8,12 @@
 //dotnet ef -h
 //
 
+
 namespace MyDBContext
 {
-    /// <summary>
-    /// 用户历史记录类型
-    /// </summary>
-    public enum HistoryType
-    {
-        Unknown,
-        Login,
-        SendDeviceCmd,
+    public enum ThingModelValueType { 
+        None,
+        Int,
+        Float,
     }
 }
-
- 
