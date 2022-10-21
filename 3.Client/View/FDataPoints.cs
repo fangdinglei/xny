@@ -75,7 +75,8 @@ namespace MyClient.View
 
         void ClearChart()
         {
-
+            chromiumWebBrowser1.ExecuteScriptAsync("clear_fromcs()");
+      
         }
         async void RefreshChart()
         {
@@ -99,11 +100,23 @@ namespace MyClient.View
             {
                 ds.Add(devices[item].Value);
             }
-
-            string data = await GetDataStr(thingModels[CStreamName.SelectedIndex], ds);
-            chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs",
-                Newtonsoft.Json.JsonConvert.SerializeObject(ds.Select(it=>it.Device.Name).ToList())
-                , data); ;
+            try
+            {
+                string data = await GetDataStr(thingModels[CStreamName.SelectedIndex], ds);
+                var ts = dateTimePicker1.Value;
+                ts = new DateTime(ts.Year,ts.Month,ts.Day);
+                var te = dateTimePicker2.Value;
+                te = new DateTime(te.Year, te.Month, te.Day);
+                chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs",
+                    Newtonsoft.Json.JsonConvert.SerializeObject(ds.Select(it => it.Device.Name).ToList())
+                    , data,_timeUtility.GetTicket(ts)*1000, _timeUtility.GetTicket(te) * 1000); ;
+            }
+            catch (Exception ex)
+            {
+                ClearChart();
+                MessageBox.Show("错误:"+ex.Message,"错误");
+            }
+         
 
         }
 
@@ -169,12 +182,12 @@ namespace MyClient.View
             CDevice.DataSource = devices;
             LoadAllStreamName(type);
         }
-        private void CDevice_SelectedValueChanged(object sender, EventArgs e)
-        {
+        private void CDevice_ItemCheck(object sender, ItemCheckEventArgs e)
+        { 
             if (devices == null || CDevice.SelectedIndices.Count == 0 || CDevice.SelectedIndex >= devices.Count)
                 return;
             ClearChart();
-        }
+        } 
         private void CStreamName_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (devices == null || CDevice.SelectedIndex < 0 || CDevice.SelectedIndex >= devices.Count || CStreamName.SelectedIndex < 0)
@@ -228,5 +241,7 @@ namespace MyClient.View
         {
             RefreshChart();
         }
+
+        
     }
 }

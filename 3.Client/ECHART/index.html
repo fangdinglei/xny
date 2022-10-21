@@ -10,10 +10,26 @@
 
     <div id="main" style="width: 90%;height:90%;"></div>
     <script type="text/javascript">
-        function showdata(legend, series) {
-            //参考https://blog.csdn.net/weixin_52546522/article/details/114990816
-            //data = [{ "name": 1596038400000, "value": [1596038400000, 53] }, { "name": 1596039040000, "value": [1596039040000, 51] }, { "name": 1596039680000, "value": [1596039680000, 51] }, { "name": 1596040320000, "value": [1596040320000, 51] }, { "name": 1596040832000, "value": [1596040832000, 58] }, { "name": 1596041472000, "value": [1596041472000, 67] }, { "name": 1596042112000, "value": [1596042112000, 68] }, { "name": 1596042624000, "value": [1596042624000, 54] }, { "name": 1596043264000, "value": [1596043264000, 51] }, { "name": 1596043904000, "value": [1596043904000, 57] }, { "name": 1596044416000, "value": [1596044416000, 52] }, { "name": 1596045056000, "value": [1596045056000, 54] }, { "name": 1596045696000, "value": [1596045696000, 51] }, { "name": 1596046208000, "value": [1596046208000, 51] }, { "name": 1596046848000, "value": [1596046848000, 52] }, { "name": 1596047488000, "value": [1596047488000, 51] }, { "name": 1596048000000, "value": [1596048000000, 53] }, { "name": 1596048640000, "value": [1596048640000, 52] }, { "name": 1596049280000, "value": [1596049280000, 67] }, { "name": 1596049920000, "value": [1596049920000, 59] }, { "name": 1596050432000, "value": [1596050432000, 58] }, { "name": 1596051072000, "value": [1596051072000, 52] }, { "name": 1596051712000, "value": [1596051712000, 55] }, { "name": 1596052224000, "value": [1596052224000, 53] }, { "name": 1596052864000, "value": [1596052864000, 54] }, { "name": 1596053504000, "value": [1596053504000, 54] }, { "name": 1596054016000, "value": [1596054016000, 54] }, { "name": 1596054656000, "value": [1596054656000, 52] }, { "name": 1596055296000, "value": [1596055296000, 54] }, { "name": 1596055808000, "value": [1596055808000, 65] }, { "name": 1596056448000, "value": [1596056448000, 59] }, { "name": 1596057088000, "value": [1596057088000, 55] }, { "name": 1596057600000, "value": [1596057600000, 53] }, { "name": 1596058240000, "value": [1596058240000, 55] }, { "name": 1596058880000, "value": [1596058880000, 54] }, { "name": 1596059520000, "value": [1596059520000, 55] }, { "name": 1596060032000, "value": [1596060032000, 64] }, { "name": 1596060672000, "value": [1596060672000, 57] }, { "name": 1596061312000, "value": [1596061312000, 56] }, { "name": 1596061824000, "value": [1596061824000, 55] }, { "name": 1596062464000, "value": [1596062464000, 55] }, { "name": 1596063104000, "value": [1596063104000, 55] }, { "name": 1596063616000, "value": [1596063616000, 58] }, { "name": 1596064256000, "value": [1596064256000, 79] }, { "name": 1596064896000, "value": [1596064896000, 60] }, { "name": 1596065408000, "value": [1596065408000, 63] }, { "name": 1596066048000, "value": [1596066048000, 63] }, { "name": 1596066688000, "value": [1596066688000, 82] }, { "name": 1596067200000, "value": [1596067200000, 81] }, { "name": 1596067840000, "value": [1596067840000, 78] }, { "name": 1596068480000, "value": [1596068480000, 78] }, { "name": 1596069120000, "value": [1596069120000, 65] }, { "name": 1596069632000, "value": [1596069632000, 76] }, { "name": 1596070272000, "value": [1596070272000, 80] }, { "name": 1596070912000, "value": [1596070912000, 78] }, { "name": 1596107040000, "value": [1596107040000, 70] }, { "name": 1596124799000, "value": [1596124799000, 0] }];
-            //data = {@@DATA @@}
+        function dateFormat(fmt, date) {
+            let ret;
+            const opt = {
+                "Y+": date.getFullYear().toString(),        // 年
+                "m+": (date.getMonth() + 1).toString(),     // 月
+                "d+": date.getDate().toString(),            // 日
+                "H+": date.getHours().toString(),           // 时
+                "M+": date.getMinutes().toString(),         // 分
+                "S+": date.getSeconds().toString()          // 秒
+                // 有其他格式化字符需求可以继续添加，必须转化成字符串
+            };
+            for (let k in opt) {
+                ret = new RegExp("(" + k + ")").exec(fmt);
+                if (ret) {
+                    fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+                };
+            };
+            return fmt;
+        } 
+        function showdata(legend, series,min,max) { 
             var chart = echarts.init(document.getElementById('main'));
             option = {
                 title: [],//
@@ -24,17 +40,8 @@
                     trigger: 'axis',
                     formatter: function (params) {
                         params = params[0];
-                        var date = new Date(params.data[0]);
-                        var hour = date.getHours();
-                        var minutes = date.getMinutes();
-                        if (hour < 10) {
-                            hour = '0' + hour;
-                        }
-                        if (minutes < 10) {
-                            minutes = '0' + minutes;
-                        }
-                        var dateStr = hour + ':' + minutes;
-                        return dateStr + ' ' + params.value[1];
+                        var date = new Date(params.data[0]); 
+                        return dateFormat("YYYY.mm.dd.HH.MM.SS",date) + ':' + params.value[1];
                     },
                     axisPointer: {
                         animation: false
@@ -42,6 +49,8 @@
                 },
                 xAxis: {
                     type: 'time',
+                    min: min,
+                    max: max,
                     splitLine: {
                         show: false
                     },
@@ -102,7 +111,7 @@
             chart.setOption(option);
         }
         //legend list string   series {Name:string .Data:list of list[time,value] }
-        function showdata_fromcs(legend, series) {
+        function showdata_fromcs(legend, series, min, max) {
             var _legend = strToJson(legend);
             var _series = strToJson(series);
             var a = [];
@@ -116,8 +125,13 @@
                     data: _series[k].Data 
                 });
             } 
-            showdata(_legend, a);
+            showdata(_legend, a,min,max);
         }
+        function clear_fromcs() {
+            var myChart = echarts.init(document.getElementById('main'));
+            myChart.clear()
+        }
+
         function strToJson(str) {
             var json = eval('(' + str + ')');
             return json;

@@ -63,7 +63,7 @@ namespace MyClient.View
             this.CDevice.Name = "CDevice";
             this.CDevice.Size = new System.Drawing.Size(196, 463);
             this.CDevice.TabIndex = 5;
-            this.CDevice.SelectedValueChanged += new System.EventHandler(this.CDevice_SelectedValueChanged);
+            this.CDevice.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CDevice_ItemCheck); 
             // 
             // dateTimePicker2
             // 
