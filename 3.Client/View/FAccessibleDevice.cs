@@ -39,9 +39,10 @@ namespace MyClient.View
         }
 
         List<User_Device_Group>? groups;
-        List<User_Device>? user_Devices;
+        //List<User_Device>? user_Devices;
         List<TypeInfo>? typeInfos;
         List<DeviceWithUserDeviceInfo>? dvinfos;
+        List<DeviceWithUserDeviceInfo>  currentshow=new List<DeviceWithUserDeviceInfo>();
         private void brefresh_Click(object sender, EventArgs e)
         {
             if (!brefresh.Enabled)
@@ -100,8 +101,8 @@ namespace MyClient.View
             {
                 var res1 = await userDeviceServiceClient.GetGroupInfosAsync(new Google.Protobuf.WellKnownTypes.Empty());
                 groups = res1.Groups.ToList();
-                var res2 = await userDeviceServiceClient.GetUserDevicesAsync(new Request_GetUserDevices());
-                user_Devices = res2.UserDevices.ToList();
+                //var res2 = await userDeviceServiceClient.GetUserDevicesAsync(new Request_GetUserDevices());
+                //user_Devices = res2.UserDevices.ToList();
                 var res3 = await deviceTypeServiceClient.GetTypeInfosAsync(new Request_GetTypeInfos());
                 typeInfos = res3.TypeInfos.ToList();
                 var res4 = await userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices());
@@ -122,7 +123,7 @@ namespace MyClient.View
                && idx < list_Group.Items.Count
                )
             {
-                var dt = table.Clone();
+                currentshow.Clear();
                 foreach (var device in dvinfos)
                 {
                     //选择全部
@@ -136,6 +137,11 @@ namespace MyClient.View
                         idx == 0 && groups.Find(it => it.Id == device.UserDevice.UserDeviceGroup) == null;
                     if (!c3)
                         continue;
+                    currentshow.Add(device); 
+                }
+                var dt = table.Clone();
+                foreach (var device in currentshow)
+                {
                     DataRow dr = dt.NewRow();
                     dr["Name"] = device.Device.Name;
                     dr["ID"] = device.Device.Id;
@@ -156,10 +162,10 @@ namespace MyClient.View
                         dr["Type"] = "未知类型";
                     }
                     dr["OP1"] = "测试中";
-                    dr["OP2"] = "测试中";
+                    dr["OP2"] = "维修记录";
                     dt.Rows.Add(dr);
                 }
-                dataGridView1.DataSource = dt;
+                 dataGridView1.DataSource = dt;
             }
         }
 
@@ -183,15 +189,14 @@ namespace MyClient.View
         {
             if (e.RowIndex < 0 || e.RowIndex == dataGridView1.Rows.Count - 1)
                 return;
-            string id = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
-            //if (e.ColumnIndex == 4)
-            //{
-            //    FMain.Instance.SwitchTo("数据统计", false, id);
-            //}
-            //else if (e.ColumnIndex == 5)
-            //{
-            //    FMain.Instance.SwitchTo("自控配置管理", false,"device" ,id);
-            //}
+            var dev =currentshow[e.RowIndex] ;
+            if (e.ColumnIndex == 4)
+            { 
+            }
+            else if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()   == "维修记录")
+            {
+                ViewHolder.SwitchTo("FDeviceRepair", false,dev);
+            }
 
         }
 
