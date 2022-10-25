@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
 using static GrpcMain.History.DTODefine.Types;
+
 namespace GrpcMain.History
 {
     public class HistoryServiceImp : HistoryService.HistoryServiceBase

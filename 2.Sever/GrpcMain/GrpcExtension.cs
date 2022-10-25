@@ -53,6 +53,7 @@ namespace GrpcMain
             app.MapGrpcService<DeviceTypeServiceImp>();
             app.MapGrpcService<InternalMailServiceImp>();
             app.MapGrpcService<HistoryServiceImp>();
+            app.MapGrpcService<RepairServiceImp>();
             foreach (var item in typeof(IGrpcAuthorityHandle).Assembly.GetTypes())
             {
                 var att = item.GetCustomAttribute<BindServiceMethodAttribute>();

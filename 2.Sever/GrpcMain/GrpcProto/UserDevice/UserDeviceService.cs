@@ -28,7 +28,7 @@ namespace GrpcMain.UserDevice
             using (MainContext ct = new MainContext())
             {
                 if (!request.UserDevice.HasUserId ||
-                    await id.IsDirectFatherAsync(ct, request.UserDevice.UserId)==false)
+                    await id.IsDirectFatherAsync(ct, request.UserDevice.UserId) == false)
 
                 {
                     return new CommonResponse()
@@ -78,7 +78,7 @@ namespace GrpcMain.UserDevice
                     {
                         //请求者的此记录
                         MyDBContext.Main.User_Device ud;
-                       
+
                         if (!dic.TryGetValue(item, out ud))
                         {
                             return new CommonResponse()
@@ -121,7 +121,7 @@ namespace GrpcMain.UserDevice
                             });
                         }
 
-                      
+
                     }
                 }
 

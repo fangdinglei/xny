@@ -31,13 +31,14 @@
             this.list_infos = new System.Windows.Forms.ListBox();
             this.time_DiscoveryTime = new System.Windows.Forms.DateTimePicker();
             this.time_CompletionTime = new System.Windows.Forms.DateTimePicker();
-            this.btn_submit = new System.Windows.Forms.Button();
+            this.btn_update = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.text_context = new System.Windows.Forms.TextBox();
             this.text_dvname = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btn_search = new System.Windows.Forms.Button();
+            this.btn_creat = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // list_infos
@@ -63,15 +64,15 @@
             this.time_CompletionTime.Size = new System.Drawing.Size(300, 30);
             this.time_CompletionTime.TabIndex = 2;
             // 
-            // btn_submit
+            // btn_update
             // 
-            this.btn_submit.Location = new System.Drawing.Point(663, 12);
-            this.btn_submit.Name = "btn_submit";
-            this.btn_submit.Size = new System.Drawing.Size(112, 34);
-            this.btn_submit.TabIndex = 3;
-            this.btn_submit.Text = "提交";
-            this.btn_submit.UseVisualStyleBackColor = true;
-            this.btn_submit.Click += new System.EventHandler(this.btn_submit_Click);
+            this.btn_update.Location = new System.Drawing.Point(663, 12);
+            this.btn_update.Name = "btn_update";
+            this.btn_update.Size = new System.Drawing.Size(112, 34);
+            this.btn_update.TabIndex = 3;
+            this.btn_update.Text = "修改";
+            this.btn_update.UseVisualStyleBackColor = true;
+            this.btn_update.Click += new System.EventHandler(this.btn_update_Click);
             // 
             // label1
             // 
@@ -125,18 +126,29 @@
             this.btn_search.UseVisualStyleBackColor = true;
             this.btn_search.Click += new System.EventHandler(this.btn_search_Click);
             // 
+            // btn_creat
+            // 
+            this.btn_creat.Location = new System.Drawing.Point(663, 54);
+            this.btn_creat.Name = "btn_creat";
+            this.btn_creat.Size = new System.Drawing.Size(112, 34);
+            this.btn_creat.TabIndex = 10;
+            this.btn_creat.Text = "新增";
+            this.btn_creat.UseVisualStyleBackColor = true;
+            this.btn_creat.Click += new System.EventHandler(this.btn_creat_Click);
+            // 
             // FDeviceRepair
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1119, 638);
+            this.Controls.Add(this.btn_creat);
             this.Controls.Add(this.btn_search);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.text_dvname);
             this.Controls.Add(this.text_context);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.btn_submit);
+            this.Controls.Add(this.btn_update);
             this.Controls.Add(this.time_CompletionTime);
             this.Controls.Add(this.time_DiscoveryTime);
             this.Controls.Add(this.list_infos);
@@ -152,12 +164,13 @@
         private ListBox list_infos;
         private DateTimePicker time_DiscoveryTime;
         private DateTimePicker time_CompletionTime;
-        private Button btn_submit;
+        private Button btn_update;
         private Label label1;
         private Label label2;
         private TextBox text_context;
         private TextBox text_dvname;
         private Label label3;
         private Button btn_search;
+        private Button btn_creat;
     }
 }

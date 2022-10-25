@@ -33,7 +33,7 @@ namespace GrpcMain.DeviceData
                 Dvid = request.Dvid,
                 Stream = new DataStream
                 {
-                    StreamId = request.StreamId, 
+                    StreamId = request.StreamId,
                 }
             };
             using (MainContext ct = new MainContext())
@@ -91,7 +91,7 @@ namespace GrpcMain.DeviceData
                 Dvid = request.Dvid,
                 Stream = new DataStream
                 {
-                    StreamId = request.StreamId, 
+                    StreamId = request.StreamId,
                 }
             };
             using (MainContext ct = new MainContext())

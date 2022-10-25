@@ -36,15 +36,20 @@ namespace MyClient.View
 
             okcall = null;
             exitcall = null;
+            tipui.RemoveAll();
             _viewholder.Back();
+
         }
-        void OnFailure()
+        ToolTip tipui = new ToolTip();
+        void OnFailure(Exception ex)
         {
             setisloading(false);
             loading = false;
             label1.Text = "加载失败";
             button1.Visible = true;
             button1.Enabled = true;
+            tipui.SetToolTip(label1, ex.Message);
+
         }
         async Task<bool> ShowLoading(Func<Task<bool>> task, Func<Task<bool>>? retry, Action okcall = null, Action exitcall = null, Action<bool> setisloading = null)
         {
@@ -58,6 +63,7 @@ namespace MyClient.View
             this.exitcall = exitcall;
             try
             {
+                tipui.RemoveAll();
                 if (await task())
                 {
                     OnSuccess();
@@ -69,20 +75,22 @@ namespace MyClient.View
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                OnFailure();
+                OnFailure(ex);
                 return false;
             }
         }
 
         private async void button1_ClickAsync(object sender, EventArgs e)
         {
+
             button1.Enabled = false;
             loading = true;
             setisloading(true);
             try
             {
+                tipui.RemoveAll();
                 if (await retry())
                 {
                     OnSuccess();
@@ -95,7 +103,7 @@ namespace MyClient.View
             }
             catch (Exception ex)
             {
-                OnFailure();
+                OnFailure(ex);
             }
             button1.Enabled = true;
         }

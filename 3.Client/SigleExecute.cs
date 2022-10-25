@@ -50,7 +50,8 @@ namespace FDL.Program
             }
             try
             {
-                action(() => {
+                action(() =>
+                {
                     lock (acts)
                         acts.Remove(name);
                 });

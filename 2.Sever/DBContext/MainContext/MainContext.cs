@@ -393,21 +393,21 @@ namespace MyDBContext.Main
             modelBuilder.Entity<ThingModel>().HasData(new ThingModel()
             {
                 Id = 1,
-                DeviceTypeId = 1, 
+                DeviceTypeId = 1,
                 MinValue = 0,
                 MaxValue = 100,
                 Name = "温度",
                 Remark = "备注温度",
                 Unit = "摄氏度",
                 Abandonted = false,
-            }); 
+            });
             modelBuilder.Entity<Device_Type>().HasData(
                new Device_Type()
                {
                    Id = 1,
                    Name = "测试类型1",
                    CreatorId = 2,
-                   Script = "", 
+                   Script = "",
                }
                 , new Device_Type()
                 {
@@ -525,17 +525,18 @@ namespace MyDBContext.Main
 
             #region 数据点
             modelBuilder.Entity<Device_DataPoint>().HasData(
-                    new Device_DataPoint() { 
-                        Id=1,
+                    new Device_DataPoint()
+                    {
+                        Id = 1,
                         DeviceId = 1,
                         StreamId = 1,
-                        Time=DateTimeUtilities.DateTimeToUnixMs( System.DateTime.Now.AddHours(-8))/1000,
-                        Value=90, 
+                        Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
+                        Value = 90,
                     },
                      new Device_DataPoint()
                      {
                          Id = 2,
-                         DeviceId =2,
+                         DeviceId = 2,
                          StreamId = 1,
                          Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
                          Value = 80,

@@ -3,6 +3,7 @@ using GrpcMain.UserDevice;
 using MyClient.Grpc;
 using System.Data;
 using static GrpcMain.UserDevice.DTODefine.Types;
+
 namespace MyClient.View
 {
     [AutoDetectView("FDeviceGroupManager", "设备分组管理", "", true)]

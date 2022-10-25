@@ -1,19 +1,15 @@
 ﻿//#define TEST
 
-using FdlWindows.View;
-using CefSharp.WinForms;
-using CefSharp.WinForms.Internals;
 using CefSharp;
-using System.Text;
+using FdlWindows.View;
+using GrpcMain.Device;
 using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
-using GrpcMain.Device;
 using GrpcMain.UserDevice;
-using static GrpcMain.UserDevice.DTODefine.Types;
+using MyUtility;
 using System.ComponentModel;
 using static GrpcMain.DeviceType.DTODefine.Types;
-using MyDBContext;
-using MyUtility;
+using static GrpcMain.UserDevice.DTODefine.Types;
 
 namespace MyClient.View
 {
@@ -43,7 +39,7 @@ namespace MyClient.View
 
         BindingList<ToStringHelper<DeviceWithUserDeviceInfo>> devices;
         List<TypeInfo> types;
-        List<ThingModel> thingModels; 
+        List<ThingModel> thingModels;
         async Task PreGetData()
         {
             var res3 = await _deviceTypeServiceClient.GetTypeInfosAsync(new Request_GetTypeInfos { });
@@ -76,18 +72,18 @@ namespace MyClient.View
         void ClearChart()
         {
             chromiumWebBrowser1.ExecuteScriptAsync("clear_fromcs()");
-      
+
         }
         async void RefreshChart()
         {
-            if (CDevice.CheckedIndices.Count ==0)
+            if (CDevice.CheckedIndices.Count == 0)
             {
                 MessageBox.Show("请选择至少一个设备", "提示");
                 return;
             }
-            if (CStreamName.SelectedIndex<0)
+            if (CStreamName.SelectedIndex < 0)
             {
-                MessageBox.Show("请选择合适的数据名称","提示");
+                MessageBox.Show("请选择合适的数据名称", "提示");
                 return;
             }
 
@@ -104,19 +100,19 @@ namespace MyClient.View
             {
                 string data = await GetDataStr(thingModels[CStreamName.SelectedIndex], ds);
                 var ts = dateTimePicker1.Value;
-                ts = new DateTime(ts.Year,ts.Month,ts.Day);
+                ts = new DateTime(ts.Year, ts.Month, ts.Day);
                 var te = dateTimePicker2.Value;
                 te = new DateTime(te.Year, te.Month, te.Day);
                 chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs",
                     Newtonsoft.Json.JsonConvert.SerializeObject(ds.Select(it => it.Device.Name).ToList())
-                    , data,_timeUtility.GetTicket(ts)*1000, _timeUtility.GetTicket(te) * 1000); ;
+                    , data, _timeUtility.GetTicket(ts) * 1000, _timeUtility.GetTicket(te) * 1000); ;
             }
             catch (Exception ex)
             {
                 ClearChart();
-                MessageBox.Show("错误:"+ex.Message,"错误");
+                MessageBox.Show("错误:" + ex.Message, "错误");
             }
-         
+
 
         }
 
@@ -137,7 +133,7 @@ namespace MyClient.View
                     Dvid = dev.Device.Id,
                     ColdData = false,
                 });
-                List<object[]> dps = res.Stream.Points.Select(it => new object[] { it.Time*1000, it.Value }).ToList();
+                List<object[]> dps = res.Stream.Points.Select(it => new object[] { it.Time * 1000, it.Value }).ToList();
                 obj.Add(new Dictionary<string, object>() {
                     { "Name",dev.Device.Name},
                     { "Data", dps },
@@ -147,7 +143,7 @@ namespace MyClient.View
         }
         void LoadAllStreamName(TypeInfo type)
         {
-            thingModels =   type.ThingModels.ToList();
+            thingModels = type.ThingModels.ToList();
             CStreamName.DataSource =
             thingModels.Select(it => it.Name).ToList();
         }
@@ -172,10 +168,10 @@ namespace MyClient.View
             CDevice.ClearSelected();
             CStreamName.DataSource = null;
 
-            var type=types[(sender as ListBox).SelectedIndex] ;
+            var type = types[(sender as ListBox).SelectedIndex];
 
             var res = await _userDeviceServiceClient.GetDevicesAsync(new GrpcMain.UserDevice.DTODefine.Types.Request_GetDevices
-            {TypeId= type.Id });
+            { TypeId = type.Id });
             var lsx = res.Info.Select(it => new ToStringHelper<DeviceWithUserDeviceInfo>
             (it, (it) => it.Device.Id + ":" + it.Device.Name)).ToList();
             devices = new BindingList<ToStringHelper<DeviceWithUserDeviceInfo>>(lsx);
@@ -183,11 +179,11 @@ namespace MyClient.View
             LoadAllStreamName(type);
         }
         private void CDevice_ItemCheck(object sender, ItemCheckEventArgs e)
-        { 
+        {
             if (devices == null || CDevice.SelectedIndices.Count == 0 || CDevice.SelectedIndex >= devices.Count)
                 return;
             ClearChart();
-        } 
+        }
         private void CStreamName_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (devices == null || CDevice.SelectedIndex < 0 || CDevice.SelectedIndex >= devices.Count || CStreamName.SelectedIndex < 0)
@@ -242,6 +238,6 @@ namespace MyClient.View
             RefreshChart();
         }
 
-        
+
     }
 }

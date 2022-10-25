@@ -39,6 +39,7 @@ namespace MyClient.Grpc
             serviceCollection.TryAddSingleton<DeviceDataService.DeviceDataServiceClient>();
             serviceCollection.TryAddSingleton<DeviceTypeService.DeviceTypeServiceClient>();
             serviceCollection.TryAddSingleton<HistoryService.HistoryServiceClient>();
+            serviceCollection.TryAddSingleton<RepairService.RepairServiceClient>();
         }
     }
     public class ClientCallContextInterceptor : Interceptor

@@ -29,15 +29,15 @@ namespace GrpcMain.DeviceType
                 if (request.Ids.Count == 0)
                 {//获取全部
                     int maxcount = 1000 + 1;
-                    var ls = await ct.Device_Types.GetEntityOfAccessible(ct, id, maxcount, request.Cursor, 
-                        true, true, false, filter: (it) => it.Include(it=>it.ThingModels));
+                    var ls = await ct.Device_Types.GetEntityOfAccessible(ct, id, maxcount, request.Cursor,
+                        true, true, false, filter: (it) => it.Include(it => it.ThingModels));
                     if (ls.Count == maxcount)
                     {
                         res.Cursor = ls.Last().Id;
                         res.TypeInfos.AddRange(ls.Take(ls.Count - 1).Select(it =>
                         {
                             var res = new TypeInfo
-                            { 
+                            {
                                 Id = it.Id,
                                 Name = it.Name,
                                 Script = it.Script,
@@ -136,19 +136,19 @@ namespace GrpcMain.DeviceType
                     return new CommonResponse()
                     {
                         Success = false,
-                        Message="没有该实例的权限",
-                    }; 
+                        Message = "没有该实例的权限",
+                    };
                 }
                 else if (ot == AuthorityUtility.OwnerType.Creator
                     || ot == AuthorityUtility.OwnerType.FatherOfCreator)
                 {
                     //自己访问或者父用户访问 不要审计
-                    if (type.ThingModels.Count>0)
+                    if (type.ThingModels.Count > 0)
                     {
                         //只能插入 不能删除
-                        var old= type.ThingModels.Select(it => it.Id);
+                        var old = type.ThingModels.Select(it => it.Id);
                         var _new = request.Info.ThingModels.Select(it => it.Id);
-                        if (old.Except(_new).Count()!=0)
+                        if (old.Except(_new).Count() != 0)
                         {
                             return new CommonResponse()
                             {
@@ -158,16 +158,17 @@ namespace GrpcMain.DeviceType
                         }
                         type.ThingModels.Clear();
                         type.ThingModels.AddRange(request.Info.ThingModels.Select(
-                           it=>new MyDBContext.Main.ThingModel { 
-                                Abandonted=it.Abandonted,
-                                DeviceTypeId=type.Id,
-                                Id= old.Contains(it.Id)?it.Id:0 ,
-                                MaxValue=it.MaxValue,
-                                MinValue=it.MinValue,
-                                Name=it.Name,
-                                Remark=it.Remark,
-                                Type= (ThingModelValueType)it.ValueType,
-                                Unit=it.Unit,
+                           it => new MyDBContext.Main.ThingModel
+                           {
+                               Abandonted = it.Abandonted,
+                               DeviceTypeId = type.Id,
+                               Id = old.Contains(it.Id) ? it.Id : 0,
+                               MaxValue = it.MaxValue,
+                               MinValue = it.MinValue,
+                               Name = it.Name,
+                               Remark = it.Remark,
+                               Type = (ThingModelValueType)it.ValueType,
+                               Unit = it.Unit,
                            }));
                     }
                     if (request.Info.HasName)

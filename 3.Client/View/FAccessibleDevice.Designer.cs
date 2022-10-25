@@ -70,7 +70,6 @@ namespace MyClient.View
             this.dataGridView1.Size = new System.Drawing.Size(923, 725);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
-            this.dataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseDown);
             // 
             // CCheck
             // 

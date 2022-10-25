@@ -6,7 +6,7 @@ using GrpcMain.UserDevice;
 using System.Data;
 using System.Runtime.InteropServices;
 using static GrpcMain.DeviceType.DTODefine.Types;
-using static GrpcMain.UserDevice.DTODefine.Types; 
+using static GrpcMain.UserDevice.DTODefine.Types;
 
 namespace MyClient.View
 {
@@ -42,7 +42,7 @@ namespace MyClient.View
         //List<User_Device>? user_Devices;
         List<TypeInfo>? typeInfos;
         List<DeviceWithUserDeviceInfo>? dvinfos;
-        List<DeviceWithUserDeviceInfo>  currentshow=new List<DeviceWithUserDeviceInfo>();
+        List<DeviceWithUserDeviceInfo> currentshow = new List<DeviceWithUserDeviceInfo>();
         private void brefresh_Click(object sender, EventArgs e)
         {
             if (!brefresh.Enabled)
@@ -137,7 +137,7 @@ namespace MyClient.View
                         idx == 0 && groups.Find(it => it.Id == device.UserDevice.UserDeviceGroup) == null;
                     if (!c3)
                         continue;
-                    currentshow.Add(device); 
+                    currentshow.Add(device);
                 }
                 var dt = table.Clone();
                 foreach (var device in currentshow)
@@ -162,10 +162,10 @@ namespace MyClient.View
                         dr["Type"] = "未知类型";
                     }
                     dr["OP1"] = "测试中";
-                    dr["OP2"] = "维修记录";
+                    dr["OP2"] = "更多功能";
                     dt.Rows.Add(dr);
                 }
-                 dataGridView1.DataSource = dt;
+                dataGridView1.DataSource = dt;
             }
         }
 
@@ -189,13 +189,14 @@ namespace MyClient.View
         {
             if (e.RowIndex < 0 || e.RowIndex == dataGridView1.Rows.Count - 1)
                 return;
-            var dev =currentshow[e.RowIndex] ;
+            var dev = currentshow[e.RowIndex];
             if (e.ColumnIndex == 4)
-            { 
-            }
-            else if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()   == "维修记录")
             {
-                ViewHolder.SwitchTo("FDeviceRepair", false,dev);
+
+            }
+            else if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString() == "更多功能")
+            {
+                ViewHolder.SwitchTo("FDeviceOtherFeatures", false, dev);
             }
 
         }
@@ -232,29 +233,6 @@ namespace MyClient.View
         private void btn_groupmgr_Click(object sender, EventArgs e)
         {
             ViewHolder.SwitchTo("FDeviceGroupManager", false);
-        }
-
-        private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
-        {
-            //int id = -1;
-            //for (int i = 0; i < list_Group.Items.Count; i++)
-            //{
-            //    if (dataGridView1.GetRowDisplayRectangle(i, true).Contains(e.X, e.Y))
-            //    {
-            //        id = i;
-            //        break;
-            //    }
-            //}
-            //if (id == -1)
-            //    return;
-            //var dvid = uint.Parse((string)dataGridView1.Rows[id].Cells[1].Value);
-            //DragDropEffects dde1 = this.DoDragDrop(dvid, DragDropEffects.Move);
-            //if (dde1 == DragDropEffects.Move)//如果移动成功
-            //{
-            //    // brefresh_ClickAsync(null, null);
-            //    list_Group_SelectedIndexChanged(null, null);
-            //}
-
         }
 
 

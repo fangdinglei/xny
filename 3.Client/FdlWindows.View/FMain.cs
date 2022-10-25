@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MyClient.View;
 using System.Reflection;
-using System.Xml.Linq;
 
 namespace FdlWindows.View
 {
@@ -167,7 +166,7 @@ namespace FdlWindows.View
                 }
             }
             var iname = NameofViewInstance[view];
-            if (highlighting != null && iname==highlighting.Tag)
+            if (highlighting != null && iname == highlighting.Tag)
             {
                 highlighting.BackColor = Color.White;
                 highlighting.ForeColor = Color.Black;
@@ -185,7 +184,7 @@ namespace FdlWindows.View
                 view.View.Visible = false;
                 Views[iname].Enqueue(view);
             }
-         
+
 
         }
         /// <summary>

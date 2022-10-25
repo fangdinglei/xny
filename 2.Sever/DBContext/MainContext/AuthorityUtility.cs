@@ -95,9 +95,9 @@ namespace MyDBContext.Main
         /// <param name="uid"></param>
         /// <returns></returns>
         static public async Task<bool> IsDirectFatherAsync(this long creator, MainContext ct, long uid)
-        { 
+        {
             var r = await ct.Users.Where(it => it.Id == uid && it.CreatorId == creator).CountAsync();
-            return r != 0; 
+            return r != 0;
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace MyDBContext.Main
         static public async Task<List<TEntity>> GetEntityOfAccessible<TEntity>(this DbSet<TEntity> dbset, MainContext ct, long uid
             , int takecount = -1, long cursor = -1
             , bool fathervisitson = false, bool sonvisitfather = false, bool trace = false
-            , ICollection<long> wantedids = null,Func<IQueryable<TEntity>, IQueryable<TEntity>>filter=null ) where TEntity : class, IHasCreator
+            , ICollection<long> wantedids = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> filter = null) where TEntity : class, IHasCreator
         {
             IQueryable<TEntity> bd;
             if (fathervisitson && sonvisitfather)
@@ -149,7 +149,7 @@ namespace MyDBContext.Main
             {
                 bd = bd.Take(takecount);
             }
-            if (filter!=null)
+            if (filter != null)
             {
                 bd = filter(bd);
             }

@@ -1,8 +1,8 @@
 ﻿namespace GrpcMain
-{   
+{
     /// <summary>
-     /// 设备冷数据处理器
-     /// </summary>
+    /// 设备冷数据处理器
+    /// </summary>
     public interface IDeviceColdDataHandle
     {
         bool UsingColdData { get; }
