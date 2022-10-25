@@ -1,4 +1,7 @@
-﻿using FdlWindows.View;
+﻿using FDL.Program;
+using FdlWindows.View;
+using GrpcMain.Device;
+using MyUtility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +12,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static GrpcMain.Device.DTODefine.Types;
 using static GrpcMain.UserDevice.DTODefine.Types;
 
 namespace MyClient.View
@@ -26,6 +28,7 @@ namespace MyClient.View
                 //list_infos.Visible = !value;
                 //btn_search.Visible = !value;
                 _device = null;
+                _isSingleMode=value;    
             }
             get { 
                 return _isSingleMode;
@@ -33,12 +36,15 @@ namespace MyClient.View
         }
 
         DeviceWithUserDeviceInfo _device;
-        //BindingList<ToStringHelper<Device>> devices;
-
-
-        public FDeviceRepair()
+        BindingList<ToStringHelper<RepairInfo>> _repairInfos;
+        IViewHolder _viewHolder;
+        ITimeUtility _timeUtility;
+        RepairService.RepairServiceClient _repairServiceClient;
+        public FDeviceRepair(RepairService.RepairServiceClient repairServiceClient, ITimeUtility timeUtility)
         {
             InitializeComponent();
+            _repairServiceClient = repairServiceClient;
+            _timeUtility = timeUtility;
         }
 
         public Control View => this;
@@ -66,7 +72,7 @@ namespace MyClient.View
 
         public void SetViewHolder(IViewHolder viewholder)
         {
-
+            _viewHolder=viewholder;
         }
 
         public void OnTick()
@@ -77,6 +83,36 @@ namespace MyClient.View
         private void btn_submit_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btn_search_Click(object sender, EventArgs e)
+        {
+            var smode = IsSingleMode;
+            SigleExecute.Execute(nameof(FDeviceRepair),unlock => { 
+                _viewHolder.ShowDatePicker((ds, de) => {
+                    _viewHolder.ShowLoading(this, async () => {
+                        var req1 = new Request_GetRepairInfos
+                        {
+                            Cursor = 0,
+                            StartTime = _timeUtility.GetTicket(ds),
+                            EndTime = _timeUtility.GetTicket(de),
+                        };
+                        if (smode) {
+                            req1.DeviceId = _device.Device.Id;
+                        }
+                        var res1 = await _repairServiceClient.GetRepairInfosAsync(req1);
+                        _repairInfos = new BindingList<ToStringHelper<RepairInfo>>(
+                            res1.Info.Select(it => new ToStringHelper<RepairInfo>(it, it => it.Id + "")).ToList());
+                        return true;
+                    }, okcall: () => {
+                        list_infos.DataSource = _repairInfos;
+                        unlock();
+                    }, exitcall: () => {
+                        unlock();
+                    });
+                }); 
+            });
+           
         }
     }
 } 

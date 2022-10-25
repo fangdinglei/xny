@@ -123,6 +123,7 @@
             this.btn_search.TabIndex = 9;
             this.btn_search.Text = "查询";
             this.btn_search.UseVisualStyleBackColor = true;
+            this.btn_search.Click += new System.EventHandler(this.btn_search_Click);
             // 
             // FDeviceRepair
             // 

@@ -17,6 +17,7 @@
 	  <None Remove="GrpcProto\DeviceData\DeviceDataService.proto" />
 	  <None Remove="GrpcProto\DeviceType\DeviceTypeService.proto" />
 	  <None Remove="GrpcProto\Device\DeviceService.proto" />
+	  <None Remove="GrpcProto\Device\RepairService.proto" />
 	  <None Remove="GrpcProto\Histroy\Account\AccountService.proto" />
 	  <None Remove="GrpcProto\InternalMail\InternalMail.proto" />
 	  <None Remove="GrpcProto\UserDevice\UserDeviceService.proto" />

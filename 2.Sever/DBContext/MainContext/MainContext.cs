@@ -43,6 +43,8 @@ namespace MyDBContext.Main
         public DbSet<Device_DataPoint> Device_DataPoints { get; set; }
         public DbSet<Device_DataPoint_Cold> Device_DataPoint_Colds { get; set; }
         public DbSet<Internal_Mail> Internal_Mails { get; set; }
+        public DbSet<Device_Repair> Device_Repairs { get; set; }
+        public DbSet<KeyValue> KeyValues { get; set; }
 
         static SqliteConnection? _connection;
 

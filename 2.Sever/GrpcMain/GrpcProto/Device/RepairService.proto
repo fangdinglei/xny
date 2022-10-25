@@ -1,0 +1,55 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.Device";
+package GrpcMain.Device;
+import "google/protobuf/empty.proto";
+import "Common/CommonResponse.proto";
+service RepairService {
+    //添加维修记录
+    rpc AddRepairInfo(Request_AddRepairInfo)
+        returns (Response_AddRepairInfo);
+    //修改维修记录
+    rpc UpdateRepairInfo(Request_UpdateRepairInfo)
+        returns (Response_UpdateRepairInfo);
+    //查询维修记录 只有拥有该设备才能查询
+    rpc GetRepairInfos(Request_GetRepairInfos)
+        returns (Response_GetRepairInfos); 
+
+} 
+
+message RepairInfo{
+    int64 Id=1;
+    int64 DeviceId=2;
+    int64 DiscoveryTime=3;
+    int64 CompletionTime=4;
+    string Context=5;
+    int64 CreatorId=6;
+}
+ 
+message Request_AddRepairInfo{
+    RepairInfo Info=1;
+}
+message Response_AddRepairInfo{
+    RepairInfo Info=1;
+}
+
+message Request_UpdateRepairInfo{
+    RepairInfo Info=1;
+}
+message Response_UpdateRepairInfo{
+    RepairInfo Info=1;
+}
+
+
+message Request_GetRepairInfos{
+    optional int64 StartTime=2;
+    optional int64 EndTime=3;
+    optional int32 MaxCount=4;
+    optional int64 DeviceId=5;
+    optional int64 Cursor=6;
+}
+
+message Response_GetRepairInfos{
+    repeated RepairInfo Info=1;
+    int64 Cursor=2;
+}
