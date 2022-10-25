@@ -89,7 +89,7 @@ namespace MyDBContext.Main
                   
                   user2-顶级用户[测试权限1,测试权限2]      -设备1(分组1) 2 3    邮件
                   /   \
-               user3   \              -设备1(分组2) 2   邮件
+               user3   \              -设备1(分组2,不可读数据) 2   邮件
                 /      user4          -设备1
              user5                    -设备1
 
@@ -499,7 +499,7 @@ namespace MyDBContext.Main
                     UserId = 3,
                     DeviceId = 1,
                     PControl = true,
-                    PData = true,
+                    PData =false,
                     PStatus = true,
                     User_Device_GroupId = 2,
                 }

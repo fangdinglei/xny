@@ -9,6 +9,9 @@ namespace GrpcMain.UserDevice
 {
     public class UserDeviceServiceImp : UserDeviceService.UserDeviceServiceBase
     {
+        public const int MaxGroup =1000;
+
+
         ITimeUtility _timeutility;
         IGrpcCursorUtility _cursorUtility;
 
@@ -292,6 +295,11 @@ namespace GrpcMain.UserDevice
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
+                if (MaxGroup <=await ct.User_Device_Groups.Where(it=>it.CreatorId==id).CountAsync())
+                {
+                    context.Status = new Status( StatusCode.Unavailable,$"用户分组上限为{MaxGroup},你已经无法再创建新的分组");
+                    return null;
+                }
                 ct.Add(new MyDBContext.Main.User_Device_Group()
                 {
                     Name = request.Name,

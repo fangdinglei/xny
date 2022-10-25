@@ -12,6 +12,8 @@ namespace GrpcMain.DeviceType
     /// </summary>
     public class DeviceTypeServiceImp : DeviceTypeService.DeviceTypeServiceBase
     {
+        public const int MaxType = 3000;
+
         ITimeUtility _timeutility;
         public DeviceTypeServiceImp(ITimeUtility time)
         {
@@ -28,7 +30,7 @@ namespace GrpcMain.DeviceType
                 long id = (long)context.UserState["CreatorId"];
                 if (request.Ids.Count == 0)
                 {//获取全部
-                    int maxcount = 1000 + 1;
+                    int maxcount = MaxType*2 + 1;
                     var ls = await ct.Device_Types.GetEntityOfAccessible(ct, id, maxcount, request.Cursor,
                         true, true, false, filter: (it) => it.Include(it => it.ThingModels));
                     if (ls.Count == maxcount)
@@ -204,7 +206,7 @@ namespace GrpcMain.DeviceType
         }
 
         public override Task<Response_AddTypeInfo> AddTypeInfo(Request_AddTypeInfo request, ServerCallContext context)
-        {
+        {//todo 鉴定数量
             throw new Exception();
         }
 
