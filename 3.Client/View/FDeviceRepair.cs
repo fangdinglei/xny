@@ -1,10 +1,10 @@
 ﻿using FDL.Program;
 using FdlWindows.View;
 using GrpcMain.Device;
+using GrpcMain.UserDevice;
 using MyUtility;
 using System.ComponentModel;
-using System.Data;
-using static GrpcMain.UserDevice.DTODefine.Types;
+using System.Data; 
 
 namespace MyClient.View
 {
@@ -36,11 +36,13 @@ namespace MyClient.View
         IViewHolder _viewHolder;
         ITimeUtility _timeUtility;
         RepairService.RepairServiceClient _repairServiceClient;
-        public FDeviceRepair(RepairService.RepairServiceClient repairServiceClient, ITimeUtility timeUtility)
+        LocalDataBase _db;
+        public FDeviceRepair(RepairService.RepairServiceClient repairServiceClient, ITimeUtility timeUtility, LocalDataBase db)
         {
             InitializeComponent();
             _repairServiceClient = repairServiceClient;
             _timeUtility = timeUtility;
+            _db = db;
         }
 
         public Control View => this;
@@ -187,7 +189,16 @@ namespace MyClient.View
             }
             var v = _repairInfos[list_infos.SelectedIndex].Value;
             text_context.Text= v.Context;
-            text_dvname.Text = "Id:"+v.DeviceId;
+            var dv=_db.GetDevice(v.DeviceId);
+            if (dv==null)
+            {
+                text_dvname.Text = "Id:" + v.DeviceId;
+            }
+            else
+            {
+                text_dvname.Text = "Id:" + dv.Id + ",Name:" + dv.Name;
+            }
+           
             time_CompletionTime.Value = _timeUtility.GetDateTime(v.CompletionTime);
             time_DiscoveryTime.Value = _timeUtility.GetDateTime(v.DiscoveryTime);
         }

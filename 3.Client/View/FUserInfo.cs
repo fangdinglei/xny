@@ -8,8 +8,7 @@ using MyDBContext.Main;
 using MyUtility;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using static GrpcMain.Account.DTODefine.Types;
-using static GrpcMain.UserDevice.DTODefine.Types;
+using static GrpcMain.Account.DTODefine.Types; 
 
 namespace MyClient.View
 {

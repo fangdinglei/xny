@@ -1,33 +1,30 @@
 ﻿syntax = "proto3";
 
 option csharp_namespace = "GrpcMain.Device";
-package GrpcMain.Device;
 import "google/protobuf/empty.proto";
 import "Common/CommonResponse.proto";
 service DeviceService {
 
     
     //发送命令
-    rpc SendCMD(DTODefine.Request_SendCMD)
+    rpc SendCMD( Request_SendCMD)
         returns (CommonResponse);
 
     //删除设备
-    rpc DeletDevice(DTODefine.Request_DeletDevice)
+    rpc DeletDevice( Request_DeletDevice)
         returns (CommonResponse);
 
     //修改设备信息
-    rpc UpdateDeviceInfo(DTODefine.Request_UpdateDeviceInfo)
+    rpc UpdateDeviceInfo( Request_UpdateDeviceInfo)
         returns (CommonResponse);
     //获取全部设备状态
-    rpc GetAllDeviceStatus(DTODefine.Request_GetAllDeviceStatus)
-        returns (DTODefine.Response_GetAllDeviceStatus);
+    rpc GetAllDeviceStatus( Request_GetAllDeviceStatus)
+        returns ( Response_GetAllDeviceStatus);
 
 }
 
 
-message DTODefine
-{  
-    message Device{
+ message Device{
         int64 Id=1;
         string Name=2;
         int64 DeviceTypeId=3;
@@ -62,5 +59,3 @@ message DTODefine
         repeated int64 Dvids=2;
         repeated int32 Status=3;
     }
-}
- 

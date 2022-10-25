@@ -1,8 +1,7 @@
 ﻿using FdlWindows.View;
 using GrpcMain.UserDevice;
 using MyClient.Grpc;
-using System.Data;
-using static GrpcMain.UserDevice.DTODefine.Types;
+using System.Data; 
 
 namespace MyClient.View
 {

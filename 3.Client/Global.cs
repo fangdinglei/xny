@@ -16,6 +16,7 @@ namespace MyClient
 
             services.AddSingleton<FLogin>();
             services.AddSingleton<ITimeUtility, TimeUtility>();
+            services.AddSingleton<LocalDataBase>();
             services.AddSingleton<FMain>();
             services.AddSingleton(new FMainOption()
             {

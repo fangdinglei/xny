@@ -1,47 +1,49 @@
 ﻿syntax = "proto3";
 
 option csharp_namespace = "GrpcMain.UserDevice";
-package GrpcMain.UserDevice;
+
 import "google/protobuf/empty.proto";
 import "Common/CommonResponse.proto";
 import "Device/DeviceService.proto";
 service UserDeviceService { 
 
     //只能直接父用户调用 修改设备权限 如果所有权限都false 则删除设备 如果没有权限 则添加
-    rpc UpdateUserDevice(DTODefine.Request_UpdateUserDevice)
+    rpc UpdateUserDevice( Request_UpdateUserDevice)
         returns (CommonResponse);
 
     //获取用户设备分组信息
     rpc GetGroupInfos(google.protobuf.Empty)
-        returns (DTODefine.Response_GetGroupInfos);
+        returns ( Response_GetGroupInfos);
     //更新用户设备分组信息
-    rpc UpdateGroupInfos(DTODefine.Request_UpdateGroupInfos)
+    rpc UpdateGroupInfos( Request_UpdateGroupInfos)
         returns (CommonResponse);
 
     //获取用户设备信息 User_Device
-    rpc GetUserDevices(DTODefine.Request_GetUserDevices)
-        returns (DTODefine.Response_GetUserDevices);
+    rpc GetUserDevices( Request_GetUserDevices)
+        returns ( Response_GetUserDevices);
 
     //获取用户的所有设备的信息 
-    rpc GetDevices(DTODefine.Request_GetDevices)
-        returns (DTODefine.Response_GetDevices);
+    rpc GetDevices( Request_GetDevices)
+        returns ( Response_GetDevices);
+    //获取用户的一些设备信息
+    rpc GetDevices_2( Request_GetDevices_2)
+        returns ( Response_GetDevices_2);
+
      //获取用户所有设备的ID
-    rpc GetUserAllDeviceID(DTODefine.Request_GetUserAllDeviceID)
-        returns (DTODefine.Response_GetUserAllDeviceID); 
+    rpc GetUserAllDeviceID( Request_GetUserAllDeviceID)
+        returns ( Response_GetUserAllDeviceID); 
     
     //将设备加入分组
-    rpc SetDeviceGroup(DTODefine.Request_SetDeviceGroup)
+    rpc SetDeviceGroup( Request_SetDeviceGroup)
         returns (CommonResponse); 
 
     //添加用户设备分组
-    rpc NewGroup(DTODefine.Request_NewGroup)
+    rpc NewGroup( Request_NewGroup)
         returns (CommonResponse); 
      
 }
 
 
-message DTODefine
-{  
     message User_Device_Group{
         int64 Id=1;
         optional string Name=2;
@@ -97,8 +99,14 @@ message DTODefine
 
     }
     message DeviceWithUserDeviceInfo{
-        GrpcMain.Device.DTODefine.Device Device=1;
+        Device Device=1;
         User_Device UserDevice=2;
+    }
+    message Request_GetDevices_2{ 
+        int64 DeviceId=1;
+    }
+    message Response_GetDevices_2{ 
+        Device Device=1;
     }
     
     message Response_GetDevices{
@@ -127,6 +135,3 @@ message DTODefine
     message Request_NewGroup{
         string Name=1;
     } 
-    
-}
- 

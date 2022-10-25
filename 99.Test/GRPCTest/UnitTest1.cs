@@ -1,4 +1,6 @@
 using Grpc.Core;
+using GrpcMain.Account;
+using static GrpcMain.Account.DTODefine.Types;
 
 namespace GRPCTest;
 

@@ -3,8 +3,7 @@ using Grpc.Core;
 using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
-using MyUtility;
-using static GrpcMain.UserDevice.DTODefine.Types;
+using MyUtility; 
 
 namespace GrpcMain.UserDevice
 {
@@ -157,27 +156,44 @@ namespace GrpcMain.UserDevice
                 res.Info.AddRange(lsx.Select(it =>
                     new DeviceWithUserDeviceInfo
                     {
-                        Device = new Device.DTODefine.Types.Device()
-                        {
-                            Id = it.device.Id,
-                            DeviceTypeId = it.device.DeviceTypeId,
-                            LatestData = it.device.LatestData,
-                            LocationStr = it.device.LocationStr,
-                            Name = it.device.Name,
-                            Status = it.device.Status,
-                        },
-                        UserDevice = new DTODefine.Types.User_Device()
-                        {
-                            PControl = it.userdeive.PControl,
-                            PData = it.userdeive.PData,
-                            PStatus = it.userdeive.PStatus,
-                            UserDeviceGroup = it.userdeive.User_Device_GroupId,
-                        }
+                        Device = MyConvertor.Get(it.device),
+                        UserDevice = MyConvertor.Get(it.userdeive)
                     }
-                ));
+                ));;
             }
             return res;
         }
+        public override async Task<Response_GetDevices_2> GetDevices_2(Request_GetDevices_2 request, ServerCallContext context)
+        {
+            long id = (long)context.UserState["CreatorId"];
+            using (MainContext ct = new MainContext())
+            {
+                IQueryable<Device_Repair> bd;
+                var ud = await ct.User_Devices
+                   .Where(it => it.DeviceId == request.DeviceId && it.UserId == id)
+                    .AsNoTracking().FirstOrDefaultAsync();
+                if (ud == null)
+                {
+                    //没有权限
+                    context.Status = new Status(StatusCode.PermissionDenied, "没有该设备的权限");
+                    return null;
+                }
+
+                var dv = await ct.Devices.Where(it => it.Id ==request.DeviceId).FirstOrDefaultAsync();
+                if (dv == null  )
+                {
+                    //没有权限
+                    context.Status = new Status(StatusCode.PermissionDenied, "该设备不存在");
+                    return null;
+                }
+                return new Response_GetDevices_2
+                {
+                    Device = MyConvertor.Get(dv)
+                };
+            }
+        }
+
+
         public override async Task<Response_GetUserAllDeviceID?> GetUserAllDeviceID(Request_GetUserAllDeviceID request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -216,7 +232,7 @@ namespace GrpcMain.UserDevice
                 var ls = await ct.User_Device_Groups.Where(it => it.CreatorId == id).AsNoTracking().ToListAsync();
                 foreach (var item in ls)
                 {
-                    res.Groups.Add(new DTODefine.Types.User_Device_Group()
+                    res.Groups.Add(new  User_Device_Group()
                     {
                         Id = item.Id,
                         Name = item.Name,
@@ -364,17 +380,7 @@ namespace GrpcMain.UserDevice
                     res.Cursor = 0;
                     lsx = r;
                 }
-                res.UserDevices.AddRange(lsx.Select(it =>
-                {
-                    return new DTODefine.Types.User_Device()
-                    {
-                        PControl = it.PControl,
-                        PData = it.PData,
-                        Dvid = it.DeviceId,
-                        PStatus = it.PStatus,
-                        UserId = it.UserId,
-                    };
-                }));
+                res.UserDevices.AddRange(lsx.Select(it =>MyConvertor.Get(it)));
                 return res;
             }
         }

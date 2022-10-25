@@ -1,5 +1,5 @@
 ﻿using FdlWindows.View;
-using static GrpcMain.UserDevice.DTODefine.Types;
+using GrpcMain.UserDevice;
 
 namespace MyClient.View
 {

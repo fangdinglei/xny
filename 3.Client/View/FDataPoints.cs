@@ -8,8 +8,7 @@ using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
 using MyUtility;
 using System.ComponentModel;
-using static GrpcMain.DeviceType.DTODefine.Types;
-using static GrpcMain.UserDevice.DTODefine.Types;
+using static GrpcMain.DeviceType.DTODefine.Types; 
 
 namespace MyClient.View
 {
@@ -170,7 +169,7 @@ namespace MyClient.View
 
             var type = types[(sender as ListBox).SelectedIndex];
 
-            var res = await _userDeviceServiceClient.GetDevicesAsync(new GrpcMain.UserDevice.DTODefine.Types.Request_GetDevices
+            var res = await _userDeviceServiceClient.GetDevicesAsync(new  Request_GetDevices
             { TypeId = type.Id });
             var lsx = res.Info.Select(it => new ToStringHelper<DeviceWithUserDeviceInfo>
             (it, (it) => it.Device.Id + ":" + it.Device.Name)).ToList();
