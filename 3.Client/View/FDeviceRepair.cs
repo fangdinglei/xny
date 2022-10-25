@@ -78,9 +78,13 @@ namespace MyClient.View
         }
 
         private void btn_update_Click(object sender, EventArgs e)
-        {
+        { 
             SigleExecute.Execute(nameof(FDeviceRepair), () =>
             {
+                if (_repairInfos.Count == 0)
+                {
+                    return;
+                }
                 try
                 {
                     var info = new RepairInfo
