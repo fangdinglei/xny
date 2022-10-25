@@ -36,7 +36,7 @@ namespace GrpcMain.History
                     }
                 }
 
-                var bd = ct.Historys.Where(it => it.Type == request.Type && it.CreatorId == qid);
+                var bd = ct.AccountHistorys.Where(it => it.Type == request.Type && it.CreatorId == qid);
                 if (request.HasStartTime)
                 {
                     bd = bd.Where(it => it.Time >= request.StartTime);
@@ -83,7 +83,7 @@ namespace GrpcMain.History
                         Success = false,
                     };
                 }
-                var history = await ct.Historys.Where(it => it.Id == request.Id).FirstOrDefaultAsync();
+                var history = await ct.AccountHistorys.Where(it => it.Id == request.Id).FirstOrDefaultAsync();
                 if (history == null)
                 {
                     return new CommonResponse()
@@ -136,7 +136,7 @@ namespace GrpcMain.History
                     };
                 }
 
-                await ct.DeleteRangeAsync<MyDBContext.Main.History>(it =>
+                await ct.DeleteRangeAsync<MyDBContext.Main.AccountHistory>(it =>
                 it.CreatorId == request.UserId && it.Time >= request.StartTime && it.Time < request.EndTime);
                 return new CommonResponse
                 {

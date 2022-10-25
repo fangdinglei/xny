@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
-    public class History : IHasCreator
+    public class AccountHistory : IHasCreator
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
@@ -27,11 +27,11 @@ namespace MyDBContext.Main
 
 
         [NotMapped]
-        public HistoryType _Type
+        public AccountHistoryType _Type
         {
-            get => Enum.IsDefined(typeof(HistoryType), Type)
-                ? (HistoryType)Type
-                : HistoryType.Unknown;
+            get => Enum.IsDefined(typeof(AccountHistoryType), Type)
+                ? (AccountHistoryType)Type
+                : AccountHistoryType.Unknown;
             set =>
                Type = (byte)value;
         }

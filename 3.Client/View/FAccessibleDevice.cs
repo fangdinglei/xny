@@ -186,14 +186,14 @@ namespace MyClient.View
         #endregion 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.RowIndex == dataGridView1.Rows.Count - 1)
+            if (e.RowIndex < 0 || e.RowIndex == dataGridView1.Rows.Count)
                 return;
             var dev = currentshow[e.RowIndex];
-            if (e.ColumnIndex == 4)
+            if (e.ColumnIndex == 5)
             {
 
             }
-            else if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString() == "更多功能")
+            else if (e.ColumnIndex==6)
             {
                 ViewHolder.SwitchTo("FDeviceOtherFeatures", false, dev);
             }

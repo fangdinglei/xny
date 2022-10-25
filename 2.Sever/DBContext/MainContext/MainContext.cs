@@ -32,7 +32,7 @@ namespace MyDBContext.Main
     public class MainContext : DbContext
     {
         public DbSet<User> Users { get; set; }
-        public DbSet<History> Historys { get; set; }
+        public DbSet<AccountHistory> AccountHistorys { get; set; }
         public DbSet<User_SF> User_SFs { get; set; }
         public DbSet<Device_Type> Device_Types { get; set; }
         public DbSet<Device> Devices { get; set; }

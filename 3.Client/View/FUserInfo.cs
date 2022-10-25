@@ -682,7 +682,7 @@ namespace MyClient.View
                         var req = new GrpcMain.History.DTODefine.Types.Request_GetHistory()
                         {
                             UserId = SelectedUser.ID,
-                            Type = (int)HistoryType.Login,
+                            Type = (int)AccountHistoryType.Login,
                         };
                         if (usertimes.Checked)
                         {//TODO 使用时间
@@ -762,7 +762,7 @@ namespace MyClient.View
                         {
                             StartTime = TimeUtility.GetTicket(s),
                             EndTime = TimeUtility.GetTicket(e),
-                            Type = (int)HistoryType.Login,
+                            Type = (int)AccountHistoryType.Login,
                             UserId = SelectedUser.ID,
                         });
                         rsp.ThrowIfNotSuccess();

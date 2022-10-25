@@ -13,7 +13,7 @@ namespace MyDBContext.Main
     /// <summary>
     /// 用户历史记录类型
     /// </summary>
-    public enum HistoryType
+    public enum AccountHistoryType
     {
         Unknown,
         Login,

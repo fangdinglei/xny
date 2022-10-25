@@ -49,9 +49,9 @@ namespace GrpcMain.Account
                 }
                 else
                 {//登陆成功
-                    ct.Add(new MyDBContext.Main.History()
+                    ct.Add(new MyDBContext.Main.AccountHistory()
                     {
-                        _Type = HistoryType.Login,
+                        _Type = AccountHistoryType.Login,
                         Success = true,
                         Time = _timeutility.GetTicket(),
                         CreatorId = user.Id,

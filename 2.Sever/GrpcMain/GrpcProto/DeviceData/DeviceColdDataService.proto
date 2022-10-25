@@ -7,6 +7,9 @@ service ColdDataService {
     //压缩数据
     rpc CompressDeviceData( Request_CompressDeviceData)
         returns (CommonResponse); 
+    //删除冷数据
+    //移动冷数据
+    //自动迁移冷数据
 
 }
 
