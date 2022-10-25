@@ -47,7 +47,10 @@ namespace MyClient.View
 
         public void OnEvent(string name, params object[] pars)
         {
-
+            if (name=="Exit")
+            {
+                _repairInfos.Clear();
+            }
         }
 
         public void PrePare(params object[] par)
@@ -55,13 +58,11 @@ namespace MyClient.View
             if (par.Count() == 0)
             {//查询模式
                 IsSingleMode = false;
-                text_dvname.Text = "";
             }
             else if (par.Count() == 1)
             {//新增模式
                 IsSingleMode = true;
                 _device = (DeviceWithUserDeviceInfo)par[0];
-                text_dvname.Text = _device.Device.Id + ":" + _device.Device.Name;
 
             }
         }
@@ -170,6 +171,19 @@ namespace MyClient.View
                     return;
                 }
             });
+        }
+
+        private void list_infos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (list_infos.SelectedIndex<0)
+            { 
+                text_dvname.Text = "";
+                text_context.Text = "";
+                return;
+            }
+            var v = _repairInfos[list_infos.SelectedIndex].Value;
+            text_context.Text= v.Context;
+            text_dvname.Text = "Id:"+v.DeviceId;
         }
     }
 }

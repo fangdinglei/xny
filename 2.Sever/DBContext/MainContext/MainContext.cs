@@ -98,8 +98,8 @@ namespace MyDBContext.Main
                /      user12
             user13 
 
-                设备1 -类型1
-                设备2 -类型1
+                设备1 -类型1 维修记录1
+                设备2 -类型1 维修记录2
                 设备3 -类型2
              */
 
@@ -540,6 +540,31 @@ namespace MyDBContext.Main
                          StreamId = 1,
                          Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
                          Value = 80,
+                     }
+                );
+            #endregion
+
+            #region 维修记录
+            modelBuilder.Entity<Device_Repair>().HasData(
+                    new Device_Repair()
+                    {
+                        Id = 1,
+                        DeviceId = 1, 
+                        DiscoveryTime = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
+                        CompletionTime = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
+                        Context="测试维修1",
+                        CreatorId=2, 
+                        
+                    },
+                     new Device_Repair()
+                     {
+                         Id = 2,
+                         DeviceId =2,
+                         DiscoveryTime = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
+                         CompletionTime = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
+                         Context = "测试维修2",
+                         CreatorId = 2,
+
                      }
                 );
             #endregion

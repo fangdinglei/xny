@@ -9,6 +9,7 @@ namespace MyClient.FdlWindows.View
     public partial class FDateSelector : Form, IView
     {
         Action<DateTime, DateTime> okcall;
+        IViewHolder _viewholder;
         public FDateSelector()
         {
             InitializeComponent();
@@ -31,7 +32,7 @@ namespace MyClient.FdlWindows.View
 
         public void SetViewHolder(IViewHolder viewholder)
         {
-
+            _viewholder=viewholder;
         }
 
         public void OnTick()
@@ -43,6 +44,7 @@ namespace MyClient.FdlWindows.View
         {
             var vs = dateTimePicker1.Value;
             var ve = dateTimePicker2.Value;
+            _viewholder.Back();
             okcall.Invoke(new DateTime(vs.Year, vs.Month, vs.Day)
                 , new DateTime(ve.Year, ve.Month, ve.Day).AddDays(1));
         }

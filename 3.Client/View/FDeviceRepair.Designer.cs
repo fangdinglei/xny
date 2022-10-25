@@ -49,6 +49,7 @@
             this.list_infos.Name = "list_infos";
             this.list_infos.Size = new System.Drawing.Size(202, 508);
             this.list_infos.TabIndex = 0;
+            this.list_infos.SelectedIndexChanged += new System.EventHandler(this.list_infos_SelectedIndexChanged);
             // 
             // time_DiscoveryTime
             // 
