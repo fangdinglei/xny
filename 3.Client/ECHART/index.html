@@ -138,6 +138,109 @@
         }
             //var data = window.external.GetDataStr();
             //showdata(data);
+
+        //timeoffset +8*60*60*1000  legend list string   series { Name: string.Data:list of list[timeoffset, value,time] }
+        function showdata_onedeviceofmanydays_fromcs(legend, series, timeoffset) {
+            var _legend = strToJson(legend);
+            var _series = strToJson(series);
+            timeoffset = strToJson(timeoffset);
+            var a = [];
+            for (var k = 0; k < _series.length; k++) {
+                a.push({
+                    name: _series[k].Name,
+                    type: 'line',
+                    hoverAnimation: false,
+                    smooth: true,
+                    symbolSize: 4,
+                    data: _series[k].Data
+                });
+            }
+            var chart = echarts.init(document.getElementById('main'));
+            chart.clear();
+            option = {
+                title: [],//
+                legend: {
+                    data: _legend
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        params = params[0];
+                        var date = new Date(params.data[2]);
+                        var str_dt1 = dateFormat("YYYY.mm.dd", date);
+                        var str_dt2 = dateFormat("HH.MM.SS", date);
+                        var str_val = params.data[1];
+                        return `<span>${str_dt1}</span><br/><span>${str_dt2}</span><br/><span>${str_val}</span>`;
+                         
+                    },
+                    axisPointer: {
+                        animation: false
+                    }
+                },
+                xAxis: {
+                    type: 'time',
+                    min: -timeoffset ,
+                    max: -timeoffset + 24 *60*60*1000,
+                    splitLine: {
+                        show: false
+                    },
+                    splitNumber: 8,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#1B2232'
+                        }
+                    },
+                    axisLabel: {
+                        formatter: function (value, index) {
+                            var date = new Date(value);
+                            var hour = date.getHours();
+                            var minutes = date.getMinutes();
+                            if (hour < 10) {
+                                hour = '0' + hour;
+                            }
+                            if (minutes < 10) {
+                                minutes = '0' + minutes;
+                            }
+                            return hour + ':' + minutes;
+                        },
+                        color: '#1B2232'
+                    }
+                },
+                yAxis: {
+                    name: '数据',
+                    nameTextStyle: {
+                        color: '#1B2232',
+                        fontSize: 15
+                    },
+                    type: 'value',
+                    boundaryGap: [0, '100%'],
+                    splitLine: {
+                        show: false
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#1B2232'
+                        }
+                    },
+                    axisLabel: {
+                        color: '#1B2232'
+                    }
+                },
+                series: a,
+                //series: [{
+                //    name: '',
+                //    type: 'line',
+                //    hoverAnimation: false,
+                //    smooth: true,
+                //    symbolSize: 4,
+                //    data: data
+
+                //}]
+            };
+
+            chart.setOption(option);
+        }
+
     </script>
 </body>
 

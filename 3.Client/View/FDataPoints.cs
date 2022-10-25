@@ -73,7 +73,7 @@ namespace MyClient.View
             chromiumWebBrowser1.ExecuteScriptAsync("clear_fromcs()");
 
         }
-        async void RefreshChart()
+        async void RefreshChart_1()
         {
             if (CDevice.CheckedIndices.Count == 0)
             {
@@ -97,7 +97,7 @@ namespace MyClient.View
             }
             try
             {
-                string data = await GetDataStr(thingModels[CStreamName.SelectedIndex], ds);
+                string data = await GetDataStr_1(thingModels[CStreamName.SelectedIndex], ds);
                 var ts = dateTimePicker1.Value;
                 ts = new DateTime(ts.Year, ts.Month, ts.Day);
                 var te = dateTimePicker2.Value;
@@ -115,7 +115,7 @@ namespace MyClient.View
 
         }
 
-        async Task<string> GetDataStr(ThingModel model, List<DeviceWithUserDeviceInfo> devinfo)
+        async Task<string> GetDataStr_1(ThingModel model, List<DeviceWithUserDeviceInfo> devinfo)
         {
             DateTime ds = dateTimePicker1.Value, de = dateTimePicker2.Value;
             ds = new DateTime(ds.Year, ds.Month, ds.Day);
@@ -140,6 +140,98 @@ namespace MyClient.View
             }
             return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
         }
+
+        async void RefreshChart_2()
+        {
+            if (CDevice.CheckedIndices.Count!=1)
+            {
+                MessageBox.Show("请选择一个设备", "提示");
+                return;
+            }
+            if (CStreamName.SelectedIndex < 0)
+            {
+                MessageBox.Show("请选择合适的数据名称", "提示");
+                return;
+            }
+
+            while (!chromiumWebBrowser1.IsBrowserInitialized || chromiumWebBrowser1.IsLoading)
+            {
+                Application.DoEvents();
+            }
+            var ds = devices[CDevice.CheckedIndices[0]].Value;
+            try
+            {
+                var data = await GetDataStr_2(thingModels[CStreamName.SelectedIndex], ds); 
+                chromiumWebBrowser1.ExecuteScriptAsync("showdata_onedeviceofmanydays_fromcs",
+                    data.Item1,data.Item2,data.Item3  ); ;
+            }
+            catch (Exception ex)
+            {
+                ClearChart();
+                MessageBox.Show("错误:" + ex.Message, "错误");
+            }
+
+
+        }
+        /// <summary>
+        /// 系列
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="dev"></param>
+        /// <returns>系列,数据,时间偏移</returns>
+        async Task<(string,string,string)> GetDataStr_2(ThingModel model, DeviceWithUserDeviceInfo dev)
+        {
+            DateTime ds = dateTimePicker1.Value, de = dateTimePicker2.Value;
+            ds = new DateTime(ds.Year, ds.Month, ds.Day);
+            de = new DateTime(de.Year, de.Month, de.Day).AddDays(1);
+            var timeoffset = (long)((_timeUtility.GetDateTime(0)-new DateTime(1970,1,1)).TotalSeconds);
+            List<Dictionary<string, object>> obj = new List<Dictionary<string, object>>();
+            List<string> legend = new List<string>();
+            var res = await _deviceDataServiceClient.GetDataPointsAsync(new Request_GetDataPoints()
+            {
+                Starttime = _timeUtility.GetTicket(ds),
+                Endtime = _timeUtility.GetTicket(de),
+                StreamId = model.Id,
+                Dvid = dev.Device.Id,
+                ColdData = false,
+            });
+            Dictionary<long, List<DataPoinet>> dps = new();  
+            foreach (var item in res.Stream.Points)
+            {
+                var day=(item.Time + timeoffset) / (24 * 60 * 60);
+                if (dps.ContainsKey(day))
+                {
+                    dps[day].Add(item);
+                }
+                else
+                {
+                    dps[day] = new List<DataPoinet>() { item};
+                }
+            }
+            foreach (var item in dps.Values) {
+                var dt = _timeUtility.GetDateTime(item[0].Time).ToString("yy-MM-dd");
+                legend.Add(dt);
+                
+                obj.Add(new Dictionary<string, object>() {
+                    { "Name",dt+""},
+                    { "Data",item.Select(it=>{
+                        var t=(it.Time )%(24 * 60 * 60);
+                        //这里对utc进行映射 映射到 -8+16小时 而取模得到0,24 将16,24的部分重映射到-8,-0
+                        t=t>(-timeoffset+24*60*60)?t-24*60*60:t;
+                       return new object[]{
+                            t*1000,
+                            it.Value,
+                            it.Time*1000
+                       };
+                    }) },
+                }); 
+            }
+          
+            return (Newtonsoft.Json.JsonConvert.SerializeObject(legend), Newtonsoft.Json.JsonConvert.SerializeObject(obj),(timeoffset*1000).ToString());
+        }
+
+
+
         void LoadAllStreamName(TypeInfo type)
         {
             thingModels = type.ThingModels.ToList();
@@ -234,9 +326,12 @@ namespace MyClient.View
 
         private void button1_Click(object sender, EventArgs e)
         {
-            RefreshChart();
+            RefreshChart_1();
         }
 
-
+        private void button2_Click(object sender, EventArgs e)
+        {
+            RefreshChart_2();
+        }
     }
 }

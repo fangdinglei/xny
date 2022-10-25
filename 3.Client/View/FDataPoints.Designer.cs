@@ -36,6 +36,7 @@ namespace MyClient.View
             this.CStreamName = new System.Windows.Forms.ComboBox();
             this.list_Type = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // dateTimePicker1
@@ -63,7 +64,7 @@ namespace MyClient.View
             this.CDevice.Name = "CDevice";
             this.CDevice.Size = new System.Drawing.Size(196, 463);
             this.CDevice.TabIndex = 5;
-            this.CDevice.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CDevice_ItemCheck); 
+            this.CDevice.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CDevice_ItemCheck);
             // 
             // dateTimePicker2
             // 
@@ -102,11 +103,22 @@ namespace MyClient.View
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(563, 2);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(112, 34);
+            this.button2.TabIndex = 11;
+            this.button2.Text = "查询";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // FDataPoints
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1754, 1050);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.list_Type);
             this.Controls.Add(this.CStreamName);
@@ -129,5 +141,6 @@ namespace MyClient.View
         private ComboBox CStreamName;
         private ListBox list_Type;
         private Button button1;
+        private Button button2;
     }
 }

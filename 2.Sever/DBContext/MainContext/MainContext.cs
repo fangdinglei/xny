@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations; 
+using Microsoft.EntityFrameworkCore.Migrations;
 using Org.BouncyCastle.Utilities.Date;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -82,7 +82,7 @@ namespace MyDBContext.Main
     {
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var time =new MyUtility.TimeUtility();
+            var time = new MyUtility.TimeUtility();
             /*
              初始化
                   admin-系统用户[SystemUser,测试权限1]
@@ -537,9 +537,56 @@ namespace MyDBContext.Main
                      new Device_DataPoint()
                      {
                          Id = 2,
+                         DeviceId = 1,
+                         StreamId = 1,
+                         Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8+1)) / 1000,
+                         Value = 91,
+                     },
+                      new Device_DataPoint()
+                      {
+                          Id = 3,
+                          DeviceId = 1,
+                          StreamId = 1,
+                          Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8 + 2)) / 1000,
+                          Value = 95,
+                      },
+                       new Device_DataPoint()
+                       {
+                           Id = 4,
+                           DeviceId = 1,
+                           StreamId = 1,
+                           Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8 +3)) / 1000,
+                           Value = 96,
+                       }, new Device_DataPoint()
+                       {
+                           Id = 5,
+                           DeviceId = 1,
+                           StreamId = 1,
+                           Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8 + 15)) / 1000,
+                           Value = 96,
+                       },
+                       new Device_DataPoint()
+                       {
+                           Id = 6,
+                           DeviceId = 1,
+                           StreamId = 1,
+                           Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8 + 18)) / 1000,
+                           Value = 96,
+                       },
+                       new Device_DataPoint()
+                       {
+                           Id = 7,
+                           DeviceId = 1,
+                           StreamId = 1,
+                           Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8 + 30)) / 1000,
+                           Value = 96,
+                       },
+                     new Device_DataPoint()
+                     {
+                         Id = 8,
                          DeviceId = 2,
                          StreamId = 1,
-                         Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
+                         Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8+4)) / 1000,
                          Value = 80,
                      }
                 );
@@ -550,17 +597,17 @@ namespace MyDBContext.Main
                     new Device_Repair()
                     {
                         Id = 1,
-                        DeviceId = 1, 
-                        DiscoveryTime = time.GetTicket(new System.DateTime(2023,1,2)),
+                        DeviceId = 1,
+                        DiscoveryTime = time.GetTicket(new System.DateTime(2023, 1, 2)),
                         CompletionTime = time.GetTicket(new System.DateTime(2023, 1, 5)),
-                        Context="测试维修1",
-                        CreatorId=2, 
-                        
+                        Context = "测试维修1",
+                        CreatorId = 2,
+
                     },
                      new Device_Repair()
                      {
                          Id = 2,
-                         DeviceId =2,
+                         DeviceId = 2,
                          DiscoveryTime = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
                          CompletionTime = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
                          Context = "测试维修2",
@@ -591,7 +638,7 @@ namespace MyDBContext.Main
                           Readed = false,
                           ReceiverId = 3,
                           SenderId = 2,
-                          Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000 
+                          Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000
                       }
                 );
             #endregion
