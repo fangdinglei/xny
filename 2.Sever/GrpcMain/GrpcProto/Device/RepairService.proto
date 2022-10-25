@@ -11,7 +11,7 @@ service RepairService {
     //修改维修记录
     rpc UpdateRepairInfo(Request_UpdateRepairInfo)
         returns (Response_UpdateRepairInfo);
-    //查询维修记录 只有拥有该设备才能查询
+    //查询维修记录 只有拥有该设备才能查询 按发现时间时间升序
     rpc GetRepairInfos(Request_GetRepairInfos)
         returns (Response_GetRepairInfos); 
 
@@ -42,6 +42,7 @@ message Response_UpdateRepairInfo{
 
 
 message Request_GetRepairInfos{
+    //发现时间 和结束时间构成的时间段与此时间段有交集则可查询到
     optional int64 StartTime=2;
     optional int64 EndTime=3;
     optional int32 MaxCount=4;

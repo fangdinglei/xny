@@ -31,7 +31,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\1.Utility\MyUtility\MyUtility.csproj" />
     <ProjectReference Include="..\EnumDefines\EnumDefines.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MyUtility">
+      <HintPath>..\..\1.Utility\MyUtility\obj\Debug\net6.0\ref\MyUtility.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

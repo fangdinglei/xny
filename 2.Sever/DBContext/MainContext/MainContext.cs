@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations; 
 using Org.BouncyCastle.Utilities.Date;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -82,13 +82,14 @@ namespace MyDBContext.Main
     {
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var time =new MyUtility.TimeUtility();
             /*
              初始化
                   admin-系统用户[SystemUser,测试权限1]
                   
-                  user2-顶级用户[测试权限1,测试权限2]      -设备1(分组1) 2 3
+                  user2-顶级用户[测试权限1,测试权限2]      -设备1(分组1) 2 3    邮件
                   /   \
-               user3   \              -设备1(分组2) 2  
+               user3   \              -设备1(分组2) 2   邮件
                 /      user4          -设备1
              user5                    -设备1
 
@@ -550,8 +551,8 @@ namespace MyDBContext.Main
                     {
                         Id = 1,
                         DeviceId = 1, 
-                        DiscoveryTime = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
-                        CompletionTime = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000,
+                        DiscoveryTime = time.GetTicket(new System.DateTime(2023,1,2)),
+                        CompletionTime = time.GetTicket(new System.DateTime(2023, 1, 5)),
                         Context="测试维修1",
                         CreatorId=2, 
                         
@@ -566,6 +567,32 @@ namespace MyDBContext.Main
                          CreatorId = 2,
 
                      }
+                );
+            #endregion
+
+            #region 站内信
+            modelBuilder.Entity<Internal_Mail>().HasData(
+                    new Internal_Mail()
+                    {
+                        Id = 1,
+                        LastEMailTime = 0,
+                        Context = "测试1",
+                        Readed = false,
+                        ReceiverId = 2,
+                        SenderId = 3,
+                        Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000
+
+                    },
+                      new Internal_Mail()
+                      {
+                          Id = 2,
+                          LastEMailTime = 0,
+                          Context = "测试2",
+                          Readed = false,
+                          ReceiverId = 3,
+                          SenderId = 2,
+                          Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000 
+                      }
                 );
             #endregion
 

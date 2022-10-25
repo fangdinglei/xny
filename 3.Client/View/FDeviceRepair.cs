@@ -188,6 +188,8 @@ namespace MyClient.View
             var v = _repairInfos[list_infos.SelectedIndex].Value;
             text_context.Text= v.Context;
             text_dvname.Text = "Id:"+v.DeviceId;
+            time_CompletionTime.Value = _timeUtility.GetDateTime(v.CompletionTime);
+            time_DiscoveryTime.Value = _timeUtility.GetDateTime(v.DiscoveryTime);
         }
     }
 }
