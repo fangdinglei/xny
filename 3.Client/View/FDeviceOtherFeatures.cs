@@ -38,5 +38,10 @@ namespace MyClient.View
         {
             _viewholder.SwitchTo("FDeviceRepair", false, _dev);
         }
+
+        private void btn_type_Click(object sender, EventArgs e)
+        {
+            _viewholder.SwitchTo("FDeviceTypeDetail", false, false,_dev.Device.DeviceTypeId);
+        }
     }
 }

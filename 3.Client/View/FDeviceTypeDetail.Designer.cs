@@ -98,12 +98,13 @@
             // 
             // btn_submit
             // 
-            this.btn_submit.Location = new System.Drawing.Point(353, 10);
+            this.btn_submit.Location = new System.Drawing.Point(241, 15);
             this.btn_submit.Name = "btn_submit";
             this.btn_submit.Size = new System.Drawing.Size(129, 34);
             this.btn_submit.TabIndex = 5;
             this.btn_submit.Text = "确定";
             this.btn_submit.UseVisualStyleBackColor = true;
+            this.btn_submit.Click += new System.EventHandler(this.btn_submit_Click);
             // 
             // text_thingmodel_name
             // 
@@ -211,6 +212,7 @@
             this.btn_thingmodel_creat.TabIndex = 18;
             this.btn_thingmodel_creat.Text = "新建";
             this.btn_thingmodel_creat.UseVisualStyleBackColor = true;
+            this.btn_thingmodel_creat.Click += new System.EventHandler(this.btn_thingmodel_creat_Click);
             // 
             // text_thingmodel_unit
             // 
@@ -246,6 +248,7 @@
             this.btn_thingmodel_update.TabIndex = 22;
             this.btn_thingmodel_update.Text = "修改";
             this.btn_thingmodel_update.UseVisualStyleBackColor = true;
+            this.btn_thingmodel_update.Click += new System.EventHandler(this.btn_thingmodel_update_Click);
             // 
             // FDeviceTypeDetail
             // 

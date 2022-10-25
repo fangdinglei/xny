@@ -5,6 +5,9 @@ using static GrpcMain.Account.DTODefine.Types;
 using GrpcMain.Device ;
 using GrpcMain.UserDevice ;
 using GrpcMain.Account;
+using CefSharp.DevTools.CacheStorage;
+using System.Reflection;
+using TypeInfo = GrpcMain.DeviceType.TypeInfo;
 
 namespace MyClient
 {
@@ -13,22 +16,24 @@ namespace MyClient
         public Dictionary<long, Device> devices = new();
 
         public Dictionary<long, UserInfo> Users = new();
-        public List<TypeInfo> TypeInfo = new();
         public List<DeviceWithUserDeviceInfo> DeviceWithUserDeviceInfos = new();
         public List<User_Device_Group> User_Device_Groups = new();
+        public Dictionary<long,TypeInfo> TypeInfos = new();
 
+        DeviceTypeService.DeviceTypeServiceClient _deviceTypeServiceClient;
         AccountService.AccountServiceClient _accountServiceClient;
         DeviceService.DeviceServiceClient _deviceServiceClient;
         UserDeviceService.UserDeviceServiceClient _userDeviceServiceClient;
-        public LocalDataBase(DeviceService.DeviceServiceClient deviceServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, AccountService.AccountServiceClient accountServiceClient)
+        public LocalDataBase(DeviceService.DeviceServiceClient deviceServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, AccountService.AccountServiceClient accountServiceClient, DeviceTypeService.DeviceTypeServiceClient deviceTypeServiceClient)
         {
             _deviceServiceClient = deviceServiceClient;
             _userDeviceServiceClient = userDeviceServiceClient;
             _accountServiceClient = accountServiceClient;
+            _deviceTypeServiceClient = deviceTypeServiceClient;
         }
 
-        public Device GetDevice(long id ) {
-            if (devices.ContainsKey(id))
+        public Device GetDevice(long id, bool cache= true) {
+            if (cache && devices.ContainsKey(id))
                 return devices[id]; 
             try
             {
@@ -52,9 +57,9 @@ namespace MyClient
             devices[value.Id] = value;  
         }
 
-        public UserInfo UserInfo(long id)
+        public UserInfo GetUserInfo(long id, bool cache = true)
         {
-            if (Users.ContainsKey(id))
+            if (cache && Users.ContainsKey(id))
                 return Users[id];
             try
             {
@@ -78,5 +83,33 @@ namespace MyClient
             Users[value.ID] = value;
         }
 
+        public TypeInfo GetTypeInfo(long id,bool cache =true)
+        {
+            if (cache&& TypeInfos.ContainsKey(id))
+                return TypeInfos[id];
+            try
+            {
+                var req = new GrpcMain.DeviceType.DTODefine.Types.Request_GetTypeInfos { };
+                req.Ids.Add(id);
+                var rsp = _deviceTypeServiceClient.GetTypeInfos(req);
+                if (rsp.TypeInfos.Count == 0)
+                {
+                    throw new Exception();
+                }
+                if (rsp.TypeInfos.Count == 0)
+                    return null;
+                TypeInfos[rsp.TypeInfos[0].Id] = rsp.TypeInfos[0]; 
+                return rsp.TypeInfos[0];
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
+        internal void Save(TypeInfo typeinfo)
+        {
+            TypeInfos[typeinfo.Id] = typeinfo;
+        }
     }
 }

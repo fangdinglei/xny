@@ -203,6 +203,10 @@ namespace GrpcMain.DeviceType
             }
         }
 
+        public override Task<Response_AddTypeInfo> AddTypeInfo(Request_AddTypeInfo request, ServerCallContext context)
+        {
+            throw new Exception();
+        }
 
     }
 }

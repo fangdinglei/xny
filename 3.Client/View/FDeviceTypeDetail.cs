@@ -1,5 +1,6 @@
 ﻿using FdlWindows.View;
 using GrpcMain.DeviceType;
+using MyClient.Grpc;
 using System.ComponentModel;
 
 namespace MyClient.View
@@ -11,16 +12,17 @@ namespace MyClient.View
         DeviceTypeService.DeviceTypeServiceClient _typeServiceClient;
         IViewHolder _viewholder;
         bool isCreat;
-        GrpcMain.DeviceType.TypeInfo typeinfo;
+        TypeInfo typeinfo;
         /// <summary>
         /// 对物模型的操作应当先操作此 再合并到typeinfo
         /// </summary>
         BindingList<ThingModel> thingModels;
-
-        public FDeviceTypeDetail(DeviceTypeService.DeviceTypeServiceClient typeServiceClient)
+        LocalDataBase _localData;
+        public FDeviceTypeDetail(DeviceTypeService.DeviceTypeServiceClient typeServiceClient, LocalDataBase localData)
         {
             InitializeComponent();
             _typeServiceClient = typeServiceClient;
+            _localData = localData;
         }
 
         public Control View => this;
@@ -44,7 +46,7 @@ namespace MyClient.View
                 _viewholder.ShowLoading(this,
                     async () =>
                     {
-                        var req = new GrpcMain.DeviceType.DTODefine.Types.Request_GetTypeInfos { };
+                        var req = new DTODefine.Types.Request_GetTypeInfos { };
                         req.Ids.Add(typeid);
                         var rsp = await _typeServiceClient.GetTypeInfosAsync(req);
                         if (rsp.TypeInfos.Count == 0)
@@ -66,7 +68,6 @@ namespace MyClient.View
                     {
                         _viewholder.Back();
                     });
-
             }
 
         }
@@ -104,6 +105,64 @@ namespace MyClient.View
 
         }
 
+        private void btn_thingmodel_update_Click(object sender, EventArgs e)
+        {
+            if (list_thingmodels.SelectedIndex < 0)
+                return;
+            var thingModel = thingModels[list_thingmodels.SelectedIndex];
+            //text_thingmodel_id.Text = thingModel.Id + "";
+            thingModel.Name = text_thingmodel_name.Text;
+            thingModel.ValueType = 1;
+            thingModel.Unit = text_thingmodel_unit.Text;
+            thingModel.MaxValue = float.Parse(text_thingmodel_max.Text);
+            thingModel.MinValue = float.Parse(text_thingmodel_min.Text);
+            thingModel.Remark = text_thingmodel_remark.Text;
+            thingModel.Abandonted = check_thingmodel_abandonted.Checked;
 
+        }
+
+        private void btn_thingmodel_creat_Click(object sender, EventArgs e)
+        {
+            var thingModel = new ThingModel();
+            thingModel.Id = 0;
+            thingModel.Name = text_thingmodel_name.Text;
+            thingModel.ValueType = 1;
+            thingModel.Unit = text_thingmodel_unit.Text;
+            thingModel.MaxValue = float.Parse(text_thingmodel_max.Text);
+            thingModel.MinValue = float.Parse(text_thingmodel_min.Text);
+            thingModel.Remark = text_thingmodel_remark.Text;
+            thingModel.Abandonted = check_thingmodel_abandonted.Checked;
+            thingModels.Add(thingModel);
+        }
+
+        private void btn_submit_Click(object sender, EventArgs e)
+        {//TODO 提交变化
+            try
+            { 
+                if (isCreat)
+                {//创建
+                    var res=_typeServiceClient.AddTypeInfo(new Request_AddTypeInfo()
+                    {
+                        Info = typeinfo
+                    });
+                    _localData.Save(res.Info);
+                }
+                else
+                {
+                    var res=_typeServiceClient.UpdateTypeInfo(new DTODefine.Types.Request_UpdateTypeInfo { 
+                        Info = typeinfo
+                    });
+                    res.ThrowIfNotSuccess();
+                    _localData.Save(typeinfo);
+                }
+                MessageBox.Show("提交成功", "提示");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("错误:" + ex.Message, "错误");
+                return;
+            }
+           
+        }
     }
 }
