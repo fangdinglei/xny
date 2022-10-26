@@ -38,7 +38,6 @@
             this.text_thingmodel_id = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.text_thingmodel_type = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.text_thingmodel_remark = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -51,6 +50,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.check_thingmodel_abandonted = new System.Windows.Forms.CheckBox();
             this.btn_thingmodel_update = new System.Windows.Forms.Button();
+            this.text_thingmodel_type = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -138,14 +138,6 @@
             this.label4.Size = new System.Drawing.Size(46, 24);
             this.label4.TabIndex = 6;
             this.label4.Text = "名称";
-            // 
-            // text_thingmodel_type
-            // 
-            this.text_thingmodel_type.Location = new System.Drawing.Point(400, 165);
-            this.text_thingmodel_type.Name = "text_thingmodel_type";
-            this.text_thingmodel_type.ReadOnly = true;
-            this.text_thingmodel_type.Size = new System.Drawing.Size(150, 30);
-            this.text_thingmodel_type.TabIndex = 11;
             // 
             // label5
             // 
@@ -250,11 +242,26 @@
             this.btn_thingmodel_update.UseVisualStyleBackColor = true;
             this.btn_thingmodel_update.Click += new System.EventHandler(this.btn_thingmodel_update_Click);
             // 
+            // text_thingmodel_type
+            // 
+            this.text_thingmodel_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.text_thingmodel_type.FormattingEnabled = true;
+            this.text_thingmodel_type.Items.AddRange(new object[] {
+            "Int",
+            "Float",
+            "Bool"});
+            this.text_thingmodel_type.Location = new System.Drawing.Point(400, 165);
+            this.text_thingmodel_type.Name = "text_thingmodel_type";
+            this.text_thingmodel_type.Size = new System.Drawing.Size(150, 32);
+            this.text_thingmodel_type.TabIndex = 23;
+            this.text_thingmodel_type.SelectedIndexChanged += new System.EventHandler(this.text_thingmodel_type_SelectedIndexChanged);
+            // 
             // FDeviceTypeDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(605, 507);
+            this.Controls.Add(this.text_thingmodel_type);
             this.Controls.Add(this.btn_thingmodel_update);
             this.Controls.Add(this.check_thingmodel_abandonted);
             this.Controls.Add(this.text_thingmodel_unit);
@@ -266,7 +273,6 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.text_thingmodel_remark);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.text_thingmodel_type);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.text_thingmodel_name);
             this.Controls.Add(this.text_thingmodel_id);
@@ -297,7 +303,6 @@
         private TextBox text_thingmodel_id;
         private Label label3;
         private Label label4;
-        private TextBox text_thingmodel_type;
         private Label label5;
         private TextBox text_thingmodel_remark;
         private Label label6;
@@ -310,5 +315,6 @@
         private Label label9;
         private CheckBox check_thingmodel_abandonted;
         private Button btn_thingmodel_update;
+        private ComboBox text_thingmodel_type;
     }
 }

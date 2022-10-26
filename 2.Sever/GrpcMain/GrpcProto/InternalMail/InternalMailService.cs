@@ -5,12 +5,50 @@ using MyDBContext.Main;
 using MyEmailUtility;
 using MyUtility;
 using System.Text.RegularExpressions;
-using static GrpcMain.InternalMail.DTODefine.Types;
 
 namespace GrpcMain.InternalMail
 {
+    static  public class Ext {
+        /// <summary>
+        /// 将请求对象转换为新的DB对象
+        /// </summary>
+        /// <param name="mail"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        static public Internal_Mail AsDBObj(this InternalMail mail )
+        {
+            return new Internal_Mail
+            {
+                Id = mail.Id,
+                SenderId = mail.SenderId,
+                LastEMailTime = mail.LastEMailTime,
+                ReceiverId = mail .ReceiverId,
+                Readed =mail.Readed,
+                Context = mail .Context,
+                Title = mail .Title,
+                Time = mail .Time,
+            };
+        }
+        static public InternalMail AsGrpcObj(this Internal_Mail mail)
+        {
+            return new InternalMail
+            {
+                Id = mail.Id,
+                SenderId = mail.SenderId,
+                LastEMailTime = mail.LastEMailTime,
+                ReceiverId = mail.ReceiverId,
+                Readed = mail.Readed,
+                Context = mail.Context,
+                Title = mail.Title,
+                Time = mail.Time,
+            };
+        }
+    }
+
     public class InternalMailServiceImp : InternalMailService.InternalMailServiceBase
     {
+        public static int PageSize;
+
         ITimeUtility _timeutility;
         IGrpcCursorUtility _cursorUtility;
         IMyEmailUtility myEmailUtility;
@@ -22,7 +60,7 @@ namespace GrpcMain.InternalMail
         }
 
 
-        public override async Task<CommonResponse?> SendMail(Request_SendInternalMail request, ServerCallContext context)
+        public override async Task<Response_SendInternalMail?> SendMail(Request_SendInternalMail request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
             request.Mail.Time = _timeutility.GetTicket();
@@ -34,22 +72,16 @@ namespace GrpcMain.InternalMail
                     context.Status = new Status(StatusCode.PermissionDenied, "无权给该用户发邮件");
                     return null;
                 }
-
-                ct.Internal_Mails.Add(
-                    new Internal_Mail
-                    {
-                        SenderId = id,
-                        LastEMailTime = 0,
-                        ReceiverId = request.Mail.ReceiverId,
-                        Readed = false,
-                        Context = request.Mail.Context,
-                        Title = request.Mail.Title,
-                        Time = request.Mail.Time,
-                    }
-                );
+                request.Mail.Id = 0;
+                request.Mail.SenderId = id;
+                request.Mail.Readed = false;
+                request.Mail.LastEMailTime = 0;
+                var mail = request.Mail.AsDBObj();
+                ct.Internal_Mails.Add(  mail );
                 await ct.SaveChangesAsync();
+                request.Mail.Id = mail.Id;
+                return new Response_SendInternalMail() {  Mail = request.Mail };
             }
-            return new CommonResponse() { Success = true };
         }
 
         public override async Task<CommonResponse?> SetMailReaded(Request_SetMailReaded request, ServerCallContext context)
@@ -71,41 +103,47 @@ namespace GrpcMain.InternalMail
         }
 
         public override async Task<Response_GetMail> GetMail(Request_GetMail request, ServerCallContext context)
-        {
-            int maxcount = 100 + 1;
-            if (request.HasMaxCount)
+        { 
+            if (!request.HasPage)
             {
-                maxcount = request.MaxCount + 1;
+                request.Page = 1;
             }
             long id = (long)context.UserState["CreatorId"];
             Response_GetMail res = new Response_GetMail();
             using (MainContext ct = new MainContext())
             {
-                var bd = ct.Internal_Mails.Where(it => it.ReceiverId == id);
-                if (request.HasCursor)
-                {
-                    bd = bd.Where(it => it.Id >= request.Cursor);
-                }
-                bd = bd.Take(maxcount);
+                var bd = ct.Internal_Mails.Where(it => it.ReceiverId == id||it.SenderId==id);
+                //if (request.HasCursor)
+                //{
+                //    bd = bd.Where(it => it.Id >= request.Cursor);
+                //}
+                bd = bd.OrderByDescending(it => it.Time);
+                bd = bd.Skip(request.Page * PageSize ).Take(PageSize);
                 var mails = await bd.AsNoTracking().ToListAsync();
-
-                IEnumerable<Internal_Mail> lsx
-                    = _cursorUtility.Run(mails, maxcount, (it) =>
-                    {
-                        res.Cursor = it == null ? 0 : it.Id;
-                    });
-                res.Mails.AddRange(lsx.Select(
-                    it => new DTODefine.Types.InternalMail()
-                    {
-                        Id = it.Id,
-                        Context = it.Context,
-                        Readed = it.Readed,
-                        Time = it.Time,
-                        Title = it.Title,
-                    }
-                ));
+                IEnumerable<Internal_Mail> lsx = mails;
+                //    = _cursorUtility.Run(mails, maxcount, (it) =>
+                //    {
+                //        res.Cursor = it == null ? 0 : it.Id;
+                //    });
+                res.Mails.AddRange(lsx.Select( it =>it.AsGrpcObj()  ));
+                res.Page=request.Page;
             }
             return res;
+        }
+
+        public override async Task<Response_CountMail> CountMail(Request_CountMail request, ServerCallContext context)
+        {
+            long id = (long)context.UserState["CreatorId"];
+            using (MainContext ct = new MainContext())
+            {
+                var count =await ct.Internal_Mails.Where(it => it.ReceiverId == id || it.SenderId == id)
+                    .CountAsync();
+                return new Response_CountMail
+                {
+                    MailCount = count,
+                    PageSize = PageSize,
+                };
+            }
         }
 
         public override async Task<CommonResponse> SendEMail(Request_SendEMail request, ServerCallContext context)

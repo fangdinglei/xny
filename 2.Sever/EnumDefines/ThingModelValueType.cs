@@ -13,8 +13,9 @@ namespace MyDBContext.Main
 {
     public enum ThingModelValueType
     {
-        None,
-        Int,
-        Float,
+        None=0,
+        Int=1,
+        Float=2,
+        Bool=3,
     }
 }

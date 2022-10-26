@@ -7,52 +7,64 @@ import "Common/CommonResponse.proto";
 service InternalMailService { 
 
     //发送站内信
-    rpc SendMail(DTODefine.Request_SendInternalMail)
-        returns (CommonResponse);
+    rpc SendMail(Request_SendInternalMail)
+        returns (Response_SendInternalMail);
     //设置站内信已读
-    rpc SetMailReaded(DTODefine.Request_SetMailReaded)
+    rpc SetMailReaded(Request_SetMailReaded)
         returns (CommonResponse);
     //获取站内信
-    rpc GetMail(DTODefine.Request_GetMail)
-        returns (DTODefine.Response_GetMail); 
+    rpc GetMail(Request_GetMail)
+        returns (Response_GetMail); 
+    //统计邮件和获取分页大小
+    rpc CountMail(Request_CountMail)
+        returns (Response_CountMail);
+
     //发送站外信
-    rpc SendEMail(DTODefine.Request_SendEMail)
+    rpc SendEMail(Request_SendEMail)
         returns (CommonResponse);
 }
 
-
-message DTODefine
-{  
-    message InternalMail{
-        optional int64 Id=1; 
-        string Title =2;
-        string Context =3;
-        optional int64 Time=4;
-        optional bool Readed=5;
-        optional int64 SenderId =6;
-        int64 ReceiverId =7; 
-        optional int64 LastEMailTime =8;
-
-    }
-    message Request_SendInternalMail{ 
-        InternalMail Mail=1;
-    }
-
-    message Request_SetMailReaded{
-        int64 MailId=1; 
-    }
-    message Request_GetMail{
-        optional int64 Cursor=1;
-        optional int32 MaxCount=2;
-    } 
-    message Response_GetMail{
-        optional int64 Cursor=1;
-        repeated InternalMail Mails=2;
-    } 
-
-    message Request_SendEMail{
-        int64 MailId=1; 
-    }
-
+message InternalMail{
+    optional int64 Id=1; 
+    string Title =2;
+    string Context =3;
+    optional int64 Time=4;
+    optional bool Readed=5;
+    optional int64 SenderId =6;
+    int64 ReceiverId =7; 
+    optional int64 LastEMailTime =8;
 }
- 
+message Request_SendInternalMail{ 
+    InternalMail Mail=1;
+}
+message Response_SendInternalMail{ 
+    InternalMail Mail=1;
+}
+message Request_SetMailReaded{
+    int64 MailId=1; 
+}
+message Request_GetMail{
+    //备用 无作用
+    optional int64 Cursor=1;
+    //最小值为0
+    optional int32 Page=2;
+} 
+message Response_GetMail{
+    //备用 无作用
+    optional int64 Cursor=1;
+    optional int32 Page=2;
+    repeated InternalMail Mails=3;
+} 
+
+message Request_CountMail{
+    
+}
+message Response_CountMail{
+    int32 PageSize=1;
+    int32 MailCount=2;
+}
+
+
+message Request_SendEMail{
+    int64 MailId=1; 
+}

@@ -1,6 +1,7 @@
 ﻿using FdlWindows.View;
 using GrpcMain.DeviceType;
 using MyClient.Grpc;
+using MyDBContext.Main;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -24,9 +25,22 @@ namespace MyClient.View
         public FDeviceTypeDetail(DeviceTypeService.DeviceTypeServiceClient typeServiceClient, LocalDataBase localData)
         {
             InitializeComponent();
+            text_thingmodel_type.SelectedIndex = 0;
             _typeServiceClient = typeServiceClient;
             _localData = localData;
         }
+
+
+
+
+
+
+
+
+
+
+
+
 
         public Control View => this;
 
@@ -91,13 +105,12 @@ namespace MyClient.View
             var thingModel = thingModels[list_thingmodels.SelectedIndex];
             text_thingmodel_id.Text = thingModel.Id + "";
             text_thingmodel_name.Text = thingModel.Name;
-            text_thingmodel_type.Text = thingModel.ValueType.ToString();
+            text_thingmodel_type.SelectedIndex = text_thingmodel_type.Items.IndexOf(((ThingModelValueType)thingModel.ValueType).ToString());
             text_thingmodel_unit.Text = thingModel.Unit;
             text_thingmodel_max.Text = thingModel.MaxValue + "";
             text_thingmodel_min.Text = thingModel.MinValue + "";
             text_thingmodel_remark.Text = thingModel.Remark;
-            check_thingmodel_abandonted.Checked = thingModel.Abandonted;
-
+            check_thingmodel_abandonted.Checked = thingModel.Abandonted; 
         }
         public void SetViewHolder(IViewHolder viewholder)
         {
@@ -116,7 +129,7 @@ namespace MyClient.View
             var thingModel = thingModels[list_thingmodels.SelectedIndex];
             //text_thingmodel_id.Text = thingModel.Id + "";
             thingModel.Name = text_thingmodel_name.Text;
-            thingModel.ValueType = 1;
+            thingModel.ValueType = (int)Enum.Parse<ThingModelValueType>(text_thingmodel_type.Text);
             thingModel.Unit = text_thingmodel_unit.Text;
             thingModel.MaxValue = float.Parse(text_thingmodel_max.Text);
             thingModel.MinValue = float.Parse(text_thingmodel_min.Text);
@@ -135,7 +148,7 @@ namespace MyClient.View
             var thingModel = new ThingModel();
             thingModel.Id = 0;
             thingModel.Name = text_thingmodel_name.Text;
-            thingModel.ValueType = 1;
+            thingModel.ValueType = (int)Enum.Parse<ThingModelValueType>(text_thingmodel_type.Text); ;
             thingModel.Unit = text_thingmodel_unit.Text;
             thingModel.MaxValue = float.Parse(text_thingmodel_max.Text);
             thingModel.MinValue = float.Parse(text_thingmodel_min.Text);
@@ -175,5 +188,22 @@ namespace MyClient.View
             }
            
         }
+
+        private void text_thingmodel_type_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (text_thingmodel_type.SelectedItem!=null&&text_thingmodel_type.SelectedItem.ToString()=="Bool")
+            {
+                text_thingmodel_max.Enabled = false;
+                text_thingmodel_min.Enabled = false;
+                text_thingmodel_max.Text = "0";
+                text_thingmodel_min.Text = "1";
+            }
+            else
+            {
+                text_thingmodel_max.Enabled = true;
+                text_thingmodel_min.Enabled = true;
+            }
+          
+        } 
     }
 }
