@@ -31,6 +31,7 @@
                 throw new Exception("错误的构造参数");
             }
             NeedAudit = needAudit;
+            NeedLogin = true;
             NeedAudit_OpName = needAudit_OpName;
         }
     }

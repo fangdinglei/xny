@@ -22,6 +22,6 @@ namespace MyDBContext.Main
         public long CreatorId { get; set; }
         public virtual User Creator { get; }
 
-        public virtual List<ThingModel> ThingModels { get; set; }
+        public virtual IList<ThingModel> ThingModels { get; set; }
     }
 }

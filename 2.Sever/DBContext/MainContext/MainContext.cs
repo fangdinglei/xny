@@ -36,6 +36,7 @@ namespace MyDBContext.Main
         public DbSet<User_SF> User_SFs { get; set; }
         public DbSet<Device_Type> Device_Types { get; set; }
         public DbSet<Device> Devices { get; set; }
+        public DbSet<ThingModel> ThingModels { get; set; }
         public DbSet<User_Device_Group> User_Device_Groups { get; set; }
         public DbSet<User_Device> User_Devices { get; set; }
         public DbSet<Device_AutoControl_Settings_Item> Device_AutoControl_Settings_Items { get; set; }

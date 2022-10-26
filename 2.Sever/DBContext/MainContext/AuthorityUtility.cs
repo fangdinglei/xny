@@ -18,26 +18,26 @@ namespace MyDBContext.Main
     {
         public enum OwnerType
         {
-            Non,
-            Creator,
-            FatherOfCreator,
-            SonOfCreator,
+            Non=0,
+            SonOfCreator=1,
+            Creator=2,
+            FatherOfCreator=3,
         }
         /// <summary>
         /// 获取用户和实体的权限关系
         /// </summary>
-        /// <param name="creator"></param>
+        /// <param name="obj"></param>
         /// <param name="ct"></param>
         /// <param name="uid"></param>
         /// <returns></returns>
-        static public async Task<OwnerType> GetOwnerTypeAsync(this IHasCreator creator, MainContext ct, long uid)
+        static public async Task<OwnerType> GetOwnerTypeAsync(this IHasCreator obj, MainContext ct, long uid)
         {
-            var u1 = creator.Id;
+            var u1 = obj.CreatorId  ;
             var u2 = uid;
             var sf = await ct.User_SFs
               .Where(it => it.User1Id == u1 && it.User2Id == u2)
                .AsNoTracking().FirstOrDefaultAsync();
-            if (sf != null)
+            if (sf == null)
             {
                 return OwnerType.Non;
             }

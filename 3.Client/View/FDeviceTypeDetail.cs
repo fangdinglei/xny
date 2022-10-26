@@ -2,6 +2,9 @@
 using GrpcMain.DeviceType;
 using MyClient.Grpc;
 using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using TypeInfo = GrpcMain.DeviceType.TypeInfo;
 
 namespace MyClient.View
 {
@@ -60,8 +63,8 @@ namespace MyClient.View
                     {
                         text_id.Text = typeinfo.Id + "";
                         text_name.Text = typeinfo.Name;
-                        thingModels = new BindingList<ThingModel>(typeinfo.ThingModels);
-                        list_thingmodels.DataSource = typeinfo.ThingModels;
+                        thingModels = new BindingList<ThingModel>(typeinfo.ThingModels.Clone());
+                        list_thingmodels.DataSource = thingModels;
                         list_thingmodels.DisplayMember = "Name";
                     },
                     exitcall: () =>
@@ -83,6 +86,7 @@ namespace MyClient.View
                 text_thingmodel_min.Text = "";
                 text_thingmodel_remark.Text = "";
                 check_thingmodel_abandonted.Checked = false;
+                return;
             }
             var thingModel = thingModels[list_thingmodels.SelectedIndex];
             text_thingmodel_id.Text = thingModel.Id + "";
@@ -118,11 +122,16 @@ namespace MyClient.View
             thingModel.MinValue = float.Parse(text_thingmodel_min.Text);
             thingModel.Remark = text_thingmodel_remark.Text;
             thingModel.Abandonted = check_thingmodel_abandonted.Checked;
+            thingModels[list_thingmodels.SelectedIndex]=thingModel;
 
         }
 
         private void btn_thingmodel_creat_Click(object sender, EventArgs e)
         {
+            if (thingModels.FirstOrDefault(it => it.Name == text_thingmodel_name.Text) != null) {
+                MessageBox.Show("该名称的物模型已经存在","提示");
+                return;
+            }  
             var thingModel = new ThingModel();
             thingModel.Id = 0;
             thingModel.Name = text_thingmodel_name.Text;
@@ -138,7 +147,9 @@ namespace MyClient.View
         private void btn_submit_Click(object sender, EventArgs e)
         {//TODO 提交变化
             try
-            { 
+            {
+                typeinfo.ThingModels.Clear();
+                typeinfo.ThingModels.AddRange(thingModels)  ;
                 if (isCreat)
                 {//创建
                     var res=_typeServiceClient.AddTypeInfo(new Request_AddTypeInfo()

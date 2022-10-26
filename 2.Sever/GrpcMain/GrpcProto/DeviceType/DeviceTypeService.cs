@@ -123,8 +123,8 @@ namespace GrpcMain.DeviceType
             using (MainContext ct = new MainContext())
             {
                 var type = await ct.Device_Types
-                    .Where(it => it.Id == request.Info.Id)
-                     .AsNoTracking().FirstOrDefaultAsync();
+                    .Where(it => it.Id == request.Info.Id).Include(it=>it.ThingModels)
+                    .FirstOrDefaultAsync();
                 if (type == null)
                 {
                     //没有权限
@@ -148,8 +148,8 @@ namespace GrpcMain.DeviceType
                     if (type.ThingModels.Count > 0)
                     {
                         //只能插入 不能删除
-                        var old = type.ThingModels.Select(it => it.Id);
-                        var _new = request.Info.ThingModels.Select(it => it.Id);
+                        var old = type.ThingModels.Select(it => it.Id).ToList();
+                        var _new = request.Info.ThingModels.Select(it => it.Id).ToList();
                         if (old.Except(_new).Count() != 0)
                         {
                             return new CommonResponse()
@@ -158,20 +158,27 @@ namespace GrpcMain.DeviceType
                                 Message = "物模型只能插入不能删除",
                             };
                         }
+
+                        //todo 修改变成添加
                         type.ThingModels.Clear();
-                        type.ThingModels.AddRange(request.Info.ThingModels.Select(
-                           it => new MyDBContext.Main.ThingModel
-                           {
-                               Abandonted = it.Abandonted,
-                               DeviceTypeId = type.Id,
-                               Id = old.Contains(it.Id) ? it.Id : 0,
-                               MaxValue = it.MaxValue,
-                               MinValue = it.MinValue,
-                               Name = it.Name,
-                               Remark = it.Remark,
-                               Type = (ThingModelValueType)it.ValueType,
-                               Unit = it.Unit,
-                           }));
+                        foreach (var item in 
+                            request.Info.ThingModels.Select(
+                            it => new MyDBContext.Main.ThingModel
+                            {
+                                Abandonted = it.Abandonted,
+                                DeviceTypeId = type.Id,
+                                Id = old.Contains(it.Id) ? it.Id : 0,
+                                MaxValue = it.MaxValue,
+                                MinValue = it.MinValue,
+                                Name = it.Name,
+                                Remark = it.Remark,
+                                Type = (ThingModelValueType)it.ValueType,
+                                Unit = it.Unit,
+                            }))
+                        {
+                            type.ThingModels.Add(item);
+                        }
+                       
                     }
                     if (request.Info.HasName)
                     {
@@ -185,7 +192,6 @@ namespace GrpcMain.DeviceType
                     return new CommonResponse()
                     {
                         Success = true,
-                        Message = null,
                     };
                 }
                 else if (ot == AuthorityUtility.OwnerType.SonOfCreator)
