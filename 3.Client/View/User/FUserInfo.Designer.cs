@@ -55,6 +55,7 @@
             this.btn_sendMail.TabIndex = 32;
             this.btn_sendMail.Text = "发送邮件";
             this.btn_sendMail.UseVisualStyleBackColor = true;
+            this.btn_sendMail.Click += new System.EventHandler(this.btn_sendMail_Click);
             // 
             // label6
             // 

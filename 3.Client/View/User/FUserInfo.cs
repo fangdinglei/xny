@@ -105,8 +105,24 @@ namespace MyClient.View.User
         }
         void SetUserInfo(BaseManager mgr)
         {
+            btn_sendMail.Enabled = !(BaseManager.FatherInfo == null || BaseManager.SelectedUser == null)
+                && !(BaseManager.FatherInfo.ID == BaseManager.SelectedUser.ID);
             mgr.RefreshHandle?.Invoke(mgr);
         }
 
+        private void btn_sendMail_Click(object sender, EventArgs e)
+        {
+            if (BaseManager.FatherInfo==null|| BaseManager.SelectedUser==null)
+            {
+                MessageBox.Show("请选择用户","提示");
+                return;
+            }
+            if (BaseManager.FatherInfo.ID==BaseManager.SelectedUser.ID)
+            {
+                MessageBox.Show("不能给自己发邮件", "提示");
+                return;
+            }
+            BaseManager._viewHolder.SwitchTo("FSendInternalMail",false,BaseManager.FatherInfo.ID,BaseManager.SelectedUser.ID);
+        }
     }
 }

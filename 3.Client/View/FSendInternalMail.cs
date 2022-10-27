@@ -24,12 +24,17 @@ namespace MyClient.View
 
         }
 
+        /// <summary>
+        /// 传入发送者和收件人 ID
+        /// </summary>
+        /// <param name="par"></param>
         public void PrePare(params object[] par)
         {
             _sendererid = (long)par[0];
             _receiverid = (long)par[1];
             text_title.Text = "";
             text_context.Text = "";
+            text_receiver.Text = _receiverid+"";
         }
 
         public void SetViewHolder(IViewHolder viewholder)
@@ -54,7 +59,7 @@ namespace MyClient.View
                         SenderId = _sendererid,
                         ReceiverId = _receiverid,
                         Context = text_context.Text,
-                        Title = text_context.Text,
+                        Title = text_title.Text,
                     }
                 });
                 MessageBox.Show("成功", "提示");

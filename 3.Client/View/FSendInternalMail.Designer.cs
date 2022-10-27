@@ -34,6 +34,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.text_context = new System.Windows.Forms.TextBox();
             this.btn_send = new System.Windows.Forms.Button();
+            this.text_receiver = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -41,9 +42,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(107, 24);
+            this.label1.Size = new System.Drawing.Size(46, 24);
             this.label1.TabIndex = 0;
-            this.label1.Text = "收件人:AAA";
+            this.label1.Text = "收件";
             // 
             // text_title
             // 
@@ -88,11 +89,20 @@
             this.btn_send.UseVisualStyleBackColor = true;
             this.btn_send.Click += new System.EventHandler(this.btn_send_Click);
             // 
+            // text_receiver
+            // 
+            this.text_receiver.Location = new System.Drawing.Point(64, 3);
+            this.text_receiver.Name = "text_receiver";
+            this.text_receiver.ReadOnly = true;
+            this.text_receiver.Size = new System.Drawing.Size(510, 30);
+            this.text_receiver.TabIndex = 6;
+            // 
             // FSendInternalMail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1104, 648);
+            this.Controls.Add(this.text_receiver);
             this.Controls.Add(this.btn_send);
             this.Controls.Add(this.text_context);
             this.Controls.Add(this.label3);
@@ -114,5 +124,6 @@
         private Label label3;
         private TextBox text_context;
         private Button btn_send;
+        private TextBox text_receiver;
     }
 }
