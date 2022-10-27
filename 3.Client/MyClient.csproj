@@ -20,6 +20,18 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <Compile Remove="View\FAutoControl.cs" />
+	  <Compile Remove="View\FAutoControl.Designer.cs" />
+	  <Compile Remove="View\FCreatOrUpdate.cs" />
+	  <Compile Remove="View\FCreatOrUpdate.Designer.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <EmbeddedResource Remove="View\FAutoControl.resx" />
+	  <EmbeddedResource Remove="View\FCreatOrUpdate.resx" />
+	</ItemGroup>
+	
+	<ItemGroup>
 	  <PackageReference Include="CefSharp.WinForms.NETCore" Version="106.0.290" />
 	  <PackageReference Include="Google.Protobuf" Version="3.21.7" />
 	  <PackageReference Include="Grpc.Core" Version="2.46.5" />

@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/3.Client/View/FCreatOrUpdate.resx
+/3.Client/View/FCreatOrUpdate.Designer.cs
+/3.Client/View/FCreatOrUpdate.cs
+/3.Client/View/FAutoControl.resx
+/3.Client/View/FAutoControl.Designer.cs
+/3.Client/View/FAutoControl.cs

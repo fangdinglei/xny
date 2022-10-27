@@ -15,11 +15,13 @@ namespace MyClient.View.User
         FUserInfo _FUserInfo;
         FUserPriority _FUserPriority;
         FUserLoginHistory _FUserLoginHistory;
+        FUserDevice _FUserDevice;
 
         BaseManager[] Managers => new BaseManager[] {
-             _FUserInfo.BaseManager,
+            _FUserInfo.BaseManager,
             _FUserPriority.BaseManager,
-             _FUserLoginHistory.BaseManager,
+            _FUserDevice.BaseManager,
+            _FUserLoginHistory.BaseManager,
         };
 
         AccountService.AccountServiceClient _accountServiceClient;
@@ -39,6 +41,7 @@ namespace MyClient.View.User
             _FUserInfo = new FUserInfo(accountServiceClient);
             _FUserPriority = new FUserPriority(accountServiceClient);
             _FUserLoginHistory = new FUserLoginHistory(historyServiceClient, _timeUtility, this);
+            _FUserDevice = new FUserDevice();
 
             for (int i = 0; i < Managers.Length; i++)
             {

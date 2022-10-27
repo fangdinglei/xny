@@ -58,7 +58,7 @@ namespace MyClient.View.User
             this.tabControl1.Location = new System.Drawing.Point(222, 16);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(746, 676);
+            this.tabControl1.Size = new System.Drawing.Size(1165, 695);
             this.tabControl1.TabIndex = 18;
             // 
             // tabPage4
@@ -66,7 +66,7 @@ namespace MyClient.View.User
             this.tabPage4.Location = new System.Drawing.Point(4, 33);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(738, 639);
+            this.tabPage4.Size = new System.Drawing.Size(1157, 658);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "用户信息";
             this.tabPage4.UseVisualStyleBackColor = true;
