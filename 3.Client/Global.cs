@@ -8,24 +8,22 @@ namespace MyClient
 {
     public static class Global
     {
-        static public IServiceCollection Collection;
+        static public IServiceProvider serviceProvider;
         static Global()
         {
-            var services = Collection = new ServiceCollection();
-            services.AddSingleton(services);
-
-            services.AddSingleton<FLogin>();
+            var services = new ServiceCollection();
             services.AddSingleton<ITimeUtility, TimeUtility>();
-            services.AddSingleton<LocalDataBase>();
-            services.AddSingleton<FMain>();
+            services.UseFMain();
             services.AddSingleton(new FMainOption()
             {
                 Title = "智慧农业",
                 CloseCall = () => System.Environment.Exit(0)
             });
+            services.UseGrpc();
+            services.AddSingleton<LocalDataBase>();
+            services.AddSingleton<FLogin>();
 
-            var provider = services.BuildServiceProvider();
-            services.UserGrpc();
+            services.AddSingleton(serviceProvider = services.BuildServiceProvider());
         }
         static public bool TryDeserializeObject<T>(this string json, out T? obj) where T : class
         {

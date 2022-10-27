@@ -7,6 +7,41 @@ using static GrpcMain.Account.DTODefine.Types;
 
 namespace GrpcMain.Account
 {
+    static public class Ext
+    {
+        ///// <summary>
+        ///// 将请求对象转换为新的DB对象
+        ///// </summary>
+        ///// <returns></returns>
+        ///// <exception cref="NotImplementedException"></exception>
+        //static public Internal_Mail AsDBObj(this InternalMail mail)
+        //{
+        //    return new Internal_Mail
+        //    {
+        //        Id = mail.Id,
+        //        SenderId = mail.SenderId,
+        //        LastEMailTime = mail.LastEMailTime,
+        //        ReceiverId = mail.ReceiverId,
+        //        Readed = mail.Readed,
+        //        Context = mail.Context,
+        //        Title = mail.Title,
+        //        Time = mail.Time,
+        //    };
+        //}
+        static public UserInfo AsGrpcObj(this User user)
+        {
+            return new UserInfo
+            {
+                ID = user.Id,
+                Authoritys = user.Authoritys,
+                Email = user.EMail,
+                Father = user.CreatorId,
+                LastLogin = user.LastLogin,
+                Phone = user.Phone,
+                UserName = user.Name,
+            };
+        }
+    }
     public class AccountServiceImp : AccountService.AccountServiceBase
     {
         IGrpcAuthorityHandle _handle;
@@ -73,7 +108,8 @@ namespace GrpcMain.Account
                 });
             return new Response_LoginByUserName()
             {
-                Token = token
+                Token = token,
+                User = user.AsGrpcObj()
             };
         }
 

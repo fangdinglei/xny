@@ -12,12 +12,14 @@ namespace MyClient.View
         IServiceProvider serviceProvider;
         AccountService.AccountServiceClient client;
         ClientCallContextInterceptor interceptor;
-        public FLogin(IServiceCollection serviceCollection, AccountService.AccountServiceClient accountServiceClient, ClientCallContextInterceptor interceptor)
+        LocalDataBase db;
+        public FLogin(IServiceProvider serviceProvider, AccountService.AccountServiceClient accountServiceClient, ClientCallContextInterceptor interceptor, LocalDataBase db)
         {
-            this.serviceProvider = serviceCollection.BuildServiceProvider();
+            this.serviceProvider = serviceProvider;
             InitializeComponent();
             this.client = accountServiceClient;
             this.interceptor = interceptor;
+            this.db = db;
         }
 
 
@@ -46,6 +48,8 @@ namespace MyClient.View
             }
             //注册token
             interceptor.Token = a.Token;
+            db.UserId = a.User.ID;
+            db.Save(a.User);
             //进入主界面
             FMain? m = serviceProvider.GetService<FMain>();
             if (m == null)

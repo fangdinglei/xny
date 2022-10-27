@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MyClient.View;
 using System.Reflection;
 
 namespace FdlWindows.View
@@ -7,13 +6,26 @@ namespace FdlWindows.View
     public partial class FMain : Form, IViewHolder
     {
         IServiceProvider serviceProvider;
-        IServiceCollection serviceCollection;
         /// <summary>
         /// 界面缓存最大值
         /// </summary>
         const int MaxSameViewInstance = 3;
         int __uid;
 
+        /// <summary>
+        ///用于创建实例 key name value classpath
+        /// </summary>
+        Dictionary<string, Type> ViewClassType => _ViewData.ViewClassType;
+        /// <summary>
+        ///备用 key name value menupath
+        /// </summary>
+        Dictionary<string, string> ViewMeunPaths => _ViewData.ViewMeunPaths;
+
+
+        /// <summary>
+        /// 用于名称找节点 key name value treenode
+        /// </summary>
+        Dictionary<string, TreeNode> ViewNodes = new();
         /// <summary>
         /// key name value view 界面缓存
         /// </summary>
@@ -22,36 +34,23 @@ namespace FdlWindows.View
         ///用于创建实例获取名称以缓存 key IView value NameofViewInstance
         /// </summary>
         Dictionary<IView, string> NameofViewInstance = new Dictionary<IView, string>();
-        /// <summary>
-        ///用于创建实例 key name value classpath
-        /// </summary>
-        Dictionary<string, Type> ViewClassType = new();
-        /// <summary>
-        ///备用 key name value menupath
-        /// </summary>
-        Dictionary<string, string> ViewMeunPaths = new Dictionary<string, string>();
-        /// <summary>
-        /// 用于名称找节点 key name value treenode
-        /// </summary>
-        Dictionary<string, TreeNode> ViewNodes = new Dictionary<string, TreeNode>();
-
         Stack<IView> Windows = new Stack<IView>();
-        Queue<FLoading> LoadingQueue = new Queue<FLoading>();
 
-        public Control Holder => this;
-
+        FMainViews _ViewData;
         public int Uid => __uid;
         Action? _closecall;
-        public FMain(FMainOption op, IServiceCollection serviceCollection)
+        public Control Holder => this;
+        public FMain(FMainOption op, IServiceProvider serviceProvider, FMainViews viewData)
         {
-            this.serviceProvider = serviceCollection.BuildServiceProvider();
-            this.serviceCollection = serviceCollection;
+            this.serviceProvider = serviceProvider;
             Text = op.Title;
             InitializeComponent();
-            InitViews();
+            _ViewData = viewData;
             this.ClientSize = new Size(1200, 650);
             _closecall = op.CloseCall;
 
+            InitViews();
+            treeview_views.Nodes[0].ExpandAll();
             //SwitchTo("关于",true);
             //if (DateTime.Now>new DateTime(2022,9,10))
             //{
@@ -61,27 +60,19 @@ namespace FdlWindows.View
         }
 
 
+
         /// <summary>
-        /// 反射注册所有View
+        /// 注册所有View
         /// </summary>
         /// <exception cref="Exception"></exception>
         void InitViews()
         {
-            foreach (var item in this.GetType().Assembly.GetTypes())
+            foreach (var att in _ViewData.Views.Values)
             {
-                var att = item.GetCustomAttribute<AutoDetectViewAttribute>();
-                if (att == null)
-                    continue;
-                if (item.IsAssignableTo(typeof(IView)) == false)
-                {
-                    throw new Exception(att.GetType().Name + " 属性只能加在" + nameof(IView));
-                }
-                AddView(att.Name, att.Title, att.MenuPath, item, att.UserSelectAble, false);
-                serviceProvider = serviceCollection.BuildServiceProvider();
+                AddView(att.Name, att.Title, att.MenuPath, att.UserSelectAble);
             }
-            treeview_views.Nodes[0].ExpandAll();
-        }
 
+        }
 
 
         /// <summary>
@@ -254,7 +245,7 @@ namespace FdlWindows.View
         /// 添加一个菜单
         /// </summary>
         /// <param name="path"></param>
-        public TreeNodeCollection AddMenu(string path)
+        TreeNodeCollection AddMenu(string path)
         {
             var mpath = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
             var root = treeview_views.Nodes;
@@ -287,19 +278,10 @@ namespace FdlWindows.View
         /// </summary>
         /// <param name="Name">名称，必须是唯一的</param>
         /// <param name="title">显示的名称 可以重复</param>
-        /// <param name="classtype">界面的全路径</param>
         /// <param name="userselectable">用户是否可以直接选择此界面</param>
-        public void AddView(string Name, string title, string menupath, Type classtype, bool userselectable = true, bool rebuiltServiceProvider = true)
+        void AddView(string Name, string title, string menupath, bool userselectable = true)
         {
-            if (Name == "Menu")
-                throw new Exception("界面名称不能是Menu");
-            if (ViewClassType.ContainsKey(Name))
-                return;
-            ViewMeunPaths.Add(Name, menupath);
-            ViewClassType.Add(Name, classtype);
-            serviceCollection.AddTransient(classtype);
-            if (rebuiltServiceProvider)
-                serviceProvider = serviceCollection.BuildServiceProvider();
+
 
             if (userselectable)
             {
@@ -450,5 +432,52 @@ namespace FdlWindows.View
         public string? Title;
         public uint Uid;
         public Action? CloseCall;
+    }
+    /// <summary>
+    /// 包含界面信息
+    /// </summary>
+    public class FMainViews
+    {
+        /// <summary>
+        ///用于创建实例 key name value classpath
+        /// </summary>
+        public Dictionary<string, Type> ViewClassType = new();
+        /// <summary>
+        /// key name value menupath
+        /// </summary>
+        public Dictionary<string, string> ViewMeunPaths = new();
+        public Dictionary<string, AutoDetectViewAttribute> Views = new();
+
+    }
+    static public class ViewRegister
+    {
+        /// <summary>
+        /// 反射注册所有View
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        static public void UseFMain(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddSingleton<FMain>();
+            FMainViews result = new FMainViews();
+            foreach (var item in typeof(ViewRegister).Assembly.GetTypes())
+            {
+                var att = item.GetCustomAttribute<AutoDetectViewAttribute>();
+                if (att == null)
+                    continue;
+                if (item.IsAssignableTo(typeof(IView)) == false)
+                {
+                    throw new Exception(att.GetType().Name + " 属性只能加在" + nameof(IView));
+                }
+                if (att.Name == "Menu")
+                    throw new Exception("界面名称不能是Menu");
+                if (result.ViewClassType.ContainsKey(att.Name))
+                    return;
+                result.Views.Add(att.Name, att);
+                result.ViewMeunPaths.Add(att.Name, att.MenuPath);
+                result.ViewClassType.Add(att.Name, item);
+                serviceCollection.AddTransient(item);
+            }
+            serviceCollection.AddSingleton<FMainViews>(result);
+        }
     }
 }

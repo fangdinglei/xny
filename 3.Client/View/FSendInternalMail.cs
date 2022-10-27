@@ -34,7 +34,7 @@ namespace MyClient.View
             _receiverid = (long)par[1];
             text_title.Text = "";
             text_context.Text = "";
-            text_receiver.Text = _receiverid+"";
+            text_receiver.Text = _receiverid + "";
         }
 
         public void SetViewHolder(IViewHolder viewholder)

@@ -24,7 +24,7 @@ namespace MyClient.Grpc
             }
             throw new Exception(String.IsNullOrWhiteSpace(rsp.Message) ? "未知错误" : rsp.Message);
         }
-        static public void UserGrpc(this IServiceCollection serviceCollection)
+        static public void UseGrpc(this IServiceCollection serviceCollection)
         {
             GrpcChannel grpcChannel = GrpcChannel.ForAddress("https://localhost:8089");
             var interceptor = new ClientCallContextInterceptor();

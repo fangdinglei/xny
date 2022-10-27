@@ -12,7 +12,7 @@ namespace MyClient
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            var f = Global.Collection.BuildServiceProvider().GetService<FLogin>();
+            var f = Global.serviceProvider.GetService<FLogin>();
             Application.Run(f);
         }
     }

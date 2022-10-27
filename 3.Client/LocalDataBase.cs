@@ -9,6 +9,7 @@ namespace MyClient
 {
     public class LocalDataBase
     {
+        public UserInfo User => Users[UserId];
         public long UserId;
         public Dictionary<long, Device> devices = new();
 
