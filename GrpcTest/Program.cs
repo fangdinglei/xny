@@ -1,5 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Grpc.Net.Client;
+using GrpcMain.Account;
+using static GrpcMain.Account.DTODefine.Types;
+
 Thread.Sleep(5000);
 Console.WriteLine("Hello, World!");
 GrpcChannel grpcChannel = GrpcChannel.ForAddress("https://bs-s-gacyedficd.cn-shanghai.fcapp.run");

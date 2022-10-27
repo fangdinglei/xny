@@ -1,4 +1,4 @@
-﻿namespace MyClient.FdlWindows.View
+﻿namespace FdlWindows.View
 {
     partial class FDateSelector
     {

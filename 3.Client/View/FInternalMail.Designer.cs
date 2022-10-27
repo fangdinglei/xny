@@ -29,9 +29,11 @@
         private void InitializeComponent()
         {
             this.button3 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_outteremail = new System.Windows.Forms.Button();
             this.list_mails = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.text_context = new System.Windows.Forms.TextBox();
+            this.pageController1 = new FdlWindows.View.PageController();
+            this.text_baseinfo = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button3
@@ -43,14 +45,15 @@
             this.button3.Text = "删除此邮件";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btn_outteremail
             // 
-            this.button1.Location = new System.Drawing.Point(1030, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(137, 69);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "站外邮件推送";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btn_outteremail.Location = new System.Drawing.Point(1030, 9);
+            this.btn_outteremail.Name = "btn_outteremail";
+            this.btn_outteremail.Size = new System.Drawing.Size(137, 69);
+            this.btn_outteremail.TabIndex = 17;
+            this.btn_outteremail.Text = "站外邮件推送";
+            this.btn_outteremail.UseVisualStyleBackColor = true;
+            this.btn_outteremail.Click += new System.EventHandler(this.btn_outteremail_Click);
             // 
             // list_mails
             // 
@@ -61,24 +64,47 @@
             this.list_mails.Name = "list_mails";
             this.list_mails.Size = new System.Drawing.Size(237, 604);
             this.list_mails.TabIndex = 19;
+            this.list_mails.SelectedIndexChanged += new System.EventHandler(this.list_mails_SelectedIndexChanged);
             // 
-            // textBox1
+            // text_context
             // 
-            this.textBox1.Location = new System.Drawing.Point(254, 12);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(770, 605);
-            this.textBox1.TabIndex = 18;
+            this.text_context.Location = new System.Drawing.Point(254, 60);
+            this.text_context.Multiline = true;
+            this.text_context.Name = "text_context";
+            this.text_context.Size = new System.Drawing.Size(770, 605);
+            this.text_context.TabIndex = 18;
+            // 
+            // pageController1
+            // 
+            this.pageController1.BackColor = System.Drawing.Color.Lime;
+            this.pageController1.Location = new System.Drawing.Point(10, 626);
+            this.pageController1.Name = "pageController1";
+            this.pageController1.Page = 1;
+            this.pageController1.PageSize = 1;
+            this.pageController1.RecordCount = 0;
+            this.pageController1.Size = new System.Drawing.Size(237, 39);
+            this.pageController1.TabIndex = 21;
+            this.pageController1.OnPageChanged += new System.Action(this.pageController1_OnPageChanged);
+            // 
+            // text_baseinfo
+            // 
+            this.text_baseinfo.Location = new System.Drawing.Point(254, 12);
+            this.text_baseinfo.Name = "text_baseinfo";
+            this.text_baseinfo.ReadOnly = true;
+            this.text_baseinfo.Size = new System.Drawing.Size(554, 30);
+            this.text_baseinfo.TabIndex = 22;
             // 
             // FInternalMail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1340, 706);
+            this.Controls.Add(this.text_baseinfo);
+            this.Controls.Add(this.pageController1);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btn_outteremail);
             this.Controls.Add(this.list_mails);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.text_context);
             this.Name = "FInternalMail";
             this.Text = "FInternalMail";
             this.ResumeLayout(false);
@@ -89,8 +115,10 @@
         #endregion
 
         private Button button3;
-        private Button button1;
+        private Button btn_outteremail;
         private ListBox list_mails;
-        private TextBox textBox1;
+        private TextBox text_context;
+        private FdlWindows.View.PageController pageController1;
+        private TextBox text_baseinfo;
     }
 }

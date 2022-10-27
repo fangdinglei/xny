@@ -624,6 +624,7 @@ namespace MyDBContext.Main
                     {
                         Id = 1,
                         LastEMailTime = 0,
+                        Title = "测试1",
                         Context = "测试1",
                         Readed = false,
                         ReceiverId = 2,
@@ -635,6 +636,7 @@ namespace MyDBContext.Main
                       {
                           Id = 2,
                           LastEMailTime = 0,
+                          Title = "测试2",
                           Context = "测试2",
                           Readed = false,
                           ReceiverId = 3,
@@ -642,6 +644,23 @@ namespace MyDBContext.Main
                           Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000
                       }
                 );
+            for (int i = 0; i < 20; i++)
+            {
+                modelBuilder.Entity<Internal_Mail>().HasData(
+                  new Internal_Mail()
+                  {
+                      Id = 3+i,
+                      LastEMailTime = 0,
+                      Title = "测试2-"+i,
+                      Context = "测试2-" + i,
+                      Readed = false,
+                      ReceiverId = 2,
+                      SenderId = 3,
+                      Time =i+ DateTimeUtilities.DateTimeToUnixMs(System.DateTime.UtcNow) / 1000
+
+                  }
+              );
+            }
             #endregion
 
         }

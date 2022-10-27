@@ -1,6 +1,6 @@
 ﻿using FdlWindows.View;
 
-namespace MyClient.FdlWindows.View
+namespace FdlWindows.View
 {
     /// <summary>
     /// 日期筛选器 获取选中开始日期0.0.0 到结束日期23.59.59

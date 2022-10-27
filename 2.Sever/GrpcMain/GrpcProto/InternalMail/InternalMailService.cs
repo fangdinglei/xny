@@ -47,7 +47,7 @@ namespace GrpcMain.InternalMail
 
     public class InternalMailServiceImp : InternalMailService.InternalMailServiceBase
     {
-        public static int PageSize;
+        public const int PageSize=20;
 
         ITimeUtility _timeutility;
         IGrpcCursorUtility _cursorUtility;
@@ -96,8 +96,11 @@ namespace GrpcMain.InternalMail
                     context.Status = new Status(StatusCode.PermissionDenied, "没有该信件");
                     return null;
                 }
-                mail.Readed = true;
-                await ct.SaveChangesAsync();
+                if (!mail.Readed)
+                {
+                    mail.Readed = true;
+                    await ct.SaveChangesAsync();
+                }
             }
             return new CommonResponse() { Success = true };
         }
@@ -110,6 +113,7 @@ namespace GrpcMain.InternalMail
             }
             long id = (long)context.UserState["CreatorId"];
             Response_GetMail res = new Response_GetMail();
+            res.Page = request.Page;
             using (MainContext ct = new MainContext())
             {
                 var bd = ct.Internal_Mails.Where(it => it.ReceiverId == id||it.SenderId==id);
@@ -125,6 +129,7 @@ namespace GrpcMain.InternalMail
                 //    {
                 //        res.Cursor = it == null ? 0 : it.Id;
                 //    });
+               
                 res.Mails.AddRange(lsx.Select( it =>it.AsGrpcObj()  ));
                 res.Page=request.Page;
             }
@@ -152,13 +157,31 @@ namespace GrpcMain.InternalMail
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
-                var mail = await ct.Internal_Mails.Where(it => it.SenderId == id && it.Id == request.MailId)
+                var mail = await ct.Internal_Mails.Where(it => (it.SenderId == id||it.ReceiverId==id) && it.Id == request.MailId)
                     /*.AsNoTracking()*/.FirstOrDefaultAsync();
                 if (mail == null)
                 {
                     context.Status = new Status(StatusCode.PermissionDenied, "没有该信件");
                     return null;
                 }
+                if (mail.ReceiverId==id)
+                {
+                    return new CommonResponse()
+                    {
+                        Success = false,
+                        Message = "该信件是发送给你的,不能使用该功能",
+                    }; 
+                    return null;
+                }
+                //if (mail.Readed)
+                //{
+                //    return new CommonResponse()
+                //    {
+                //        Success = false,
+                //        Message = "该信件已读,不能再发送站外信",
+                //    };
+                //}
+
                 if ((_timeutility.GetTicket() - mail.LastEMailTime) < 60)
                 {//上次发是60s内
                     return new CommonResponse()
@@ -190,7 +213,6 @@ namespace GrpcMain.InternalMail
                     return new CommonResponse()
                     {
                         Success = true,
-                        Message = null,
                     };
                 }
                 else
