@@ -151,6 +151,36 @@ namespace GrpcMain.InternalMail
             }
         }
 
+        public override async Task<CommonResponse> DeletMail(Request_DeletMail request, ServerCallContext context)
+        {
+            long id = (long)context.UserState["CreatorId"];
+            using (MainContext ct = new MainContext())
+            {
+                var mail = await ct.Internal_Mails.Where(it => (it.SenderId == id || it.ReceiverId == id) && it.Id == request.MailId)
+                    /*.AsNoTracking()*/.FirstOrDefaultAsync();
+                if (mail == null)
+                {
+                    context.Status = new Status(StatusCode.PermissionDenied, "没有该信件");
+                    return null;
+                }
+                if (mail.SenderId == id)
+                {
+                    return new CommonResponse()
+                    {
+                        Success = false,
+                        Message = "只有发送者才能删除",
+                    };
+                    return null;
+                }
+                ct.Remove(mail);
+                await ct.SaveChangesAsync();
+                return new CommonResponse()
+                {
+                    Success = true,
+                };
+            }
+        }
+
         public override async Task<CommonResponse> SendEMail(Request_SendEMail request, ServerCallContext context)
         {
 

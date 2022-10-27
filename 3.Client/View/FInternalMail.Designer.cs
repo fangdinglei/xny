@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button3 = new System.Windows.Forms.Button();
+            this.btn_deletmail = new System.Windows.Forms.Button();
             this.btn_outteremail = new System.Windows.Forms.Button();
             this.list_mails = new System.Windows.Forms.ListBox();
             this.text_context = new System.Windows.Forms.TextBox();
@@ -36,14 +36,15 @@
             this.text_baseinfo = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // button3
+            // btn_deletmail
             // 
-            this.button3.Location = new System.Drawing.Point(1030, 84);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(137, 69);
-            this.button3.TabIndex = 20;
-            this.button3.Text = "删除此邮件";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btn_deletmail.Location = new System.Drawing.Point(1030, 84);
+            this.btn_deletmail.Name = "btn_deletmail";
+            this.btn_deletmail.Size = new System.Drawing.Size(137, 69);
+            this.btn_deletmail.TabIndex = 20;
+            this.btn_deletmail.Text = "删除此邮件";
+            this.btn_deletmail.UseVisualStyleBackColor = true;
+            this.btn_deletmail.Click += new System.EventHandler(this.btn_deletmail_Click);
             // 
             // btn_outteremail
             // 
@@ -101,7 +102,7 @@
             this.ClientSize = new System.Drawing.Size(1340, 706);
             this.Controls.Add(this.text_baseinfo);
             this.Controls.Add(this.pageController1);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.btn_deletmail);
             this.Controls.Add(this.btn_outteremail);
             this.Controls.Add(this.list_mails);
             this.Controls.Add(this.text_context);
@@ -114,7 +115,7 @@
 
         #endregion
 
-        private Button button3;
+        private Button btn_deletmail;
         private Button btn_outteremail;
         private ListBox list_mails;
         private TextBox text_context;

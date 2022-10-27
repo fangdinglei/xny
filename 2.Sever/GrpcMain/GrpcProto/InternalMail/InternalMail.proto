@@ -18,7 +18,9 @@ service InternalMailService {
     //统计邮件和获取分页大小
     rpc CountMail(Request_CountMail)
         returns (Response_CountMail);
-
+    //删除邮件
+    rpc DeletMail(Request_DeletMail)
+        returns (CommonResponse);
     //发送站外信
     rpc SendEMail(Request_SendEMail)
         returns (CommonResponse);
@@ -64,6 +66,9 @@ message Response_CountMail{
     int32 MailCount=2;
 }
 
+message Request_DeletMail{
+    int64 MailId=1; 
+}
 
 message Request_SendEMail{
     int64 MailId=1; 

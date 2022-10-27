@@ -1,6 +1,8 @@
 ﻿using FdlWindows.View;
 using GrpcMain.Device;
 using GrpcMain.InternalMail;
+using MyClient.Grpc;
+using MyUtility;
 using System.ComponentModel;
 
 namespace MyClient.View
@@ -13,12 +15,14 @@ namespace MyClient.View
         BindingList<InternalMail> _mails;
         InternalMailService.InternalMailServiceClient _client;
         LocalDataBase _localData;
+        ITimeUtility _timeUtility;
         IViewHolder _viewholder;
-        public FInternalMail(DeviceService.DeviceServiceClient deviceServiceClient, InternalMailService.InternalMailServiceClient client, LocalDataBase localData)
+        public FInternalMail(DeviceService.DeviceServiceClient deviceServiceClient, InternalMailService.InternalMailServiceClient client, LocalDataBase localData, ITimeUtility timeUtility)
         {
             InitializeComponent();
             _client = client;
             _localData = localData;
+            _timeUtility = timeUtility;
         }
 
 
@@ -74,7 +78,7 @@ namespace MyClient.View
                 return;
             var mail = _mails[list_mails.SelectedIndex];
             text_context.Text = mail.Context;
-            text_baseinfo.Text = $"发件人{mail.SenderId} 收件人{mail.ReceiverId} 发件时间{mail.Time}";
+            text_baseinfo.Text = $"发件人{mail.SenderId} 收件人{mail.ReceiverId} 发件时间{_timeUtility.GetDateTime(mail.Time).ToString()}";
         }
 
         private void btn_outteremail_Click(object sender, EventArgs e)
@@ -85,10 +89,11 @@ namespace MyClient.View
             }
             try
             {
-                _client.SendEMail(new Request_SendEMail
+                var res = _client.SendEMail(new Request_SendEMail
                 {
                     MailId = _mails[list_mails.SelectedIndex].Id
-                });
+                }); 
+                res.ThrowIfNotSuccess();
                 MessageBox.Show("成功", "提示");
                 return;
             }
@@ -102,6 +107,30 @@ namespace MyClient.View
         private void pageController1_OnPageChanged()
         {
             LoadPage(pageController1.Page-1);
+        }
+
+        private void btn_deletmail_Click(object sender, EventArgs e)
+        {
+            if (list_mails.SelectedIndex < 0)
+            {
+                MessageBox.Show("请选择合适的邮件", "提示");
+                return;
+            }
+            try
+            {
+                var res=_client.DeletMail(new  Request_DeletMail
+                {
+                    MailId = _mails[list_mails.SelectedIndex].Id
+                });
+                res.ThrowIfNotSuccess();
+                _mails.RemoveAt(list_mails.SelectedIndex);
+                MessageBox.Show("成功", "提示");
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("错误:" + ex.Message, "错误");
+            }
         }
     }
 }
