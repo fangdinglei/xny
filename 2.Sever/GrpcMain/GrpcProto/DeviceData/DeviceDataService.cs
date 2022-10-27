@@ -56,7 +56,7 @@ namespace GrpcMain.DeviceData
                 if (request.HasEndtime)
                     bd = bd.Where(it => it.Time < request.Endtime);
                 bd = bd.Take(maxcount);
-                bd = bd.AsNoTracking().OrderBy(it=>it.Time);
+                bd = bd.AsNoTracking().OrderBy(it => it.Time);
                 var ls = await bd.ToListAsync();
                 IEnumerable<Device_DataPoint> lsx;
                 if (maxcount == ls.Count)
@@ -113,7 +113,7 @@ namespace GrpcMain.DeviceData
                 }
                 var cursor = request.Cursor;
                 var r = await _deviceColdDataHandle.DeCompressDeviceData(request.Starttime, request.Endtime, request.Dvid, request.StreamId, ref cursor, maxcount);
-                res.Stream.Points.Add( r.Select(it => new DataPoinet { Time = it.Item1, Value = it.Item2 }));
+                res.Stream.Points.Add(r.Select(it => new DataPoinet { Time = it.Item1, Value = it.Item2 }));
                 if (cursor > 0)
                 {
                     request.Cursor = cursor;

@@ -8,25 +8,26 @@ using System.Text.RegularExpressions;
 
 namespace GrpcMain.InternalMail
 {
-    static  public class Ext {
+    static public class Ext
+    {
         /// <summary>
         /// 将请求对象转换为新的DB对象
         /// </summary>
         /// <param name="mail"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        static public Internal_Mail AsDBObj(this InternalMail mail )
+        static public Internal_Mail AsDBObj(this InternalMail mail)
         {
             return new Internal_Mail
             {
                 Id = mail.Id,
                 SenderId = mail.SenderId,
                 LastEMailTime = mail.LastEMailTime,
-                ReceiverId = mail .ReceiverId,
-                Readed =mail.Readed,
-                Context = mail .Context,
-                Title = mail .Title,
-                Time = mail .Time,
+                ReceiverId = mail.ReceiverId,
+                Readed = mail.Readed,
+                Context = mail.Context,
+                Title = mail.Title,
+                Time = mail.Time,
             };
         }
         static public InternalMail AsGrpcObj(this Internal_Mail mail)
@@ -47,7 +48,7 @@ namespace GrpcMain.InternalMail
 
     public class InternalMailServiceImp : InternalMailService.InternalMailServiceBase
     {
-        public const int PageSize=20;
+        public const int PageSize = 20;
 
         ITimeUtility _timeutility;
         IGrpcCursorUtility _cursorUtility;
@@ -77,10 +78,10 @@ namespace GrpcMain.InternalMail
                 request.Mail.Readed = false;
                 request.Mail.LastEMailTime = 0;
                 var mail = request.Mail.AsDBObj();
-                ct.Internal_Mails.Add(  mail );
+                ct.Internal_Mails.Add(mail);
                 await ct.SaveChangesAsync();
                 request.Mail.Id = mail.Id;
-                return new Response_SendInternalMail() {  Mail = request.Mail };
+                return new Response_SendInternalMail() { Mail = request.Mail };
             }
         }
 
@@ -106,7 +107,7 @@ namespace GrpcMain.InternalMail
         }
 
         public override async Task<Response_GetMail> GetMail(Request_GetMail request, ServerCallContext context)
-        { 
+        {
             if (!request.HasPage)
             {
                 request.Page = 1;
@@ -116,22 +117,22 @@ namespace GrpcMain.InternalMail
             res.Page = request.Page;
             using (MainContext ct = new MainContext())
             {
-                var bd = ct.Internal_Mails.Where(it => it.ReceiverId == id||it.SenderId==id);
+                var bd = ct.Internal_Mails.Where(it => it.ReceiverId == id || it.SenderId == id);
                 //if (request.HasCursor)
                 //{
                 //    bd = bd.Where(it => it.Id >= request.Cursor);
                 //}
                 bd = bd.OrderByDescending(it => it.Time);
-                bd = bd.Skip(request.Page * PageSize ).Take(PageSize);
+                bd = bd.Skip(request.Page * PageSize).Take(PageSize);
                 var mails = await bd.AsNoTracking().ToListAsync();
                 IEnumerable<Internal_Mail> lsx = mails;
                 //    = _cursorUtility.Run(mails, maxcount, (it) =>
                 //    {
                 //        res.Cursor = it == null ? 0 : it.Id;
                 //    });
-               
-                res.Mails.AddRange(lsx.Select( it =>it.AsGrpcObj()  ));
-                res.Page=request.Page;
+
+                res.Mails.AddRange(lsx.Select(it => it.AsGrpcObj()));
+                res.Page = request.Page;
             }
             return res;
         }
@@ -141,7 +142,7 @@ namespace GrpcMain.InternalMail
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
-                var count =await ct.Internal_Mails.Where(it => it.ReceiverId == id || it.SenderId == id)
+                var count = await ct.Internal_Mails.Where(it => it.ReceiverId == id || it.SenderId == id)
                     .CountAsync();
                 return new Response_CountMail
                 {
@@ -187,20 +188,20 @@ namespace GrpcMain.InternalMail
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
-                var mail = await ct.Internal_Mails.Where(it => (it.SenderId == id||it.ReceiverId==id) && it.Id == request.MailId)
+                var mail = await ct.Internal_Mails.Where(it => (it.SenderId == id || it.ReceiverId == id) && it.Id == request.MailId)
                     /*.AsNoTracking()*/.FirstOrDefaultAsync();
                 if (mail == null)
                 {
                     context.Status = new Status(StatusCode.PermissionDenied, "没有该信件");
                     return null;
                 }
-                if (mail.ReceiverId==id)
+                if (mail.ReceiverId == id)
                 {
                     return new CommonResponse()
                     {
                         Success = false,
                         Message = "该信件是发送给你的,不能使用该功能",
-                    }; 
+                    };
                     return null;
                 }
                 //if (mail.Readed)

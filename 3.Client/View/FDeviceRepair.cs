@@ -4,7 +4,7 @@ using GrpcMain.Device;
 using GrpcMain.UserDevice;
 using MyUtility;
 using System.ComponentModel;
-using System.Data; 
+using System.Data;
 
 namespace MyClient.View
 {
@@ -49,7 +49,7 @@ namespace MyClient.View
 
         public void OnEvent(string name, params object[] pars)
         {
-            if (name=="Exit")
+            if (name == "Exit")
             {
                 _repairInfos.Clear();
             }
@@ -80,7 +80,7 @@ namespace MyClient.View
         }
 
         private void btn_update_Click(object sender, EventArgs e)
-        { 
+        {
             SigleExecute.Execute(nameof(FDeviceRepair), () =>
             {
                 if (_repairInfos.Count == 0)
@@ -181,16 +181,16 @@ namespace MyClient.View
 
         private void list_infos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (list_infos.SelectedIndex<0)
-            { 
+            if (list_infos.SelectedIndex < 0)
+            {
                 text_dvname.Text = "";
                 text_context.Text = "";
                 return;
             }
             var v = _repairInfos[list_infos.SelectedIndex].Value;
-            text_context.Text= v.Context;
-            var dv=_db.GetDevice(v.DeviceId);
-            if (dv==null)
+            text_context.Text = v.Context;
+            var dv = _db.GetDevice(v.DeviceId);
+            if (dv == null)
             {
                 text_dvname.Text = "Id:" + v.DeviceId;
             }
@@ -198,7 +198,7 @@ namespace MyClient.View
             {
                 text_dvname.Text = "Id:" + dv.Id + ",Name:" + dv.Name;
             }
-           
+
             time_CompletionTime.Value = _timeUtility.GetDateTime(v.CompletionTime);
             time_DiscoveryTime.Value = _timeUtility.GetDateTime(v.DiscoveryTime);
         }

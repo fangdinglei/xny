@@ -30,7 +30,7 @@ namespace GrpcMain.DeviceType
                 long id = (long)context.UserState["CreatorId"];
                 if (request.Ids.Count == 0)
                 {//获取全部
-                    int maxcount = MaxType*2 + 1;
+                    int maxcount = MaxType * 2 + 1;
                     var ls = await ct.Device_Types.GetEntityOfAccessible(ct, id, maxcount, request.Cursor,
                         true, true, false, filter: (it) => it.Include(it => it.ThingModels));
                     if (ls.Count == maxcount)
@@ -123,7 +123,7 @@ namespace GrpcMain.DeviceType
             using (MainContext ct = new MainContext())
             {
                 var type = await ct.Device_Types
-                    .Where(it => it.Id == request.Info.Id).Include(it=>it.ThingModels)
+                    .Where(it => it.Id == request.Info.Id).Include(it => it.ThingModels)
                     .FirstOrDefaultAsync();
                 if (type == null)
                 {
@@ -161,7 +161,7 @@ namespace GrpcMain.DeviceType
 
                         //todo 修改变成添加
                         type.ThingModels.Clear();
-                        foreach (var item in 
+                        foreach (var item in
                             request.Info.ThingModels.Select(
                             it => new MyDBContext.Main.ThingModel
                             {
@@ -178,7 +178,7 @@ namespace GrpcMain.DeviceType
                         {
                             type.ThingModels.Add(item);
                         }
-                       
+
                     }
                     if (request.Info.HasName)
                     {

@@ -1,6 +1,5 @@
 ﻿using FdlWindows.View;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace MyClient.View
 {
@@ -129,7 +128,7 @@ namespace MyClient.View
                     {
                         loading = false;
                         setisloading(false);
-                    } 
+                    }
                     exitcall?.Invoke();
                 }
                 catch (Exception)

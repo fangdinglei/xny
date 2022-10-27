@@ -28,8 +28,10 @@ namespace MyClient.View
 
 
 
-        void LoadPage(int page) {
-            _viewholder.ShowLoading(this, async () => {
+        void LoadPage(int page)
+        {
+            _viewholder.ShowLoading(this, async () =>
+            {
                 _countMail = await _client.CountMailAsync(new Request_CountMail());
                 var res2 = await _client.GetMailAsync(new Request_GetMail()
                 {
@@ -37,16 +39,18 @@ namespace MyClient.View
                 });
                 _mails = new BindingList<InternalMail>(res2.Mails.ToList());
                 return true;
-            }, okcall: () => {
+            }, okcall: () =>
+            {
                 pageController1.RecordCount = _countMail.MailCount;
                 pageController1.PageSize = _countMail.PageSize;
                 list_mails.DataSource = _mails;
                 list_mails.DisplayMember = "Title";
-            }, exitcall: () => {
+            }, exitcall: () =>
+            {
                 _viewholder.Back();
             });
         }
-        
+
         public Control View => this;
 
 
@@ -59,12 +63,12 @@ namespace MyClient.View
 
         public void PrePare(params object[] par)
         {
-            LoadPage(pageController1.Page-1);
+            LoadPage(pageController1.Page - 1);
         }
 
         public void SetViewHolder(IViewHolder viewholder)
         {
-            _viewholder=viewholder;
+            _viewholder = viewholder;
         }
 
         public void OnTick()
@@ -74,7 +78,7 @@ namespace MyClient.View
 
         private void list_mails_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (list_mails.SelectedIndex<0)
+            if (list_mails.SelectedIndex < 0)
                 return;
             var mail = _mails[list_mails.SelectedIndex];
             text_context.Text = mail.Context;
@@ -83,8 +87,9 @@ namespace MyClient.View
 
         private void btn_outteremail_Click(object sender, EventArgs e)
         {
-            if (list_mails.SelectedIndex < 0) {
-                MessageBox.Show("请选择合适的邮件","提示");
+            if (list_mails.SelectedIndex < 0)
+            {
+                MessageBox.Show("请选择合适的邮件", "提示");
                 return;
             }
             try
@@ -92,21 +97,21 @@ namespace MyClient.View
                 var res = _client.SendEMail(new Request_SendEMail
                 {
                     MailId = _mails[list_mails.SelectedIndex].Id
-                }); 
+                });
                 res.ThrowIfNotSuccess();
                 MessageBox.Show("成功", "提示");
                 return;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("错误:"+ex.Message, "错误");
+                MessageBox.Show("错误:" + ex.Message, "错误");
             }
-          
+
         }
 
         private void pageController1_OnPageChanged()
         {
-            LoadPage(pageController1.Page-1);
+            LoadPage(pageController1.Page - 1);
         }
 
         private void btn_deletmail_Click(object sender, EventArgs e)
@@ -118,7 +123,7 @@ namespace MyClient.View
             }
             try
             {
-                var res=_client.DeletMail(new  Request_DeletMail
+                var res = _client.DeletMail(new Request_DeletMail
                 {
                     MailId = _mails[list_mails.SelectedIndex].Id
                 });

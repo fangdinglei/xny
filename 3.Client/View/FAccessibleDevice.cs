@@ -5,7 +5,7 @@ using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
 using System.Data;
 using System.Runtime.InteropServices;
-using static GrpcMain.DeviceType.DTODefine.Types; 
+using static GrpcMain.DeviceType.DTODefine.Types;
 
 namespace MyClient.View
 {
@@ -193,7 +193,7 @@ namespace MyClient.View
             {
 
             }
-            else if (e.ColumnIndex==6)
+            else if (e.ColumnIndex == 6)
             {
                 ViewHolder.SwitchTo("FDeviceOtherFeatures", false, dev);
             }

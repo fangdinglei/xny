@@ -500,7 +500,7 @@ namespace MyDBContext.Main
                     UserId = 3,
                     DeviceId = 1,
                     PControl = true,
-                    PData =false,
+                    PData = false,
                     PStatus = true,
                     User_Device_GroupId = 2,
                 }
@@ -540,7 +540,7 @@ namespace MyDBContext.Main
                          Id = 2,
                          DeviceId = 1,
                          StreamId = 1,
-                         Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8+1)) / 1000,
+                         Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8 + 1)) / 1000,
                          Value = 91,
                      },
                       new Device_DataPoint()
@@ -556,7 +556,7 @@ namespace MyDBContext.Main
                            Id = 4,
                            DeviceId = 1,
                            StreamId = 1,
-                           Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8 +3)) / 1000,
+                           Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8 + 3)) / 1000,
                            Value = 96,
                        }, new Device_DataPoint()
                        {
@@ -587,7 +587,7 @@ namespace MyDBContext.Main
                          Id = 8,
                          DeviceId = 2,
                          StreamId = 1,
-                         Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8+4)) / 1000,
+                         Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8 + 4)) / 1000,
                          Value = 80,
                      }
                 );
@@ -649,14 +649,14 @@ namespace MyDBContext.Main
                 modelBuilder.Entity<Internal_Mail>().HasData(
                   new Internal_Mail()
                   {
-                      Id = 3+i,
+                      Id = 3 + i,
                       LastEMailTime = 0,
-                      Title = "测试2-"+i,
+                      Title = "测试2-" + i,
                       Context = "测试2-" + i,
                       Readed = false,
                       ReceiverId = 2,
                       SenderId = 3,
-                      Time =i+ DateTimeUtilities.DateTimeToUnixMs(System.DateTime.UtcNow) / 1000
+                      Time = i + DateTimeUtilities.DateTimeToUnixMs(System.DateTime.UtcNow) / 1000
 
                   }
               );

@@ -3,8 +3,6 @@ using GrpcMain.DeviceType;
 using MyClient.Grpc;
 using MyDBContext.Main;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using TypeInfo = GrpcMain.DeviceType.TypeInfo;
 
 namespace MyClient.View
@@ -110,7 +108,7 @@ namespace MyClient.View
             text_thingmodel_max.Text = thingModel.MaxValue + "";
             text_thingmodel_min.Text = thingModel.MinValue + "";
             text_thingmodel_remark.Text = thingModel.Remark;
-            check_thingmodel_abandonted.Checked = thingModel.Abandonted; 
+            check_thingmodel_abandonted.Checked = thingModel.Abandonted;
         }
         public void SetViewHolder(IViewHolder viewholder)
         {
@@ -135,16 +133,17 @@ namespace MyClient.View
             thingModel.MinValue = float.Parse(text_thingmodel_min.Text);
             thingModel.Remark = text_thingmodel_remark.Text;
             thingModel.Abandonted = check_thingmodel_abandonted.Checked;
-            thingModels[list_thingmodels.SelectedIndex]=thingModel;
+            thingModels[list_thingmodels.SelectedIndex] = thingModel;
 
         }
 
         private void btn_thingmodel_creat_Click(object sender, EventArgs e)
         {
-            if (thingModels.FirstOrDefault(it => it.Name == text_thingmodel_name.Text) != null) {
-                MessageBox.Show("该名称的物模型已经存在","提示");
+            if (thingModels.FirstOrDefault(it => it.Name == text_thingmodel_name.Text) != null)
+            {
+                MessageBox.Show("该名称的物模型已经存在", "提示");
                 return;
-            }  
+            }
             var thingModel = new ThingModel();
             thingModel.Id = 0;
             thingModel.Name = text_thingmodel_name.Text;
@@ -162,10 +161,10 @@ namespace MyClient.View
             try
             {
                 typeinfo.ThingModels.Clear();
-                typeinfo.ThingModels.AddRange(thingModels)  ;
+                typeinfo.ThingModels.AddRange(thingModels);
                 if (isCreat)
                 {//创建
-                    var res=_typeServiceClient.AddTypeInfo(new Request_AddTypeInfo()
+                    var res = _typeServiceClient.AddTypeInfo(new Request_AddTypeInfo()
                     {
                         Info = typeinfo
                     });
@@ -173,7 +172,8 @@ namespace MyClient.View
                 }
                 else
                 {
-                    var res=_typeServiceClient.UpdateTypeInfo(new DTODefine.Types.Request_UpdateTypeInfo { 
+                    var res = _typeServiceClient.UpdateTypeInfo(new DTODefine.Types.Request_UpdateTypeInfo
+                    {
                         Info = typeinfo
                     });
                     res.ThrowIfNotSuccess();
@@ -186,12 +186,12 @@ namespace MyClient.View
                 MessageBox.Show("错误:" + ex.Message, "错误");
                 return;
             }
-           
+
         }
 
         private void text_thingmodel_type_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (text_thingmodel_type.SelectedItem!=null&&text_thingmodel_type.SelectedItem.ToString()=="Bool")
+            if (text_thingmodel_type.SelectedItem != null && text_thingmodel_type.SelectedItem.ToString() == "Bool")
             {
                 text_thingmodel_max.Enabled = false;
                 text_thingmodel_min.Enabled = false;
@@ -203,7 +203,7 @@ namespace MyClient.View
                 text_thingmodel_max.Enabled = true;
                 text_thingmodel_min.Enabled = true;
             }
-          
-        } 
+
+        }
     }
 }

@@ -52,7 +52,7 @@ namespace MyClient.View
             }
             try
             {
-                var req = new   Request_SendCMD();
+                var req = new Request_SendCMD();
                 req.Dvids.AddRange(dvs.Select(it => it.Item1));
                 req.Cmd = tcmd.Text;
                 var rsp = deviceServiceClient.SendCMD(req);

@@ -1,24 +1,21 @@
-﻿using GrpcMain.Device;
+﻿using GrpcMain.Account;
+using GrpcMain.Device;
 using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
 using static GrpcMain.Account.DTODefine.Types;
-using GrpcMain.Device ;
-using GrpcMain.UserDevice ;
-using GrpcMain.Account;
-using CefSharp.DevTools.CacheStorage;
-using System.Reflection;
 using TypeInfo = GrpcMain.DeviceType.TypeInfo;
 
 namespace MyClient
 {
-    public  class LocalDataBase {
+    public class LocalDataBase
+    {
         public long UserId;
         public Dictionary<long, Device> devices = new();
 
         public Dictionary<long, UserInfo> Users = new();
         public List<DeviceWithUserDeviceInfo> DeviceWithUserDeviceInfos = new();
         public List<User_Device_Group> User_Device_Groups = new();
-        public Dictionary<long,TypeInfo> TypeInfos = new();
+        public Dictionary<long, TypeInfo> TypeInfos = new();
 
         DeviceTypeService.DeviceTypeServiceClient _deviceTypeServiceClient;
         AccountService.AccountServiceClient _accountServiceClient;
@@ -32,9 +29,10 @@ namespace MyClient
             _deviceTypeServiceClient = deviceTypeServiceClient;
         }
 
-        public Device GetDevice(long id, bool cache= true) {
+        public Device GetDevice(long id, bool cache = true)
+        {
             if (cache && devices.ContainsKey(id))
-                return devices[id]; 
+                return devices[id];
             try
             {
                 var dv = _userDeviceServiceClient.GetDevices_2(new Request_GetDevices_2()
@@ -50,11 +48,11 @@ namespace MyClient
             {
                 return null;
             }
-           
+
         }
         public void Save(Device value)
         {
-            devices[value.Id] = value;  
+            devices[value.Id] = value;
         }
 
         public UserInfo GetUserInfo(long id, bool cache = true)
@@ -63,12 +61,12 @@ namespace MyClient
                 return Users[id];
             try
             {
-                var dv = _accountServiceClient.GetUserInfo (new Request_GetUserInfo()
+                var dv = _accountServiceClient.GetUserInfo(new Request_GetUserInfo()
                 {
-                    UserId=id,
-                    SubUser=false,
+                    UserId = id,
+                    SubUser = false,
                 });
-                if (dv.UserInfo.Count==0  )
+                if (dv.UserInfo.Count == 0)
                     return null;
                 Users[id] = dv.UserInfo[0];
                 return Users[id];
@@ -79,13 +77,14 @@ namespace MyClient
             }
 
         }
-        public void Save(UserInfo value) {
+        public void Save(UserInfo value)
+        {
             Users[value.ID] = value;
         }
 
-        public TypeInfo GetTypeInfo(long id,bool cache =true)
+        public TypeInfo GetTypeInfo(long id, bool cache = true)
         {
-            if (cache&& TypeInfos.ContainsKey(id))
+            if (cache && TypeInfos.ContainsKey(id))
                 return TypeInfos[id];
             try
             {
@@ -98,7 +97,7 @@ namespace MyClient
                 }
                 if (rsp.TypeInfos.Count == 0)
                     return null;
-                TypeInfos[rsp.TypeInfos[0].Id] = rsp.TypeInfos[0]; 
+                TypeInfos[rsp.TypeInfos[0].Id] = rsp.TypeInfos[0];
                 return rsp.TypeInfos[0];
             }
             catch (Exception)

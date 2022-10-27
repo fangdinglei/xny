@@ -41,7 +41,7 @@ namespace MyClient.View
 
         private void btn_type_Click(object sender, EventArgs e)
         {
-            _viewholder.SwitchTo("FDeviceTypeDetail", false, false,_dev.Device.DeviceTypeId);
+            _viewholder.SwitchTo("FDeviceTypeDetail", false, false, _dev.Device.DeviceTypeId);
         }
     }
 }

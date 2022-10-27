@@ -8,7 +8,7 @@ using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
 using MyUtility;
 using System.ComponentModel;
-using static GrpcMain.DeviceType.DTODefine.Types; 
+using static GrpcMain.DeviceType.DTODefine.Types;
 
 namespace MyClient.View
 {
@@ -143,7 +143,7 @@ namespace MyClient.View
 
         async void RefreshChart_2()
         {
-            if (CDevice.CheckedIndices.Count!=1)
+            if (CDevice.CheckedIndices.Count != 1)
             {
                 MessageBox.Show("请选择一个设备", "提示");
                 return;
@@ -161,9 +161,9 @@ namespace MyClient.View
             var ds = devices[CDevice.CheckedIndices[0]].Value;
             try
             {
-                var data = await GetDataStr_2(thingModels[CStreamName.SelectedIndex], ds); 
+                var data = await GetDataStr_2(thingModels[CStreamName.SelectedIndex], ds);
                 chromiumWebBrowser1.ExecuteScriptAsync("showdata_onedeviceofmanydays_fromcs",
-                    data.Item1,data.Item2,data.Item3  ); ;
+                    data.Item1, data.Item2, data.Item3); ;
             }
             catch (Exception ex)
             {
@@ -179,12 +179,12 @@ namespace MyClient.View
         /// <param name="model"></param>
         /// <param name="dev"></param>
         /// <returns>系列,数据,时间偏移</returns>
-        async Task<(string,string,string)> GetDataStr_2(ThingModel model, DeviceWithUserDeviceInfo dev)
+        async Task<(string, string, string)> GetDataStr_2(ThingModel model, DeviceWithUserDeviceInfo dev)
         {
             DateTime ds = dateTimePicker1.Value, de = dateTimePicker2.Value;
             ds = new DateTime(ds.Year, ds.Month, ds.Day);
             de = new DateTime(de.Year, de.Month, de.Day).AddDays(1);
-            var timeoffset = (long)((_timeUtility.GetDateTime(0)-new DateTime(1970,1,1)).TotalSeconds);
+            var timeoffset = (long)((_timeUtility.GetDateTime(0) - new DateTime(1970, 1, 1)).TotalSeconds);
             List<Dictionary<string, object>> obj = new List<Dictionary<string, object>>();
             List<string> legend = new List<string>();
             var res = await _deviceDataServiceClient.GetDataPointsAsync(new Request_GetDataPoints()
@@ -195,23 +195,24 @@ namespace MyClient.View
                 Dvid = dev.Device.Id,
                 ColdData = false,
             });
-            Dictionary<long, List<DataPoinet>> dps = new();  
+            Dictionary<long, List<DataPoinet>> dps = new();
             foreach (var item in res.Stream.Points)
             {
-                var day=(item.Time + timeoffset) / (24 * 60 * 60);
+                var day = (item.Time + timeoffset) / (24 * 60 * 60);
                 if (dps.ContainsKey(day))
                 {
                     dps[day].Add(item);
                 }
                 else
                 {
-                    dps[day] = new List<DataPoinet>() { item};
+                    dps[day] = new List<DataPoinet>() { item };
                 }
             }
-            foreach (var item in dps.Values) {
+            foreach (var item in dps.Values)
+            {
                 var dt = _timeUtility.GetDateTime(item[0].Time).ToString("yy-MM-dd");
                 legend.Add(dt);
-                
+
                 obj.Add(new Dictionary<string, object>() {
                     { "Name",dt+""},
                     { "Data",item.Select(it=>{
@@ -224,10 +225,10 @@ namespace MyClient.View
                             it.Time*1000
                        };
                     }) },
-                }); 
+                });
             }
-          
-            return (Newtonsoft.Json.JsonConvert.SerializeObject(legend), Newtonsoft.Json.JsonConvert.SerializeObject(obj),(timeoffset*1000).ToString());
+
+            return (Newtonsoft.Json.JsonConvert.SerializeObject(legend), Newtonsoft.Json.JsonConvert.SerializeObject(obj), (timeoffset * 1000).ToString());
         }
 
 
@@ -261,7 +262,7 @@ namespace MyClient.View
 
             var type = types[(sender as ListBox).SelectedIndex];
 
-            var res = await _userDeviceServiceClient.GetDevicesAsync(new  Request_GetDevices
+            var res = await _userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices
             { TypeId = type.Id });
             var lsx = res.Info.Select(it => new ToStringHelper<DeviceWithUserDeviceInfo>
             (it, (it) => it.Device.Id + ":" + it.Device.Name)).ToList();

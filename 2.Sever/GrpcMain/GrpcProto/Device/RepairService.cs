@@ -103,13 +103,13 @@ namespace GrpcMain.Device
                 }
                 if (request.HasStartTime)
                 {
-                    bd = bd.Where(it => request.StartTime<= it.CompletionTime );
+                    bd = bd.Where(it => request.StartTime <= it.CompletionTime);
                 }
                 if (request.HasEndTime)
                 {
-                    bd = bd.Where(it => request.EndTime> it.DiscoveryTime );
+                    bd = bd.Where(it => request.EndTime > it.DiscoveryTime);
                 }
-                bd = bd.Take(request.MaxCount + 1).OrderBy(it=>it.DiscoveryTime).AsNoTracking();
+                bd = bd.Take(request.MaxCount + 1).OrderBy(it => it.DiscoveryTime).AsNoTracking();
                 var ls = await bd.ToListAsync();
                 var lsx = _grpcCursorUtility.Run(ls, request.MaxCount + 1, (it) => { res.Cursor = it.Id; });
                 res.Info.AddRange(lsx.Select(it => new RepairInfo()

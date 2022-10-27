@@ -3,13 +3,13 @@ using Grpc.Core;
 using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
-using MyUtility; 
+using MyUtility;
 
 namespace GrpcMain.UserDevice
 {
     public class UserDeviceServiceImp : UserDeviceService.UserDeviceServiceBase
     {
-        public const int MaxGroup =1000;
+        public const int MaxGroup = 1000;
 
 
         ITimeUtility _timeutility;
@@ -162,7 +162,7 @@ namespace GrpcMain.UserDevice
                         Device = MyConvertor.Get(it.device),
                         UserDevice = MyConvertor.Get(it.userdeive)
                     }
-                ));;
+                )); ;
             }
             return res;
         }
@@ -182,8 +182,8 @@ namespace GrpcMain.UserDevice
                     return null;
                 }
 
-                var dv = await ct.Devices.Where(it => it.Id ==request.DeviceId).FirstOrDefaultAsync();
-                if (dv == null  )
+                var dv = await ct.Devices.Where(it => it.Id == request.DeviceId).FirstOrDefaultAsync();
+                if (dv == null)
                 {
                     //没有权限
                     context.Status = new Status(StatusCode.PermissionDenied, "该设备不存在");
@@ -235,7 +235,7 @@ namespace GrpcMain.UserDevice
                 var ls = await ct.User_Device_Groups.Where(it => it.CreatorId == id).AsNoTracking().ToListAsync();
                 foreach (var item in ls)
                 {
-                    res.Groups.Add(new  User_Device_Group()
+                    res.Groups.Add(new User_Device_Group()
                     {
                         Id = item.Id,
                         Name = item.Name,
@@ -295,9 +295,9 @@ namespace GrpcMain.UserDevice
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
-                if (MaxGroup <=await ct.User_Device_Groups.Where(it=>it.CreatorId==id).CountAsync())
+                if (MaxGroup <= await ct.User_Device_Groups.Where(it => it.CreatorId == id).CountAsync())
                 {
-                    context.Status = new Status( StatusCode.Unavailable,$"用户分组上限为{MaxGroup},你已经无法再创建新的分组");
+                    context.Status = new Status(StatusCode.Unavailable, $"用户分组上限为{MaxGroup},你已经无法再创建新的分组");
                     return null;
                 }
                 ct.Add(new MyDBContext.Main.User_Device_Group()
@@ -388,7 +388,7 @@ namespace GrpcMain.UserDevice
                     res.Cursor = 0;
                     lsx = r;
                 }
-                res.UserDevices.AddRange(lsx.Select(it =>MyConvertor.Get(it)));
+                res.UserDevices.AddRange(lsx.Select(it => MyConvertor.Get(it)));
                 return res;
             }
         }

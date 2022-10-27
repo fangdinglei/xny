@@ -1,6 +1,6 @@
 ﻿using Grpc.Core;
 using GrpcMain.Common;
-using MyUtility; 
+using MyUtility;
 
 namespace GrpcMain.Device
 {

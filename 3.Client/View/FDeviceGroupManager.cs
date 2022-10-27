@@ -1,7 +1,7 @@
 ﻿using FdlWindows.View;
 using GrpcMain.UserDevice;
 using MyClient.Grpc;
-using System.Data; 
+using System.Data;
 
 namespace MyClient.View
 {
