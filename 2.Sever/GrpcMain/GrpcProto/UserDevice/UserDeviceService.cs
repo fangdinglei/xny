@@ -7,6 +7,23 @@ using MyUtility;
 
 namespace GrpcMain.UserDevice
 {
+    static public class Ext
+    {
+        /// <summary>
+        /// 将请求对象转换为新的DB对象
+        /// </summary>
+        /// <returns></returns>
+        static public User_Device AsDBObj(this GrpcMain.UserDevice.User_Device ud)
+        {
+            return new  User_Device
+            {
+                Authority = ud.Authority,
+                Dvid = ud.Dvid,
+                UserDeviceGroup = ud.UserDeviceGroup,
+                UserId = ud.UserId,
+            };
+        }
+    }
     public class UserDeviceServiceImp : UserDeviceService.UserDeviceServiceBase
     {
         public const int MaxGroup = 1000;
@@ -23,14 +40,13 @@ namespace GrpcMain.UserDevice
             _cursorUtility = cursorUtility;
         }
 
-        public override async Task<CommonResponse?> UpdateUserDevice(Request_UpdateUserDevice request, ServerCallContext context)
+        public override async Task<CommonResponse?> UpdateUserDeviceAuthority(Request_UpdateUserDeviceAuthority request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
 
             using (MainContext ct = new MainContext())
             {
-                if (!request.UserDevice.HasUserId ||
-                    await id.IsDirectFatherAsync(ct, request.UserDevice.UserId) == false)
+                if (await id.IsDirectFatherAsync(ct, request.UserDevice.UserId) == false)
 
                 {
                     return new CommonResponse()
@@ -40,9 +56,9 @@ namespace GrpcMain.UserDevice
                     };
                 }
                 //TODO 优化
-                var count = await ct.Devices.Join(ct.User_Devices, it => it.Id, it => it.DeviceId, (dv, udv) => new { dv, udv })
-                    .Where(it => it.udv.UserId == id && request.Dvids.Contains(it.dv.Id)).CountAsync();
-                if (count != request.Dvids.Count)
+                var uds = await ct.Devices.Join(ct.User_Devices, it => it.Id, it => it.DeviceId, (dv, udv) => new { dv, udv })
+                    .Where(it => it.udv.UserId == id && request.Dvids.Contains(it.dv.Id)).ToListAsync();
+                if (uds.Count != request.Dvids.Count)
                 {
                     return new CommonResponse()
                     {
@@ -51,13 +67,29 @@ namespace GrpcMain.UserDevice
                     };
                 }
 
-                if (!request.UserDevice.PStatus
-                        && !request.UserDevice.PData
-                        && !request.UserDevice.PControl)
+                //确定所有设备可以权限转授
+                foreach (var item in uds)
+                {
+                    if (!item.udv._Authority.HasFlag( UserDeviceAuthority.Delegate))
+                    {
+                        return new CommonResponse()
+                        {
+                            Success = false,
+                            Message = $"设备{item.dv.Id}的权限不能被转授",
+                        };
+                    }
+                }
+
+
+                if (request.UserDevice.Authority== 0)
                 {//删除权限
-                    await ct.DeleteRangeAsync<MyDBContext.Main.User_Device>(
-                          it => request.Dvids.Contains(it.DeviceId)
-                      );
+                    await ct.DeleteRangeAsync<MyDBContext.Main.User_Device>(it=>
+                        request.Dvids.Contains(it.DeviceId)&&
+                        ct.User_SFs.Where(itx=>
+                            itx.User1Id==request.UserDevice.UserId&&
+                            itx.User2Id==it.UserId&&(itx.IsFather||itx.IsSelf)
+                        ).Select(it=>it.User2Id).Contains(it.UserId)
+                    );
                 }
                 else
                 {//修改权限
@@ -70,14 +102,18 @@ namespace GrpcMain.UserDevice
                         });
                     //被修改者已有的权限
                     Dictionary<long, MyDBContext.Main.User_Device> dic2 = new();
-                    (await ct.User_Devices.Where(it => request.Dvids.Contains(it.DeviceId) && it.UserId == request.UserId)
+                    (await ct.User_Devices.Where(it => request.Dvids.Contains(it.DeviceId) && it.UserId == request. UserDevice.UserId)
                         .ToListAsync()).ForEach(it =>
                         {
                             dic2.Add(it.DeviceId, it);
                         });
 
+                    //TODO 级联删除子用户权限 使用&=
+                    request.UserDevice.UserDeviceGroup = 0;
+                    var inputud=request.UserDevice.Clone();
                     foreach (var item in request.Dvids)
                     {
+                   
                         //请求者的此记录
                         MyDBContext.Main.User_Device ud;
 
@@ -89,40 +125,51 @@ namespace GrpcMain.UserDevice
                                 Message = "没有设备:" + item + " 的权限",
                             };
                         }
-
-                        if (request.UserDevice.PStatus && !ud.PStatus
-                            || request.UserDevice.PData && !ud.PData
-                            || request.UserDevice.PControl && !ud.PControl
-                            )
+                        var newauthority = request.UserDevice.Authority;
+                        if ((newauthority & ud.Authority) != newauthority)
                         {
-                            return new CommonResponse()
-                            {
-                                Success = false,
-                                Message = "设备:" + item + " 的权限不足,请添加你拥有的权限",
-                            };
+                            newauthority = newauthority & ud.Authority;
                         }
 
-                        //被请求者的此记录
-                        MyDBContext.Main.User_Device ud2;
-                        if (dic.TryGetValue(item, out ud2))
-                        {
-                            ud2.PStatus = request.UserDevice.PStatus;
-                            ud2.PData = request.UserDevice.PData;
-                            ud2.PControl = request.UserDevice.PControl;
-                        }
-                        else
-                        {
-                            ct.Add(new MyDBContext.Main.User_Device()
-                            {
-                                DeviceId = item,
-                                UserId = request.UserId,
-                                User_Device_GroupId = 0,
-                                PStatus = request.UserDevice.PStatus,
-                                PData = request.UserDevice.PData,
-                                PControl = request.UserDevice.PControl,
-                            });
-                        }
+                        //TODO 重新处理逻辑
+                        //子用户降级权限
+                        await ct.BatchUpdate<MyDBContext.Main.User_Device>().
+                        Set(
+                            it => it.Authority,
+                            it => (it.Authority & newauthority)
+                        ).Where(
+                             it =>
+                            request.Dvids.Contains(it.DeviceId) &&
+                            ct.User_SFs.Where(itx =>
+                                itx.User1Id == request.UserDevice.UserId &&
+                                itx.User2Id == it.UserId && itx.IsFather
+                            ).Select(it => it.User2Id).Contains(it.UserId)
+                        )
+                        .ExecuteAsync();
+                        //此用户修改权限
+                        await ct.BatchUpdate<MyDBContext.Main.User_Device>().
+                        Set(
+                            it => it.Authority,
+                            it => (newauthority)
+                        ).Where(
+                             it =>
+                            request.Dvids.Contains(it.DeviceId) &&
+                            it.UserId == request.UserDevice.UserId
+                        )
+                        .ExecuteAsync();
 
+                        ////被请求者的此记录
+                        //MyDBContext.Main.User_Device ud2;
+                        //if (dic.TryGetValue(item, out ud2))
+                        //{
+                        //    ud2.Authority = newauthority;
+                        //}
+                        //else
+                        //{
+                        //    inputud.Dvid = item;
+                        //    inputud.Authority = newauthority;
+                        //    ct.Add(inputud.AsDBObj() );
+                        //}
 
                     }
                 }
@@ -159,7 +206,7 @@ namespace GrpcMain.UserDevice
                 res.Info.AddRange(lsx.Select(it =>
                     new DeviceWithUserDeviceInfo
                     {
-                        Device = MyConvertor.Get(it.device),
+                        Device = MyConvertor.Get(it.device,it.userdeive._Authority),
                         UserDevice = MyConvertor.Get(it.userdeive)
                     }
                 )); ;
@@ -191,7 +238,7 @@ namespace GrpcMain.UserDevice
                 }
                 return new Response_GetDevices_2
                 {
-                    Device = MyConvertor.Get(dv)
+                    Device = MyConvertor.Get(dv,ud._Authority)
                 };
             }
         }

@@ -7,8 +7,11 @@ import "Common/CommonResponse.proto";
 import "Device/DeviceService.proto";
 service UserDeviceService { 
 
-    //只能直接父用户调用 修改设备权限 如果所有权限都false 则删除设备 如果没有权限 则添加
-    rpc UpdateUserDevice( Request_UpdateUserDevice)
+    //只能直接父用户调用 修改设备权限 如果所有权限都false 则删除设备
+    rpc UpdateUserDeviceAuthority( Request_UpdateUserDeviceAuthority)
+        returns (CommonResponse);
+    //只能直接父用户调用 添加用户权限
+    rpc AddUserDevice( Request_AddUserDevice)
         returns (CommonResponse);
 
     //获取用户设备分组信息
@@ -53,21 +56,18 @@ service UserDeviceService {
     message User_Device{
         //optional int64 Id=1;
         optional int64 Dvid=1;
-        optional int64 UserId=2;
+        int64 UserId=2;
         int64 UserDeviceGroup=3;
-        //数据读取权限
-        bool PData=4;
-        //实时状态获取权限
-        bool PStatus=5;
-        //设备控制权限
-        bool PControl=6;
+        int32 Authority=4;
     }
-    message Request_UpdateUserDevice{
+    message Request_UpdateUserDeviceAuthority{
         repeated int64 Dvids=1; 
         User_Device UserDevice=2;  
-        int64 UserId=3;
     }
-
+    message Request_AddUserDevice{
+        repeated int64 Dvids=1; 
+        User_Device UserDevice=2;  
+    }
     message Response_GetGroupInfos{ 
         repeated  User_Device_Group Groups=1; 
     }

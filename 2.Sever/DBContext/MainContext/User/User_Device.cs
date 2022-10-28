@@ -8,21 +8,29 @@
 //dotnet ef -h
 //
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
-
+   
     public class User_Device
     {
         public long UserId { get; set; }
         public long DeviceId { get; set; }
         public long User_Device_GroupId { get; set; }
-        //数据读取权限
-        public bool PData { get; set; }
-        //实时状态获取权限
-        public bool PStatus { get; set; }
-        //设备控制权限
-        public bool PControl { get; set; }
+
+        public int Authority { get; set; }
+        [NotMapped]
+        public UserDeviceAuthority _Authority
+        {
+            get => Enum.IsDefined(typeof(UserDeviceAuthority), Authority)
+                ? (UserDeviceAuthority)Authority
+                : UserDeviceAuthority.No;
+            set =>
+               Authority = (int)value;
+        }
+
 
         public virtual User User { get; set; }
         public virtual Device Device { get; set; }

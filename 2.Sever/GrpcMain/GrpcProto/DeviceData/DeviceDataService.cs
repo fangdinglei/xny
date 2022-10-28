@@ -41,7 +41,7 @@ namespace GrpcMain.DeviceData
                 var ud = await ct.User_Devices
                     .Where(it => it.DeviceId == request.Dvid && it.UserId == id)
                      .AsNoTracking().FirstOrDefaultAsync();
-                if (ud == null || !ud.PData)
+                if (ud == null || !ud._Authority.HasFlag(UserDeviceAuthority.read_data))
                 {
                     //没有权限
                     context.Status = new Status(StatusCode.PermissionDenied, "没有数据读取权限");
@@ -99,7 +99,7 @@ namespace GrpcMain.DeviceData
                 var ud = await ct.User_Devices
                     .Where(it => it.DeviceId == request.Dvid && it.UserId == id)
                      .AsNoTracking().FirstOrDefaultAsync();
-                if (ud == null || !ud.PData)
+                if (ud == null || !ud._Authority.HasFlag( UserDeviceAuthority.read_data))
                 {
                     //没有权限
                     context.Status = new Status(StatusCode.PermissionDenied, "没有数据读取权限");
@@ -137,7 +137,7 @@ namespace GrpcMain.DeviceData
                 var ud = await ct.User_Devices
                     .Where(it => it.DeviceId == request.Dvid && it.UserId == id)
                      .AsNoTracking().FirstOrDefaultAsync();
-                if (ud == null || !ud.PStatus)
+                if (ud == null || ud._Authority.HasFlag( UserDeviceAuthority.read_status))
                 {
                     //没有权限
                     context.Status = new Status(StatusCode.PermissionDenied, "没有数据读取权限");
