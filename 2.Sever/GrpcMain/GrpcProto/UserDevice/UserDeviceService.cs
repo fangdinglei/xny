@@ -108,7 +108,7 @@ namespace GrpcMain.UserDevice
                             dic2.Add(it.DeviceId, it);
                         });
 
-                    //TODO 级联删除子用户权限 使用&=
+                   
                     request.UserDevice.UserDeviceGroup = 0;
                     var inputud=request.UserDevice.Clone();
                     foreach (var item in request.Dvids)
@@ -158,19 +158,6 @@ namespace GrpcMain.UserDevice
                         )
                         .ExecuteAsync();
 
-                        ////被请求者的此记录
-                        //MyDBContext.Main.User_Device ud2;
-                        //if (dic.TryGetValue(item, out ud2))
-                        //{
-                        //    ud2.Authority = newauthority;
-                        //}
-                        //else
-                        //{
-                        //    inputud.Dvid = item;
-                        //    inputud.Authority = newauthority;
-                        //    ct.Add(inputud.AsDBObj() );
-                        //}
-
                     }
                 }
 
@@ -179,6 +166,60 @@ namespace GrpcMain.UserDevice
             }
             return new CommonResponse() { Success = true };
         }
+        public override async Task<CommonResponse> AddUserDevice(Request_AddUserDevice request, ServerCallContext context)
+        {
+            long id = (long)context.UserState["CreatorId"];
+
+            using (MainContext ct = new MainContext())
+            {
+                if (await id.IsDirectFatherAsync(ct, request.UserDevice.UserId) == false)
+
+                {
+                    return new CommonResponse()
+                    {
+                        Success = false,
+                        Message = "指定了无效的接收用户",
+                    };
+                }
+                //TODO 优化
+                var uds = await ct.Devices.Join(ct.User_Devices, it => it.Id, it => it.DeviceId, (dv, udv) => new { dv, udv })
+                    .Where(it => it.udv.UserId == id && request.Dvids.Contains(it.dv.Id)).ToListAsync();
+                if (uds.Count != request.Dvids.Count)
+                {
+                    return new CommonResponse()
+                    {
+                        Success = false,
+                        Message = "参数错误或者使用非法的设备ID或不是子用户ID",
+                    };
+                }
+
+                //确定所有设备可以权限转授
+                Dictionary<long, MyDBContext.Main.User_Device> dicuds = new();
+                foreach (var item in uds)
+                {
+                    dicuds[item.udv.DeviceId] = item.udv;
+                    if (!item.udv._Authority.HasFlag(UserDeviceAuthority.Delegate))
+                    {
+                        return new CommonResponse()
+                        {
+                            Success = false,
+                            Message = $"设备{item.dv.Id}的权限不能被转授",
+                        };
+                    }
+                }
+                request.UserDevice.UserDeviceGroup = 0;
+                var autority = request.UserDevice.Authority;
+                foreach (var item in request.Dvids)
+                {
+                    request.UserDevice.Dvid = item;
+                    request.UserDevice.Authority= dicuds[item].Authority&autority;
+                    ct.Add(MyConvertor.Get(request.UserDevice));
+                }
+                await ct.SaveChangesAsync();
+            }
+            return new CommonResponse() { Success = true };
+        }
+
 
         public override async Task<Response_GetDevices> GetDevices(Request_GetDevices request, ServerCallContext context)
         {

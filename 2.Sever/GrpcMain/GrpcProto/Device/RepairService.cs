@@ -24,7 +24,7 @@ namespace GrpcMain.Device
                 var ud = await ct.User_Devices
                    .Where(it => it.DeviceId == request.Info.DeviceId && it.UserId == id)
                     .AsNoTracking().FirstOrDefaultAsync();
-                if (ud == null)
+                if (ud == null||!ud._Authority.HasFlag( UserDeviceAuthority.write_repair))
                 {
                     //没有权限
                     context.Status = new Status(StatusCode.PermissionDenied, "没有该设备的维修信息修改权限");
@@ -58,7 +58,7 @@ namespace GrpcMain.Device
                 var ud = await ct.User_Devices
                    .Where(it => it.DeviceId == request.Info.DeviceId && it.UserId == id)
                     .AsNoTracking().FirstOrDefaultAsync();
-                if (ud == null)
+                if (ud == null|| !ud._Authority.HasFlag(UserDeviceAuthority.write_repair))
                 {
                     //没有权限
                     context.Status = new Status(StatusCode.PermissionDenied, "没有该设备的维修信息修改权限");
@@ -91,26 +91,28 @@ namespace GrpcMain.Device
             Response_GetRepairInfos res = new Response_GetRepairInfos();
             using (MainContext ct = new MainContext())
             {
-                IQueryable<Device_Repair> bd;
-                bd = ct.Device_Repairs.Join(ct.User_Devices, it => it.DeviceId, it => it.DeviceId, (a, b) => new { a, b }).Where(it => it.b.UserId == id).Select(it => it.a);
+                var bd = ct.Device_Repairs.Join(ct.User_Devices, it => it.DeviceId, it => it.DeviceId, (a, b) => new { a, b }).Where(it => it.b.UserId == id);
+                //过滤权限
+                bd = bd.Where(it=>(it.b.Authority & (int)UserDeviceAuthority.read_repair)!=0);
                 if (request.HasDeviceId)
                 {
-                    bd = bd.Where(it => it.DeviceId == request.DeviceId);
+                    bd = bd.Where(it => it.a.DeviceId == request.DeviceId);
                 }
                 if (request.HasCursor)
                 {
-                    bd = bd.Where(it => it.Id >= request.Cursor);
+                    bd = bd.Where(it => it.a.Id >= request.Cursor);
                 }
                 if (request.HasStartTime)
                 {
-                    bd = bd.Where(it => request.StartTime <= it.CompletionTime);
+                    bd = bd.Where(it => request.StartTime <= it.a.CompletionTime);
                 }
                 if (request.HasEndTime)
                 {
-                    bd = bd.Where(it => request.EndTime > it.DiscoveryTime);
+                    bd = bd.Where(it => request.EndTime > it.a.DiscoveryTime);
                 }
-                bd = bd.Take(request.MaxCount + 1).OrderBy(it => it.DiscoveryTime).AsNoTracking();
-                var ls = await bd.ToListAsync();
+                var bdx = bd.Select(it=>it.a);
+                bdx = bdx.Take(request.MaxCount + 1).OrderBy(it => it.DiscoveryTime).AsNoTracking();
+                var ls = await bdx.ToListAsync();
                 var lsx = _grpcCursorUtility.Run(ls, request.MaxCount + 1, (it) => { res.Cursor = it.Id; });
                 res.Info.AddRange(lsx.Select(it => new RepairInfo()
                 {

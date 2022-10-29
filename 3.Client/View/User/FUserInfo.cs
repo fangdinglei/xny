@@ -62,7 +62,6 @@ namespace MyClient.View.User
                 }
 
                 var rsp = await client.UpdateUserInfoAsync(req);
-                rsp.ThrowIfNotSuccess();
                 MessageBox.Show("修改成功", "提示");
                 var idx = -1;
                 foreach (var item in GetUserInfos())
@@ -73,7 +72,7 @@ namespace MyClient.View.User
                         break;
                     }
                 }
-                GetUserInfos()[idx] = uclone;
+                GetUserInfos()[idx] = rsp.UserInfo;
             }
             catch (Exception ex)
             {

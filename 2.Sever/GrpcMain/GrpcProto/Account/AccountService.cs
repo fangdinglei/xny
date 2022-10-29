@@ -287,7 +287,7 @@ namespace GrpcMain.Account
         }
 
 
-        public override async Task<CommonResponse> UpdateUserInfo(Request_UpdateUserInfo request, ServerCallContext context)
+        public override async Task<Response_UpdateUserInfo> UpdateUserInfo(Request_UpdateUserInfo request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
@@ -304,11 +304,8 @@ namespace GrpcMain.Account
                       .AsNoTracking().FirstOrDefaultAsync();
                     if (sf == null)
                     {
-                        return new CommonResponse()
-                        {
-                            Success = false,
-                            Message = "无该子用户的所有权",
-                        };
+                        context.Status = new Status( StatusCode.PermissionDenied, "无该子用户的所有权");
+                        return null;
                     }
                 }
                 user = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
@@ -316,10 +313,10 @@ namespace GrpcMain.Account
                 {
                     throw new Exception("用户应当不空但是为空");
                 }
-                if (request.UserInfo.HasUserName)
-                {
-                    user.Name = request.UserInfo.UserName;
-                }
+                //if (request.UserInfo.HasUserName)
+                //{
+                //    user.Name = request.UserInfo.UserName;
+                //}
                 if (request.UserInfo.HasPhone)
                 {
                     user.Phone = request.UserInfo.Phone;
@@ -343,19 +340,15 @@ namespace GrpcMain.Account
                             authoritysself == null || authoritysself.Count < authorityssubuser.Count
                             || authorityssubuser.Except(authoritysself).Count() != 0)
                         {
-                            return new CommonResponse()
-                            {
-                                Success = false,
-                                Message = "父用户不具有这些权限",
-                            };
+                            context.Status = new Status(StatusCode.PermissionDenied, "父用户不具有这些权限");
+                            return null;
                         }
                         user.Authoritys = request.UserInfo.Authoritys;
                     }
                 }
                 await ct.SaveChangesAsync();
-                return new CommonResponse
-                {
-                    Success = true,
+                return new Response_UpdateUserInfo() { 
+                    UserInfo=MyConvertor.Get(user)
                 };
             }
         }

@@ -21,7 +21,7 @@ service AccountService {
         returns (DTODefine.Response_GetUserInfo);
     //修改用户信息 也可修改高级信息
     rpc UpdateUserInfo(DTODefine.Request_UpdateUserInfo)
-        returns (CommonResponse);
+        returns (DTODefine.Response_UpdateUserInfo);
 }
 
 
@@ -58,6 +58,7 @@ message DTODefine
 
     message UserInfo{
         int64 ID=1;
+        //暂时不能修改
         optional string UserName=2;
         optional string Phone=3;
         optional int64 Father=4;    
@@ -77,6 +78,8 @@ message DTODefine
     message Request_UpdateUserInfo{
         UserInfo UserInfo=1;
     }
-     
+    message Response_UpdateUserInfo{
+        UserInfo UserInfo=1;
+    }
 }
  

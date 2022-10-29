@@ -154,8 +154,7 @@ namespace MyClient.View.User
                         Authoritys = Newtonsoft.Json.JsonConvert.SerializeObject(prioritys)
                     }
                 });
-                r.ThrowIfNotSuccess();
-                SelectedUser.Authoritys = Newtonsoft.Json.JsonConvert.SerializeObject(prioritys);
+                SelectedUser.Authoritys =r.UserInfo.Authoritys;
                 MessageBox.Show("更新成功", "提示");
                 BaseManager.SetUserInfo(BaseManager.SelectedUser, BaseManager.FatherInfo);
             }

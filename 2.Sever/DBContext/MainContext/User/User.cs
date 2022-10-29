@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 //Add-Migration [--context MainContext]
@@ -22,6 +23,9 @@ namespace MyDBContext.Main
         public string EMail { get; set; }
         public byte Status { get; set; }
         public long LastLogin { get; set; }
+
+        [Comment("表示用户属于哪一个用户族")]
+        public int TreeId { get; set; }
 
         [Required]
         public string Authoritys { get; set; }
