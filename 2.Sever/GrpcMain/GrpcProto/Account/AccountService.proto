@@ -66,6 +66,9 @@ message DTODefine
         optional int32 TreeId=8;
         optional int32 Status=9;
         optional string PassWord=10;
+        optional int32 TreeDeep=11;
+        optional int32 MaxSubUser=12;
+        optional int32 MaxSubUserDepth=13;
     }
     message Request_GetUserInfo{
         bool SubUser=1;

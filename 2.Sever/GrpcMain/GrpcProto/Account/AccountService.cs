@@ -3,6 +3,7 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using Org.BouncyCastle.Crypto.Tls;
 using static GrpcMain.Account.DTODefine.Types;
 
 namespace GrpcMain.Account
@@ -23,6 +24,9 @@ namespace GrpcMain.Account
                 Status = user.Status,
                 TreeId = user.TreeId,
                 PassWord = haspass? user.Pass:"",
+                MaxSubUser=user.MaxSubUser,
+                TreeDeep=user.TreeDeep,
+                MaxSubUserDepth=user.MaxSubUserDepth,
             };
         }
 
@@ -40,12 +44,21 @@ namespace GrpcMain.Account
                 Phone = user.Phone,
                 TreeId = user.TreeId,
                 Status = (byte)user.Status,
+                MaxSubUser=user.MaxSubUser,
+                MaxSubUserDepth=user.MaxSubUserDepth,
+                TreeDeep=user.TreeDeep,
             };
         }
    
     }
     public class AccountServiceImp : AccountService.AccountServiceBase
     {
+        /*
+         it =>it.User1Id == id && it.IsFather 查询的User2Id为子用户
+         it =>it.User1Id == id && !it.IsFather 查询的User2Id父用户和自己
+         it =>it.User2Id == id && it.IsFather 查询的User1Id为父用户
+         it =>it.User2Id == id && !it.IsFather 查询的User1Id子用户和自己
+         */
         IGrpcAuthorityHandle _handle;
         ITimeUtility _timeutility;
         public AccountServiceImp(IGrpcAuthorityHandle handle, ITimeUtility time)
@@ -211,14 +224,36 @@ namespace GrpcMain.Account
             using (MainContext ct = new MainContext())
             {
                 var trans = await ct.Database.BeginTransactionAsync();
-                var me=ct.Users.Where(it=>it.Id==id).FirstOrDefaultAsync();
-                if (me != null)
+                var me=await ct.Users.Where(it=>it.Id==id).FirstOrDefaultAsync();
+                if (me == null)
                     throw new Exception("数据库不一致"+me.Id+"应当存在却不存在");
+
+                //最大子用户深度校验
+                var maxdeep =await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new { a, b })
+                    .Where(it => !it.b.IsFather).MaxAsync(it=>it.a.MaxSubUserDepth);
+                if (maxdeep < me.TreeDeep+1)
+                {
+                    throw new RpcException(new Status(StatusCode.PermissionDenied, "最大用户深度为" + maxdeep+ ",该限制可能是父用户对您的限制也可能是父用户受到的限制"));
+                }
+                //最大子用户校验 查找父用户和自己 为集合  如果集合中所有用户的子用户数量都小于其受到的限制 则允许插入
+                var __ct=await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new { a, b })
+                    .Where(it => !it.b.IsFather && it.b.User1Id == id
+                    && (ct.User_SFs.Where(sub => sub.User1Id == it.b.User2Id && sub.IsFather).Count() >= it.a.MaxSubUser)
+                    ).Take(1).CountAsync();
+                var canadd = __ct == 0;
+                if (!canadd)
+                {
+                    throw new RpcException(new Status(StatusCode.PermissionDenied, "超出最大用户数量限制,该限制可能是父用户对您的限制也可能是父用户受到的限制"));
+                }
+
+
                 var user = request.User.AsDBObj();
                 user.CreatorId = id;
+                user.TreeId = me.TreeId;
+                user.TreeDeep = me.TreeDeep + 1;
                 ct.Add(user);
                 await ct.SaveChangesAsync();
-                await CreatUser_AddUserSFAsync(ct,user.Id,id);
+                await CreatUser_AddUserSFAsync(ct, user.Id, id);
                 await ct.SaveChangesAsync();
                 await trans.CommitAsync();
                 return new Response_CreatUser()
@@ -281,11 +316,12 @@ namespace GrpcMain.Account
         public override async Task<Response_UpdateUserInfo> UpdateUserInfo(Request_UpdateUserInfo request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
+            bool updateself = request.UserInfo.ID == id;
             using (MainContext ct = new MainContext())
             {
                 User? user; User? self;
                 //鉴权 自己则不能改权限 子用户则
-                if (request.UserInfo.ID == id)
+                if (updateself)
                 {
                     request.UserInfo.ClearAuthoritys();
                 }
@@ -295,14 +331,14 @@ namespace GrpcMain.Account
                       .AsNoTracking().FirstOrDefaultAsync();
                     if (sf == null)
                     {
-                        context.Status = new Status( StatusCode.PermissionDenied, "无该子用户的所有权");
-                        return null;
+                        throw new RpcException(new Status(StatusCode.PermissionDenied, "无该子用户的所有权"));
                     }
                 }
-                user = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
-                if (user == null)
+                self = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
+                user= await ct.Users.Where(it => it.Id == request.UserInfo.ID).FirstOrDefaultAsync();
+                if (self == null||user==null)
                 {
-                    throw new Exception("用户应当不空但是为空");
+                    throw new Exception("不一致:用户应当不空但是为空");
                 }
                 //if (request.UserInfo.HasUserName)
                 //{
@@ -320,6 +356,19 @@ namespace GrpcMain.Account
                 {//修改高级权限
                     await UpdateUserInfo_ChangeAuthoritysAsync(ct, user, id,request.UserInfo.Authoritys);
                 }
+
+                if (!updateself)
+                {
+                    if (request.UserInfo.HasMaxSubUser)
+                    {
+                        user.MaxSubUser = request.UserInfo.MaxSubUser;
+                    }
+                    if (request.UserInfo.HasMaxSubUserDepth)
+                    {
+                        user.MaxSubUserDepth = request.UserInfo.MaxSubUserDepth;
+                    }
+                }
+
                 await ct.SaveChangesAsync();
                 return new Response_UpdateUserInfo() { 
                     UserInfo=user.AsGrpcObj()
