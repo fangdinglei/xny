@@ -142,7 +142,7 @@ namespace XNYAPI.DAL
         /// </summary>
         /// <param name="dv"></param>
         /// <param name="cmd"></param>
-        static public void UpdateDeviceInfo(DeviceInfo dv, MySqlCommand cmd)
+        static public void UpdateDeviceBaseInfo(DeviceInfo dv, MySqlCommand cmd)
         {
             /*
         public uint  ID;

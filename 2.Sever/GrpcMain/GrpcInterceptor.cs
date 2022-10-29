@@ -57,17 +57,13 @@ namespace GrpcMain
                     }
                     var r = await continuation(request, context);
                     //审计
-                    if (at.NeedAudit)
+                    if (at.NeedAudit && context.Status.StatusCode == StatusCode.Cancelled)
                     {
-                        if (at.NeedAudit && context.Status.StatusCode == StatusCode.Cancelled)
-                        {
-                            await _Handle.RecordAudit(context, request, continuation, at);
-                            context.Status = Status.DefaultSuccess;
-                        }
+                        await _Handle.RecordAudit(context, request, continuation, at);
                     }
                     if (r == null)
                     {
-                        return Activator.CreateInstance<TResponse>();
+                        throw new RpcException(new Status(StatusCode.Cancelled, "需要审计"));
                     }
                     return r;
                 }

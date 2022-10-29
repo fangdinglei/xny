@@ -14,8 +14,12 @@ service DeviceService {
     rpc DeletDevice( Request_DeletDevice)
         returns (CommonResponse);
 
-    //修改设备信息
-    rpc UpdateDeviceInfo( Request_UpdateDeviceInfo)
+    //修改设备信息基础
+    rpc UpdateDeviceBaseInfo( Request_UpdateDeviceBaseInfo)
+        returns (CommonResponse);
+
+     //修改设备类型
+    rpc UpdateDeviceType( Request_UpdateDeviceType)
         returns (CommonResponse);
     //获取全部设备状态
     rpc GetAllDeviceStatus( Request_GetAllDeviceStatus)
@@ -23,39 +27,44 @@ service DeviceService {
 
 }
 
+message Device{
+    int64 Id=1;
+    optional string Name=2;
+    optional int64 DeviceTypeId=3;
+    optional string LatestData=4;
+    optional int32 Status=5;
+    optional string LocationStr=6;
+ 
+}
 
- message Device{
-        int64 Id=1;
-        string Name=2;
-        int64 DeviceTypeId=3;
-        optional string LatestData=4;
-        optional int32 Status=5;
-        optional string LocationStr=6;
-     
-    }
-
-    message Request_SendCMD{
-        repeated int64 Dvids=1;
-        string Cmd=2;
-    }   
+message Request_SendCMD{
+    repeated int64 Dvids=1;
+    string Cmd=2;
+}   
 
 
-    message Request_DeletDevice{
-        int64 Dvid=1;
-        optional string Reason=2;
-    }
+message Request_DeletDevice{
+    int64 Dvid=1;
+    optional string Reason=2;
+}
 
-    message Request_UpdateDeviceInfo{
-        repeated Device Devices=1;
-    }
-    
-    message Request_GetAllDeviceStatus{
-        optional int64 Cursor=1;
+message Request_UpdateDeviceBaseInfo{
+    Device Device=1;
+}
+message Request_UpdateDeviceType{
+    int64 Dvid=1;
+    int64 TypeId=2;
+}
 
-    }
-    message Response_GetAllDeviceStatus{
-        //0则无后续数据
-        int64 Cursor=1; 
-        repeated int64 Dvids=2;
-        repeated int32 Status=3;
-    }
+
+
+message Request_GetAllDeviceStatus{
+    optional int64 Cursor=1;
+
+}
+message Response_GetAllDeviceStatus{
+    //0则无后续数据
+    int64 Cursor=1; 
+    repeated int64 Dvids=2;
+    repeated int32 Status=3;
+}
