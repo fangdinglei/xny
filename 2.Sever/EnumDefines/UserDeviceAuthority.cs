@@ -46,11 +46,11 @@ namespace MyDBContext.Main
         /// <summary>
         /// 删除设备历史信息
         /// </summary>
-        Write_Data = 1 << 6,
+        Write_DeletData = 1 << 6,
         /// <summary>
         /// 删除设备
         /// </summary>
-        Write_Device = 1 << 7,
+        Write_DeletDevice = 1 << 7,
         /// <summary>
         /// 修改设备基础信息
         /// </summary>
@@ -75,6 +75,5 @@ namespace MyDBContext.Main
         /// 转授
         /// </summary>
         Delegate=1<<31,
-
     }
 }

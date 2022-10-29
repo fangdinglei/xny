@@ -41,7 +41,7 @@ service DeviceService {
 
 
     message Request_DeletDevice{
-        repeated int64 Dvids=1;
+        int64 Dvid=1;
         optional string Reason=2;
     }
 
