@@ -12,12 +12,12 @@ namespace GrpcMain.Common
             {
                 DeviceTypeId = value.DeviceTypeId,
                 Id = value.Id,
-                LatestData = authority.HasFlag( UserDeviceAuthority.read_status)?
+                LatestData = authority.HasFlag( UserDeviceAuthority.Read_Status)?
                     value.LatestData:"",
                 LocationStr = authority.HasFlag(UserDeviceAuthority.Read_BaseInfo) ? 
                     value.LocationStr:"",
                 Name = value.Name,
-                Status = authority.HasFlag(UserDeviceAuthority.read_status) ?
+                Status = authority.HasFlag(UserDeviceAuthority.Read_Status) ?
                     value.Status :0,
             };
         }

@@ -24,7 +24,7 @@ namespace GrpcMain.Device
                 var ud = await ct.User_Devices
                    .Where(it => it.DeviceId == request.Info.DeviceId && it.UserId == id)
                     .AsNoTracking().FirstOrDefaultAsync();
-                if (ud == null||!ud._Authority.HasFlag( UserDeviceAuthority.write_repair))
+                if (ud == null||!ud._Authority.HasFlag( UserDeviceAuthority.Write_Repair))
                 {
                     //没有权限
                     context.Status = new Status(StatusCode.PermissionDenied, "没有该设备的维修信息修改权限");
@@ -58,7 +58,7 @@ namespace GrpcMain.Device
                 var ud = await ct.User_Devices
                    .Where(it => it.DeviceId == request.Info.DeviceId && it.UserId == id)
                     .AsNoTracking().FirstOrDefaultAsync();
-                if (ud == null|| !ud._Authority.HasFlag(UserDeviceAuthority.write_repair))
+                if (ud == null|| !ud._Authority.HasFlag(UserDeviceAuthority.Write_Repair))
                 {
                     //没有权限
                     context.Status = new Status(StatusCode.PermissionDenied, "没有该设备的维修信息修改权限");
@@ -93,7 +93,7 @@ namespace GrpcMain.Device
             {
                 var bd = ct.Device_Repairs.Join(ct.User_Devices, it => it.DeviceId, it => it.DeviceId, (a, b) => new { a, b }).Where(it => it.b.UserId == id);
                 //过滤权限
-                bd = bd.Where(it=>(it.b.Authority & (int)UserDeviceAuthority.read_repair)!=0);
+                bd = bd.Where(it=>(it.b.Authority & (int)UserDeviceAuthority.Read_Repair)!=0);
                 if (request.HasDeviceId)
                 {
                     bd = bd.Where(it => it.a.DeviceId == request.DeviceId);

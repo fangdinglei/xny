@@ -22,55 +22,55 @@ namespace MyDBContext.Main
         /// <summary>
         /// 获取设备基础信息
         /// </summary>
-        Read_BaseInfo=1,
+        Read_BaseInfo=1<<0,
         /// <summary>
         /// 获取设备维修历史记录
         /// </summary>
-        read_repair ,
+        Read_Repair =1<<1,
         /// <summary>
         /// 获取设备历史命令
         /// </summary>
-        read_cmd,
+        Read_Cmd = 1 << 2,
         /// <summary>
         /// 获取设备定时任务
         /// </summary>
-        read_timesetting,
+        Read_TimeSetting = 1 << 3,
         /// <summary>
         /// 获取设备当前状态信息
         /// </summary>
-        read_status,
+        Read_Status = 1 << 4,
         /// <summary>
         /// 获取设备历史信息
         /// </summary>
-        read_data,
+        Read_Data = 1 << 5,
         /// <summary>
         /// 删除设备历史信息
         /// </summary>
-        write_data,
+        Write_Data = 1 << 6,
         /// <summary>
         /// 删除设备
         /// </summary>
-        write_device,
+        Write_Device = 1 << 7,
         /// <summary>
         /// 修改设备基础信息
         /// </summary>
-        write_baseinfo,
+        Write_BaseInfo = 1 << 8,
         /// <summary>
         /// 修改设备维修信息
         /// </summary>
-        write_repair,
+        Write_Repair = 1 << 9,
         /// <summary>
         /// 修改设备类型
         /// </summary>
-        write_type,
+        Write_Type = 1 << 10,
         /// <summary>
         /// 向设备发送命令
         /// </summary>
-        control_cmd,
+        control_cmd = 1 << 11,
         /// <summary>
         /// 修改设备定时任务
         /// </summary>
-        Control_TimeSetting,
+        Control_TimeSetting = 1 << 12,
         /// <summary>
         /// 转授
         /// </summary>
