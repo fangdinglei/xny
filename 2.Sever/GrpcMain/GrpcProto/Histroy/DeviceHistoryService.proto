@@ -16,12 +16,12 @@ service DeviceHistoryService {
 }
 
 
-message History{
-      int64 Id=1;
-      int32 Type=2;
-      int64 Time=3;
-      bool Success=4;
-      string Data=5;
+message DeviceHistory{
+    int64 Id=1;
+    int32 Type=2;
+    int64 Time=3;
+    int64 UserId=5;
+    string Data=5;
 }
 message Request_GetHistory{
     //日志的产生者
@@ -33,7 +33,7 @@ message Request_GetHistory{
     int32 Type=5;
 }
 message Response_GetHistory{
-    repeated History Historys=1;
+    repeated DeviceHistory Historys=1;
 }
 
 message Request_DeletHistory{

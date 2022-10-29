@@ -10,6 +10,10 @@ service DeviceService {
     rpc SendCMD( Request_SendCMD)
         returns (CommonResponse);
 
+    //添加设备
+    rpc AddDevice( Request_AddDevice)
+        returns (Response_AddDevice);
+
     //删除设备
     rpc DeletDevice( Request_DeletDevice)
         returns (CommonResponse);
@@ -46,6 +50,12 @@ message Request_SendCMD{
     string Cmd=2;
 }   
 
+message Request_AddDevice{
+    Device Device=1;
+}   
+message Response_AddDevice{
+    Device Device=1;
+}  
 
 message Request_DeletDevice{
     int64 Dvid=1;
