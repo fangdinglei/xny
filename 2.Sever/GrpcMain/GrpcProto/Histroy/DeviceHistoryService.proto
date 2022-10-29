@@ -1,0 +1,50 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.History";
+package GrpcMain.History;
+import "Common/CommonResponse.proto";
+service DeviceHistoryService { 
+    rpc GetHistory(Request_GetHistory)
+        returns (Response_GetHistory);
+
+    rpc DeletHistory(Request_DeletHistory)
+        returns (CommonResponse);
+
+    rpc DeletHistorys(Request_DeletHistorys)
+        returns (CommonResponse);
+
+}
+
+
+message History{
+      int64 Id=1;
+      int32 Type=2;
+      int64 Time=3;
+      bool Success=4;
+      string Data=5;
+}
+message Request_GetHistory{
+    //日志的产生者
+    optional int64 UserId=1;
+    optional int64 StartTime=2;
+    optional int64 EndTime=3;
+    //50 100 200 400 800 默认400
+    optional int32 MaxCount=4;
+    int32 Type=5;
+}
+message Response_GetHistory{
+    repeated History Historys=1;
+}
+
+message Request_DeletHistory{
+    //日志Id
+    int64 Id=1;
+}
+message Request_DeletHistorys{
+    int64 StartTime=1;
+    int64 EndTime=2;
+    //日志产生的用户
+    int64 UserId=3;
+    //日志类型
+    int32 Type=4;
+}   

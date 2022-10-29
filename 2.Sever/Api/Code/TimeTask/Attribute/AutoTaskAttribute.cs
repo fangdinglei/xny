@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using XNYAPI.Utility;
 
 namespace TimerMvcWeb.Filters
 {
@@ -86,8 +85,7 @@ namespace TimerMvcWeb.Filters
                 {
                     //LogHelper.Error(t.FullName + " 任务启动失败", ex);
                     //Debug.WriteLine(t.FullName + " 任务启动失败", ex);
-                    Logger.Log(Logger.LOGICERROR, "定时任务启动失败");
-                    Logger.Log(ex);
+                 
                 }
             }
         }
@@ -142,8 +140,7 @@ namespace TimerMvcWeb.Filters
                     }
                     catch (Exception ex)
                     {
-                        Logger.Log(Logger.ERROR, att.Name + " 自动任务 OnLoad失败");
-                        Logger.Log(ex);
+                   
                     }
                 });
             }
@@ -159,8 +156,7 @@ namespace TimerMvcWeb.Filters
                     }
                     catch (Exception e)
                     {
-                        Logger.Log(Logger.ERROR, att.Name + " 自动任务 OnTime失败");
-                        Logger.Log(e);
+                      
                     }
 
                     timers[att].Change(att.IntervalSeconds * 1000, att.IntervalSeconds * 1000);
@@ -176,8 +172,7 @@ namespace TimerMvcWeb.Filters
                     }
                     catch (Exception ex)
                     {
-                        Logger.Log(Logger.ERROR, att.Name + " 自动任务 OnExit失败");
-                        Logger.Log(ex);
+                      
                     }
                 });
             }
