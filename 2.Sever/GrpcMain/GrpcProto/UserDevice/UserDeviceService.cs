@@ -23,6 +23,19 @@ namespace GrpcMain.UserDevice
                 UserId = ud.UserId,
             };
         }
+        static public UserDevice.User_Device AsGrpcObj(this MyDBContext.Main.User_Device value)
+        {
+            return new UserDevice.User_Device()
+            {
+                Dvid = value.DeviceId,
+                UserId = value.UserId,
+                Authority = value.Authority,
+                UserDeviceGroup = value.User_Device_GroupId,
+            };
+        }
+
+
+
     }
     public class UserDeviceServiceImp : UserDeviceService.UserDeviceServiceBase
     {
@@ -213,7 +226,7 @@ namespace GrpcMain.UserDevice
                 {
                     request.UserDevice.Dvid = item;
                     request.UserDevice.Authority= dicuds[item].Authority&autority;
-                    ct.Add(MyConvertor.Get(request.UserDevice));
+                    ct.Add(request.UserDevice.AsDBObj());
                 }
                 await ct.SaveChangesAsync();
             }
@@ -248,7 +261,7 @@ namespace GrpcMain.UserDevice
                     new DeviceWithUserDeviceInfo
                     {
                         Device = MyConvertor.Get(it.device,it.userdeive._Authority),
-                        UserDevice = MyConvertor.Get(it.userdeive)
+                        UserDevice = it.userdeive.AsGrpcObj()
                     }
                 )); ;
             }
@@ -476,7 +489,7 @@ namespace GrpcMain.UserDevice
                     res.Cursor = 0;
                     lsx = r;
                 }
-                res.UserDevices.AddRange(lsx.Select(it => MyConvertor.Get(it)));
+                res.UserDevices.AddRange(lsx.Select(it => it.AsGrpcObj()));
                 return res;
             }
         }

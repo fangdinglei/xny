@@ -48,9 +48,7 @@ message DTODefine
 
     }   
     message Request_CreatUser{
-        string uname=1;
-        string pass=2;
-        string phone = 3;
+        UserInfo User=1;
     }  
     message Response_CreatUser{
         int64 UserId=1;
@@ -64,7 +62,10 @@ message DTODefine
         optional int64 Father=4;    
         optional string Email=5;
         optional int64 LastLogin=6;
-        optional string Authoritys =7;
+        optional string Authoritys =7; 
+        optional int32 TreeId=8;
+        optional int32 Status=9;
+        optional string PassWord=10;
     }
     message Request_GetUserInfo{
         bool SubUser=1;

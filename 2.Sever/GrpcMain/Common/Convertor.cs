@@ -22,39 +22,8 @@ namespace GrpcMain.Common
             };
         }
 
-        static public UserDevice.User_Device Get(MyDBContext.Main.User_Device value)
-        {
-            return new UserDevice.User_Device()
-            {
-                Dvid = value.DeviceId,
-                UserId = value.UserId,
-                Authority=value.Authority,
-                UserDeviceGroup = value.User_Device_GroupId,
-            };
-        }
+        
 
-        static public MyDBContext.Main.User_Device Get(UserDevice.User_Device userDevice)
-        {
-            return new MyDBContext.Main.User_Device
-            {
-                Authority = userDevice.Authority,
-                UserId = userDevice.UserId,
-                DeviceId=userDevice.Dvid,
-                User_Device_GroupId = userDevice.UserDeviceGroup,
-            };
-        }
 
-        static public DTODefine.Types.UserInfo Get(User user)
-        {
-            return new DTODefine.Types.UserInfo() { 
-                Authoritys = user.Authoritys,
-                Email=user.EMail,
-                Father=user.CreatorId,
-                ID = user.Id,
-                LastLogin=user.LastLogin,
-                Phone=user.Phone,
-                UserName=user.Name,
-            };
-        }
     }
 }

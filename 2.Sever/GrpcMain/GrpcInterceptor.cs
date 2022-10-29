@@ -72,6 +72,9 @@ namespace GrpcMain
                     return r;
                 }
             }
+            catch (RpcException ex) {
+                throw;
+            }
             catch (Exception ex)
             {
                 _Handle.OnError(ex);

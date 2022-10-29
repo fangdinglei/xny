@@ -9,38 +9,40 @@ namespace GrpcMain.Account
 {
     static public class Ext
     {
-        ///// <summary>
-        ///// 将请求对象转换为新的DB对象
-        ///// </summary>
-        ///// <returns></returns>
-        ///// <exception cref="NotImplementedException"></exception>
-        //static public Internal_Mail AsDBObj(this InternalMail mail)
-        //{
-        //    return new Internal_Mail
-        //    {
-        //        Id = mail.Id,
-        //        SenderId = mail.SenderId,
-        //        LastEMailTime = mail.LastEMailTime,
-        //        ReceiverId = mail.ReceiverId,
-        //        Readed = mail.Readed,
-        //        Context = mail.Context,
-        //        Title = mail.Title,
-        //        Time = mail.Time,
-        //    };
-        //}
-        static public UserInfo AsGrpcObj(this User user)
+        static public DTODefine.Types.UserInfo AsGrpcObj(this User user,bool haspass=false)
         {
-            return new UserInfo
+            return new DTODefine.Types.UserInfo()
             {
-                ID = user.Id,
                 Authoritys = user.Authoritys,
                 Email = user.EMail,
                 Father = user.CreatorId,
+                ID = user.Id,
                 LastLogin = user.LastLogin,
                 Phone = user.Phone,
                 UserName = user.Name,
+                Status = user.Status,
+                TreeId = user.TreeId,
+                PassWord = haspass? user.Pass:"",
             };
         }
+
+        static public User AsDBObj(this DTODefine.Types.UserInfo user)
+        {
+            return new User
+            {
+                Id = user.ID,
+                Authoritys = user.Authoritys,
+                CreatorId = user.Father,
+                Name = user.UserName,
+                EMail = user.Email,
+                LastLogin = user.LastLogin,
+                Pass = user.PassWord,
+                Phone = user.Phone,
+                TreeId = user.TreeId,
+                Status = (byte)user.Status,
+            };
+        }
+   
     }
     public class AccountServiceImp : AccountService.AccountServiceBase
     {
@@ -62,44 +64,29 @@ namespace GrpcMain.Account
             {
                 user = await ct.Users.Where(it => it.Name == request.UserName
                 && it.Pass == request.PassWord).AsNoTracking().FirstOrDefaultAsync();
+                //登陆失败
                 if (user == null)
-                {//登陆失败
-                    //await ct.AddAsync(new MyDBContext.Main. History()
-                    //{
-                    //    _Type = HistoryType.Login,
-                    //    Success=false,
-                    //    Time = _timeutility.GetTicket(),
-                    //    Data = Newtonsoft.Json.JsonConvert.SerializeObject(
-                    //        new
-                    //        {
-                    //            Success = false,
-                    //            Ip = context.Peer,
-                    //        }
-                    //   )
-                    //});
-                    //await ct.SaveChangesAsync();
+                {
                     return new Response_LoginByUserName()
                     {
                     };
                 }
-                else
-                {//登陆成功
-                    ct.Add(new MyDBContext.Main.AccountHistory()
-                    {
-                        _Type = AccountHistoryType.Login,
-                        Success = true,
-                        Time = _timeutility.GetTicket(),
-                        CreatorId = user.Id,
-                        Data = Newtonsoft.Json.JsonConvert.SerializeObject(
-                           new
-                           {
-                               Success = true,
-                               Ip = context.Peer,
-                           }
-                      )
-                    });
-                    await ct.SaveChangesAsync();
-                }
+                //登陆成功
+                ct.Add(new MyDBContext.Main.AccountHistory()
+                {
+                    _Type = AccountHistoryType.Login,
+                    Success = true,
+                    Time = _timeutility.GetTicket(),
+                    CreatorId = user.Id,
+                    Data = Newtonsoft.Json.JsonConvert.SerializeObject(
+                       new
+                       {
+                           Success = true,
+                           Ip = context.Peer,
+                       }
+                  )
+                });
+                await ct.SaveChangesAsync();
             }
             var token = _handle.GetToken(
                 new MyJwtHelper.TokenClass
@@ -121,8 +108,7 @@ namespace GrpcMain.Account
                 var sf = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.UserId && it.IsFather).AsNoTracking().SingleOrDefaultAsync();
                 if (sf == null)
                 {
-                    context.Status = new Status(StatusCode.PermissionDenied, "没有该子用户");
-                    return null;
+                    throw new RpcException(new Status(StatusCode.PermissionDenied, "没有该子用户"));
                 }
                 throw new Exception("维护中");
                 //ct.Remove(sf.Son);
@@ -134,7 +120,46 @@ namespace GrpcMain.Account
             };
         }
 
-
+        #region ChangePassWord
+        async Task<CommonResponse> ChangePassWord_SubUserAsync(Request_ChangePassWord request,  MainContext ct, long fatherid) {
+            var sf = await ct.User_SFs.Where(it => it.User1Id == fatherid && it.User2Id == request.Uid && it.IsFather)
+                        .AsNoTracking().FirstOrDefaultAsync();
+            if (sf == null)
+            {
+                throw new RpcException(new Status(StatusCode.PermissionDenied, "无该子用户的所有权"));
+            }
+            var user = await ct.Users.Where(it => it.Id == request.Uid
+             && it.Pass == request.New).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new Exception("用户应当存在而不存在");
+            }
+            user.Pass = request.New;
+            await ct.SaveChangesAsync();
+            return new CommonResponse()
+            {
+                Success = true
+            };
+        }
+        async Task<CommonResponse> ChangePassWord_SelfAsync(Request_ChangePassWord request, MainContext ct, long id)
+        {
+            var user = await ct.Users.Where(it => it.Id == id
+                        && it.Pass == request.Old).FirstOrDefaultAsync();
+            if (user == null)
+            {//密码错误
+                return new CommonResponse()
+                {
+                    Success = false,
+                    Message = "密码错误",
+                };
+            }
+            user.Pass = request.New;
+            await ct.SaveChangesAsync();
+            return new CommonResponse()
+            {
+                Success = true
+            };
+        }
         public override async Task<CommonResponse?> ChangePassWord(Request_ChangePassWord request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -142,93 +167,58 @@ namespace GrpcMain.Account
             {
                 if (request.HasUid)
                 {//改子用户
-                    var sf = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == request.Uid && it.IsFather)
-                        .AsNoTracking().FirstOrDefaultAsync();
-                    if (sf == null)
-                    {
-                        context.Status = new Status(StatusCode.PermissionDenied, "无该子用户的所有权");
-                        return null;
-                    }
-                    var user = await ct.Users.Where(it => it.Id == request.Uid
-                     && it.Pass == request.New).FirstOrDefaultAsync();
-                    if (user == null)
-                    {
-                        throw new Exception("用户应当存在而不存在");
-                    }
-                    user.Pass = request.New;
-                    await ct.SaveChangesAsync();
-                    return new CommonResponse()
-                    {
-                        Success = true
-                    };
+                    return await ChangePassWord_SubUserAsync(request,ct,id);
                 }
                 else
                 {//改自己
-                    var user = await ct.Users.Where(it => it.Id == id
-                        && it.Pass == request.Old).FirstOrDefaultAsync();
-                    if (user == null)
-                    {//密码错误
-                        return new CommonResponse()
-                        {
-                            Success = false,
-                            Message = "密码错误",
-                        };
-                    }
-                    user.Pass = request.New;
-                    await ct.SaveChangesAsync();
-                    return new CommonResponse()
-                    {
-                        Success = true
-                    };
+                    return await ChangePassWord_SelfAsync(request, ct, id); 
                 }
-
-
-
             }
         }
+        #endregion
 
-
+        #region CreatUser
+        async Task CreatUser_AddUserSFAsync(MainContext ct,long fatheruserid,long uid) {
+            var users = await ct.User_SFs.Where(it => it.User1Id == fatheruserid && (it.IsFather || it.IsSelf)).Select(it => it.User2Id).ToListAsync();
+            foreach (var item in users)
+            {
+                ct.Add(new User_SF()
+                {
+                    User1Id = item,
+                    User2Id = uid,
+                    IsSelf = false,
+                    IsFather = true,
+                });
+                ct.Add(new User_SF()
+                {
+                    User1Id = uid,
+                    User2Id = item,
+                    IsSelf = false,
+                    IsFather = false,
+                });
+            }
+            ct.Add(new User_SF()
+            {
+                User1Id = uid,
+                User2Id = uid,
+                IsSelf = true,
+                IsFather = false,
+            });
+        }
         public override async Task<Response_CreatUser> CreatUser(Request_CreatUser request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
                 var trans = await ct.Database.BeginTransactionAsync();
-                var user = new User()
-                {
-                    Name = request.Uname,
-                    Pass = request.Pass,
-                    Phone = request.Phone,
-                    CreatorId = id,
-                };
+                var me=ct.Users.Where(it=>it.Id==id).FirstOrDefaultAsync();
+                if (me != null)
+                    throw new Exception("数据库不一致"+me.Id+"应当存在却不存在");
+                var user = request.User.AsDBObj();
+                user.CreatorId = id;
                 ct.Add(user);
                 await ct.SaveChangesAsync();
-
-                var users = await ct.User_SFs.Where(it => it.User1Id == id && it.IsFather || it.IsSelf).Select(it => it.User2Id).ToListAsync();
-                foreach (var item in users)
-                {
-                    ct.Add(new User_SF()
-                    {
-                        User1Id = item,
-                        User2Id = user.Id,
-                        IsSelf = false,
-                        IsFather = true,
-                    });
-                    ct.Add(new User_SF()
-                    {
-                        User1Id = user.Id,
-                        User2Id = item,
-                        IsSelf = false,
-                        IsFather = false,
-                    });
-                }
-                ct.Add(new User_SF()
-                {
-                    User1Id = user.Id,
-                    User2Id = user.Id,
-                    IsSelf = true,
-                    IsFather = false,
-                });
+                await CreatUser_AddUserSFAsync(ct,user.Id,id);
                 await ct.SaveChangesAsync();
                 await trans.CommitAsync();
                 return new Response_CreatUser()
@@ -237,6 +227,7 @@ namespace GrpcMain.Account
                 };
             }
         }
+        #endregion
 
 
         public override async Task<Response_GetUserInfo?> GetUserInfo(Request_GetUserInfo request, ServerCallContext context)
@@ -250,43 +241,43 @@ namespace GrpcMain.Account
                     qid = request.UserId;
                     if ((await id.GetOwnerTypeAsync(ct, qid)) != AuthorityUtility.OwnerType.SonOfCreator)
                     {
-                        context.Status = new Status(StatusCode.PermissionDenied, "只能获取自己的子用户的信息");
-                        return null;
+                        throw new RpcException(new Status(StatusCode.PermissionDenied, "只能获取自己的子用户的信息"));
                     }
 
                 }
+
                 var list = new List<User>();
+                var r = await ct.Users.Where(it => it.Id == qid).AsNoTracking().FirstOrDefaultAsync();
+                list.Add(r);
                 if (request.SubUser)
-                {
-                    var r = await ct.Users.Where(it => it.Id == qid).AsNoTracking().FirstOrDefaultAsync();
-                    list.Add(r);
                     list.AddRange(await ct.Users.Where(it => it.CreatorId == qid).AsNoTracking().ToListAsync());
-                }
-                else
-                {
-                    var r = await ct.Users.Where(it => it.Id == qid).AsNoTracking().FirstOrDefaultAsync();
-                    list.Add(r);
-                }
                 var rsp = new Response_GetUserInfo();
-                rsp.UserInfo.AddRange(list.Select(it =>
-                {
-                    return new UserInfo()
-                    {
-                        Father = it.CreatorId,
-                        ID = it.Id,
-                        Phone = it.Phone,
-                        UserName = it.Name,
-                        Email = it.EMail,
-                        LastLogin = it.LastLogin,
-                        Authoritys = it.Authoritys,
-                    };
-                }));
+                rsp.UserInfo.AddRange(list.Select(it =>it.AsGrpcObj()));
                 return rsp;
             }
 
         }
 
 
+        async Task UpdateUserInfo_ChangeAuthoritysAsync(MainContext ct,User son,long fatherid,string newauthority) {
+            List<string>? authorityssubuser;
+            if (newauthority.TryDeserializeObject(out authorityssubuser) && authorityssubuser.Count > 0)
+            {
+                var father = await ct.Users.Where(it => it.Id == fatherid).AsNoTracking().FirstOrDefaultAsync();
+                if (father == null)
+                {
+                    throw new Exception("用户自己应当不空但是为空");
+                }
+                List<string>? authoritysself;
+                if (!father.Authoritys.TryDeserializeObject(out authoritysself) ||
+                    authoritysself == null || authoritysself.Count < authorityssubuser.Count
+                    || authorityssubuser.Except(authoritysself).Count() != 0)
+                {
+                    throw new RpcException(new Status(StatusCode.PermissionDenied, "父用户不具有这些权限"));
+                }
+                son.Authoritys = newauthority;
+            }
+        }
         public override async Task<Response_UpdateUserInfo> UpdateUserInfo(Request_UpdateUserInfo request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -327,28 +318,11 @@ namespace GrpcMain.Account
                 }
                 if (request.UserInfo.HasAuthoritys)
                 {//修改高级权限
-                    List<string>? authorityssubuser;
-                    if (user.Authoritys.TryDeserializeObject(out authorityssubuser) && authorityssubuser.Count > 0)
-                    {
-                        self = await ct.Users.Where(it => it.Id == id).AsNoTracking().FirstOrDefaultAsync();
-                        if (self == null)
-                        {
-                            throw new Exception("用户自己应当不空但是为空");
-                        }
-                        List<string>? authoritysself;
-                        if (!self.Authoritys.TryDeserializeObject(out authoritysself) ||
-                            authoritysself == null || authoritysself.Count < authorityssubuser.Count
-                            || authorityssubuser.Except(authoritysself).Count() != 0)
-                        {
-                            context.Status = new Status(StatusCode.PermissionDenied, "父用户不具有这些权限");
-                            return null;
-                        }
-                        user.Authoritys = request.UserInfo.Authoritys;
-                    }
+                    await UpdateUserInfo_ChangeAuthoritysAsync(ct, user, id,request.UserInfo.Authoritys);
                 }
                 await ct.SaveChangesAsync();
                 return new Response_UpdateUserInfo() { 
-                    UserInfo=MyConvertor.Get(user)
+                    UserInfo=user.AsGrpcObj()
                 };
             }
         }
