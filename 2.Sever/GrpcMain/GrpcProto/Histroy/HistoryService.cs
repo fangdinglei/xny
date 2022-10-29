@@ -7,11 +7,11 @@ using static GrpcMain.History.DTODefine.Types;
 
 namespace GrpcMain.History
 {
-    public class HistoryServiceImp : HistoryService.HistoryServiceBase
+    public class AccountHistoryServiceImp : AccountHistoryService.AccountHistoryServiceBase
     {
         IGrpcAuthorityHandle _handle;
         ITimeUtility _timeutility;
-        public HistoryServiceImp(IGrpcAuthorityHandle handle, ITimeUtility time)
+        public AccountHistoryServiceImp(IGrpcAuthorityHandle handle, ITimeUtility time)
         {
             _handle = handle;
             _timeutility = time;

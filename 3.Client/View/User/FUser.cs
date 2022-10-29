@@ -27,20 +27,20 @@ namespace MyClient.View.User
         AccountService.AccountServiceClient _accountServiceClient;
         UserDeviceService.UserDeviceServiceClient _userDeviceServiceClient;
         DeviceService.DeviceServiceClient _deviceServiceClient;
-        HistoryService.HistoryServiceClient _historyServiceClient;
+        AccountHistoryService.AccountHistoryServiceClient _AccountHistoryServiceClient;
         private ITimeUtility _timeUtility;
         IViewHolder _viewholder;
-        public FUser(AccountService.AccountServiceClient accountServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, DeviceService.DeviceServiceClient deviceServiceClient, HistoryService.HistoryServiceClient historyServiceClient, ITimeUtility timeUtility)
+        public FUser(AccountService.AccountServiceClient accountServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, DeviceService.DeviceServiceClient deviceServiceClient, AccountHistoryService.AccountHistoryServiceClient AccountHistoryServiceClient, ITimeUtility timeUtility)
         {
             InitializeComponent();
             this._userDeviceServiceClient = userDeviceServiceClient;
             this._accountServiceClient = accountServiceClient;
             this._deviceServiceClient = deviceServiceClient;
-            _historyServiceClient = historyServiceClient;
+            _AccountHistoryServiceClient = AccountHistoryServiceClient;
             _timeUtility = timeUtility;
             _FUserInfo = new FUserInfo(accountServiceClient);
             _FUserPriority = new FUserPriority(accountServiceClient);
-            _FUserLoginHistory = new FUserLoginHistory(historyServiceClient, _timeUtility, this);
+            _FUserLoginHistory = new FUserLoginHistory(AccountHistoryServiceClient, _timeUtility, this);
             _FUserDevice = new FUserDevice();
 
             for (int i = 0; i < Managers.Length; i++)

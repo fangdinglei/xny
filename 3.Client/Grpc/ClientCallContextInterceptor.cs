@@ -38,7 +38,7 @@ namespace MyClient.Grpc
             serviceCollection.TryAddSingleton<InternalMailService.InternalMailServiceClient>();
             serviceCollection.TryAddSingleton<DeviceDataService.DeviceDataServiceClient>();
             serviceCollection.TryAddSingleton<DeviceTypeService.DeviceTypeServiceClient>();
-            serviceCollection.TryAddSingleton<HistoryService.HistoryServiceClient>();
+            serviceCollection.TryAddSingleton<AccountHistoryService.AccountHistoryServiceClient>();
             serviceCollection.TryAddSingleton<RepairService.RepairServiceClient>();
         }
     }

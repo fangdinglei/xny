@@ -3,6 +3,7 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using System.Text;
 
 namespace GrpcMain.Device
 {
@@ -15,9 +16,38 @@ namespace GrpcMain.Device
         }
 
 
-        public override Task<CommonResponse> SendCMD(Request_SendCMD request, ServerCallContext context)
+        public override async Task<CommonResponse> SendCMD(Request_SendCMD request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            long id = (long)context.UserState["CreatorId"];
+            using (MainContext ct = new MainContext())
+            {
+                StringBuilder sb=new StringBuilder();
+                foreach (var dvid in request.Dvids)
+                {
+                    var ud = await ct.User_Devices
+                        .Where(it => it.DeviceId == dvid && it.UserId == id)
+                        .AsNoTracking().FirstOrDefaultAsync();
+                    if (ud == null || !ud._Authority.HasFlag(UserDeviceAuthority.Write_BaseInfo))
+                    {
+                        //没有权限
+                        sb.Append(dvid+":"+ "没有设备基础信息修改权限");
+                        continue;
+                    }
+                    if (!ud._Authority.HasFlag(UserDeviceAuthority.Control_Cmd))
+                    {//没有权限
+                        sb.Append(dvid + ":" + "没有设备命令权限");
+                        continue;
+                    }
+                    var dv = await ct.Devices.Where(it => it.Id == dvid).FirstOrDefaultAsync();
+                    if (dv == null)
+                        throw new Exception("不一致:设备" + dvid + " 应当存在却不存在");
+                    //TODO 发送命令
+                }
+                return new CommonResponse() { 
+                    Success=true,
+                    Message=sb.ToString()
+                };
+            }
         }
 
         /// <summary>
@@ -72,6 +102,25 @@ namespace GrpcMain.Device
         {
             throw new NotImplementedException();
         }
+        public override async Task<Response_GetDeviceStatusAndLatestData> GetDeviceStatusAndLatestData(Request_GetDeviceStatusAndLatestData request, ServerCallContext context)
+        {
+            long id = (long)context.UserState["CreatorId"];
+            Response_GetDeviceStatusAndLatestData res = new Response_GetDeviceStatusAndLatestData();
+            using (MainContext ct = new MainContext())
+            {
+                var dt = await ct.User_Devices.Join(ct.Devices, it => it.DeviceId, it => it.Id, (ud, dv) => new { ud, dv })
+                   .Where(it => request.Dvids.Contains(it.ud.DeviceId) && it.ud.UserId == id && 0 != (it.ud.Authority & (int)UserDeviceAuthority.Read_Status))
+                    .Select(it => new { it.dv.Status, it.dv.LatestData,it.dv.Id }).ToListAsync();
+                foreach (var item in dt)
+                {
+                    res.Status.Add(item.Status);
+                    res.Dvids.Add(item.Id);
+                    res.LatestData.Add(item.LatestData);
+                }
+            }
+            return res;
+        }
+
 
         public override async Task<CommonResponse> UpdateDeviceBaseInfo(Request_UpdateDeviceBaseInfo request, ServerCallContext context)
         {

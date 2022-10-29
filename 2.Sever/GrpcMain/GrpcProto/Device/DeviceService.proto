@@ -25,6 +25,10 @@ service DeviceService {
     rpc GetAllDeviceStatus( Request_GetAllDeviceStatus)
         returns ( Response_GetAllDeviceStatus);
 
+     //获取全部设备状态
+    rpc GetDeviceStatusAndLatestData( Request_GetDeviceStatusAndLatestData)
+        returns ( Response_GetDeviceStatusAndLatestData);
+
 }
 
 message Device{
@@ -60,11 +64,21 @@ message Request_UpdateDeviceType{
 
 message Request_GetAllDeviceStatus{
     optional int64 Cursor=1;
-
+    //如果不为空则只获取该集合中的设备
+    repeated int64 Dvids=2;
 }
 message Response_GetAllDeviceStatus{
     //0则无后续数据
     int64 Cursor=1; 
     repeated int64 Dvids=2;
     repeated int32 Status=3;
+}
+
+message  Request_GetDeviceStatusAndLatestData{
+    repeated int64 Dvids=1;
+}
+message  Response_GetDeviceStatusAndLatestData{
+    repeated int64 Dvids=1;
+    repeated int32 Status=2;
+    repeated string LatestData=3;
 }

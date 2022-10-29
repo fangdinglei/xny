@@ -3,7 +3,7 @@
 option csharp_namespace = "GrpcMain.History";
 package GrpcMain.History;
 import "Common/CommonResponse.proto";
-service HistoryService { 
+service AccountHistoryService { 
     rpc GetHistory(DTODefine.Request_GetHistory)
         returns (DTODefine.Response_GetHistory);
 

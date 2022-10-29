@@ -11,7 +11,18 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<DefineConstants>TRACE;PayManually</DefineConstants>
-	</PropertyGroup> 
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Code\AutoControl\**" />
+	  <Compile Remove="Code\TODOAutoControl\**" />
+	  <Content Remove="Code\AutoControl\**" />
+	  <Content Remove="Code\TODOAutoControl\**" />
+	  <EmbeddedResource Remove="Code\AutoControl\**" />
+	  <EmbeddedResource Remove="Code\TODOAutoControl\**" />
+	  <None Remove="Code\AutoControl\**" />
+	  <None Remove="Code\TODOAutoControl\**" />
+	</ItemGroup> 
 
 	<ItemGroup>
 		<Content Remove="appsettings.Development.json" />
@@ -66,6 +77,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Code\MVC\Attribute\" />
 	  <Folder Include="Controllers\" />
 	</ItemGroup>
 

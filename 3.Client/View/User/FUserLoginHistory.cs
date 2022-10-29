@@ -20,10 +20,10 @@ namespace MyClient.View.User
 
         public BaseManager BaseManager;
 
-        private HistoryService.HistoryServiceClient _historyServiceClient;
+        private AccountHistoryService.AccountHistoryServiceClient _AccountHistoryServiceClient;
         private ITimeUtility _timeUtility;
         private IView _father;
-        public FUserLoginHistory(HistoryService.HistoryServiceClient historyServiceClient, ITimeUtility timeUtility, IView father)
+        public FUserLoginHistory(AccountHistoryService.AccountHistoryServiceClient AccountHistoryServiceClient, ITimeUtility timeUtility, IView father)
         {
             BaseManager = new BaseManager(this);
             InitializeComponent();
@@ -38,7 +38,7 @@ namespace MyClient.View.User
                (_, _) => OnDelet(group_loginhistory_list);
             group_loginhistory_multidelet.Click +=
                (_, _) => OnMultiDelet();
-            _historyServiceClient = historyServiceClient;
+            _AccountHistoryServiceClient = AccountHistoryServiceClient;
             _timeUtility = timeUtility;
             _father = father;
         }
@@ -73,7 +73,7 @@ namespace MyClient.View.User
                         req.EndTime = ed;
                     }
                     req.MaxCount = int.Parse(maxcount.Text);
-                    var rsp = await _historyServiceClient.GetHistoryAsync(req);
+                    var rsp = await _AccountHistoryServiceClient.GetHistoryAsync(req);
                     _histories = new BindingList<ToStringHelper<GrpcMain.History.DTODefine.Types.History>>(
                         rsp.Historys.Select(it => new ToStringHelper<GrpcMain.History.DTODefine.Types.History>(it, (it) =>
                         {
@@ -119,7 +119,7 @@ namespace MyClient.View.User
             {
                 if (_histories != null && list.SelectedIndex >= 0 && list.SelectedIndex < _histories.Count)
                 {
-                    var rsp = _historyServiceClient.DeletHistory(new GrpcMain.History.DTODefine.Types.Request_DeletHistory
+                    var rsp = _AccountHistoryServiceClient.DeletHistory(new GrpcMain.History.DTODefine.Types.Request_DeletHistory
                     {
                         Id = _histories[list.SelectedIndex].Value.Id
                     });
@@ -141,7 +141,7 @@ namespace MyClient.View.User
             {
                 try
                 {
-                    var rsp = _historyServiceClient.DeletHistorys(new GrpcMain.History.DTODefine.Types.Request_DeletHistorys()
+                    var rsp = _AccountHistoryServiceClient.DeletHistorys(new GrpcMain.History.DTODefine.Types.Request_DeletHistorys()
                     {
                         StartTime = _timeUtility.GetTicket(s),
                         EndTime = _timeUtility.GetTicket(e),

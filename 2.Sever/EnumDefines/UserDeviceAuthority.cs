@@ -66,7 +66,7 @@ namespace MyDBContext.Main
         /// <summary>
         /// 向设备发送命令
         /// </summary>
-        control_cmd = 1 << 11,
+        Control_Cmd = 1 << 11,
         /// <summary>
         /// 修改设备定时任务
         /// </summary>
