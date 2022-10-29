@@ -115,7 +115,7 @@ namespace GrpcMain.Device
                     //没有权限
                     throw new RpcException(new Status(StatusCode.PermissionDenied, "没有设备基础信息修改"));
                 }
-                if (!ud._Authority.HasFlag(UserDeviceAuthority.Write_BaseInfo))
+                if (!ud._Authority.HasFlag(UserDeviceAuthority.Write_Type))
                 {
                     throw new RpcException(new Status(StatusCode.PermissionDenied, "没有设备类型修改权限"));
                 }
