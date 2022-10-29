@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Google.Protobuf.WellKnownTypes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
@@ -18,6 +19,9 @@ namespace MyDBContext.Main
         public string Unit { get; set; }
         public float MinValue { get; set; }
         public float MaxValue { get; set; }
+
+        public float AlertLowValue { get; set; }
+        public float AlertHighValue { get; set; }
 
         public bool Abandonted { get; set; }
     }

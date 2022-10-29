@@ -28,7 +28,7 @@ namespace MyClient.View
         {
             InitializeComponent();
             string curDir = Directory.GetCurrentDirectory();
-            chromiumWebBrowser1.Load(String.Format("file:///{0}/ECHART/index.html", curDir));
+            chromiumWebBrowser1.Load(String.Format("file:///{0}/ECHART/devicedata/index.html", curDir));
             _deviceDataServiceClient = deviceDataServiceClient;
             _deviceTypeServiceClient = deviceTypeServiceClient;
             _deviceServiceClient = deviceServiceClient;

@@ -51,6 +51,11 @@
             this.check_thingmodel_abandonted = new System.Windows.Forms.CheckBox();
             this.btn_thingmodel_update = new System.Windows.Forms.Button();
             this.text_thingmodel_type = new System.Windows.Forms.ComboBox();
+            this.text_alterhigh = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.text_alterlow = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.btn_creatdevice = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -198,7 +203,7 @@
             // 
             // btn_thingmodel_creat
             // 
-            this.btn_thingmodel_creat.Location = new System.Drawing.Point(400, 385);
+            this.btn_thingmodel_creat.Location = new System.Drawing.Point(400, 452);
             this.btn_thingmodel_creat.Name = "btn_thingmodel_creat";
             this.btn_thingmodel_creat.Size = new System.Drawing.Size(150, 34);
             this.btn_thingmodel_creat.TabIndex = 18;
@@ -225,7 +230,7 @@
             // check_thingmodel_abandonted
             // 
             this.check_thingmodel_abandonted.AutoSize = true;
-            this.check_thingmodel_abandonted.Location = new System.Drawing.Point(322, 345);
+            this.check_thingmodel_abandonted.Location = new System.Drawing.Point(322, 412);
             this.check_thingmodel_abandonted.Name = "check_thingmodel_abandonted";
             this.check_thingmodel_abandonted.Size = new System.Drawing.Size(72, 28);
             this.check_thingmodel_abandonted.TabIndex = 21;
@@ -234,7 +239,7 @@
             // 
             // btn_thingmodel_update
             // 
-            this.btn_thingmodel_update.Location = new System.Drawing.Point(400, 345);
+            this.btn_thingmodel_update.Location = new System.Drawing.Point(400, 412);
             this.btn_thingmodel_update.Name = "btn_thingmodel_update";
             this.btn_thingmodel_update.Size = new System.Drawing.Size(150, 34);
             this.btn_thingmodel_update.TabIndex = 22;
@@ -256,11 +261,57 @@
             this.text_thingmodel_type.TabIndex = 23;
             this.text_thingmodel_type.SelectedIndexChanged += new System.EventHandler(this.text_thingmodel_type_SelectedIndexChanged);
             // 
+            // text_alterhigh
+            // 
+            this.text_alterhigh.Location = new System.Drawing.Point(400, 381);
+            this.text_alterhigh.Name = "text_alterhigh";
+            this.text_alterhigh.Size = new System.Drawing.Size(150, 30);
+            this.text_alterhigh.TabIndex = 27;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(324, 381);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(64, 24);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "预警高";
+            // 
+            // text_alterlow
+            // 
+            this.text_alterlow.Location = new System.Drawing.Point(400, 345);
+            this.text_alterlow.Name = "text_alterlow";
+            this.text_alterlow.Size = new System.Drawing.Size(150, 30);
+            this.text_alterlow.TabIndex = 25;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(324, 345);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(64, 24);
+            this.label11.TabIndex = 24;
+            this.label11.Text = "预警低";
+            // 
+            // btn_creatdevice
+            // 
+            this.btn_creatdevice.Location = new System.Drawing.Point(400, 15);
+            this.btn_creatdevice.Name = "btn_creatdevice";
+            this.btn_creatdevice.Size = new System.Drawing.Size(129, 34);
+            this.btn_creatdevice.TabIndex = 28;
+            this.btn_creatdevice.Text = "创建设备";
+            this.btn_creatdevice.UseVisualStyleBackColor = true;
+            // 
             // FDeviceTypeDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(605, 507);
+            this.Controls.Add(this.btn_creatdevice);
+            this.Controls.Add(this.text_alterhigh);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.text_alterlow);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.text_thingmodel_type);
             this.Controls.Add(this.btn_thingmodel_update);
             this.Controls.Add(this.check_thingmodel_abandonted);
@@ -316,5 +367,10 @@
         private CheckBox check_thingmodel_abandonted;
         private Button btn_thingmodel_update;
         private ComboBox text_thingmodel_type;
+        private TextBox text_alterhigh;
+        private Label label10;
+        private TextBox text_alterlow;
+        private Label label11;
+        private Button btn_creatdevice;
     }
 }

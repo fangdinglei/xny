@@ -55,14 +55,18 @@ namespace GrpcMain
                         context.Status = new Status(StatusCode.PermissionDenied, errormsg);
                         return Activator.CreateInstance<TResponse>();
                     }
-                    var r = await continuation(request, context);
-                    //审计
-                    if (at.NeedAudit && context.Status.StatusCode == StatusCode.Cancelled)
+                    TResponse r=null;
+                    try
                     {
-                        await _Handle.RecordAudit(context, request, continuation, at);
+                        r = await continuation(request, context);
                     }
-                    if (r == null)
+                    catch (RpcException ex)
                     {
+                        //审计
+                        if (at.NeedAudit && ex.Status.StatusCode == StatusCode.Cancelled)
+                        {
+                            await _Handle.RecordAudit(context, request, continuation, at);
+                        }
                         throw new RpcException(new Status(StatusCode.Cancelled, "需要审计"));
                     }
                     return r;

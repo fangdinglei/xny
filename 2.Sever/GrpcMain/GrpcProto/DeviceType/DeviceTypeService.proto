@@ -37,6 +37,8 @@ message  ThingModel{
     float MinValue=6;
     float MaxValue =7;
     bool Abandonted=8;
+    float AlertLowValue=9;
+    float AlertHighValue=10;
 }   
 
 message TypeInfo{

@@ -2,10 +2,9 @@
 using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
-using MyUtility;
-using static GrpcMain.History.DTODefine.Types;
+using MyUtility; 
 
-namespace GrpcMain.History
+namespace GrpcMain.AccountHistory
 {
     public class AccountHistoryServiceImp : AccountHistoryService.AccountHistoryServiceBase
     {
@@ -16,7 +15,6 @@ namespace GrpcMain.History
             _handle = handle;
             _timeutility = time;
         }
-
         public override async Task<Response_GetHistory?> GetHistory(Request_GetHistory request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -56,7 +54,7 @@ namespace GrpcMain.History
                 bd = bd.AsNoTracking();
                 res.Historys.Add((await bd.ToListAsync()).Select(it =>
                 {
-                    return new DTODefine.Types.History
+                    return new AccountHistory
                     {
                         Data = it.Data,
                         Id = it.Id,

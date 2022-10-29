@@ -2,6 +2,7 @@
 using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
 using GrpcMain.Account;
+using GrpcMain.AccountHistory;
 using GrpcMain.Common;
 using GrpcMain.Device;
 using GrpcMain.DeviceData;

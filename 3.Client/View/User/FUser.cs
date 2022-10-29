@@ -1,7 +1,7 @@
 ﻿using FdlWindows.View;
 using GrpcMain.Account;
+using GrpcMain.AccountHistory;
 using GrpcMain.Device;
-using GrpcMain.History;
 using GrpcMain.UserDevice;
 using MyUtility;
 using System.ComponentModel;

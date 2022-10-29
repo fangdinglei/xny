@@ -96,6 +96,8 @@ namespace MyClient.View
                 text_thingmodel_unit.Text = "";
                 text_thingmodel_max.Text = "";
                 text_thingmodel_min.Text = "";
+                text_alterlow.Text = "";
+                text_alterhigh.Text = "";
                 text_thingmodel_remark.Text = "";
                 check_thingmodel_abandonted.Checked = false;
                 return;
@@ -107,6 +109,8 @@ namespace MyClient.View
             text_thingmodel_unit.Text = thingModel.Unit;
             text_thingmodel_max.Text = thingModel.MaxValue + "";
             text_thingmodel_min.Text = thingModel.MinValue + "";
+            text_alterlow.Text=thingModel.AlertLowValue+"";
+            text_alterhigh.Text = thingModel.AlertHighValue+"";
             text_thingmodel_remark.Text = thingModel.Remark;
             check_thingmodel_abandonted.Checked = thingModel.Abandonted;
         }
@@ -133,6 +137,8 @@ namespace MyClient.View
             thingModel.MinValue = float.Parse(text_thingmodel_min.Text);
             thingModel.Remark = text_thingmodel_remark.Text;
             thingModel.Abandonted = check_thingmodel_abandonted.Checked;
+            thingModel.AlertLowValue = float.Parse(text_alterlow.Text);
+            thingModel.AlertHighValue= float.Parse(text_alterhigh.Text);
             thingModels[list_thingmodels.SelectedIndex] = thingModel;
 
         }
@@ -153,6 +159,8 @@ namespace MyClient.View
             thingModel.MinValue = float.Parse(text_thingmodel_min.Text);
             thingModel.Remark = text_thingmodel_remark.Text;
             thingModel.Abandonted = check_thingmodel_abandonted.Checked;
+            thingModel.AlertLowValue = float.Parse(text_alterlow.Text);
+            thingModel.AlertHighValue = float.Parse(text_alterhigh.Text);
             thingModels.Add(thingModel);
         }
 

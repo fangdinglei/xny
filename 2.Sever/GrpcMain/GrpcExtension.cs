@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using GrpcMain.Account;
+using GrpcMain.AccountHistory;
 using GrpcMain.Device;
 using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;

@@ -57,7 +57,7 @@
 	  <None Update="ECHART\echarts.min.js">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="ECHART\index.html">
+	  <None Update="ECHART\devicedata\index.html">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

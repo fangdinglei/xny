@@ -21,7 +21,7 @@ message DeviceHistory{
     int32 Type=2;
     int64 Time=3;
     int64 UserId=5;
-    string Data=5;
+    string Data=6;
 }
 message Request_GetHistory{
     //日志的产生者
