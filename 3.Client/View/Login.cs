@@ -48,8 +48,7 @@ namespace MyClient.View
             }
             //注册token
             interceptor.Token = a.Token;
-            db.UserId = a.User.ID;
-            db.Save(a.User);
+            db.User = a.User;
             //进入主界面
             FMain? m = serviceProvider.GetService<FMain>();
             if (m == null)

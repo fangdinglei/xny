@@ -3,6 +3,7 @@ using FdlWindows.View;
 using GrpcMain.Device;
 using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
+using MyClient.View.Device;
 using System.Data;
 using System.Runtime.InteropServices;
 using static GrpcMain.DeviceType.DTODefine.Types;
@@ -160,7 +161,7 @@ namespace MyClient.View
                     {
                         dr["Type"] = "未知类型";
                     }
-                    dr["OP1"] = "测试中";
+                    dr["OP1"] = "详情";
                     dr["OP2"] = "更多功能";
                     dt.Rows.Add(dr);
                 }
@@ -191,7 +192,7 @@ namespace MyClient.View
             var dev = currentshow[e.RowIndex];
             if (e.ColumnIndex == 5)
             {
-
+                ViewHolder.SwitchTo("FDeviceDetail", false, dev.Device.Id);
             }
             else if (e.ColumnIndex == 6)
             {

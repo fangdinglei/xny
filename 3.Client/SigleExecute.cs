@@ -128,5 +128,10 @@ namespace FDL.Program
             }
             return true;
         }
+
+        internal static Task ExecuteAsync(Task task)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

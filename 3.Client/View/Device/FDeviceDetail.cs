@@ -1,4 +1,5 @@
 ﻿using CefSharp;
+using FDL.Program;
 using FdlWindows.View;
 using GrpcMain.Device;
 using GrpcMain.DeviceType;
@@ -14,9 +15,9 @@ using System.Windows.Forms;
 
 namespace MyClient.View.Device
 {
-
+    [AutoDetectView("FDeviceDetail", "设备详情", "",false)]
     [System.Runtime.InteropServices.ComVisibleAttribute(true)]//标记对com可见
-    public partial class FDeviceDetail : Form,IView
+    public partial class FDeviceDetail : Form, IView
     {
         GrpcMain.Device.Device device;
         GrpcMain.DeviceType.TypeInfo typeinfo;
@@ -32,53 +33,72 @@ DeviceService.DeviceServiceClient deviceServiceClient)
             _deviceServiceClient = deviceServiceClient;
             string curDir = Directory.GetCurrentDirectory();
             chromiumWebBrowser1.Load(String.Format("file:///{0}/ECHART/devicestatus/index.html", curDir));
-           
-            
+
+
         }
 
         public Control View => this;
 
         public void OnEvent(string name, params object[] pars)
         {
-             
+
         }
 
+        DateTime lastupdate = new DateTime(1970,1,1);
         public void OnTick()
         {
-            //if (Visible)
-            //{
-            //    Rresh2();
-            //}
+            if ((DateTime.Now - lastupdate).TotalMinutes==1)
+            {
+                lastupdate = DateTime.Now;
+            }
+            else
+            {
+                return;
+            }
+#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+            SigleExecute.ExecuteAsync(nameof(FDeviceDetail)+nameof(Rresh2Async),Rresh2Async);
+#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
         }
-        public void Rresh2() {
-            var res1=  _deviceServiceClient.GetDeviceStatusAndLatestData (new Request_GetDeviceStatusAndLatestData
+        public async Task Rresh2Async()
+        {
+            if (!Visible)
             {
-                Dvids = {device.Id}
-            });
-            var dt=Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<long, float>>(res1.LatestData[0]);
-            var ls = new List<Dictionary<string, object>>();
-            foreach (var kv in dt)
+                return;
+            }
+            var ls= await Task.Run(() =>
             {
-                var thingmodel=typeinfo.ThingModels.FirstOrDefault(it => it.Id == kv.Key);
-                if (thingmodel == null)
-                    continue;
-                //Name,Unit,MinValue,MaxValue ,AlertLowValue,AlertHighValue,Value,ValueType
-                Dictionary<string, object> data = new Dictionary<string, object> { 
+                var res1 = _deviceServiceClient.GetDeviceStatusAndLatestData(new Request_GetDeviceStatusAndLatestData
+                {
+                    Dvids = { device.Id }
+                });
+                var dt = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<long, float>>(res1.LatestData[0]);
+                var ls = new List<Dictionary<string, object>>();
+                foreach (var kv in dt)
+                {
+                    var thingmodel = typeinfo.ThingModels.FirstOrDefault(it => it.Id == kv.Key);
+                    if (thingmodel == null)
+                        continue;
+                    //Name,Unit,MinValue,MaxValue ,AlertLowValue,AlertHighValue,Value,ValueType
+                    Dictionary<string, object> data = new Dictionary<string, object> {
                     {"Name",thingmodel.Name },{"Unit",thingmodel.Unit } ,
                      {"MinValue",thingmodel.MinValue },{"MaxValue",thingmodel.MaxValue } ,
                       {"AlertLowValue",thingmodel.AlertLowValue },{"AlertHighValue",thingmodel.AlertHighValue } ,
                        {"Value",kv.Value },{"ValueType",thingmodel.ValueType.ToString() } ,
                 };
-                ls.Add(data);
-                chromiumWebBrowser1.ExecuteScriptAsync("fromcs_ShowStatus",
-                   Newtonsoft.Json.JsonConvert.SerializeObject(ls));
-            }
-        
+                    ls.Add(data);
+                }
+                return ls;
+            });
+
+            chromiumWebBrowser1.ExecuteScriptAsync("fromcs_ShowStatus",
+               Newtonsoft.Json.JsonConvert.SerializeObject(ls));
+
         }
         public void PrePare(params object[] par)
         {
-            _viewholder.ShowLoading(this, async () => {
-               
+            _viewholder.ShowLoading(this, async () =>
+            {
+
                 while (!chromiumWebBrowser1.IsBrowserInitialized || chromiumWebBrowser1.IsLoading)
                 {
                     //Application.DoEvents();
@@ -87,11 +107,25 @@ DeviceService.DeviceServiceClient deviceServiceClient)
                 var dvid = (long)par[0];
                 device = _localdata.GetDevice(dvid, true);
                 typeinfo = _localdata.GetTypeInfo(device.DeviceTypeId, true);
+                await Rresh2Async();
                 return true;
-            }, okcall: () => { 
-            }, 
-            exitcall: () => { 
-                
+            }, okcall:() =>
+            {
+                text_id.Text = device.Id+"";
+                text_name.Text = device.Name;
+                text_status.Text = device.Status switch
+                { //1未激活 2离线 3在线 4};
+                    1=>"未激活",
+                    2=>"离线",
+                  
+                    3 => "在线",
+                    _ => "未知",
+                };
+                text_type.Text = typeinfo.Id + ":" + typeinfo.Name;
+            },
+            exitcall: () =>
+            {
+                _viewholder.Back();
             });
         }
 

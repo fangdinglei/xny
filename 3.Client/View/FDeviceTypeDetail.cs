@@ -176,7 +176,6 @@ namespace MyClient.View
                     {
                         Info = typeinfo
                     });
-                    _localData.Save(res.Info);
                 }
                 else
                 {
@@ -185,7 +184,6 @@ namespace MyClient.View
                         Info = typeinfo
                     });
                     res.ThrowIfNotSuccess();
-                    _localData.Save(typeinfo);
                 }
                 MessageBox.Show("提交成功", "提示");
             }

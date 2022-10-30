@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using CefSharp.DevTools.Database;
+using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
 using GrpcMain.Account;
@@ -45,7 +46,7 @@ namespace MyClient.Grpc
     }
     public class ClientCallContextInterceptor : Interceptor
     {
-        public string? Token;
+        public string? Token;                    
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
             CallOptions options = context.Options;
@@ -62,7 +63,16 @@ namespace MyClient.Grpc
             }
             var contextx = new ClientInterceptorContext<TRequest, TResponse>
                 (context.Method, context.Host, options);
-            return continuation(request, contextx);
+            var rsp=continuation(request, contextx);
+            rsp.GetAwaiter().OnCompleted(() => {
+                LocalDataBase db = LocalDataBase.Instance;
+                if (db != null)
+                {
+                    db.OnResonse(rsp.GetAwaiter().GetResult());
+                }
+            });
+            
+            return rsp;
         }
 
         public override TResponse BlockingUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, BlockingUnaryCallContinuation<TRequest, TResponse> continuation) where TRequest : class where TResponse : class
@@ -81,7 +91,13 @@ namespace MyClient.Grpc
             }
             var contextx = new ClientInterceptorContext<TRequest, TResponse>
                 (context.Method, context.Host, options);
-            return continuation(request, contextx);
+            var rsp = continuation(request, contextx);
+            LocalDataBase db = LocalDataBase.Instance;
+            if (db != null)
+            {
+                db.OnResonse(rsp);
+            }
+            return rsp;
         }
     }
 }

@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.text_id = new System.Windows.Forms.TextBox();
+            this.text_name = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.text_status = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.text_type = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -53,19 +53,20 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "编号";
             // 
-            // textBox1
+            // text_id
             // 
-            this.textBox1.Location = new System.Drawing.Point(112, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(150, 30);
-            this.textBox1.TabIndex = 1;
+            this.text_id.Location = new System.Drawing.Point(112, 12);
+            this.text_id.Name = "text_id";
+            this.text_id.ReadOnly = true;
+            this.text_id.Size = new System.Drawing.Size(150, 30);
+            this.text_id.TabIndex = 1;
             // 
-            // textBox2
+            // text_name
             // 
-            this.textBox2.Location = new System.Drawing.Point(112, 48);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(150, 30);
-            this.textBox2.TabIndex = 3;
+            this.text_name.Location = new System.Drawing.Point(112, 48);
+            this.text_name.Name = "text_name";
+            this.text_name.Size = new System.Drawing.Size(150, 30);
+            this.text_name.TabIndex = 3;
             // 
             // label2
             // 
@@ -76,12 +77,12 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "名称";
             // 
-            // textBox3
+            // text_status
             // 
-            this.textBox3.Location = new System.Drawing.Point(112, 84);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(150, 30);
-            this.textBox3.TabIndex = 5;
+            this.text_status.Location = new System.Drawing.Point(112, 84);
+            this.text_status.Name = "text_status";
+            this.text_status.Size = new System.Drawing.Size(150, 30);
+            this.text_status.TabIndex = 5;
             // 
             // label3
             // 
@@ -101,12 +102,12 @@
             this.label4.TabIndex = 7;
             this.label4.Text = "设备类型";
             // 
-            // textBox4
+            // text_type
             // 
-            this.textBox4.Location = new System.Drawing.Point(112, 120);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(150, 30);
-            this.textBox4.TabIndex = 8;
+            this.text_type.Location = new System.Drawing.Point(112, 120);
+            this.text_type.Name = "text_type";
+            this.text_type.Size = new System.Drawing.Size(150, 30);
+            this.text_type.TabIndex = 8;
             // 
             // button1
             // 
@@ -173,13 +174,13 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.text_type);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.text_status);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.text_name);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.text_id);
             this.Controls.Add(this.label1);
             this.Name = "FDeviceDetail";
             this.Text = "FDeviceDetail";
@@ -191,13 +192,13 @@
         #endregion
 
         private Label label1;
-        private TextBox textBox1;
-        private TextBox textBox2;
+        private TextBox text_id;
+        private TextBox text_name;
         private Label label2;
-        private TextBox textBox3;
+        private TextBox text_status;
         private Label label3;
         private Label label4;
-        private TextBox textBox4;
+        private TextBox text_type;
         private Button button1;
         private Button button2;
         private Button button3;
