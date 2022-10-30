@@ -21,8 +21,7 @@ namespace MyClient.View
             {
                 btn_creat.Visible = value;
                 //list_infos.Visible = !value;
-                //btn_search.Visible = !value;
-                _device = null;
+                //btn_search.Visible = !value; 
                 _isSingleMode = value;
             }
             get
@@ -31,7 +30,7 @@ namespace MyClient.View
             }
         }
 
-        DeviceWithUserDeviceInfo _device;
+        long dvid;
         BindingList<ToStringHelper<RepairInfo>> _repairInfos = new BindingList<ToStringHelper<RepairInfo>>();
         IViewHolder _viewHolder;
         ITimeUtility _timeUtility;
@@ -64,7 +63,7 @@ namespace MyClient.View
             else if (par.Count() == 1)
             {//新增模式
                 IsSingleMode = true;
-                _device = (DeviceWithUserDeviceInfo)par[0];
+                dvid = (long)par[0];
 
             }
         }
@@ -130,7 +129,7 @@ namespace MyClient.View
                         };
                         if (smode)
                         {
-                            req1.DeviceId = _device.Device.Id;
+                            req1.DeviceId =dvid;
                         }
                         var res1 = await _repairServiceClient.GetRepairInfosAsync(req1);
                         _repairInfos = new BindingList<ToStringHelper<RepairInfo>>(
@@ -165,7 +164,7 @@ namespace MyClient.View
                             DiscoveryTime = _timeUtility.GetTicket(time_DiscoveryTime.Value),
                             CompletionTime = _timeUtility.GetTicket(time_CompletionTime.Value),
                             Context = text_context.Text,
-                            DeviceId = _device.Device.Id,
+                            DeviceId =dvid,
                         }
                     });
                     _repairInfos.Add(new ToStringHelper<RepairInfo>(r.Info, it => it.Id + ""));

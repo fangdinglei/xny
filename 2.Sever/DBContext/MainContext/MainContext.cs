@@ -442,7 +442,7 @@ namespace MyDBContext.Main
                     Name = "设备1",
                     CreatorId = 2,
                     DeviceTypeId = 1,
-                    LatestData = "{}",
+                    LatestData = "{1:59}",
                     LocationStr = "",
                     Status = 2,
                 }

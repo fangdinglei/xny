@@ -19,6 +19,8 @@ namespace MyClient.View.Device
     [System.Runtime.InteropServices.ComVisibleAttribute(true)]//标记对com可见
     public partial class FDeviceDetail : Form, IView
     {
+
+
         GrpcMain.Device.Device device;
         GrpcMain.DeviceType.TypeInfo typeinfo;
 
@@ -134,7 +136,9 @@ DeviceService.DeviceServiceClient deviceServiceClient)
             _viewholder = viewholder;
         }
 
-
-
+        private void btn_typeinfo_Click(object sender, EventArgs e)
+        {
+            _viewholder.SwitchTo("FDeviceDetail", false, device.Id);
+        }
     }
 }

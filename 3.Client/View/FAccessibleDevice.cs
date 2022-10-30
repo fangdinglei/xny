@@ -196,7 +196,7 @@ namespace MyClient.View
             }
             else if (e.ColumnIndex == 6)
             {
-                ViewHolder.SwitchTo("FDeviceOtherFeatures", false, dev);
+                ViewHolder.SwitchTo("FDeviceOtherFeatures", false, dev.Device.Id);
             }
 
         }

@@ -38,7 +38,7 @@
             this.text_type = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btn_typeinfo = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.chromiumWebBrowser1 = new CefSharp.WinForms.ChromiumWebBrowser();
@@ -127,14 +127,15 @@
             this.button2.Text = "更多设置";
             this.button2.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // btn_typeinfo
             // 
-            this.button3.Location = new System.Drawing.Point(130, 235);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(112, 34);
-            this.button3.TabIndex = 11;
-            this.button3.Text = "设备类型";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btn_typeinfo.Location = new System.Drawing.Point(130, 235);
+            this.btn_typeinfo.Name = "btn_typeinfo";
+            this.btn_typeinfo.Size = new System.Drawing.Size(112, 34);
+            this.btn_typeinfo.TabIndex = 11;
+            this.btn_typeinfo.Text = "设备类型";
+            this.btn_typeinfo.UseVisualStyleBackColor = true;
+            this.btn_typeinfo.Click += new System.EventHandler(this.btn_typeinfo_Click);
             // 
             // button4
             // 
@@ -159,7 +160,7 @@
             this.chromiumWebBrowser1.ActivateBrowserOnCreation = false;
             this.chromiumWebBrowser1.Location = new System.Drawing.Point(289, 12);
             this.chromiumWebBrowser1.Name = "chromiumWebBrowser1";
-            this.chromiumWebBrowser1.Size = new System.Drawing.Size(772, 627);
+            this.chromiumWebBrowser1.Size = new System.Drawing.Size(972, 634);
             this.chromiumWebBrowser1.TabIndex = 14;
             this.chromiumWebBrowser1.Text = "chromiumWebBrowser1";
             // 
@@ -167,11 +168,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1073, 656);
+            this.ClientSize = new System.Drawing.Size(1273, 671);
             this.Controls.Add(this.chromiumWebBrowser1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.btn_typeinfo);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.text_type);
@@ -201,7 +202,7 @@
         private TextBox text_type;
         private Button button1;
         private Button button2;
-        private Button button3;
+        private Button btn_typeinfo;
         private Button button4;
         private Button button5;
         private CefSharp.WinForms.ChromiumWebBrowser chromiumWebBrowser1;

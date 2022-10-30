@@ -59,10 +59,10 @@ namespace MyDBContext.Main
         /// 修改设备维修信息
         /// </summary>
         Write_Repair = 1 << 9,
-        /// <summary>
-        /// 修改设备类型
-        /// </summary>
-        Write_Type = 1 << 10,
+        ///// <summary>
+        ///// 修改设备类型
+        ///// </summary>
+        //Write_Type = 1 << 10,
         /// <summary>
         /// 向设备发送命令
         /// </summary>
