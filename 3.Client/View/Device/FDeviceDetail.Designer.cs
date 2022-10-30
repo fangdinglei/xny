@@ -41,6 +41,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.chromiumWebBrowser1 = new CefSharp.WinForms.ChromiumWebBrowser();
             this.SuspendLayout();
             // 
             // label1
@@ -152,11 +153,21 @@
             this.button5.Text = "提交更新";
             this.button5.UseVisualStyleBackColor = true;
             // 
+            // chromiumWebBrowser1
+            // 
+            this.chromiumWebBrowser1.ActivateBrowserOnCreation = false;
+            this.chromiumWebBrowser1.Location = new System.Drawing.Point(289, 12);
+            this.chromiumWebBrowser1.Name = "chromiumWebBrowser1";
+            this.chromiumWebBrowser1.Size = new System.Drawing.Size(772, 627);
+            this.chromiumWebBrowser1.TabIndex = 14;
+            this.chromiumWebBrowser1.Text = "chromiumWebBrowser1";
+            // 
             // FDeviceDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(898, 600);
+            this.ClientSize = new System.Drawing.Size(1073, 656);
+            this.Controls.Add(this.chromiumWebBrowser1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -192,5 +203,6 @@
         private Button button3;
         private Button button4;
         private Button button5;
+        private CefSharp.WinForms.ChromiumWebBrowser chromiumWebBrowser1;
     }
 }

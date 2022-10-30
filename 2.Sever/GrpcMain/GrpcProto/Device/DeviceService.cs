@@ -150,53 +150,53 @@ namespace GrpcMain.Device
             }
             return new CommonResponse() { Success = true };
         }
-        [GrpcRequireAuthority(true, "UpdateDeviceType")]
-        public override async Task<CommonResponse> UpdateDeviceType(Request_UpdateDeviceType request, ServerCallContext context)
-        {
-            long id = (long)context.UserState["CreatorId"];
-            using (MainContext ct = new MainContext())
-            {
-                var ud = await ct.User_Devices
-                   .Where(it => it.DeviceId == request.Dvid && it.UserId == id)
-                    .AsNoTracking().FirstOrDefaultAsync();
-                if (ud == null || !ud._Authority.HasFlag(UserDeviceAuthority.Write_BaseInfo))
-                {
-                    //没有权限
-                    throw new RpcException(new Status(StatusCode.PermissionDenied, "没有设备基础信息修改"));
-                }
-                if (!ud._Authority.HasFlag(UserDeviceAuthority.Write_Type))
-                {
-                    throw new RpcException(new Status(StatusCode.PermissionDenied, "没有设备类型修改权限"));
-                }
-                var dv = await ct.Devices.Where(it => it.Id == request.Dvid).FirstOrDefaultAsync();
-                if (dv == null)
-                    throw new Exception("不一致:设备" + request.Dvid + " 应当存在却不存在");
+        //[GrpcRequireAuthority(true, "UpdateDeviceType")]
+        //public override async Task<CommonResponse> UpdateDeviceType(Request_UpdateDeviceType request, ServerCallContext context)
+        //{
+        //    long id = (long)context.UserState["CreatorId"];
+        //    using (MainContext ct = new MainContext())
+        //    {
+        //        var ud = await ct.User_Devices
+        //           .Where(it => it.DeviceId == request.Dvid && it.UserId == id)
+        //            .AsNoTracking().FirstOrDefaultAsync();
+        //        if (ud == null || !ud._Authority.HasFlag(UserDeviceAuthority.Write_BaseInfo))
+        //        {
+        //            //没有权限
+        //            throw new RpcException(new Status(StatusCode.PermissionDenied, "没有设备基础信息修改"));
+        //        }
+        //        if (!ud._Authority.HasFlag(UserDeviceAuthority.Write_Type))
+        //        {
+        //            throw new RpcException(new Status(StatusCode.PermissionDenied, "没有设备类型修改权限"));
+        //        }
+        //        var dv = await ct.Devices.Where(it => it.Id == request.Dvid).FirstOrDefaultAsync();
+        //        if (dv == null)
+        //            throw new Exception("不一致:设备" + request.Dvid + " 应当存在却不存在");
 
-                var dvtypeownertype=await request.TypeId.GetOwnerTypeAsync(ct,id);
-                if (dvtypeownertype== AuthorityUtility.OwnerType.Non)
-                    throw new Exception("没有该设备类型的权限");
+        //        var dvtypeownertype=await request.TypeId.GetOwnerTypeAsync(ct,id);
+        //        if (dvtypeownertype== AuthorityUtility.OwnerType.Non)
+        //            throw new Exception("没有该设备类型的权限");
 
-                var ownertype = await dv.GetOwnerTypeAsync(ct, id);
-                if (ownertype == AuthorityUtility.OwnerType.Non)
-                {
-                    //没权限
-                    throw new RpcException(new Status(StatusCode.PermissionDenied, "不一致"));
-                }
-                else if (ownertype == AuthorityUtility.OwnerType.SonOfCreator)
-                {
-                    //子用户
-                    context.Status = Status.DefaultCancelled;
-                    return null;
-                }
-                else
-                {
-                    dv.DeviceTypeId = request.TypeId;
-                    await ct.SaveChangesAsync();
-                }
-            }
-            return new CommonResponse() { Success = true };
+        //        var ownertype = await dv.GetOwnerTypeAsync(ct, id);
+        //        if (ownertype == AuthorityUtility.OwnerType.Non)
+        //        {
+        //            //没权限
+        //            throw new RpcException(new Status(StatusCode.PermissionDenied, "不一致"));
+        //        }
+        //        else if (ownertype == AuthorityUtility.OwnerType.SonOfCreator)
+        //        {
+        //            //子用户
+        //            context.Status = Status.DefaultCancelled;
+        //            return null;
+        //        }
+        //        else
+        //        {
+        //            dv.DeviceTypeId = request.TypeId;
+        //            await ct.SaveChangesAsync();
+        //        }
+        //    }
+        //    return new CommonResponse() { Success = true };
            
-        }
+        //}
 
     }
 }

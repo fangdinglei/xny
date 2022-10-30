@@ -1,0 +1,158 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script language="javascript" src="../echarts.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+
+    <div id="main" style="width: 90%;height:90%;"></div>
+    <script type="text/javascript">
+        function dateFormat(fmt, date) {
+            let ret;
+            const opt = {
+                "Y+": date.getFullYear().toString(),        // 年
+                "m+": (date.getMonth() + 1).toString(),     // 月
+                "d+": date.getDate().toString(),            // 日
+                "H+": date.getHours().toString(),           // 时
+                "M+": date.getMinutes().toString(),         // 分
+                "S+": date.getSeconds().toString()          // 秒
+                // 有其他格式化字符需求可以继续添加，必须转化成字符串
+            };
+            for (let k in opt) {
+                ret = new RegExp("(" + k + ")").exec(fmt);
+                if (ret) {
+                    fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+                };
+            };
+            return fmt;
+        } 
+
+        //Name,Unit,MinValue,MaxValue ,AlertLowValue,AlertHighValue,Value,ValueType
+        function DrawChart(data,div) {
+            var chart = echarts.init(div);     
+            option = {
+                backgroundColor: "#072B79",
+                tooltip: {
+                    formatter: "{b}{c}"
+                },
+                series: [{
+                    name: '1',
+                    type: 'gauge',
+                    radius: '80%',
+                    min: data.MinValue,
+                    max: data.MaxValue,
+                    center: ['50%', '60%'],
+                    data: [{
+                        value: data.Value,
+                        name: data.Name
+                    }],
+                    splitNumber: 12, //刻度数量
+                    startAngle: 180,
+                    endAngle: 0,
+                    z: 5,
+                    axisLine: {
+                        show: true,
+                        lineStyle: {
+                            width: 0,
+                            color: [
+                                [(data.AlertLowValue - data.MinValue) / (data.MaxValue-data.MinValue), '#E71A6D'],
+                                [(data.AlertHighValue - data.MinValue) / (data.MaxValue - data.MinValue), '#70C27E'],
+                                [(data.MaxValue - data.MinValue) / (data.MaxValue - data.MinValue), '#E71A6D'],
+                            ]
+                        }
+                    }, //仪表盘轴线
+                    axisLabel: {
+                        show: true,
+                        color: '#fff',
+                        fontSize: 20,
+                        distance: -70,
+                        formatter: function (params) {
+                            return params.toFixed(1) +"";
+                            //var value = params.toFixed(2)
+
+                            //if (value == 0.00) {
+                            //    return '危'
+                            //} else if (value == 0.25) {
+                            //    return '差'
+                            //} else if (value == 0.50) {
+                            //    return '中'
+                            //} else if (value == 0.75) {
+                            //    return '良'
+                            //} else if (value == 1.00) {
+                            //    return '优'
+                            //} else {
+                            //    return ''
+                            //}
+                        }
+                    }, //刻度标签。
+                    axisTick: {
+                        splitNumber: 10,
+                        show: true,
+                        lineStyle: {
+                            color: 'auto',
+                            width: 2
+                        },
+                        length: 20,
+                    }, //刻度样式
+                    splitLine: {
+                        show: true,
+                        length: 25,
+                        lineStyle: {
+                            color: 'auto',
+                            width: 5
+                        }
+                    }, //分隔线样式
+
+                    "itemStyle": {
+                        "normal": {
+                            "color": "#24D8E7" //指针颜色
+                        }
+                    },
+                    pointer: {
+                        width: 10,
+                        length: '80%'
+                    },
+                    detail: {
+                        formatter: function (params) {
+                            return (params  ).toFixed(0)
+                        },
+                        fontSize: 50,
+                        color: "#fff",
+                        offsetCenter: ['0%', '-35%']
+                    },
+                    title: {
+                        offsetCenter: ['0', '-60%'],
+                        fontSize: 40,
+                        color: "#fff",
+                        show: true
+                    },
+                }]
+            };
+            chart.setOption(option);
+        }
+        //array of Name,Unit,MinValue,MaxValue ,AlertLowValue,AlertHighValue,Value,ValueType
+        function fromcs_ShowStatus(str) {
+            var Father = document.getElementById('main');
+            Father.innerHTML = "";
+            var datas = strToJson(str);
+            for (var i = 0; i < datas.length; i++) {
+                var data = datas[i];
+                var obj = document.createElement("div");
+                obj.id = "chart"+i;
+                obj.style.height = "33%";
+                obj.style.width = "33%";
+                Father.appendChild(obj);
+                DrawChart(data,obj);
+            }
+        }
+        function strToJson(str) {
+            var json = eval('(' + str + ')');
+            return json;
+        }
+    </script>
+</body>
+
+</html>

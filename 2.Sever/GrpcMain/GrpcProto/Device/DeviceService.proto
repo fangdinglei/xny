@@ -23,8 +23,8 @@ service DeviceService {
         returns (CommonResponse);
 
      //修改设备类型
-    rpc UpdateDeviceType( Request_UpdateDeviceType)
-        returns (CommonResponse);
+    //rpc UpdateDeviceType( Request_UpdateDeviceType)
+        //returns (CommonResponse);
     //获取全部设备状态
     rpc GetAllDeviceStatus( Request_GetAllDeviceStatus)
         returns ( Response_GetAllDeviceStatus);
@@ -65,10 +65,10 @@ message Request_DeletDevice{
 message Request_UpdateDeviceBaseInfo{
     Device Device=1;
 }
-message Request_UpdateDeviceType{
-    int64 Dvid=1;
-    int64 TypeId=2;
-}
+//message Request_UpdateDeviceType{
+//    int64 Dvid=1;
+//    int64 TypeId=2;
+//}
 
 
 
