@@ -19,6 +19,7 @@ namespace MyDBContext.Main
         public long UserId { get; set; }
         public long DeviceId { get; set; }
         public long User_Device_GroupId { get; set; }
+        public int UserTreeId { get; set; }
 
         public int Authority { get; set; }
         [NotMapped]

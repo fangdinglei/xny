@@ -25,7 +25,7 @@ namespace MyDBContext.Main
         public long LastLogin { get; set; }
 
         [Comment("表示用户属于哪一个用户族")]
-        public int TreeId { get; set; }
+        public int UserTreeId { get; set; }
         public int TreeDeep { get; set; }
         public int MaxSubUser { get; set; }
         public int MaxSubUserDepth { get; set; }

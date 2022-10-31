@@ -11,10 +11,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
-    public class Internal_Mail
+    public class Internal_Mail : IHasCreator
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
+        public int UserTreeId { get; set; }
+
         public string Title { get; set; }
         public string Context { get; set; }
         public long Time { get; set; }
@@ -24,5 +26,10 @@ namespace MyDBContext.Main
         public long ReceiverId { get; set; }
 
         public long LastEMailTime { get; set; }
+
+        [NotMapped]
+        public virtual User Creator => throw new System.NotImplementedException();
+        [NotMapped]
+        public long CreatorId =>SenderId;
     }
 }

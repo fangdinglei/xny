@@ -28,10 +28,11 @@ namespace GrpcMain.DeviceType
             using (MainContext ct = new MainContext())
             {
                 long id = (long)context.UserState["CreatorId"];
+                User us = (User)context.UserState["user"];
                 if (request.Ids.Count == 0)
                 {//获取全部
                     int maxcount = MaxType * 2 + 1;
-                    var ls = await ct.Device_Types.GetEntityOfAccessible(ct, id, maxcount, request.Cursor,
+                    var ls = await ct.Device_Types.GetEntityOfAccessible(ct, us, maxcount, request.Cursor,
                         true, true, false, filter: (it) => it.Include(it => it.ThingModels));
                     if (ls.Count == maxcount)
                     {
@@ -91,7 +92,7 @@ namespace GrpcMain.DeviceType
                 }
                 else
                 {//获取部分
-                    var ls = await ct.Device_Types.GetEntityOfAccessible(ct, id, -1, request.Cursor,
+                    var ls = await ct.Device_Types.GetEntityOfAccessible(ct, us, -1, request.Cursor,
                         true, true, false, request.Ids, filter: (it) => it.Include(it => it.ThingModels));
                     res.Cursor = 0;
                     res.TypeInfos.AddRange(ls.Select(it =>
@@ -125,7 +126,8 @@ namespace GrpcMain.DeviceType
         [GrpcRequireAuthority(true, "UpdateDeviceTypeInfo")]
         public override async Task<CommonResponse?> UpdateTypeInfo(Request_UpdateTypeInfo request, ServerCallContext context)
         {//需要审计
-            long id = (long)context.UserState["CreatorId"];
+            long id = (long)context.UserState["CreatorId"]; 
+            User us = (User)context.UserState["user"];
             using (MainContext ct = new MainContext())
             {
                 var type = await ct.Device_Types
@@ -174,6 +176,7 @@ namespace GrpcMain.DeviceType
                                 Abandonted = it.Abandonted,
                                 DeviceTypeId = type.Id,
                                 Id = old.Contains(it.Id) ? it.Id : 0,
+                                UserTreeId= us.UserTreeId,
                                 MaxValue = it.MaxValue,
                                 MinValue = it.MinValue,
                                 Name = it.Name,

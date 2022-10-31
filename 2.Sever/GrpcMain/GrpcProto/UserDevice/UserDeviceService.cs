@@ -13,14 +13,15 @@ namespace GrpcMain.UserDevice
         /// 将请求对象转换为新的DB对象
         /// </summary>
         /// <returns></returns>
-        static public User_Device AsDBObj(this GrpcMain.UserDevice.User_Device ud)
+        static public MyDBContext.Main.User_Device  AsDBObj(this GrpcMain.UserDevice.User_Device ud,int usertreeid)
         {
-            return new  User_Device
+            return new MyDBContext.Main.User_Device
             {
                 Authority = ud.Authority,
-                Dvid = ud.Dvid,
-                UserDeviceGroup = ud.UserDeviceGroup,
+                DeviceId = ud.Dvid,
+                User_Device_GroupId= ud.UserDeviceGroup,
                 UserId = ud.UserId,
+                UserTreeId= usertreeid,
             };
         }
         static public UserDevice.User_Device AsGrpcObj(this MyDBContext.Main.User_Device value)
@@ -182,7 +183,7 @@ namespace GrpcMain.UserDevice
         public override async Task<CommonResponse> AddUserDevice(Request_AddUserDevice request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
-
+            User us = (User)context.UserState["user"];
             using (MainContext ct = new MainContext())
             {
                 if (await id.IsDirectFatherAsync(ct, request.UserDevice.UserId) == false)
@@ -226,7 +227,7 @@ namespace GrpcMain.UserDevice
                 {
                     request.UserDevice.Dvid = item;
                     request.UserDevice.Authority= dicuds[item].Authority&autority;
-                    ct.Add(request.UserDevice.AsDBObj());
+                    ct.Add(request.UserDevice.AsDBObj(us.UserTreeId));
                 }
                 await ct.SaveChangesAsync();
             }
@@ -394,6 +395,7 @@ namespace GrpcMain.UserDevice
         public override async Task<CommonResponse> NewGroup(Request_NewGroup request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
+            User us=(User)context.UserState["user"];
             using (MainContext ct = new MainContext())
             {
                 if (MaxGroup <= await ct.User_Device_Groups.Where(it => it.CreatorId == id).CountAsync())
@@ -404,7 +406,8 @@ namespace GrpcMain.UserDevice
                 ct.Add(new MyDBContext.Main.User_Device_Group()
                 {
                     Name = request.Name,
-                    CreatorId = id
+                    CreatorId = id,
+                    UserTreeId = us.UserTreeId
                 });
                 await ct.SaveChangesAsync();
             }

@@ -16,6 +16,8 @@ namespace MyDBContext.Main
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
+        public int UserTreeId { get; set; }
+
         public string Name { get; set; }
         public string Script { get; set; }
 

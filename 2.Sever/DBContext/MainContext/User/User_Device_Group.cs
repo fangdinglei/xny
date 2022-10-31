@@ -24,6 +24,7 @@ namespace MyDBContext.Main
         /// 所属者
         /// </summary>
         public long CreatorId { get; set; }
+        public int UserTreeId { get; set; }
         /// <summary>
         /// 所属者
         /// </summary>

@@ -128,24 +128,37 @@ namespace GrpcMain
                 {
                     return (false, "token无效");
                 }
+                using MainContext ct = new MainContext()  ;
+                var select = await ct.Users.Where(it => it.Id == jwt.Id).Select(it=>new { it.Id,it.Status,it.UserTreeId,it.Authoritys}).FirstOrDefaultAsync();
+                if (select == null )
+                {
+                    throw new RpcException(new Status( StatusCode.Unauthenticated,"登陆过时"));
+                }
+                User user = new User()
+                {
+                    Id = select.Id,
+                    Status = select.Status,
+                    Authoritys = select.Authoritys,
+                    UserTreeId = select.UserTreeId,
+                };
+
+
                 if (att != null && att.Authoritys != null && att.Authoritys.Count() > 0)
                 {//校验高级权限
-                    using (MainContext ct = new MainContext())
+                    var authoritys = user.Authoritys;
+                    List<string>? authoritysx;
+                    if (authoritys == null || !authoritys.TryDeserializeObject(out authoritysx) || authoritysx == null)
                     {
-                        var authoritys = await ct.Users.Where(it => it.Id == jwt.Id).Select(it => it.Authoritys).FirstOrDefaultAsync();
-                        List<string>? authoritysx;
-                        if (authoritys == null || !authoritys.TryDeserializeObject(out authoritysx) || authoritysx == null)
-                        {
-                            return (false, "需要高级权限 " + att.Authoritys[0]);
-                        }
-                        var nothave = att.Authoritys.Except(authoritysx);
-                        if (nothave.Count() != 0)
-                        {
-                            return (false, "需要高级权限 " + nothave.First());
-                        }
+                        return (false, "需要高级权限 " + att.Authoritys[0]);
+                    }
+                    var nothave = att.Authoritys.Except(authoritysx);
+                    if (nothave.Count() != 0)
+                    {
+                        return (false, "需要高级权限 " + nothave.First());
                     }
                 }
                 context.UserState["CreatorId"] = jwt.Id;
+                context.UserState["user"]=user;
                 return (true, null);
             }
 
@@ -159,9 +172,9 @@ namespace GrpcMain
                 return;
             }
 
-            public async Task RecordAudit<TRequest, TResponse>(ServerCallContext context, object request, UnaryServerMethod<TRequest, TResponse> continuation, GrpcRequireAuthorityAttribute att)
+            public async Task RecordAudit<TRequest, TResponse>(ServerCallContext context, object request, UnaryServerMethod<TRequest, TResponse> continuation, GrpcRequireAuthorityAttribute att, User user)
+                where TResponse : class 
                 where TRequest : class
-                where TResponse : class
             {
                 long Sponsorid = (long)context.UserState["CreatorId"];
                 long AuditorId = (long)context.UserState["AuditorId"];
@@ -174,7 +187,8 @@ namespace GrpcMain
                             AuditorId = AuditorId,
                             Time = _timeUtility.GetTicket(),
                             Op = att.NeedAudit_OpName,
-                            Data = Newtonsoft.Json.JsonConvert.SerializeObject(request)
+                            Data = Newtonsoft.Json.JsonConvert.SerializeObject(request),
+                            UserTreeId = user.UserTreeId,
                         }
                         ); ;
                     await ct.SaveChangesAsync();

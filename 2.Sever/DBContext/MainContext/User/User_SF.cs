@@ -20,6 +20,7 @@ namespace MyDBContext.Main
         public long User2Id { get; set; }
         public bool IsFather { get; set; }
         public bool IsSelf { get; set; }
+        public int UserTreeId { get; set; }
         public virtual User User1 { get; set; }
         public virtual User User2 { get; set; }
 

@@ -14,5 +14,6 @@ namespace MyDBContext.Main
         long Id { get; }
         User? Creator { get; }
         long CreatorId { get; }
+        int UserTreeId { get; }
     }
 }

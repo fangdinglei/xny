@@ -16,7 +16,7 @@ namespace GrpcMain.InternalMail
         /// <param name="mail"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        static public Internal_Mail AsDBObj(this InternalMail mail)
+        static public Internal_Mail AsDBObj(this InternalMail mail,int usertreeid)
         {
             return new Internal_Mail
             {
@@ -28,6 +28,7 @@ namespace GrpcMain.InternalMail
                 Context = mail.Context,
                 Title = mail.Title,
                 Time = mail.Time,
+                UserTreeId= usertreeid,
             };
         }
         static public InternalMail AsGrpcObj(this Internal_Mail mail)
@@ -64,6 +65,7 @@ namespace GrpcMain.InternalMail
         public override async Task<Response_SendInternalMail?> SendMail(Request_SendInternalMail request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
+            User us = (User)context.UserState["user"];
             request.Mail.Time = _timeutility.GetTicket();
             using (MainContext ct = new MainContext())
             {
@@ -77,7 +79,7 @@ namespace GrpcMain.InternalMail
                 request.Mail.SenderId = id;
                 request.Mail.Readed = false;
                 request.Mail.LastEMailTime = 0;
-                var mail = request.Mail.AsDBObj();
+                var mail = request.Mail.AsDBObj(us.UserTreeId);
                 ct.Internal_Mails.Add(mail);
                 await ct.SaveChangesAsync();
                 request.Mail.Id = mail.Id;

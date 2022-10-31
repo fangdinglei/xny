@@ -40,6 +40,7 @@ namespace MyDBContext.Main
         /// 审计人
         /// </summary>
         public long AuditorId { get; set; }
+        public int UserTreeId { get; set; }
         public virtual User Auditor { get; }
     }
 }

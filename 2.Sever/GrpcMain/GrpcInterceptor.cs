@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using Grpc.Core.Interceptors;
+using MyDBContext.Main;
 
 namespace GrpcMain
 {
@@ -56,7 +57,7 @@ namespace GrpcMain
                         //审计
                         if (at.NeedAudit && ex.Status.StatusCode == StatusCode.Cancelled)
                         {
-                            await _Handle.RecordAudit(context, request, continuation, at);
+                            await _Handle.RecordAudit(context, request, continuation, at, (User)context.UserState["user"]);
                         }
                         throw new RpcException(new Status(StatusCode.Cancelled, "需要审计"));
                     }

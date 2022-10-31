@@ -1,4 +1,5 @@
 ﻿using Grpc.Core;
+using MyDBContext.Main;
 using MyJwtHelper;
 
 namespace GrpcMain
@@ -16,6 +17,6 @@ namespace GrpcMain
         public string GetToken(TokenClass tokenClass);
         public Task<(bool, string?)> Authorize(ServerCallContext context, GrpcRequireAuthorityAttribute att);
         public void OnError(Exception e);
-        public Task RecordAudit<TRequest, TResponse>(ServerCallContext context, object request, UnaryServerMethod<TRequest, TResponse> continuation, GrpcRequireAuthorityAttribute att) where TRequest : class where TResponse : class;
+        public Task RecordAudit<TRequest, TResponse>(ServerCallContext context, object request, UnaryServerMethod<TRequest, TResponse> continuation, GrpcRequireAuthorityAttribute att, User user) where TRequest : class where TResponse : class;
     }
 }

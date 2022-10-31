@@ -18,6 +18,7 @@ namespace GrpcMain.Device
         public override async Task<Response_AddRepairInfo> AddRepairInfo(Request_AddRepairInfo request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
+            User us = (User)context.UserState["user"];
             using (MainContext ct = new MainContext())
             {
                 IQueryable<Device_Repair> bd;
@@ -37,6 +38,7 @@ namespace GrpcMain.Device
                     Context = request.Info.Context,
                     CreatorId = id,
                     DiscoveryTime = request.Info.DiscoveryTime,
+                    UserTreeId=us.UserTreeId,
                 };
                 ct.Device_Repairs.Add(obj);
                 await ct.SaveChangesAsync();

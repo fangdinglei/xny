@@ -104,24 +104,22 @@ namespace MyDBContext.Main
         /// 获取所有用户可访问的实体
         /// </summary>
         /// <returns></returns>
-        static public async Task<List<TEntity>> GetEntityOfAccessible<TEntity>(this DbSet<TEntity> dbset, MainContext ct, long uid
+        static public async Task<List<TEntity>> GetEntityOfAccessible<TEntity>(this DbSet<TEntity> dbset, MainContext ct, User user
             , int takecount = -1, long cursor = -1
             , bool fathervisitson = false, bool sonvisitfather = false, bool trace = false
             , ICollection<long> wantedids = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> filter = null) where TEntity : class, IHasCreator
         {
             IQueryable<TEntity> bd;
+            var uid = user.Id;
             if (fathervisitson && sonvisitfather)
             {
-                var bd1 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
-                 (dt, us) => new { us, dt })
-                 .Where(it => it.us.User2Id == uid)
-                 .Select(it => it.dt);
-                bd = bd1;
+                bd = dbset.Where(it => it.UserTreeId == user.UserTreeId);
             }
             else if (fathervisitson)
             {
                 bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                    (dt, us) => new { us, dt })
+                       .Where(it => it.us.UserTreeId == user.UserTreeId)
                    .Where(it => it.us.User2Id == uid && (!it.us.IsFather || it.us.IsSelf))
                    .Select(it => it.dt);
             }
@@ -129,6 +127,7 @@ namespace MyDBContext.Main
             {
                 bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                      (dt, us) => new { us, dt })
+                    .Where(it => it.us.UserTreeId == user.UserTreeId)
                      .Where(it => it.us.User2Id == uid && (it.us.IsFather || it.us.IsSelf))
                      .Select(it => it.dt);
             }
@@ -164,24 +163,22 @@ namespace MyDBContext.Main
         /// 获取所有用户可访问的实体
         /// </summary>
         /// <returns></returns>
-        static public async Task<int> GetEntityOfAccessibleCount<TEntity>(this DbSet<TEntity> dbset, MainContext ct, long uid
+        static public async Task<int> GetEntityOfAccessibleCount<TEntity>(this DbSet<TEntity> dbset, MainContext ct, User user
             , int takecount = -1, long cursor = -1
             , bool fathervisitson = false, bool sonvisitfather = false, bool trace = false
             , ICollection<long> wantedids = null) where TEntity : class, IHasCreator
         {
             IQueryable<TEntity> bd;
+            var uid = user.Id;
             if (fathervisitson && sonvisitfather)
             {
-                var bd1 = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
-                 (dt, us) => new { us, dt })
-                 .Where(it => it.us.User2Id == uid)
-                 .Select(it => it.dt);
-                bd = bd1;
+                bd = dbset.Where(it => it.UserTreeId == user.UserTreeId);
             }
             else if (fathervisitson)
             {
                 bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                    (dt, us) => new { us, dt })
+                    .Where(it=>it.us.UserTreeId==user.UserTreeId)
                    .Where(it => it.us.User2Id == uid && (!it.us.IsFather || it.us.IsSelf))
                    .Select(it => it.dt);
             }
@@ -189,6 +186,7 @@ namespace MyDBContext.Main
             {
                 bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                      (dt, us) => new { us, dt })
+                       .Where(it => it.us.UserTreeId == user.UserTreeId)
                      .Where(it => it.us.User2Id == uid && (it.us.IsFather || it.us.IsSelf))
                      .Select(it => it.dt);
             }

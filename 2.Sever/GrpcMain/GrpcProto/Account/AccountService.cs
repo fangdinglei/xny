@@ -22,7 +22,7 @@ namespace GrpcMain.Account
                 Phone = user.Phone,
                 UserName = user.Name,
                 Status = user.Status,
-                TreeId = user.TreeId,
+                TreeId = user.UserTreeId,
                 PassWord = haspass? user.Pass:"",
                 MaxSubUser=user.MaxSubUser,
                 TreeDeep=user.TreeDeep,
@@ -42,7 +42,7 @@ namespace GrpcMain.Account
                 LastLogin = user.LastLogin,
                 Pass = user.PassWord,
                 Phone = user.Phone,
-                TreeId = user.TreeId,
+                UserTreeId = user.TreeId,
                 Status = (byte)user.Status,
                 MaxSubUser=user.MaxSubUser,
                 MaxSubUserDepth=user.MaxSubUserDepth,
@@ -97,7 +97,8 @@ namespace GrpcMain.Account
                            Success = true,
                            Ip = context.Peer,
                        }
-                  )
+                  ),
+                    UserTreeId= user.UserTreeId
                 });
                 await ct.SaveChangesAsync();
             }
@@ -191,7 +192,7 @@ namespace GrpcMain.Account
         #endregion
 
         #region CreatUser
-        async Task CreatUser_AddUserSFAsync(MainContext ct,long fatheruserid,long uid) {
+        async Task CreatUser_AddUserSFAsync(MainContext ct,long fatheruserid,long uid,int usertreeid) {
             var users = await ct.User_SFs.Where(it => it.User1Id == fatheruserid && (it.IsFather || it.IsSelf)).Select(it => it.User2Id).ToListAsync();
             foreach (var item in users)
             {
@@ -201,6 +202,7 @@ namespace GrpcMain.Account
                     User2Id = uid,
                     IsSelf = false,
                     IsFather = true,
+                    UserTreeId= usertreeid,
                 });
                 ct.Add(new User_SF()
                 {
@@ -208,6 +210,7 @@ namespace GrpcMain.Account
                     User2Id = item,
                     IsSelf = false,
                     IsFather = false,
+                    UserTreeId = usertreeid
                 });
             }
             ct.Add(new User_SF()
@@ -216,6 +219,7 @@ namespace GrpcMain.Account
                 User2Id = uid,
                 IsSelf = true,
                 IsFather = false,
+                UserTreeId = usertreeid
             });
         }
         public override async Task<Response_CreatUser> CreatUser(Request_CreatUser request, ServerCallContext context)
@@ -249,11 +253,11 @@ namespace GrpcMain.Account
 
                 var user = request.User.AsDBObj();
                 user.CreatorId = id;
-                user.TreeId = me.TreeId;
+                user.UserTreeId = me.UserTreeId;
                 user.TreeDeep = me.TreeDeep + 1;
                 ct.Add(user);
                 await ct.SaveChangesAsync();
-                await CreatUser_AddUserSFAsync(ct, user.Id, id);
+                await CreatUser_AddUserSFAsync(ct, user.Id, id, me.UserTreeId);
                 await ct.SaveChangesAsync();
                 await trans.CommitAsync();
                 return new Response_CreatUser()
