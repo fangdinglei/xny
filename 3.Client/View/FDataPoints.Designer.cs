@@ -77,6 +77,7 @@ namespace MyClient.View
             // 
             // CStreamName
             // 
+            this.CStreamName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CStreamName.FormattingEnabled = true;
             this.CStreamName.Location = new System.Drawing.Point(10, 50);
             this.CStreamName.Name = "CStreamName";
