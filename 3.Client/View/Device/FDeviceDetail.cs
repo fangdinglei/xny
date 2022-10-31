@@ -59,12 +59,12 @@ DeviceService.DeviceServiceClient deviceServiceClient)
                 return;
             }
 #pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
-            SigleExecute.ExecuteAsync(nameof(FDeviceDetail)+nameof(Rresh2Async),Rresh2Async);
+            SigleExecute.ExecuteAsync(nameof(FDeviceDetail)+nameof(Rresh2Async),()=> Rresh2Async());
 #pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
         }
-        public async Task Rresh2Async()
+        public async Task Rresh2Async(bool force=false)
         {
-            if (!Visible)
+            if (!Visible&&!force)
             {
                 return;
             }

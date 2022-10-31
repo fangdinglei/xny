@@ -80,6 +80,8 @@ namespace GrpcMain.DeviceType
                                 Remark = it.Remark,
                                 Unit = it.Unit,
                                 ValueType = (int)it.Type,
+                                AlertHighValue = it.AlertHighValue,
+                                AlertLowValue = it.AlertLowValue,
                             }));
                             return res;
                         }));
