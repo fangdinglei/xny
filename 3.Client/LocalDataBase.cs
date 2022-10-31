@@ -1,8 +1,11 @@
-﻿using Grpc.Core;
+﻿using CefSharp.DevTools.CacheStorage;
+using FdlWindows.View;
+using Grpc.Core;
 using GrpcMain.Account;
 using GrpcMain.Device;
 using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
+using MyDBContext.Main;
 using MyUtility;
 using System.Collections;
 using System.Reflection;
@@ -143,6 +146,39 @@ namespace MyClient
         {
             return GetUser_Device(User.ID,dvid,cache,retry);
         }
+        public bool TestDeviceAuthorityWithMessageBox(long dvid,UserDeviceAuthority authority,string tip) {
+            var uid = User.ID;
+            UserDeviceAuthority? realat= null;
+            if (User_Devices.ContainsKey(uid) && User_Devices[uid].ContainsKey(dvid)
+             && (_timeUtility.GetTicket() - User_Devices[uid][dvid].Item1) < 10)
+                realat = (UserDeviceAuthority) User_Devices[uid][dvid].Item2.Authority;
+            else
+            {
+                _userDeviceServiceClient.GetUserDevices(new Request_GetUserDevices()
+                {
+                    UserId = uid,
+                    DeviceIds = { dvid },
+                });
+            }
+            if (User_Devices.ContainsKey(uid) && User_Devices[uid].ContainsKey(dvid))
+                realat = (UserDeviceAuthority)User_Devices[uid][dvid].Item2.Authority;
+
+            if (realat.HasValue)
+            {
+                if (((UserDeviceAuthority)realat).HasFlag(authority))
+                {
+                    MessageBox.Show($"没有设备的{tip}权限", "提示");
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                MessageBox.Show("获取权限失败", "错误");
+                return false;
+            }
+        }
+
 
         internal void OnResonse<TResponse>(TResponse rsp) 
         {

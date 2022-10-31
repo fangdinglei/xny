@@ -4,6 +4,7 @@ using FdlWindows.View;
 using GrpcMain.Device;
 using GrpcMain.DeviceType;
 using MyClient.Grpc;
+using MyDBContext.Main;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -144,6 +145,10 @@ DeviceService.DeviceServiceClient deviceServiceClient)
 
         private void btn_deletdevice_Click(object sender, EventArgs e)
         {
+            if (!_localdata.TestDeviceAuthorityWithMessageBox(device.Id, UserDeviceAuthority.Write_DeletDevice, "删除"))
+            {
+                return;
+            }
             try
             {
                 var res =_deviceServiceClient.DeletDevice(new Request_DeletDevice { Dvid = device.Id, Reason = "1" });
@@ -159,6 +164,11 @@ DeviceService.DeviceServiceClient deviceServiceClient)
 
         private void btn_commit_Click(object sender, EventArgs e)
         {
+            if (!_localdata.TestDeviceAuthorityWithMessageBox(device.Id, UserDeviceAuthority.Write_BaseInfo, "修改"))
+            {
+                return;
+            }
+            
             try
             {
                 var dv=device.Clone();
@@ -177,11 +187,19 @@ DeviceService.DeviceServiceClient deviceServiceClient)
 
         private void btn_sendcmd_Click(object sender, EventArgs e)
         {
+            if (!_localdata.TestDeviceAuthorityWithMessageBox(device.Id,UserDeviceAuthority.Control_Cmd, "命令"))
+            {
+                return;
+            }
             _viewholder.SwitchTo("FSendCMD", false,new List<(long,string)>{ (device.Id, device.Name) });
         }
 
         private void btn_repair_Click(object sender, EventArgs e)
         {
+            if (!_localdata.TestDeviceAuthorityWithMessageBox(device.Id, UserDeviceAuthority.Read_Repair, "维修信息"))
+            {
+                return;
+            }
             _viewholder.SwitchTo("FDeviceRepair", false, device.Id);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using FdlWindows.View;
 using GrpcMain.Device;
 using MyClient.Grpc;
+using MyDBContext.Main;
 using System.Data;
 
 namespace MyClient.View
@@ -10,10 +11,12 @@ namespace MyClient.View
     {
         List<ValueTuple<long, string>>? dvs;
         DeviceService.DeviceServiceClient deviceServiceClient;
-        public FSendCMD(DeviceService.DeviceServiceClient deviceServiceClient)
+        LocalDataBase _localData;
+        public FSendCMD(DeviceService.DeviceServiceClient deviceServiceClient, LocalDataBase localData)
         {
             InitializeComponent();
             this.deviceServiceClient = deviceServiceClient;
+            _localData = localData;
         }
 
 
@@ -54,7 +57,24 @@ namespace MyClient.View
             try
             {
                 var req = new Request_SendCMD();
-                req.Dvids.AddRange(dvs.Select(it => it.Item1));
+                var notoklist = new List<(long,string)>();
+                req.Dvids.AddRange(dvs.Where(it => {
+                    var a=_localData.GetUser_Device(it.Item1);
+                    if (a==null|| !((UserDeviceAuthority)a.Authority).HasFlag(UserDeviceAuthority.Control_Cmd))
+                    {
+                        notoklist.Add(it);
+                        return false;
+                    }
+                    return true;
+                }).Select(it=>it.Item1));
+                if (notoklist.Count!=0)
+                {
+                    var str=notoklist.Aggregate("", (old, it) => {
+                        return old+","+it.Item2;
+                    });
+                    MessageBox.Show("不具有设备:\r\n" + str.Trim(',')+ "\r\n的命令权限,已忽略", "提示");
+                }
+
                 req.Cmd = tcmd.Text;
                 var rsp = deviceServiceClient.SendCMD(req);
                 rsp.ThrowIfNotSuccess();

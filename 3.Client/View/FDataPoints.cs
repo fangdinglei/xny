@@ -275,7 +275,8 @@ namespace MyClient.View
 
             var res = await _userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices
             { TypeId = type.Id });
-            var lsx = res.Info.Select(it => new ToStringHelper<DeviceWithUserDeviceInfo>
+            var lsx = res.Info.Where(it=>((UserDeviceAuthority)it.UserDevice.Authority).HasFlag( UserDeviceAuthority.Read_Data))
+                .Select(it => new ToStringHelper<DeviceWithUserDeviceInfo>
             (it, (it) => it.Device.Id + ":" + it.Device.Name)).ToList();
             devices = new BindingList<ToStringHelper<DeviceWithUserDeviceInfo>>(lsx);
             CDevice.DataSource = devices;
