@@ -6,9 +6,9 @@
     <script language="javascript" src="../echarts.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
-<body>
+<body onload="load()">
 
-    <div id="main" style="width: 90%;height:90%;"></div>
+    <div id="main" style="width: 100%; height: 100%;"></div>
     <script type="text/javascript">
         function dateFormat(fmt, date) {
             let ret;
@@ -41,15 +41,15 @@
                 series: [{
                     name: '1',
                     type: 'gauge',
-                    radius: '80%',
+                    radius: '100%',
                     min: data.MinValue,
                     max: data.MaxValue,
-                    center: ['50%', '60%'],
+                    center: ['50%', '80%'],
                     data: [{
                         value: data.Value,
                         name: data.Name
                     }],
-                    splitNumber: 12, //刻度数量
+                    splitNumber: 5, //大刻度数量
                     startAngle: 180,
                     endAngle: 0,
                     z: 5,
@@ -67,8 +67,8 @@
                     axisLabel: {
                         show: true,
                         color: '#fff',
-                        fontSize: 20,
-                        distance: -70,
+                        fontSize: 10,
+                        distance: 5,
                         formatter: function (params) {
                             return params.toFixed(1) +"";
                             //var value = params.toFixed(2)
@@ -95,14 +95,14 @@
                             color: 'auto',
                             width: 2
                         },
-                        length: 20,
-                    }, //刻度样式
+                        length: 10,
+                    }, //小刻度样式
                     splitLine: {
                         show: true,
-                        length: 25,
+                        length: 15,
                         lineStyle: {
                             color: 'auto',
-                            width: 5
+                            width:3
                         }
                     }, //分隔线样式
 
@@ -112,22 +112,22 @@
                         }
                     },
                     pointer: {
-                        width: 10,
+                        width: 5,
                         length: '80%'
                     },
-                    detail: {
+                    title: {//标题
+                        offsetCenter: ['0', '-120%'],
+                        fontSize: 15,
+                        color: "#fff",
+                        show: true
+                    },
+                    detail: {//标题下方
                         formatter: function (params) {
                             return (params  ).toFixed(0)
                         },
-                        fontSize: 50,
+                        fontSize:12,
                         color: "#fff",
-                        offsetCenter: ['0%', '-35%']
-                    },
-                    title: {
-                        offsetCenter: ['0', '-60%'],
-                        fontSize: 40,
-                        color: "#fff",
-                        show: true
+                        offsetCenter: ['0%', '20%']
                     },
                 }]
             };
@@ -142,8 +142,8 @@
                 var data = datas[i];
                 var obj = document.createElement("div");
                 obj.id = "chart"+i;
-                obj.style.height = "50%";
-                obj.style.width = "50%";
+                obj.style.height = "150px";
+                obj.style.width = "200px";
                 Father.appendChild(obj);
                 DrawChart(data,obj);
             }
@@ -151,6 +151,11 @@
         function strToJson(str) {
             var json = eval('(' + str + ')');
             return json;
+        }
+
+        function  load() {
+            fromcs_ShowStatus("[{\"Name\":\"温度\",\"Unit\":\"摄氏度\",\"MinValue\":0.0,\"MaxValue\":100.0,\"AlertLowValue\":20.0,\"AlertHighValue\":80.0,\"Value\":59.0,\"ValueType\":\"2\"},{\"Name\":\"温度\",\"Unit\":\"摄氏度\",\"MinValue\":0.0,\"MaxValue\":100.0,\"AlertLowValue\":20.0,\"AlertHighValue\":80.0,\"Value\":59.0,\"ValueType\":\"2\"}]")
+
         }
     </script>
 </body>
