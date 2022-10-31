@@ -46,6 +46,8 @@ namespace MyClient.View
                 text_cpucount.Text = res.ProcesserCount + "个";
                 text_runtime.Text = res.SystemTime / 1000 + "s";
                 return true;
+            }, exitcall: () => {
+                _viewholder.Back();
             });
             
         }

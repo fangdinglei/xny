@@ -1,4 +1,5 @@
 ﻿using FdlWindows.View;
+using Grpc.Core;
 using System.Diagnostics;
 
 namespace MyClient.View
@@ -21,6 +22,7 @@ namespace MyClient.View
         public Control View => this;
         IViewHolder _viewholder;
 
+        ToolTip tipui = new ToolTip();
         void OnSuccess()
         {
             setisloading(false);
@@ -40,30 +42,40 @@ namespace MyClient.View
             _viewholder.Back();
 
         }
-        ToolTip tipui = new ToolTip();
         void OnFailure(Exception ex)
         {
             setisloading(false);
             loading = false;
-            label1.Text = "加载失败";
+            if (ex is RpcException ex2)
+            {
+                label1.Text = ex2.Status.Detail.Length>7 ? ex2.Status.Detail.Substring(0,7)+"..":ex2.Status.Detail;
+                tipui.SetToolTip(label1, ex2.Status.Detail);
+            }
+            else
+            {
+                label1.Text = ex.Message.Length > 7 ? ex.Message.Substring(0, 7) + ".." : ex.Message;
+                tipui.SetToolTip(label1, ex.Message);
+            }
             button1.Visible = true;
-            button1.Enabled = true;
-            tipui.SetToolTip(label1, ex.Message);
-
         }
-        async Task<bool> ShowLoading(Func<Task<bool>> task, Func<Task<bool>>? retry, Action okcall = null, Action exitcall = null, Action<bool> setisloading = null)
-        {
-            Debug.Assert(loading == false, "不能重复进入加载界面");
+        void OnStartLoad() {
+            tipui.RemoveAll();
             loading = true; setisloading(true);
             button1.Visible = false;
             label1.Text = "加载中";
+        }
+
+        async Task<bool> ShowLoading(Func<Task<bool>> task, Func<Task<bool>>? retry, Action okcall = null, Action exitcall = null, Action<bool> setisloading = null)
+        {
+            Debug.Assert(loading == false, "不能重复进入加载界面");
+         
             this.retry = retry ?? task;
             this.setisloading = setisloading;
             this.okcall = okcall;
             this.exitcall = exitcall;
             try
             {
-                tipui.RemoveAll();
+                OnStartLoad();
                 if (await task())
                 {
                     OnSuccess();
@@ -85,12 +97,10 @@ namespace MyClient.View
         private async void button1_ClickAsync(object sender, EventArgs e)
         {
 
-            button1.Enabled = false;
-            loading = true;
-            setisloading(true);
+        
             try
             {
-                tipui.RemoveAll();
+                OnStartLoad();
                 if (await retry())
                 {
                     OnSuccess();
@@ -105,7 +115,6 @@ namespace MyClient.View
             {
                 OnFailure(ex);
             }
-            button1.Enabled = true;
         }
 
         public async void PrePare(params object[] par)
