@@ -6,6 +6,7 @@ using GrpcMain.Device;
 using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
+using MyDBContext.Main;
 using MyUtility;
 using System.ComponentModel;
 using static GrpcMain.DeviceType.DTODefine.Types;
@@ -93,6 +94,11 @@ namespace MyClient.View
             var ds = new List<DeviceWithUserDeviceInfo>();
             foreach (int item in CDevice.CheckedIndices)
             {
+                if (!((UserDeviceAuthority)devices[item].Value.UserDevice.Authority).HasFlag( UserDeviceAuthority.Read_Data))
+                {
+                    MessageBox.Show("没有该设备数据读取权限"+ devices[item].Value.Device.Name, "提示");
+                    return;
+                }
                 ds.Add(devices[item].Value);
             }
             try
@@ -159,6 +165,11 @@ namespace MyClient.View
                 Application.DoEvents();
             }
             var ds = devices[CDevice.CheckedIndices[0]].Value;
+            if (!((UserDeviceAuthority)ds.UserDevice.Authority).HasFlag(UserDeviceAuthority.Read_Data))
+            {
+                MessageBox.Show("没有该设备数据读取权限" + ds.Device.Name, "提示");
+                return;
+            }
             try
             {
                 var data = await GetDataStr_2(thingModels[CStreamName.SelectedIndex], ds);

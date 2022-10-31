@@ -6,6 +6,7 @@ using GrpcMain.UserDevice;
 using MyUtility;
 using System.Collections;
 using System.Reflection;
+using static Grpc.Core.Metadata;
 using static GrpcMain.Account.DTODefine.Types;
 using TypeInfo = GrpcMain.DeviceType.TypeInfo;
 
@@ -63,7 +64,7 @@ namespace MyClient
             }
             catch (Exception)
             {
-                return null;
+                return GetDevice(id, cache, retry - 1);
             }
 
         }
@@ -88,7 +89,7 @@ namespace MyClient
             }
             catch (Exception)
             {
-                return null;
+                return GetUserInfo(id, cache, retry - 1);
             }
 
         }
@@ -111,14 +112,37 @@ namespace MyClient
             }
             catch (Exception)
             {
-                return null;
+                return GetTypeInfo(id, cache, retry - 1);
             }
 
         }
 
-        //public User_Device GetUser_Device(long id, bool cache = true) { 
-            
-        //}
+        public User_Device GetUser_Device(long uid,long dvid, bool cache = true, int retry = 5) {
+            if (retry < 0)
+            {
+                return null;
+            }
+            if (cache && User_Devices.ContainsKey(uid)&& User_Devices[uid].ContainsKey(dvid)
+                && (_timeUtility.GetTicket() - User_Devices[uid][dvid].Item1) < 10)
+                return User_Devices[uid][dvid].Item2;
+            try
+            {
+                _userDeviceServiceClient.GetUserDevices(new Request_GetUserDevices() { 
+                     UserId = uid,
+                    DeviceIds = {dvid},
+                });
+                return GetUser_Device(uid,dvid, cache, retry - 1);
+            }
+            catch (Exception)
+            {
+                return GetUser_Device(uid, dvid, cache, retry - 1);
+            }
+
+        }
+        public User_Device GetUser_Device( long dvid, bool cache = true, int retry = 5)
+        {
+            return GetUser_Device(User.ID,dvid,cache,retry);
+        }
 
         internal void OnResonse<TResponse>(TResponse rsp) 
         {

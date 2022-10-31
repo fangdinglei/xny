@@ -81,6 +81,8 @@ service UserDeviceService {
         optional int64 Cursor=1;
         //获取子用户时需要
         optional int64 UserId=2;
+        //如果不空则只获取对应的
+        repeated int64 DeviceIds=3;
     }  
     message Response_GetUserDevices{
         //0后续无数据

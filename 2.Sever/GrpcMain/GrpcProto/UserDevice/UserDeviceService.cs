@@ -473,6 +473,10 @@ namespace GrpcMain.UserDevice
                     bd = bd.Where(it => it.DeviceId >= request.Cursor)
                         .Take(maxcount);
                 }
+                if (request.DeviceIds.Count>0)
+                {
+                    bd = bd.Where(it=>request.DeviceIds.Contains(it.DeviceId));
+                }
                 var r = await bd.AsNoTracking().ToListAsync();
                 var res = new Response_GetUserDevices()
                 {
