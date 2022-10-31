@@ -87,6 +87,7 @@ namespace GrpcMain.Device
                 }
                 else {
                     //父用户和创建者
+                    //TODO 冷数据删除
                     await ct.Database.BeginTransactionAsync();
                     await ct.Devices.DeleteRangeAsync(ct,it=>it.Id==request.Dvid);
                     await ct.User_Devices.DeleteRangeAsync(ct,it=>it.DeviceId==id);

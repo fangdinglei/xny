@@ -1,5 +1,6 @@
 ﻿using FdlWindows.View;
 using GrpcMain.Device;
+using MyClient.Grpc;
 using System.Data;
 
 namespace MyClient.View
@@ -56,13 +57,12 @@ namespace MyClient.View
                 req.Dvids.AddRange(dvs.Select(it => it.Item1));
                 req.Cmd = tcmd.Text;
                 var rsp = deviceServiceClient.SendCMD(req);
-                if (!rsp.Success)
-                    throw new Exception(rsp.Message);
+                rsp.ThrowIfNotSuccess();
                 MessageBox.Show("发送成功", "提示");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("发送设备:" + ex.Message, "提示");
+                MessageBox.Show("失败:" + ex.Message, "错误");
             }
 
         }

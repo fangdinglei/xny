@@ -101,7 +101,7 @@ namespace MyClient.View
                 var ts = dateTimePicker1.Value;
                 ts = new DateTime(ts.Year, ts.Month, ts.Day);
                 var te = dateTimePicker2.Value;
-                te = new DateTime(te.Year, te.Month, te.Day);
+                te = (new DateTime(te.Year, te.Month, te.Day)).AddDays(1);
                 chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs",
                     Newtonsoft.Json.JsonConvert.SerializeObject(ds.Select(it => it.Device.Name).ToList())
                     , data, _timeUtility.GetTicket(ts) * 1000, _timeUtility.GetTicket(te) * 1000); ;
