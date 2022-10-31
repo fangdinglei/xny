@@ -1,6 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using System.ComponentModel.DataAnnotations.Schema;
-
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System;
 namespace MyDBContext.Main
 {
     public class ThingModel
@@ -11,7 +10,7 @@ namespace MyDBContext.Main
         public virtual Device_Type DeviceType { get; set; }
         public long DeviceTypeId { get; set; }
         public string Name { get; set; }
-        public ThingModelValueType Type { get; set; }
+        public byte Type { get; set; }
         public string Remark { get; set; }
         /// <summary>
         /// 单位
@@ -24,5 +23,15 @@ namespace MyDBContext.Main
         public float AlertHighValue { get; set; }
 
         public bool Abandonted { get; set; }
+
+        [NotMapped]
+        public ThingModelValueType _Type
+        {
+            get => Enum.IsDefined(typeof(ThingModelValueType), Type)
+                ? (ThingModelValueType)Type
+                : ThingModelValueType.None;
+            set =>
+              Type = (byte)value;
+        }
     }
 }

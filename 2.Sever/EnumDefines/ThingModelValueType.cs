@@ -11,7 +11,7 @@
 
 namespace MyDBContext.Main
 {
-    public enum ThingModelValueType
+    public enum ThingModelValueType:byte
     {
         None = 0,
         Int = 1,

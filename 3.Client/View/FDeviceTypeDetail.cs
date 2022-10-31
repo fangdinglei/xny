@@ -109,6 +109,8 @@ namespace MyClient.View
             text_thingmodel_unit.Text = thingModel.Unit;
             text_thingmodel_max.Text = thingModel.MaxValue + "";
             text_thingmodel_min.Text = thingModel.MinValue + "";
+            text_alterhigh.Text = thingModel.AlertHighValue + "";
+            text_alterlow.Text = thingModel.AlertLowValue+ "";
             text_alterlow.Text=thingModel.AlertLowValue+"";
             text_alterhigh.Text = thingModel.AlertHighValue+"";
             text_thingmodel_remark.Text = thingModel.Remark;

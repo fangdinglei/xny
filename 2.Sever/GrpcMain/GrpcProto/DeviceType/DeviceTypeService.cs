@@ -174,7 +174,7 @@ namespace GrpcMain.DeviceType
                                 MinValue = it.MinValue,
                                 Name = it.Name,
                                 Remark = it.Remark,
-                                Type = (ThingModelValueType)it.ValueType,
+                                Type = (byte)it.ValueType,
                                 Unit = it.Unit,
                                 AlertHighValue = it.AlertHighValue,
                                 AlertLowValue = it.AlertLowValue,

@@ -401,6 +401,9 @@ namespace MyDBContext.Main
                 Name = "温度",
                 Remark = "备注温度",
                 Unit = "摄氏度",
+                AlertLowValue = 20,
+                AlertHighValue = 80,
+                _Type =  ThingModelValueType.Float,
                 Abandonted = false,
             });
             modelBuilder.Entity<Device_Type>().HasData(

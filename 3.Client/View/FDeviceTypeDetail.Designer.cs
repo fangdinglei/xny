@@ -252,6 +252,7 @@
             this.text_thingmodel_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.text_thingmodel_type.FormattingEnabled = true;
             this.text_thingmodel_type.Items.AddRange(new object[] {
+            "None",
             "Int",
             "Float",
             "Bool"});
