@@ -110,9 +110,9 @@ namespace MyClient.View
             text_thingmodel_max.Text = thingModel.MaxValue + "";
             text_thingmodel_min.Text = thingModel.MinValue + "";
             text_alterhigh.Text = thingModel.AlertHighValue + "";
-            text_alterlow.Text = thingModel.AlertLowValue+ "";
-            text_alterlow.Text=thingModel.AlertLowValue+"";
-            text_alterhigh.Text = thingModel.AlertHighValue+"";
+            text_alterlow.Text = thingModel.AlertLowValue + "";
+            text_alterlow.Text = thingModel.AlertLowValue + "";
+            text_alterhigh.Text = thingModel.AlertHighValue + "";
             text_thingmodel_remark.Text = thingModel.Remark;
             check_thingmodel_abandonted.Checked = thingModel.Abandonted;
         }
@@ -140,7 +140,7 @@ namespace MyClient.View
             thingModel.Remark = text_thingmodel_remark.Text;
             thingModel.Abandonted = check_thingmodel_abandonted.Checked;
             thingModel.AlertLowValue = float.Parse(text_alterlow.Text);
-            thingModel.AlertHighValue= float.Parse(text_alterhigh.Text);
+            thingModel.AlertHighValue = float.Parse(text_alterhigh.Text);
             thingModels[list_thingmodels.SelectedIndex] = thingModel;
 
         }

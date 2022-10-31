@@ -1,6 +1,5 @@
 ﻿using FdlWindows.View;
 using GrpcMain.AccountHistory;
-using GrpcMain.History;
 using MyClient.Grpc;
 using MyDBContext.Main;
 using MyUtility;

@@ -54,8 +54,8 @@ namespace GrpcMain.DeviceType
                                 Remark = it.Remark,
                                 Unit = it.Unit,
                                 ValueType = (int)it.Type,
-                                AlertHighValue=it.AlertHighValue,
-                                AlertLowValue=it.AlertLowValue,
+                                AlertHighValue = it.AlertHighValue,
+                                AlertLowValue = it.AlertLowValue,
                             }));
                             return res;
                         }));
@@ -126,7 +126,7 @@ namespace GrpcMain.DeviceType
         [GrpcRequireAuthority(true, "UpdateDeviceTypeInfo")]
         public override async Task<CommonResponse?> UpdateTypeInfo(Request_UpdateTypeInfo request, ServerCallContext context)
         {//需要审计
-            long id = (long)context.UserState["CreatorId"]; 
+            long id = (long)context.UserState["CreatorId"];
             User us = (User)context.UserState["user"];
             using (MainContext ct = new MainContext())
             {
@@ -176,7 +176,7 @@ namespace GrpcMain.DeviceType
                                 Abandonted = it.Abandonted,
                                 DeviceTypeId = type.Id,
                                 Id = old.Contains(it.Id) ? it.Id : 0,
-                                UserTreeId= us.UserTreeId,
+                                UserTreeId = us.UserTreeId,
                                 MaxValue = it.MaxValue,
                                 MinValue = it.MinValue,
                                 Name = it.Name,

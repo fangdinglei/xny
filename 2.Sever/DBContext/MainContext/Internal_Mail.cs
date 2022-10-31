@@ -35,6 +35,6 @@ namespace MyDBContext.Main
         [NotMapped]
         public virtual User Creator => throw new System.NotImplementedException();
         [NotMapped]
-        public long CreatorId =>SenderId;
+        public long CreatorId => SenderId;
     }
 }

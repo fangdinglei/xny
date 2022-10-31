@@ -9,12 +9,11 @@
 //
 
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Cms;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
-    [Index(nameof(DeviceId),nameof(StreamId),nameof(Time))]
+    [Index(nameof(DeviceId), nameof(StreamId), nameof(Time))]
     public class Device_DataPoint
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

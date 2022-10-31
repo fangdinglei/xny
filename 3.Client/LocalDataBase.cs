@@ -1,25 +1,23 @@
-﻿using CefSharp.DevTools.CacheStorage;
-using FdlWindows.View;
-using Grpc.Core;
-using GrpcMain.Account;
+﻿using GrpcMain.Account;
 using GrpcMain.Device;
 using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
+using MyClient.Grpc;
 using MyDBContext.Main;
 using MyUtility;
 using System.Collections;
 using System.Reflection;
-using static Grpc.Core.Metadata;
 using static GrpcMain.Account.DTODefine.Types;
 using TypeInfo = GrpcMain.DeviceType.TypeInfo;
 
 namespace MyClient
 {
-    public class LocalDataBase
+
+    public class LocalDataBase : IResopnseInterceptor
     {
         static public LocalDataBase Instance;
 
-        public UserInfo User ;
+        public UserInfo User;
         public Dictionary<long, (long, Device)> devices = new();
         public Dictionary<long, (long, UserInfo)> Users = new();
         //public List<DeviceWithUserDeviceInfo> DeviceWithUserDeviceInfos = new();
@@ -35,7 +33,8 @@ namespace MyClient
         DeviceService.DeviceServiceClient _deviceServiceClient;
         UserDeviceService.UserDeviceServiceClient _userDeviceServiceClient;
         ITimeUtility _timeUtility;
-        public LocalDataBase(DeviceService.DeviceServiceClient deviceServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, AccountService.AccountServiceClient accountServiceClient, DeviceTypeService.DeviceTypeServiceClient deviceTypeServiceClient, ITimeUtility timeUtility)
+        IClientCallContextInterceptor _callContextInterceptor;
+        public LocalDataBase(DeviceService.DeviceServiceClient deviceServiceClient, UserDeviceService.UserDeviceServiceClient userDeviceServiceClient, AccountService.AccountServiceClient accountServiceClient, DeviceTypeService.DeviceTypeServiceClient deviceTypeServiceClient, ITimeUtility timeUtility, IClientCallContextInterceptor callContextInterceptor)
         {
             if (Instance != null)
             {
@@ -47,15 +46,17 @@ namespace MyClient
             _deviceTypeServiceClient = deviceTypeServiceClient;
             Instance = this;
             _timeUtility = timeUtility;
+            _callContextInterceptor = callContextInterceptor;
+            _callContextInterceptor.RegistResopnseInterceptor(this);
         }
 
-        public Device GetDevice(long id, bool cache = true,int retry=5)
+        public Device GetDevice(long id, bool cache = true, int retry = 5)
         {
             if (retry < 0)
             {
                 return null;
             }
-            if (cache && devices.ContainsKey(id)&& (_timeUtility.GetTicket() - devices[id].Item1)<10)
+            if (cache && devices.ContainsKey(id) && (_timeUtility.GetTicket() - devices[id].Item1) < 10)
                 return devices[id].Item2;
             try
             {
@@ -63,7 +64,7 @@ namespace MyClient
                 {
                     DeviceId = id
                 });
-                return GetDevice(id,cache, retry-1);
+                return GetDevice(id, cache, retry - 1);
             }
             catch (Exception)
             {
@@ -88,7 +89,7 @@ namespace MyClient
                     UserId = id,
                     SubUser = false,
                 });
-                return GetUserInfo(id,cache, retry - 1);
+                return GetUserInfo(id, cache, retry - 1);
             }
             catch (Exception)
             {
@@ -103,7 +104,7 @@ namespace MyClient
             {
                 return null;
             }
-            if (cache && TypeInfos.ContainsKey(id) 
+            if (cache && TypeInfos.ContainsKey(id)
                 && (_timeUtility.GetTicket() - TypeInfos[id].Item1) < 10)
                 return TypeInfos[id].Item2;
             try
@@ -111,7 +112,7 @@ namespace MyClient
                 var req = new GrpcMain.DeviceType.DTODefine.Types.Request_GetTypeInfos { };
                 req.Ids.Add(id);
                 var rsp = _deviceTypeServiceClient.GetTypeInfos(req);
-                return GetTypeInfo(id,cache, retry - 1);
+                return GetTypeInfo(id, cache, retry - 1);
             }
             catch (Exception)
             {
@@ -120,21 +121,23 @@ namespace MyClient
 
         }
 
-        public User_Device GetUser_Device(long uid,long dvid, bool cache = true, int retry = 5) {
+        public User_Device GetUser_Device(long uid, long dvid, bool cache = true, int retry = 5)
+        {
             if (retry < 0)
             {
                 return null;
             }
-            if (cache && User_Devices.ContainsKey(uid)&& User_Devices[uid].ContainsKey(dvid)
+            if (cache && User_Devices.ContainsKey(uid) && User_Devices[uid].ContainsKey(dvid)
                 && (_timeUtility.GetTicket() - User_Devices[uid][dvid].Item1) < 10)
                 return User_Devices[uid][dvid].Item2;
             try
             {
-                _userDeviceServiceClient.GetUserDevices(new Request_GetUserDevices() { 
-                     UserId = uid,
-                    DeviceIds = {dvid},
+                _userDeviceServiceClient.GetUserDevices(new Request_GetUserDevices()
+                {
+                    UserId = uid,
+                    DeviceIds = { dvid },
                 });
-                return GetUser_Device(uid,dvid, cache, retry - 1);
+                return GetUser_Device(uid, dvid, cache, retry - 1);
             }
             catch (Exception)
             {
@@ -142,16 +145,17 @@ namespace MyClient
             }
 
         }
-        public User_Device GetUser_Device( long dvid, bool cache = true, int retry = 5)
+        public User_Device GetUser_Device(long dvid, bool cache = true, int retry = 5)
         {
-            return GetUser_Device(User.ID,dvid,cache,retry);
+            return GetUser_Device(User.ID, dvid, cache, retry);
         }
-        public bool TestDeviceAuthorityWithMessageBox(long dvid,UserDeviceAuthority authority,string tip) {
+        public bool TestDeviceAuthorityWithMessageBox(long dvid, UserDeviceAuthority authority, string tip)
+        {
             var uid = User.ID;
-            UserDeviceAuthority? realat= null;
+            UserDeviceAuthority? realat = null;
             if (User_Devices.ContainsKey(uid) && User_Devices[uid].ContainsKey(dvid)
              && (_timeUtility.GetTicket() - User_Devices[uid][dvid].Item1) < 10)
-                realat = (UserDeviceAuthority) User_Devices[uid][dvid].Item2.Authority;
+                realat = (UserDeviceAuthority)User_Devices[uid][dvid].Item2.Authority;
             else
             {
                 _userDeviceServiceClient.GetUserDevices(new Request_GetUserDevices()
@@ -178,18 +182,54 @@ namespace MyClient
                 return false;
             }
         }
-
-
-        internal void OnResonse<TResponse>(TResponse rsp) 
+        public bool TestUserAuthorityWithMessageBox(long uid, string authority, string tip)
         {
-            if (rsp==null)
+            string realat = null;
+            if (Users.ContainsKey(uid)
+             && (_timeUtility.GetTicket() - Users[uid].Item1) < 100)
+                realat = Users[uid].Item2.Authoritys;
+            else
             {
-                return; 
+                var dv = _accountServiceClient.GetUserInfo(new Request_GetUserInfo()
+                {
+                    UserId = uid,
+                    SubUser = false,
+                });
+            }
+            if (User_Devices.ContainsKey(uid))
+                realat = Users[uid].Item2.Authoritys;
+
+            if (realat != null)
+            {
+                List<string> ats = new List<string>();
+                if (realat.TryDeserializeObject(out ats))
+                {
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show($"用户没有权限{authority}", "提示");
+                    return false;
+                }
+            }
+            else
+            {
+                MessageBox.Show("获取权限失败", "错误");
+                return false;
+            }
+        }
+
+        public void OnResonse<TResponse>(TResponse rsp)
+        {
+            if (rsp == null)
+            {
+                return;
             }
             if (rsp.GetType().IsGenericType)
             {
-                var a=rsp as IList;
-                if (a != null) {
+                var a = rsp as IList;
+                if (a != null)
+                {
                     foreach (var b in a)
                     {
                         OnResonse(b);
@@ -228,18 +268,18 @@ namespace MyClient
                 var v = rsp as TypeInfo;
                 TypeInfos[v.Id] = (_timeUtility.GetTicket(), v);
             }
-            else if (tp==typeof(string))
+            else if (tp == typeof(string))
             {
 
             }
-            else 
+            else
             {
                 foreach (var item in tp.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
                     OnResonse(item.GetValue(rsp));
                 }
             }
-          
+
         }
     }
 }

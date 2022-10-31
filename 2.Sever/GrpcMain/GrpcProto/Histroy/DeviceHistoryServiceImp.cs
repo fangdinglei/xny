@@ -1,10 +1,4 @@
-﻿using Grpc.Core;
-using GrpcMain.Common;
-using Microsoft.EntityFrameworkCore;
-using MyDBContext.Main;
-using MyUtility; 
-
-namespace GrpcMain.History
+﻿namespace GrpcMain.History
 {
     ////TODO
     //public class DeviceHistoryServiceImp : DeviceHistoryService.DeviceHistoryServiceBase

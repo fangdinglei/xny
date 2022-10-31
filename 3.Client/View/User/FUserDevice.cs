@@ -1,14 +1,6 @@
 ﻿using GrpcMain.Account;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using static GrpcMain.Account.DTODefine.Types;
 
 namespace MyClient.View.User
@@ -20,7 +12,7 @@ namespace MyClient.View.User
         bool Active => BaseManager.Active;
         Func<Collection<UserInfo>?> GetUserInfos => BaseManager.GetUserInfos;
 
-       
+
 
         AccountService.AccountServiceClient client;
         public FUserDevice()
@@ -29,11 +21,12 @@ namespace MyClient.View.User
             InitializeComponent();
         }
 
-     
-        void QuickCheck(int level) {
-            List<TableLayoutPanel> checkgroups = new List<TableLayoutPanel>() { lay_read, lay_write, lay_control};
-            List < CheckBox > A=new List < CheckBox >();
-            List < CheckBox > B=new List < CheckBox >();
+
+        void QuickCheck(int level)
+        {
+            List<TableLayoutPanel> checkgroups = new List<TableLayoutPanel>() { lay_read, lay_write, lay_control };
+            List<CheckBox> A = new List<CheckBox>();
+            List<CheckBox> B = new List<CheckBox>();
             for (int i = 0; i < level; i++)
             {
                 foreach (var item in checkgroups[i].Controls)
@@ -46,7 +39,7 @@ namespace MyClient.View.User
                     if (item is CheckBox check)
                         B.Add(check);
             }
-            if (A.Where(it => it.Checked).Count() !=A.Count)
+            if (A.Where(it => it.Checked).Count() != A.Count)
                 A.ForEach(it => it.Checked = true);
             else
                 A.ForEach(it => it.Checked = false);

@@ -46,6 +46,7 @@ namespace MyClient.View
             this.bgroupmove = new System.Windows.Forms.Button();
             this.bselectall = new System.Windows.Forms.Button();
             this.bsetting = new System.Windows.Forms.Button();
+            this.btn_creatdevice = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,12 +63,13 @@ namespace MyClient.View
             this.CType,
             this.COP,
             this.COP2});
-            this.dataGridView1.Location = new System.Drawing.Point(201, 9);
+            this.dataGridView1.Location = new System.Drawing.Point(246, 12);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 30;
-            this.dataGridView1.Size = new System.Drawing.Size(923, 725);
+            this.dataGridView1.Size = new System.Drawing.Size(1128, 967);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
@@ -134,9 +136,10 @@ namespace MyClient.View
             // 
             // brefresh
             // 
-            this.brefresh.Location = new System.Drawing.Point(1130, 94);
+            this.brefresh.Location = new System.Drawing.Point(1381, 125);
+            this.brefresh.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.brefresh.Name = "brefresh";
-            this.brefresh.Size = new System.Drawing.Size(152, 51);
+            this.brefresh.Size = new System.Drawing.Size(186, 68);
             this.brefresh.TabIndex = 1;
             this.brefresh.Text = "刷新";
             this.brefresh.UseVisualStyleBackColor = true;
@@ -147,9 +150,10 @@ namespace MyClient.View
             this.CB_ShowOnline.AutoSize = true;
             this.CB_ShowOnline.Checked = true;
             this.CB_ShowOnline.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CB_ShowOnline.Location = new System.Drawing.Point(1153, 13);
+            this.CB_ShowOnline.Location = new System.Drawing.Point(1409, 17);
+            this.CB_ShowOnline.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.CB_ShowOnline.Name = "CB_ShowOnline";
-            this.CB_ShowOnline.Size = new System.Drawing.Size(106, 22);
+            this.CB_ShowOnline.Size = new System.Drawing.Size(108, 28);
             this.CB_ShowOnline.TabIndex = 2;
             this.CB_ShowOnline.Text = "显示在线";
             this.CB_ShowOnline.UseVisualStyleBackColor = true;
@@ -160,9 +164,10 @@ namespace MyClient.View
             this.CB_ShowNotOnline.AutoSize = true;
             this.CB_ShowNotOnline.Checked = true;
             this.CB_ShowNotOnline.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CB_ShowNotOnline.Location = new System.Drawing.Point(1153, 41);
+            this.CB_ShowNotOnline.Location = new System.Drawing.Point(1409, 55);
+            this.CB_ShowNotOnline.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.CB_ShowNotOnline.Name = "CB_ShowNotOnline";
-            this.CB_ShowNotOnline.Size = new System.Drawing.Size(106, 22);
+            this.CB_ShowNotOnline.Size = new System.Drawing.Size(108, 28);
             this.CB_ShowNotOnline.TabIndex = 3;
             this.CB_ShowNotOnline.Text = "显示离线";
             this.CB_ShowNotOnline.UseVisualStyleBackColor = true;
@@ -172,10 +177,11 @@ namespace MyClient.View
             // 
             this.list_Group.AllowDrop = true;
             this.list_Group.FormattingEnabled = true;
-            this.list_Group.ItemHeight = 18;
-            this.list_Group.Location = new System.Drawing.Point(12, 10);
+            this.list_Group.ItemHeight = 24;
+            this.list_Group.Location = new System.Drawing.Point(15, 13);
+            this.list_Group.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.list_Group.Name = "list_Group";
-            this.list_Group.Size = new System.Drawing.Size(183, 724);
+            this.list_Group.Size = new System.Drawing.Size(223, 964);
             this.list_Group.TabIndex = 4;
             this.list_Group.SelectedIndexChanged += new System.EventHandler(this.list_Group_SelectedIndexChanged);
             this.list_Group.DragDrop += new System.Windows.Forms.DragEventHandler(this.list_Group_DragDrop);
@@ -183,9 +189,10 @@ namespace MyClient.View
             // 
             // btn_groupmgr
             // 
-            this.btn_groupmgr.Location = new System.Drawing.Point(1130, 208);
+            this.btn_groupmgr.Location = new System.Drawing.Point(1381, 277);
+            this.btn_groupmgr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_groupmgr.Name = "btn_groupmgr";
-            this.btn_groupmgr.Size = new System.Drawing.Size(152, 51);
+            this.btn_groupmgr.Size = new System.Drawing.Size(186, 68);
             this.btn_groupmgr.TabIndex = 5;
             this.btn_groupmgr.Text = "分组";
             this.btn_groupmgr.UseVisualStyleBackColor = true;
@@ -193,9 +200,10 @@ namespace MyClient.View
             // 
             // b_sendcmd
             // 
-            this.b_sendcmd.Location = new System.Drawing.Point(1130, 265);
+            this.b_sendcmd.Location = new System.Drawing.Point(1381, 353);
+            this.b_sendcmd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.b_sendcmd.Name = "b_sendcmd";
-            this.b_sendcmd.Size = new System.Drawing.Size(152, 51);
+            this.b_sendcmd.Size = new System.Drawing.Size(186, 68);
             this.b_sendcmd.TabIndex = 6;
             this.b_sendcmd.Text = "发送命令";
             this.b_sendcmd.UseVisualStyleBackColor = true;
@@ -203,9 +211,10 @@ namespace MyClient.View
             // 
             // bgroupmove
             // 
-            this.bgroupmove.Location = new System.Drawing.Point(1130, 322);
+            this.bgroupmove.Location = new System.Drawing.Point(1381, 429);
+            this.bgroupmove.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bgroupmove.Name = "bgroupmove";
-            this.bgroupmove.Size = new System.Drawing.Size(152, 51);
+            this.bgroupmove.Size = new System.Drawing.Size(186, 68);
             this.bgroupmove.TabIndex = 7;
             this.bgroupmove.Text = "移动分组";
             this.bgroupmove.UseVisualStyleBackColor = true;
@@ -213,9 +222,10 @@ namespace MyClient.View
             // 
             // bselectall
             // 
-            this.bselectall.Location = new System.Drawing.Point(1130, 151);
+            this.bselectall.Location = new System.Drawing.Point(1381, 201);
+            this.bselectall.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bselectall.Name = "bselectall";
-            this.bselectall.Size = new System.Drawing.Size(152, 51);
+            this.bselectall.Size = new System.Drawing.Size(186, 68);
             this.bselectall.TabIndex = 8;
             this.bselectall.Text = "全选";
             this.bselectall.UseVisualStyleBackColor = true;
@@ -223,19 +233,31 @@ namespace MyClient.View
             // 
             // bsetting
             // 
-            this.bsetting.Location = new System.Drawing.Point(1130, 379);
+            this.bsetting.Location = new System.Drawing.Point(1381, 505);
+            this.bsetting.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bsetting.Name = "bsetting";
-            this.bsetting.Size = new System.Drawing.Size(152, 51);
+            this.bsetting.Size = new System.Drawing.Size(186, 68);
             this.bsetting.TabIndex = 9;
             this.bsetting.Text = "LED配置";
             this.bsetting.UseVisualStyleBackColor = true;
             this.bsetting.Click += new System.EventHandler(this.bsetting_Click);
             // 
+            // btn_creatdevice
+            // 
+            this.btn_creatdevice.Location = new System.Drawing.Point(1382, 581);
+            this.btn_creatdevice.Margin = new System.Windows.Forms.Padding(4);
+            this.btn_creatdevice.Name = "btn_creatdevice";
+            this.btn_creatdevice.Size = new System.Drawing.Size(186, 68);
+            this.btn_creatdevice.TabIndex = 10;
+            this.btn_creatdevice.Text = "创建设备";
+            this.btn_creatdevice.UseVisualStyleBackColor = true;
+            // 
             // FAccessibleDevice
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1318, 754);
+            this.ClientSize = new System.Drawing.Size(1611, 1005);
+            this.Controls.Add(this.btn_creatdevice);
             this.Controls.Add(this.bsetting);
             this.Controls.Add(this.bselectall);
             this.Controls.Add(this.bgroupmove);
@@ -246,6 +268,7 @@ namespace MyClient.View
             this.Controls.Add(this.CB_ShowOnline);
             this.Controls.Add(this.brefresh);
             this.Controls.Add(this.dataGridView1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FAccessibleDevice";
             this.Text = "FAccessibleDevice";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -273,5 +296,6 @@ namespace MyClient.View
         private System.Windows.Forms.DataGridViewButtonColumn COP;
         private System.Windows.Forms.DataGridViewButtonColumn COP2;
         private System.Windows.Forms.Button bsetting;
+        private Button btn_creatdevice;
     }
 }

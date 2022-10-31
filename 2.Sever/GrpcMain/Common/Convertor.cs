@@ -1,5 +1,4 @@
-﻿using GrpcMain.Account;
-using MyDBContext.Main;
+﻿using MyDBContext.Main;
 
 namespace GrpcMain.Common
 {
@@ -12,17 +11,17 @@ namespace GrpcMain.Common
             {
                 DeviceTypeId = value.DeviceTypeId,
                 Id = value.Id,
-                LatestData = authority.HasFlag( UserDeviceAuthority.Read_Status)?
-                    value.LatestData:"",
-                LocationStr = authority.HasFlag(UserDeviceAuthority.Read_BaseInfo) ? 
-                    value.LocationStr:"",
+                LatestData = authority.HasFlag(UserDeviceAuthority.Read_Status) ?
+                    value.LatestData : "",
+                LocationStr = authority.HasFlag(UserDeviceAuthority.Read_BaseInfo) ?
+                    value.LocationStr : "",
                 Name = value.Name,
                 Status = authority.HasFlag(UserDeviceAuthority.Read_Status) ?
-                    value.Status :0,
+                    value.Status : 0,
             };
         }
 
-        
+
 
 
     }

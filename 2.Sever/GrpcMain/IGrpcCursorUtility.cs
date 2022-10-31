@@ -24,9 +24,9 @@ namespace GrpcMain
     public class GrpcCursorUtilityImp : IGrpcCursorUtility
     {
         public IEnumerable<T> Run<T>(IEnumerable<T> list, int maxcount, Action<T> onlast)
-            where T:class
+            where T : class
         {
-            Debug.Assert(list != null&&maxcount>0);
+            Debug.Assert(list != null && maxcount > 0);
             if (list.Count() == maxcount)
             {
                 onlast?.Invoke(list.Last());
@@ -34,7 +34,7 @@ namespace GrpcMain
             }
             else
             {
-                onlast?.Invoke(null  );
+                onlast?.Invoke(null);
                 return list;
             }
         }

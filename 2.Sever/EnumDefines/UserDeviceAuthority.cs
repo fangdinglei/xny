@@ -17,16 +17,16 @@ namespace MyDBContext.Main
     [Flags]
     public enum UserDeviceAuthority : int
     {
-        No=0,
-        Every=-1,
+        No = 0,
+        Every = -1,
         /// <summary>
         /// 获取设备基础信息
         /// </summary>
-        Read_BaseInfo=1<<0,
+        Read_BaseInfo = 1 << 0,
         /// <summary>
         /// 获取设备维修历史记录
         /// </summary>
-        Read_Repair =1<<1,
+        Read_Repair = 1 << 1,
         /// <summary>
         /// 获取设备历史命令
         /// </summary>
@@ -74,6 +74,6 @@ namespace MyDBContext.Main
         /// <summary>
         /// 转授
         /// </summary>
-        Delegate=1<<31,
+        Delegate = 1 << 31,
     }
 }

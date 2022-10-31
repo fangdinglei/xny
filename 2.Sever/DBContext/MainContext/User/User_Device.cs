@@ -10,11 +10,10 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
 
 namespace MyDBContext.Main
 {
-    [Index(nameof(UserId),nameof(DeviceId))]
+    [Index(nameof(UserId), nameof(DeviceId))]
     [Index(nameof(UserTreeId))]
     public class User_Device
     {

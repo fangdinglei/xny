@@ -1,6 +1,5 @@
 ﻿
 using GrpcMain.Account;
-using MyClient.Grpc;
 using System.Collections.ObjectModel;
 using static GrpcMain.Account.DTODefine.Types;
 
@@ -154,7 +153,7 @@ namespace MyClient.View.User
                         Authoritys = Newtonsoft.Json.JsonConvert.SerializeObject(prioritys)
                     }
                 });
-                SelectedUser.Authoritys =r.UserInfo.Authoritys;
+                SelectedUser.Authoritys = r.UserInfo.Authoritys;
                 MessageBox.Show("更新成功", "提示");
                 BaseManager.SetUserInfo(BaseManager.SelectedUser, BaseManager.FatherInfo);
             }

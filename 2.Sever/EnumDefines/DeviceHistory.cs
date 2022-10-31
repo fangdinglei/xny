@@ -10,7 +10,8 @@
 
 namespace MyDBContext.Main
 {
-    public enum DeviceHistory {
+    public enum DeviceHistory
+    {
         Unknown,
     }
 }

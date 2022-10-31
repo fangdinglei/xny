@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
 namespace FdlWindows.View
@@ -15,7 +16,7 @@ namespace FdlWindows.View
         /// <summary>
         ///用于创建实例 key name value classpath
         /// </summary>
-        Dictionary<string, Type> ViewClassType => _ViewData.ViewClassType;
+        Dictionary<string, Type> ViewClassType => _ViewData.ViewClassTypes;
         /// <summary>
         ///备用 key name value menupath
         /// </summary>
@@ -67,7 +68,7 @@ namespace FdlWindows.View
         /// <exception cref="Exception"></exception>
         void InitViews()
         {
-            foreach (var att in _ViewData.Views.Values)
+            foreach (var att in _ViewData.ViewAttributes.Values)
             {
                 AddView(att.Name, att.Title, att.MenuPath, att.UserSelectAble);
             }
@@ -441,12 +442,12 @@ namespace FdlWindows.View
         /// <summary>
         ///用于创建实例 key name value classpath
         /// </summary>
-        public Dictionary<string, Type> ViewClassType = new();
+        public Dictionary<string, Type> ViewClassTypes = new();
         /// <summary>
         /// key name value menupath
         /// </summary>
         public Dictionary<string, string> ViewMeunPaths = new();
-        public Dictionary<string, AutoDetectViewAttribute> Views = new();
+        public Dictionary<string, AutoDetectViewAttribute> ViewAttributes = new();
 
     }
     static public class ViewRegister
@@ -455,9 +456,10 @@ namespace FdlWindows.View
         /// 反射注册所有View
         /// </summary>
         /// <exception cref="Exception"></exception>
-        static public void UseFMain(this IServiceCollection serviceCollection)
+        static public void UseFMain(this IServiceCollection serviceCollection, FMainOption fMainOption)
         {
             serviceCollection.AddSingleton<FMain>();
+            serviceCollection.AddSingleton(fMainOption);
             FMainViews result = new FMainViews();
             foreach (var item in typeof(ViewRegister).Assembly.GetTypes())
             {
@@ -470,14 +472,14 @@ namespace FdlWindows.View
                 }
                 if (att.Name == "Menu")
                     throw new Exception("界面名称不能是Menu");
-                if (result.ViewClassType.ContainsKey(att.Name))
+                if (result.ViewClassTypes.ContainsKey(att.Name))
                     return;
-                result.Views.Add(att.Name, att);
+                result.ViewAttributes.Add(att.Name, att);
                 result.ViewMeunPaths.Add(att.Name, att.MenuPath);
-                result.ViewClassType.Add(att.Name, item);
-                serviceCollection.AddTransient(item);
+                result.ViewClassTypes.Add(att.Name, item);
+                serviceCollection.TryAddTransient(item);
             }
-            serviceCollection.AddSingleton<FMainViews>(result);
+            serviceCollection.TryAddSingleton<FMainViews>(result);
         }
     }
 }

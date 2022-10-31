@@ -1,4 +1,4 @@
-﻿namespace MyClient.View
+﻿namespace FdlWindows.View.LoginView
 {
     partial class FLogin
     {
@@ -47,9 +47,9 @@
             this.groupBox5.Controls.Add(this.label3);
             this.groupBox5.Controls.Add(this.btLogin);
             this.groupBox5.Location = new System.Drawing.Point(15, 16);
-            this.groupBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox5.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox5.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox5.Size = new System.Drawing.Size(488, 477);
             this.groupBox5.TabIndex = 0;
             this.groupBox5.TabStop = false;
@@ -57,7 +57,7 @@
             // tUName
             // 
             this.tUName.Location = new System.Drawing.Point(188, 132);
-            this.tUName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tUName.Margin = new System.Windows.Forms.Padding(4);
             this.tUName.Name = "tUName";
             this.tUName.Size = new System.Drawing.Size(279, 30);
             this.tUName.TabIndex = 17;
@@ -79,7 +79,7 @@
             // tPass
             // 
             this.tPass.Location = new System.Drawing.Point(188, 241);
-            this.tPass.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tPass.Margin = new System.Windows.Forms.Padding(4);
             this.tPass.Name = "tPass";
             this.tPass.PasswordChar = '*';
             this.tPass.Size = new System.Drawing.Size(279, 30);
@@ -103,7 +103,7 @@
             this.btLogin.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btLogin.ForeColor = System.Drawing.Color.Black;
             this.btLogin.Location = new System.Drawing.Point(188, 392);
-            this.btLogin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btLogin.Margin = new System.Windows.Forms.Padding(4);
             this.btLogin.Name = "btLogin";
             this.btLogin.Size = new System.Drawing.Size(110, 45);
             this.btLogin.TabIndex = 2;
@@ -117,7 +117,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(517, 516);
             this.Controls.Add(this.groupBox5);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "登录";

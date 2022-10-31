@@ -1,12 +1,11 @@
 ﻿using FdlWindows.View;
-using GrpcMain.UserDevice;
 
 namespace MyClient.View
 {
     [AutoDetectView("FDeviceOtherFeatures", "", "", false)]
     public partial class FDeviceOtherFeatures : Form, IView
     {
-       long _dvid;
+        long _dvid;
 
         IViewHolder _viewholder;
         LocalDataBase _localDataBase;
@@ -28,7 +27,7 @@ namespace MyClient.View
 
         public void PrePare(params object[] par)
         {
-            _dvid = (long)par[0]  ;
+            _dvid = (long)par[0];
         }
 
         public void SetViewHolder(IViewHolder viewholder)
@@ -42,14 +41,14 @@ namespace MyClient.View
         }
 
         private void btn_type_Click(object sender, EventArgs e)
-        { 
+        {
             var dv = _localDataBase.GetDevice(_dvid);
-            if (dv==null)
+            if (dv == null)
             {
-                MessageBox.Show("请求超时或设备不存在","错误");
+                MessageBox.Show("请求超时或设备不存在", "错误");
                 return;
             }
-            _viewholder.SwitchTo("FDeviceTypeDetail", false, false,dv.DeviceTypeId);
+            _viewholder.SwitchTo("FDeviceTypeDetail", false, false, dv.DeviceTypeId);
         }
     }
 }

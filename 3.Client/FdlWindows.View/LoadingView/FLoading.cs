@@ -1,5 +1,4 @@
 ﻿using FdlWindows.View;
-using Grpc.Core;
 using System.Diagnostics;
 
 namespace MyClient.View
@@ -8,9 +7,15 @@ namespace MyClient.View
     public partial class FLoading : Form, IView
     {
         bool loading = false;
+        FLoadingOption Option;
         public FLoading()
         {
             InitializeComponent();
+        }
+        public FLoading(FLoadingOption option)
+        {
+            InitializeComponent();
+            Option = option;
         }
         Func<Task<bool>> retry;
         /// <summary>
@@ -46,19 +51,13 @@ namespace MyClient.View
         {
             setisloading(false);
             loading = false;
-            if (ex is RpcException ex2)
-            {
-                label1.Text = ex2.Status.Detail.Length>7 ? ex2.Status.Detail.Substring(0,7)+"..":ex2.Status.Detail;
-                tipui.SetToolTip(label1, ex2.Status.Detail);
-            }
-            else
-            {
-                label1.Text = ex.Message.Length > 7 ? ex.Message.Substring(0, 7) + ".." : ex.Message;
-                tipui.SetToolTip(label1, ex.Message);
-            }
+            var str = Option?.Convertor(ex) ?? ex.Message;
+            label1.Text = str.Length > 7 ? str.Substring(0, 7) + ".." : str;
+            tipui.SetToolTip(label1, str);
             button1.Visible = true;
         }
-        void OnStartLoad() {
+        void OnStartLoad()
+        {
             tipui.RemoveAll();
             loading = true; setisloading(true);
             button1.Visible = false;
@@ -68,7 +67,7 @@ namespace MyClient.View
         async Task<bool> ShowLoading(Func<Task<bool>> task, Func<Task<bool>>? retry, Action okcall = null, Action exitcall = null, Action<bool> setisloading = null)
         {
             Debug.Assert(loading == false, "不能重复进入加载界面");
-         
+
             this.retry = retry ?? task;
             this.setisloading = setisloading;
             this.okcall = okcall;
@@ -97,7 +96,7 @@ namespace MyClient.View
         private async void button1_ClickAsync(object sender, EventArgs e)
         {
 
-        
+
             try
             {
                 OnStartLoad();
@@ -154,4 +153,5 @@ namespace MyClient.View
         {
         }
     }
+
 }

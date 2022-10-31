@@ -13,15 +13,15 @@ namespace GrpcMain.UserDevice
         /// 将请求对象转换为新的DB对象
         /// </summary>
         /// <returns></returns>
-        static public MyDBContext.Main.User_Device  AsDBObj(this GrpcMain.UserDevice.User_Device ud,int usertreeid)
+        static public MyDBContext.Main.User_Device AsDBObj(this GrpcMain.UserDevice.User_Device ud, int usertreeid)
         {
             return new MyDBContext.Main.User_Device
             {
                 Authority = ud.Authority,
                 DeviceId = ud.Dvid,
-                User_Device_GroupId= ud.UserDeviceGroup,
+                User_Device_GroupId = ud.UserDeviceGroup,
                 UserId = ud.UserId,
-                UserTreeId= usertreeid,
+                UserTreeId = usertreeid,
             };
         }
         static public UserDevice.User_Device AsGrpcObj(this MyDBContext.Main.User_Device value)
@@ -84,7 +84,7 @@ namespace GrpcMain.UserDevice
                 //确定所有设备可以权限转授
                 foreach (var item in uds)
                 {
-                    if (!item.udv._Authority.HasFlag( UserDeviceAuthority.Delegate))
+                    if (!item.udv._Authority.HasFlag(UserDeviceAuthority.Delegate))
                     {
                         return new CommonResponse()
                         {
@@ -95,14 +95,14 @@ namespace GrpcMain.UserDevice
                 }
 
 
-                if (request.UserDevice.Authority== 0)
+                if (request.UserDevice.Authority == 0)
                 {//删除权限
-                    await ct.DeleteRangeAsync<MyDBContext.Main.User_Device>(it=>
-                        request.Dvids.Contains(it.DeviceId)&&
-                        ct.User_SFs.Where(itx=>
-                            itx.User1Id==request.UserDevice.UserId&&
-                            itx.User2Id==it.UserId&&(itx.IsFather||itx.IsSelf)
-                        ).Select(it=>it.User2Id).Contains(it.UserId)
+                    await ct.DeleteRangeAsync<MyDBContext.Main.User_Device>(it =>
+                        request.Dvids.Contains(it.DeviceId) &&
+                        ct.User_SFs.Where(itx =>
+                            itx.User1Id == request.UserDevice.UserId &&
+                            itx.User2Id == it.UserId && (itx.IsFather || itx.IsSelf)
+                        ).Select(it => it.User2Id).Contains(it.UserId)
                     );
                 }
                 else
@@ -116,18 +116,18 @@ namespace GrpcMain.UserDevice
                         });
                     //被修改者已有的权限
                     Dictionary<long, MyDBContext.Main.User_Device> dic2 = new();
-                    (await ct.User_Devices.Where(it => request.Dvids.Contains(it.DeviceId) && it.UserId == request. UserDevice.UserId)
+                    (await ct.User_Devices.Where(it => request.Dvids.Contains(it.DeviceId) && it.UserId == request.UserDevice.UserId)
                         .ToListAsync()).ForEach(it =>
                         {
                             dic2.Add(it.DeviceId, it);
                         });
 
-                   
+
                     request.UserDevice.UserDeviceGroup = 0;
-                    var inputud=request.UserDevice.Clone();
+                    var inputud = request.UserDevice.Clone();
                     foreach (var item in request.Dvids)
                     {
-                   
+
                         //请求者的此记录
                         MyDBContext.Main.User_Device ud;
 
@@ -226,7 +226,7 @@ namespace GrpcMain.UserDevice
                 foreach (var item in request.Dvids)
                 {
                     request.UserDevice.Dvid = item;
-                    request.UserDevice.Authority= dicuds[item].Authority&autority;
+                    request.UserDevice.Authority = dicuds[item].Authority & autority;
                     ct.Add(request.UserDevice.AsDBObj(us.UserTreeId));
                 }
                 await ct.SaveChangesAsync();
@@ -257,11 +257,11 @@ namespace GrpcMain.UserDevice
                     bd = bd.Where(it => it.device.Id >= request.Cursor);
                 }
                 var ls = await bd.ToListAsync();
-                var lsx = _cursorUtility.Run(ls, maxcount, (it) => res.Cursor = it==null?0:it.device.Id);
+                var lsx = _cursorUtility.Run(ls, maxcount, (it) => res.Cursor = it == null ? 0 : it.device.Id);
                 res.Info.AddRange(lsx.Select(it =>
                     new DeviceWithUserDeviceInfo
                     {
-                        Device = MyConvertor.Get(it.device,it.userdeive._Authority),
+                        Device = MyConvertor.Get(it.device, it.userdeive._Authority),
                         UserDevice = it.userdeive.AsGrpcObj()
                     }
                 )); ;
@@ -293,7 +293,7 @@ namespace GrpcMain.UserDevice
                 }
                 return new Response_GetDevices_2
                 {
-                    Device = MyConvertor.Get(dv,ud._Authority)
+                    Device = MyConvertor.Get(dv, ud._Authority)
                 };
             }
         }
@@ -395,7 +395,7 @@ namespace GrpcMain.UserDevice
         public override async Task<CommonResponse> NewGroup(Request_NewGroup request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
-            User us=(User)context.UserState["user"];
+            User us = (User)context.UserState["user"];
             using (MainContext ct = new MainContext())
             {
                 if (MaxGroup <= await ct.User_Device_Groups.Where(it => it.CreatorId == id).CountAsync())
@@ -476,9 +476,9 @@ namespace GrpcMain.UserDevice
                     bd = bd.Where(it => it.DeviceId >= request.Cursor)
                         .Take(maxcount);
                 }
-                if (request.DeviceIds.Count>0)
+                if (request.DeviceIds.Count > 0)
                 {
-                    bd = bd.Where(it=>request.DeviceIds.Contains(it.DeviceId));
+                    bd = bd.Where(it => request.DeviceIds.Contains(it.DeviceId));
                 }
                 var r = await bd.AsNoTracking().ToListAsync();
                 var res = new Response_GetUserDevices()

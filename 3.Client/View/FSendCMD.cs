@@ -57,22 +57,24 @@ namespace MyClient.View
             try
             {
                 var req = new Request_SendCMD();
-                var notoklist = new List<(long,string)>();
-                req.Dvids.AddRange(dvs.Where(it => {
-                    var a=_localData.GetUser_Device(it.Item1);
-                    if (a==null|| !((UserDeviceAuthority)a.Authority).HasFlag(UserDeviceAuthority.Control_Cmd))
+                var notoklist = new List<(long, string)>();
+                req.Dvids.AddRange(dvs.Where(it =>
+                {
+                    var a = _localData.GetUser_Device(it.Item1);
+                    if (a == null || !((UserDeviceAuthority)a.Authority).HasFlag(UserDeviceAuthority.Control_Cmd))
                     {
                         notoklist.Add(it);
                         return false;
                     }
                     return true;
-                }).Select(it=>it.Item1));
-                if (notoklist.Count!=0)
+                }).Select(it => it.Item1));
+                if (notoklist.Count != 0)
                 {
-                    var str=notoklist.Aggregate("", (old, it) => {
-                        return old+","+it.Item2;
+                    var str = notoklist.Aggregate("", (old, it) =>
+                    {
+                        return old + "," + it.Item2;
                     });
-                    MessageBox.Show("不具有设备:\r\n" + str.Trim(',')+ "\r\n的命令权限,已忽略", "提示");
+                    MessageBox.Show("不具有设备:\r\n" + str.Trim(',') + "\r\n的命令权限,已忽略", "提示");
                 }
 
                 req.Cmd = tcmd.Text;

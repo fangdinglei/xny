@@ -1,7 +1,6 @@
 ﻿using FDL.Program;
 using FdlWindows.View;
 using GrpcMain.Device;
-using GrpcMain.UserDevice;
 using MyUtility;
 using System.ComponentModel;
 using System.Data;
@@ -129,7 +128,7 @@ namespace MyClient.View
                         };
                         if (smode)
                         {
-                            req1.DeviceId =dvid;
+                            req1.DeviceId = dvid;
                         }
                         var res1 = await _repairServiceClient.GetRepairInfosAsync(req1);
                         _repairInfos = new BindingList<ToStringHelper<RepairInfo>>(
@@ -164,7 +163,7 @@ namespace MyClient.View
                             DiscoveryTime = _timeUtility.GetTicket(time_DiscoveryTime.Value),
                             CompletionTime = _timeUtility.GetTicket(time_CompletionTime.Value),
                             Context = text_context.Text,
-                            DeviceId =dvid,
+                            DeviceId = dvid,
                         }
                     });
                     _repairInfos.Add(new ToStringHelper<RepairInfo>(r.Info, it => it.Id + ""));

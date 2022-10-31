@@ -1,14 +1,10 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
-using GrpcMain.Common;
-using Microsoft.EntityFrameworkCore;
-using MyDBContext.Main;
-using MyUtility;
+﻿using Grpc.Core;
 using System.Management;
 
 namespace GrpcMain.System
 {
-    public class SystemServiceImp : SystemService.SystemServiceBase {
+    public class SystemServiceImp : SystemService.SystemServiceBase
+    {
         [GrpcRequireAuthority("SystemUser")]
         public override async Task<Response_GetSystemBaseInfo> GetSystemBaseInfo(Request_GetSystemBaseInfo request, ServerCallContext context)
         {
@@ -19,7 +15,7 @@ namespace GrpcMain.System
             osVersionName = osVersionName + " " + servicePack;
             string userName = Environment.UserName;
             string domainName = Environment.UserDomainName;
-            var tickCount = Environment.TickCount ;
+            var tickCount = Environment.TickCount;
             var systemPageSize = Environment.SystemPageSize;
             string systemDir = Environment.SystemDirectory;
             string stackTrace = Environment.StackTrace;
@@ -31,7 +27,7 @@ namespace GrpcMain.System
             string cmdLine = Environment.CommandLine;
             string[] drives = Environment.GetLogicalDrives();
 
-            res.SeverId=request.SeverId;
+            res.SeverId = request.SeverId;
             res.ProcesserCount = processorCounter;
             res.MachineName = machineName;
             res.OsVersionName = osVersionName;
@@ -40,12 +36,13 @@ namespace GrpcMain.System
             res.SystemTime = tickCount;
             res.Is64System = Environment.Is64BitOperatingSystem;
             res.Is64Process = Environment.Is64BitProcess;
-            return await Task.Run(() => {
+            return await Task.Run(() =>
+            {
                 return res;
             });
         }
 
-        
+
 
         private string GetOsVersion(Version ver)
         {
@@ -111,7 +108,7 @@ namespace GrpcMain.System
             return (int)(capacity / 1024 / 1024);
         }
 
-       
+
         private int GetPhicnalInfo()
         {
             //ManagementClass osClass = new ManagementClass("Win32_Processor");//后面几种可以试一下，会有意外的收获//Win32_PhysicalMemory/Win32_Keyboard/Win32_ComputerSystem/Win32_OperatingSystem

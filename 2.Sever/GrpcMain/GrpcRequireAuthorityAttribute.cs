@@ -7,7 +7,7 @@
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class GrpcRequireAuthorityAttribute : Attribute
     {
-        static public GrpcRequireAuthorityAttribute Default=new GrpcRequireAuthorityAttribute();
+        static public GrpcRequireAuthorityAttribute Default = new GrpcRequireAuthorityAttribute();
 
         public string[]? Authoritys;
         public bool NeedLogin;

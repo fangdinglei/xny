@@ -11,11 +11,11 @@
 
 namespace MyDBContext.Main
 {
-    public enum ThingModelValueType : byte
+    public class UserAuthorityDefines
     {
-        None = 0,
-        Int = 1,
-        Float = 2,
-        Bool = 3,
+        public const string SystemUser = "SystemUser";
+        public const string CreatDevice = "CreatDevice";
+        public const string CreatDeviceType = "CreatDevice";
+
     }
 }

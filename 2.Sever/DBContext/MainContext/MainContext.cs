@@ -1,9 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Org.BouncyCastle.Utilities.Date;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 //Add-Migration [--context MainContext]
@@ -120,8 +118,8 @@ namespace MyDBContext.Main
                 Phone = "15850798245",
                 CreatorId = 0,
                 Authoritys = "[\"SystemUser\",\"测试权限1\"]",
-                UserTreeId=1,
-               
+                UserTreeId = 1,
+
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -206,7 +204,7 @@ namespace MyDBContext.Main
                 Phone = "15850798245",
                 CreatorId = 10,
                 Authoritys = "[]",
-                UserTreeId =3,
+                UserTreeId = 3,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -361,7 +359,7 @@ namespace MyDBContext.Main
                 IsSelf = false,
                 User1Id = 10,
                 User2Id = 12,
-                UserTreeId =3,
+                UserTreeId = 3,
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
@@ -401,7 +399,7 @@ namespace MyDBContext.Main
                 IsSelf = false,
                 User1Id = 13,
                 User2Id = 11,
-                UserTreeId =3,
+                UserTreeId = 3,
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
@@ -441,7 +439,7 @@ namespace MyDBContext.Main
                 Unit = "摄氏度",
                 AlertLowValue = 20,
                 AlertHighValue = 80,
-                _Type =  ThingModelValueType.Float,
+                _Type = ThingModelValueType.Float,
                 Abandonted = false,
             });
             modelBuilder.Entity<Device_Type>().HasData(
@@ -451,7 +449,7 @@ namespace MyDBContext.Main
                    Name = "测试类型1",
                    CreatorId = 2,
                    Script = "",
-                   UserTreeId=2,
+                   UserTreeId = 2,
                }
                 , new Device_Type()
                 {
@@ -460,7 +458,7 @@ namespace MyDBContext.Main
                     CreatorId = 2,
                     ThingModels = new List<ThingModel>(),
                     Script = "",
-                    UserTreeId=2,
+                    UserTreeId = 2,
                 }
 
                 );
@@ -470,14 +468,14 @@ namespace MyDBContext.Main
                   Id = 1,
                   Name = "测试分组1",
                   CreatorId = 2,
-                  UserTreeId=1,
+                  UserTreeId = 1,
               },
                new User_Device_Group()
                {
                    Id = 2,
                    Name = "测试分组2",
                    CreatorId = 3,
-                   UserTreeId=1,
+                   UserTreeId = 1,
                }
               );
             modelBuilder.Entity<Device>().HasData(
@@ -490,7 +488,7 @@ namespace MyDBContext.Main
                     LatestData = "{1:59}",
                     LocationStr = "",
                     Status = 2,
-                    UserTreeId=2,
+                    UserTreeId = 2,
                 }
                 , new Device()
                 {
@@ -536,7 +534,7 @@ namespace MyDBContext.Main
                 {
                     UserId = 2,
                     DeviceId = 3,
-                    _Authority=  UserDeviceAuthority.Every,
+                    _Authority = UserDeviceAuthority.Every,
                     User_Device_GroupId = 0,
                     UserTreeId = 2,
                 }
@@ -645,7 +643,7 @@ namespace MyDBContext.Main
                         CompletionTime = time.GetTicket(new System.DateTime(2023, 1, 5)),
                         Context = "测试维修1",
                         CreatorId = 2,
-                        UserTreeId  =2 ,
+                        UserTreeId = 2,
                     },
                      new Device_Repair()
                      {
@@ -672,7 +670,8 @@ namespace MyDBContext.Main
                         ReceiverId = 2,
                         SenderId = 3,
                         Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000
-                        ,UserTreeId = 2,
+                        ,
+                        UserTreeId = 2,
                     },
                       new Internal_Mail()
                       {
@@ -684,7 +683,8 @@ namespace MyDBContext.Main
                           ReceiverId = 3,
                           SenderId = 2,
                           Time = DateTimeUtilities.DateTimeToUnixMs(System.DateTime.Now.AddHours(-8)) / 1000
-                            ,UserTreeId = 2,
+                            ,
+                          UserTreeId = 2,
                       }
                 );
             for (int i = 0; i < 20; i++)

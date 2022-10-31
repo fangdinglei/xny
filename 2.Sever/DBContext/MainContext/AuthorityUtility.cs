@@ -178,7 +178,7 @@ namespace MyDBContext.Main
             {
                 bd = dbset.Join(ct.User_SFs, dt => dt.CreatorId, us => us.User1Id,
                    (dt, us) => new { us, dt })
-                    .Where(it=>it.us.UserTreeId==user.UserTreeId)
+                    .Where(it => it.us.UserTreeId == user.UserTreeId)
                    .Where(it => it.us.User2Id == uid && (!it.us.IsFather || it.us.IsSelf))
                    .Select(it => it.dt);
             }

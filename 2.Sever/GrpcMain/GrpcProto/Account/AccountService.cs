@@ -3,14 +3,13 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
-using Org.BouncyCastle.Crypto.Tls;
 using static GrpcMain.Account.DTODefine.Types;
 
 namespace GrpcMain.Account
 {
     static public class Ext
     {
-        static public DTODefine.Types.UserInfo AsGrpcObj(this User user,bool haspass=false)
+        static public DTODefine.Types.UserInfo AsGrpcObj(this User user, bool haspass = false)
         {
             return new DTODefine.Types.UserInfo()
             {
@@ -23,10 +22,10 @@ namespace GrpcMain.Account
                 UserName = user.Name,
                 Status = user.Status,
                 TreeId = user.UserTreeId,
-                PassWord = haspass? user.Pass:"",
-                MaxSubUser=user.MaxSubUser,
-                TreeDeep=user.TreeDeep,
-                MaxSubUserDepth=user.MaxSubUserDepth,
+                PassWord = haspass ? user.Pass : "",
+                MaxSubUser = user.MaxSubUser,
+                TreeDeep = user.TreeDeep,
+                MaxSubUserDepth = user.MaxSubUserDepth,
             };
         }
 
@@ -44,12 +43,12 @@ namespace GrpcMain.Account
                 Phone = user.Phone,
                 UserTreeId = user.TreeId,
                 Status = (byte)user.Status,
-                MaxSubUser=user.MaxSubUser,
-                MaxSubUserDepth=user.MaxSubUserDepth,
-                TreeDeep=user.TreeDeep,
+                MaxSubUser = user.MaxSubUser,
+                MaxSubUserDepth = user.MaxSubUserDepth,
+                TreeDeep = user.TreeDeep,
             };
         }
-   
+
     }
     public class AccountServiceImp : AccountService.AccountServiceBase
     {
@@ -98,7 +97,7 @@ namespace GrpcMain.Account
                            Ip = context.Peer,
                        }
                   ),
-                    UserTreeId= user.UserTreeId
+                    UserTreeId = user.UserTreeId
                 });
                 await ct.SaveChangesAsync();
             }
@@ -135,7 +134,8 @@ namespace GrpcMain.Account
         }
 
         #region ChangePassWord
-        async Task<CommonResponse> ChangePassWord_SubUserAsync(Request_ChangePassWord request,  MainContext ct, long fatherid) {
+        async Task<CommonResponse> ChangePassWord_SubUserAsync(Request_ChangePassWord request, MainContext ct, long fatherid)
+        {
             var sf = await ct.User_SFs.Where(it => it.User1Id == fatherid && it.User2Id == request.Uid && it.IsFather)
                         .AsNoTracking().FirstOrDefaultAsync();
             if (sf == null)
@@ -181,18 +181,19 @@ namespace GrpcMain.Account
             {
                 if (request.HasUid)
                 {//改子用户
-                    return await ChangePassWord_SubUserAsync(request,ct,id);
+                    return await ChangePassWord_SubUserAsync(request, ct, id);
                 }
                 else
                 {//改自己
-                    return await ChangePassWord_SelfAsync(request, ct, id); 
+                    return await ChangePassWord_SelfAsync(request, ct, id);
                 }
             }
         }
         #endregion
 
         #region CreatUser
-        async Task CreatUser_AddUserSFAsync(MainContext ct,long fatheruserid,long uid,int usertreeid) {
+        async Task CreatUser_AddUserSFAsync(MainContext ct, long fatheruserid, long uid, int usertreeid)
+        {
             var users = await ct.User_SFs.Where(it => it.User1Id == fatheruserid && (it.IsFather || it.IsSelf)).Select(it => it.User2Id).ToListAsync();
             foreach (var item in users)
             {
@@ -202,7 +203,7 @@ namespace GrpcMain.Account
                     User2Id = uid,
                     IsSelf = false,
                     IsFather = true,
-                    UserTreeId= usertreeid,
+                    UserTreeId = usertreeid,
                 });
                 ct.Add(new User_SF()
                 {
@@ -228,19 +229,19 @@ namespace GrpcMain.Account
             using (MainContext ct = new MainContext())
             {
                 var trans = await ct.Database.BeginTransactionAsync();
-                var me=await ct.Users.Where(it=>it.Id==id).FirstOrDefaultAsync();
+                var me = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
                 if (me == null)
-                    throw new Exception("数据库不一致"+me.Id+"应当存在却不存在");
+                    throw new Exception("数据库不一致" + me.Id + "应当存在却不存在");
 
                 //最大子用户深度校验
-                var maxdeep =await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new { a, b })
-                    .Where(it => !it.b.IsFather).MaxAsync(it=>it.a.MaxSubUserDepth);
-                if (maxdeep < me.TreeDeep+1)
+                var maxdeep = await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new { a, b })
+                    .Where(it => !it.b.IsFather).MaxAsync(it => it.a.MaxSubUserDepth);
+                if (maxdeep < me.TreeDeep + 1)
                 {
-                    throw new RpcException(new Status(StatusCode.PermissionDenied, "最大用户深度为" + maxdeep+ ",该限制可能是父用户对您的限制也可能是父用户受到的限制"));
+                    throw new RpcException(new Status(StatusCode.PermissionDenied, "最大用户深度为" + maxdeep + ",该限制可能是父用户对您的限制也可能是父用户受到的限制"));
                 }
                 //最大子用户校验 查找父用户和自己 为集合  如果集合中所有用户的子用户数量都小于其受到的限制 则允许插入
-                var __ct=await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new { a, b })
+                var __ct = await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new { a, b })
                     .Where(it => !it.b.IsFather && it.b.User1Id == id
                     && (ct.User_SFs.Where(sub => sub.User1Id == it.b.User2Id && sub.IsFather).Count() >= it.a.MaxSubUser)
                     ).Take(1).CountAsync();
@@ -291,14 +292,15 @@ namespace GrpcMain.Account
                 if (request.SubUser)
                     list.AddRange(await ct.Users.Where(it => it.CreatorId == qid).AsNoTracking().ToListAsync());
                 var rsp = new Response_GetUserInfo();
-                rsp.UserInfo.AddRange(list.Select(it =>it.AsGrpcObj()));
+                rsp.UserInfo.AddRange(list.Select(it => it.AsGrpcObj()));
                 return rsp;
             }
 
         }
 
 
-        async Task UpdateUserInfo_ChangeAuthoritysAsync(MainContext ct,User son,long fatherid,string newauthority) {
+        async Task UpdateUserInfo_ChangeAuthoritysAsync(MainContext ct, User son, long fatherid, string newauthority)
+        {
             List<string>? authorityssubuser;
             if (newauthority.TryDeserializeObject(out authorityssubuser) && authorityssubuser.Count > 0)
             {
@@ -339,8 +341,8 @@ namespace GrpcMain.Account
                     }
                 }
                 self = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
-                user= await ct.Users.Where(it => it.Id == request.UserInfo.ID).FirstOrDefaultAsync();
-                if (self == null||user==null)
+                user = await ct.Users.Where(it => it.Id == request.UserInfo.ID).FirstOrDefaultAsync();
+                if (self == null || user == null)
                 {
                     throw new Exception("不一致:用户应当不空但是为空");
                 }
@@ -358,7 +360,7 @@ namespace GrpcMain.Account
                 }
                 if (request.UserInfo.HasAuthoritys)
                 {//修改高级权限
-                    await UpdateUserInfo_ChangeAuthoritysAsync(ct, user, id,request.UserInfo.Authoritys);
+                    await UpdateUserInfo_ChangeAuthoritysAsync(ct, user, id, request.UserInfo.Authoritys);
                 }
 
                 if (!updateself)
@@ -374,8 +376,9 @@ namespace GrpcMain.Account
                 }
 
                 await ct.SaveChangesAsync();
-                return new Response_UpdateUserInfo() { 
-                    UserInfo=user.AsGrpcObj()
+                return new Response_UpdateUserInfo()
+                {
+                    UserInfo = user.AsGrpcObj()
                 };
             }
         }

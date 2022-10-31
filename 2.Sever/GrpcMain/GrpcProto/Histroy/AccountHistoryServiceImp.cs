@@ -2,7 +2,7 @@
 using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
-using MyUtility; 
+using MyUtility;
 
 namespace GrpcMain.AccountHistory
 {

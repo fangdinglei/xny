@@ -32,7 +32,7 @@ namespace GrpcMain.DeviceData
                     var bd = selector.Where(it => it.Id >= cursor && item.DeviceId == it.DeviceId && item.StreamId == it.StreamId);
                     bd = bd.AsNoTracking().Take(maxcout);
                     cursor = 0;
-                    var ls = _grpcCursorUtility.Run(await bd.ToListAsync(), maxcout, (it) => cursor = it==null?0:it.Id);
+                    var ls = _grpcCursorUtility.Run(await bd.ToListAsync(), maxcout, (it) => cursor = it == null ? 0 : it.Id);
                     if (ls.Count() == 0)
                         continue;
                     Device_DataPoint_Cold cold = new Device_DataPoint_Cold()

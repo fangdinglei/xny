@@ -1,5 +1,5 @@
+using FdlWindows.View.LoginView;
 using Microsoft.Extensions.DependencyInjection;
-using MyClient.View;
 
 namespace MyClient
 {

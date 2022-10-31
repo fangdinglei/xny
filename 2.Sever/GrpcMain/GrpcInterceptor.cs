@@ -24,10 +24,10 @@ namespace GrpcMain
                 if (!AuthorityAttributes.TryGetValue(context.Method, out at) || at == null)
                 {  //默认鉴权 不审计
                     at = GrpcRequireAuthorityAttribute.Default;
-                   
+
                 }
 
-               
+
 
                 if (!at.NeedLogin)
                 {
@@ -47,7 +47,7 @@ namespace GrpcMain
                     {
                         throw new RpcException(new Status(StatusCode.NotFound, errormsg));
                     }
-                    TResponse r=null;
+                    TResponse r = null;
                     try
                     {
                         r = await continuation(request, context);
@@ -64,7 +64,8 @@ namespace GrpcMain
                     return r;
                 }
             }
-            catch (RpcException ex) {
+            catch (RpcException ex)
+            {
                 throw;
             }
             catch (Exception ex)

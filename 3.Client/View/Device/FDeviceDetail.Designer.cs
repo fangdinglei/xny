@@ -43,6 +43,7 @@
             this.btn_commit = new System.Windows.Forms.Button();
             this.chromiumWebBrowser1 = new CefSharp.WinForms.ChromiumWebBrowser();
             this.btn_repair = new System.Windows.Forms.Button();
+            this.btn_timesetting = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -122,7 +123,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(12, 275);
+            this.button2.Location = new System.Drawing.Point(130, 315);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(112, 34);
             this.button2.TabIndex = 10;
@@ -170,7 +171,7 @@
             // 
             // btn_repair
             // 
-            this.btn_repair.Location = new System.Drawing.Point(12, 315);
+            this.btn_repair.Location = new System.Drawing.Point(12, 275);
             this.btn_repair.Name = "btn_repair";
             this.btn_repair.Size = new System.Drawing.Size(112, 34);
             this.btn_repair.TabIndex = 15;
@@ -178,11 +179,21 @@
             this.btn_repair.UseVisualStyleBackColor = true;
             this.btn_repair.Click += new System.EventHandler(this.btn_repair_Click);
             // 
+            // btn_timesetting
+            // 
+            this.btn_timesetting.Location = new System.Drawing.Point(12, 315);
+            this.btn_timesetting.Name = "btn_timesetting";
+            this.btn_timesetting.Size = new System.Drawing.Size(112, 34);
+            this.btn_timesetting.TabIndex = 16;
+            this.btn_timesetting.Text = "定时任务";
+            this.btn_timesetting.UseVisualStyleBackColor = true;
+            // 
             // FDeviceDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1273, 671);
+            this.Controls.Add(this.btn_timesetting);
             this.Controls.Add(this.btn_repair);
             this.Controls.Add(this.chromiumWebBrowser1);
             this.Controls.Add(this.btn_commit);
@@ -222,5 +233,6 @@
         private Button btn_commit;
         private CefSharp.WinForms.ChromiumWebBrowser chromiumWebBrowser1;
         private Button btn_repair;
+        private Button btn_timesetting;
     }
 }

@@ -16,7 +16,7 @@ namespace GrpcMain.InternalMail
         /// <param name="mail"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        static public Internal_Mail AsDBObj(this InternalMail mail,int usertreeid)
+        static public Internal_Mail AsDBObj(this InternalMail mail, int usertreeid)
         {
             return new Internal_Mail
             {
@@ -28,7 +28,7 @@ namespace GrpcMain.InternalMail
                 Context = mail.Context,
                 Title = mail.Title,
                 Time = mail.Time,
-                UserTreeId= usertreeid,
+                UserTreeId = usertreeid,
             };
         }
         static public InternalMail AsGrpcObj(this Internal_Mail mail)

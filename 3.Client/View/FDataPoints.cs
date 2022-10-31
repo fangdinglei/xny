@@ -94,9 +94,9 @@ namespace MyClient.View
             var ds = new List<DeviceWithUserDeviceInfo>();
             foreach (int item in CDevice.CheckedIndices)
             {
-                if (!((UserDeviceAuthority)devices[item].Value.UserDevice.Authority).HasFlag( UserDeviceAuthority.Read_Data))
+                if (!((UserDeviceAuthority)devices[item].Value.UserDevice.Authority).HasFlag(UserDeviceAuthority.Read_Data))
                 {
-                    MessageBox.Show("没有该设备数据读取权限"+ devices[item].Value.Device.Name, "提示");
+                    MessageBox.Show("没有该设备数据读取权限" + devices[item].Value.Device.Name, "提示");
                     return;
                 }
                 ds.Add(devices[item].Value);
@@ -275,7 +275,7 @@ namespace MyClient.View
 
             var res = await _userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices
             { TypeId = type.Id });
-            var lsx = res.Info.Where(it=>((UserDeviceAuthority)it.UserDevice.Authority).HasFlag( UserDeviceAuthority.Read_Data))
+            var lsx = res.Info.Where(it => ((UserDeviceAuthority)it.UserDevice.Authority).HasFlag(UserDeviceAuthority.Read_Data))
                 .Select(it => new ToStringHelper<DeviceWithUserDeviceInfo>
             (it, (it) => it.Device.Id + ":" + it.Device.Name)).ToList();
             devices = new BindingList<ToStringHelper<DeviceWithUserDeviceInfo>>(lsx);

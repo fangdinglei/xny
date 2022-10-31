@@ -51,6 +51,15 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <Compile Update="FdlWindows.View\LoadingView\FLoading.cs">
+	    <SubType>Form</SubType>
+	  </Compile>
+	  <Compile Update="FdlWindows.View\LoginView\FLogin.cs">
+	    <SubType>Form</SubType>
+	  </Compile>
+	</ItemGroup>
+	
+	<ItemGroup>
 	  <None Update="ECHART\devicestatus\index.html">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
