@@ -6,8 +6,10 @@ using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
 using GrpcMain.History;
 using GrpcMain.InternalMail;
+using GrpcMain.System;
 using GrpcMain.UserDevice;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using MyDBContext.Main;
@@ -55,6 +57,7 @@ namespace GrpcMain
             app.MapGrpcService<InternalMailServiceImp>();
             app.MapGrpcService<AccountHistoryServiceImp>();
             app.MapGrpcService<RepairServiceImp>();
+            app.MapGrpcService<SystemServiceImp>();
             foreach (var item in typeof(IGrpcAuthorityHandle).Assembly.GetTypes())
             {
                 var att = item.GetCustomAttribute<BindServiceMethodAttribute>();

@@ -21,6 +21,7 @@
 	  <None Remove="GrpcProto\Histroy\Account\AccountService.proto" />
 	  <None Remove="GrpcProto\Histroy\DeviceHistoryService.proto" />
 	  <None Remove="GrpcProto\InternalMail\InternalMail.proto" />
+	  <None Remove="GrpcProto\System\SystemService.proto" />
 	  <None Remove="GrpcProto\UserDevice\UserDeviceService.proto" />
 	</ItemGroup>
 
@@ -30,6 +31,7 @@
     <PackageReference Include="Grpc.Core" Version="2.46.5" />
     <PackageReference Include="JWT" Version="9.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Management" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

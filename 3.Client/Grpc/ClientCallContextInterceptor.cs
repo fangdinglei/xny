@@ -10,6 +10,7 @@ using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
 using GrpcMain.History;
 using GrpcMain.InternalMail;
+using GrpcMain.System;
 using GrpcMain.UserDevice;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -42,6 +43,7 @@ namespace MyClient.Grpc
             serviceCollection.TryAddSingleton<DeviceTypeService.DeviceTypeServiceClient>();
             serviceCollection.TryAddSingleton<AccountHistoryService.AccountHistoryServiceClient>();
             serviceCollection.TryAddSingleton<RepairService.RepairServiceClient>();
+            serviceCollection.TryAddSingleton<SystemService.SystemServiceClient>();
         }
     }
     public class ClientCallContextInterceptor : Interceptor
@@ -68,7 +70,13 @@ namespace MyClient.Grpc
                 LocalDataBase db = LocalDataBase.Instance;
                 if (db != null)
                 {
-                    db.OnResonse(rsp.GetAwaiter().GetResult());
+                    try
+                    {
+                        db.OnResonse(rsp.GetAwaiter().GetResult());
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
             });
             

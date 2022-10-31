@@ -29,17 +29,21 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.text_id = new System.Windows.Forms.TextBox();
+            this.text_totalmemory = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.text_runtime = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.text_os = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.text_cpucount = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.text_pagesize = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -51,35 +55,21 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "编号";
             // 
-            // textBox1
+            // text_id
             // 
-            this.textBox1.Location = new System.Drawing.Point(102, 18);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(150, 30);
-            this.textBox1.TabIndex = 1;
+            this.text_id.Location = new System.Drawing.Point(102, 18);
+            this.text_id.Name = "text_id";
+            this.text_id.ReadOnly = true;
+            this.text_id.Size = new System.Drawing.Size(150, 30);
+            this.text_id.TabIndex = 1;
             // 
-            // textBox2
+            // text_totalmemory
             // 
-            this.textBox2.Location = new System.Drawing.Point(102, 54);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(150, 30);
-            this.textBox2.TabIndex = 3;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(14, 54);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 24);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "磁盘";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(102, 90);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(150, 30);
-            this.textBox3.TabIndex = 5;
+            this.text_totalmemory.Location = new System.Drawing.Point(102, 90);
+            this.text_totalmemory.Name = "text_totalmemory";
+            this.text_totalmemory.ReadOnly = true;
+            this.text_totalmemory.Size = new System.Drawing.Size(150, 30);
+            this.text_totalmemory.TabIndex = 5;
             // 
             // label3
             // 
@@ -90,12 +80,13 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "内存";
             // 
-            // textBox4
+            // text_runtime
             // 
-            this.textBox4.Location = new System.Drawing.Point(102, 126);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(150, 30);
-            this.textBox4.TabIndex = 7;
+            this.text_runtime.Location = new System.Drawing.Point(102, 126);
+            this.text_runtime.Name = "text_runtime";
+            this.text_runtime.ReadOnly = true;
+            this.text_runtime.Size = new System.Drawing.Size(150, 30);
+            this.text_runtime.TabIndex = 7;
             // 
             // label4
             // 
@@ -156,22 +147,77 @@
             this.comboBox2.Size = new System.Drawing.Size(182, 32);
             this.comboBox2.TabIndex = 12;
             // 
+            // text_os
+            // 
+            this.text_os.Location = new System.Drawing.Point(102, 57);
+            this.text_os.Name = "text_os";
+            this.text_os.ReadOnly = true;
+            this.text_os.Size = new System.Drawing.Size(150, 30);
+            this.text_os.TabIndex = 14;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(14, 57);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(46, 24);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "系统";
+            // 
+            // text_cpucount
+            // 
+            this.text_cpucount.Location = new System.Drawing.Point(102, 162);
+            this.text_cpucount.Name = "text_cpucount";
+            this.text_cpucount.ReadOnly = true;
+            this.text_cpucount.Size = new System.Drawing.Size(150, 30);
+            this.text_cpucount.TabIndex = 16;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(14, 162);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(82, 24);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "逻辑核心";
+            // 
+            // text_pagesize
+            // 
+            this.text_pagesize.Location = new System.Drawing.Point(102, 198);
+            this.text_pagesize.Name = "text_pagesize";
+            this.text_pagesize.ReadOnly = true;
+            this.text_pagesize.Size = new System.Drawing.Size(150, 30);
+            this.text_pagesize.TabIndex = 18;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(14, 198);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(64, 24);
+            this.label7.TabIndex = 17;
+            this.label7.Text = "页大小";
+            // 
             // FSystemInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(602, 174);
+            this.ClientSize = new System.Drawing.Size(662, 358);
+            this.Controls.Add(this.text_pagesize);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.text_cpucount);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.text_os);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.text_runtime);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.text_totalmemory);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.text_id);
             this.Controls.Add(this.label1);
             this.Name = "FSystemInfo";
             this.Text = "FSystemInfo";
@@ -183,16 +229,20 @@
         #endregion
 
         private Label label1;
-        private TextBox textBox1;
-        private TextBox textBox2;
-        private Label label2;
-        private TextBox textBox3;
+        private TextBox text_id;
+        private TextBox text_totalmemory;
         private Label label3;
-        private TextBox textBox4;
+        private TextBox text_runtime;
         private Label label4;
         private Label label5;
         private ComboBox comboBox1;
         private Label label6;
         private ComboBox comboBox2;
+        private TextBox text_os;
+        private Label label2;
+        private TextBox text_cpucount;
+        private Label label8;
+        private TextBox text_pagesize;
+        private Label label7;
     }
 }

@@ -1,0 +1,39 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.System";
+
+import "google/protobuf/empty.proto";
+import "Common/CommonResponse.proto";
+service SystemService { 
+
+    //获取系统基础信息
+    rpc GetSystemBaseInfo( Request_GetSystemBaseInfo)
+        returns (Response_GetSystemBaseInfo);
+        
+}
+
+
+
+message Request_GetSystemBaseInfo{
+    //备用
+    int64 SeverId=1;
+}
+message Response_GetSystemBaseInfo{
+    int64 SeverId=1;
+
+    string MachineName=2;
+    string OsVersionName=3;
+    string UserName=4;
+    //系统运行毫秒
+    int64 SystemTime=5;
+    //页大小 byte
+    int32 PageSize=6;
+    //cup逻辑核心
+    int32 ProcesserCount=7;
+    bool Is64System=8;
+    bool Is64Process=9;
+    //MB
+    int64 PhisicalMemory=10;
+
+
+}
