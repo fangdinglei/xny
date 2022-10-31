@@ -1,7 +1,6 @@
 ﻿syntax = "proto3";
 
 option csharp_namespace = "GrpcMain.History";
-package GrpcMain.History;
 import "Common/CommonResponse.proto";
 service DeviceHistoryService { 
     rpc GetHistory(Request_GetHistory)

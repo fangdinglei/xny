@@ -9,6 +9,7 @@ using System.Management;
 namespace GrpcMain.System
 {
     public class SystemServiceImp : SystemService.SystemServiceBase {
+        [GrpcRequireAuthority("SystemUser")]
         public override async Task<Response_GetSystemBaseInfo> GetSystemBaseInfo(Request_GetSystemBaseInfo request, ServerCallContext context)
         {
             Response_GetSystemBaseInfo res = new Response_GetSystemBaseInfo();

@@ -1,7 +1,6 @@
 ﻿syntax = "proto3";
 
 option csharp_namespace = "GrpcMain.DeviceType";
-package GrpcMain.DeviceType;
 import "google/protobuf/empty.proto";
 import "Common/CommonResponse.proto";
 

@@ -1,7 +1,6 @@
 ﻿syntax = "proto3";
 
 option csharp_namespace = "GrpcMain.Account";
-package GrpcMain.Account;
 import "Common/CommonResponse.proto";
 service AccountService {
     //登陆

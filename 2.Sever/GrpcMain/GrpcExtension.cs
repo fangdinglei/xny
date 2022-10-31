@@ -70,7 +70,7 @@ namespace GrpcMain
                     var atx = func.GetCustomAttribute<GrpcRequireAuthorityAttribute>();
                     if (atx == null)
                         continue;
-                    var str = "/" + att.BindType.FullName + "/" + func.Name;
+                    var str = "/" + att.BindType.GetField("__ServiceName", BindingFlags.Static | BindingFlags.NonPublic).GetValue(att.BindType) + "/" + func.Name;
                     GrpcInterceptor.AuthorityAttributes.Add(str, atx);
                 }
 

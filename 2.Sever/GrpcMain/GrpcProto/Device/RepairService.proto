@@ -1,7 +1,6 @@
 ﻿syntax = "proto3";
 
 option csharp_namespace = "GrpcMain.Device";
-package GrpcMain.Device;
 import "google/protobuf/empty.proto";
 import "Common/CommonResponse.proto";
 service RepairService {

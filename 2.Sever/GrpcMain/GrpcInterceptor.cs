@@ -22,21 +22,13 @@ namespace GrpcMain
                 GrpcRequireAuthorityAttribute? at;
                 if (!AuthorityAttributes.TryGetValue(context.Method, out at) || at == null)
                 {  //默认鉴权 不审计
-                    string? errormsg;
-                    (var canvisit, errormsg) = await _Handle.Authorize(context, at);
-                    if (canvisit == false)
-                    {
-                        context.Status = new Status(StatusCode.PermissionDenied, errormsg);
-                        return null;
-                    }
-                    var r = await continuation(request, context);
-                    if (r == null)
-                    {
-                        return Activator.CreateInstance<TResponse>();
-                    }
-                    return r;
+                    at = GrpcRequireAuthorityAttribute.Default;
+                   
                 }
-                else if (!at.NeedLogin)
+
+               
+
+                if (!at.NeedLogin)
                 {
                     //不要鉴权
                     var r = await continuation(request, context);
@@ -52,8 +44,7 @@ namespace GrpcMain
                     (var canvisit, errormsg) = await _Handle.Authorize(context, at);
                     if (canvisit == false)
                     {
-                        context.Status = new Status(StatusCode.PermissionDenied, errormsg);
-                        return Activator.CreateInstance<TResponse>();
+                        throw new RpcException(new Status(StatusCode.NotFound, errormsg));
                     }
                     TResponse r=null;
                     try
