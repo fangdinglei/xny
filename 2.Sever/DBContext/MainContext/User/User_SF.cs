@@ -14,6 +14,7 @@ namespace MyDBContext.Main
     /// <summary>
     /// 记录用户父子映射  
     /// </summary>
+    [Index(nameof(UserTreeId))]
     public class User_SF
     {
         public long User1Id { get; set; }

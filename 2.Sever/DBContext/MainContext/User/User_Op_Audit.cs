@@ -7,13 +7,19 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace MyDBContext.Main
 {
     /// <summary>
     /// 用户操作审计
     /// </summary>
+    [Index(nameof(Op))]
+    [Index(nameof(Time))]
+    [Index(nameof(UserTreeId))]
+    [Index(nameof(AuditorId))]
     public class User_Op_Audit
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

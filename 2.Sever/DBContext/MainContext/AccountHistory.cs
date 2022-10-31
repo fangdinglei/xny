@@ -7,11 +7,15 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
+    [Index(nameof(UserTreeId))]
+    [Index(nameof(Time))]
+    [Index(nameof(CreatorId))]
     public class AccountHistory : IHasCreator
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

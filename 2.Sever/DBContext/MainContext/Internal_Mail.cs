@@ -7,10 +7,15 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
+    [Index(nameof(SenderId))]
+    [Index(nameof(ReceiverId))]
+    [Index(nameof(Time))]
+    [Index(nameof(UserTreeId))]
     public class Internal_Mail : IHasCreator
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

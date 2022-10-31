@@ -7,8 +7,11 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using Microsoft.EntityFrameworkCore;
+
 namespace MyDBContext.Main
 {
+    [Index(nameof(DeviceId), nameof(StreamId), nameof(StartTime),nameof(EndTime))]
     public class Device_DataPoint_Cold
     {
         public long Id { get; set; }

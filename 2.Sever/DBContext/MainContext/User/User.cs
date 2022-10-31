@@ -13,6 +13,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 //
 namespace MyDBContext.Main
 {
+    [Index(nameof(UserTreeId))]
+    [Index(nameof(Name))]
     public class User : IHasCreator
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

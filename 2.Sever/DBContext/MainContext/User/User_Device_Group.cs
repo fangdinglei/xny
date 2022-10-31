@@ -7,6 +7,7 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
@@ -14,6 +15,8 @@ namespace MyDBContext.Main
     /// <summary>
     /// 用户设备分组 仅对创建者可见
     /// </summary>
+    [Index(nameof(UserTreeId))]
+    [Index(nameof(Name))]
     public class User_Device_Group : IHasCreator
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

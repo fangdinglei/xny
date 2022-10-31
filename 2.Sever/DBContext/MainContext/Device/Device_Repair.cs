@@ -7,6 +7,8 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
@@ -14,6 +16,9 @@ namespace MyDBContext.Main
     /// <summary>
     /// 设备维修记录表
     /// </summary>
+    [Index(nameof(DiscoveryTime), nameof(Id))]
+    [Index(nameof(CompletionTime))]
+    [Index(nameof(DeviceId))]
     public class Device_Repair : IHasCreator
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

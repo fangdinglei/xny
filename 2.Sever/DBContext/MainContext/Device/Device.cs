@@ -7,10 +7,13 @@
 //dotnet tool install --global dotnet-ef
 //dotnet ef -h
 //
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
+    [Index(nameof(UserTreeId))]
+    [Index(nameof(Name))]
     public class Device : IHasCreator
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

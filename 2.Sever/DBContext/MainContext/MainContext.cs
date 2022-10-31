@@ -1,7 +1,9 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Org.BouncyCastle.Utilities.Date;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 //Add-Migration [--context MainContext]
@@ -63,6 +65,7 @@ namespace MyDBContext.Main
             //optionsBuilder.UseMySql(s, ServerVersion.AutoDetect(s));
             optionsBuilder.UseSqlite(_connection);
             optionsBuilder.UseBatchEF_Sqlite();
+            //optionsBuilder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel .Information).EnableSensitiveDataLogging().EnableDetailedErrors();
         }
         [DebuggerStepThrough]
         protected override void OnModelCreating(ModelBuilder modelBuilder)

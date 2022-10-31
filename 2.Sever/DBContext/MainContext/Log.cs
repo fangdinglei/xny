@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 //Add-Migration
 //Remove-Migration
@@ -13,7 +14,11 @@ namespace MyDBContext.Main
         Error,
         Information,
     }
+
     [Table("log")]
+    [Index(nameof(Time))]
+    [Index(nameof(Level))]
+    [Index(nameof(Title))]
     public class Log
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

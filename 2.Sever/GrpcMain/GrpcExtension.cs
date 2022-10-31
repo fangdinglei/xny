@@ -41,7 +41,7 @@ namespace GrpcMain
             {
                 ct.Database.EnsureCreated();
             }
-
+            Console.Clear();
         }
         /// <summary>
         /// 注册grpc服务到路由
