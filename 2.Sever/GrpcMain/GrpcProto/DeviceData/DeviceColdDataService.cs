@@ -32,7 +32,7 @@ namespace GrpcMain.DeviceData
                     var bd = selector.Where(it => it.Id >= cursor && item.DeviceId == it.DeviceId && item.StreamId == it.StreamId);
                     bd = bd.AsNoTracking().Take(maxcout);
                     cursor = 0;
-                    var ls = _grpcCursorUtility.Run(await bd.ToListAsync(), maxcout, (it) => cursor = it.Id);
+                    var ls = _grpcCursorUtility.Run(await bd.ToListAsync(), maxcout, (it) => cursor = it==null?0:it.Id);
                     if (ls.Count() == 0)
                         continue;
                     Device_DataPoint_Cold cold = new Device_DataPoint_Cold()
@@ -83,7 +83,7 @@ namespace GrpcMain.DeviceData
                     //先选择
                     var ls = await bdx.AsNoTracking().Take(maxcout1).ToListAsync();
                     cursor1 = 0;
-                    var newlist = _grpcCursorUtility.Run(ls, maxcout1, (it) => cursor1 = it.Id);
+                    var newlist = _grpcCursorUtility.Run(ls, maxcout1, (it) => cursor1 = it == null ? 0 : it.Id);
 
                     List<Device_DataPoint_Cold> reses = await CompressDeviceData(request.MaxCountOneTime + 1, newlist, bd);
                     foreach (var item in newlist)

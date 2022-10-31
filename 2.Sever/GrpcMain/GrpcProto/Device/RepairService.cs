@@ -115,7 +115,7 @@ namespace GrpcMain.Device
                 var bdx = bd.Select(it=>it.a);
                 bdx = bdx.Take(request.MaxCount + 1).OrderBy(it => it.DiscoveryTime).AsNoTracking();
                 var ls = await bdx.ToListAsync();
-                var lsx = _grpcCursorUtility.Run(ls, request.MaxCount + 1, (it) => { res.Cursor = it.Id; });
+                var lsx = _grpcCursorUtility.Run(ls, request.MaxCount + 1, (it) => { res.Cursor =it==null?0: it.Id; });
                 res.Info.AddRange(lsx.Select(it => new RepairInfo()
                 {
                     Id = it.Id,

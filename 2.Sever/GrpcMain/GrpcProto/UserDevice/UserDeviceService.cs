@@ -257,7 +257,7 @@ namespace GrpcMain.UserDevice
                     bd = bd.Where(it => it.device.Id >= request.Cursor);
                 }
                 var ls = await bd.ToListAsync();
-                var lsx = _cursorUtility.Run(ls, maxcount, (it) => res.Cursor = it.device.Id);
+                var lsx = _cursorUtility.Run(ls, maxcount, (it) => res.Cursor = it==null?0:it.device.Id);
                 res.Info.AddRange(lsx.Select(it =>
                     new DeviceWithUserDeviceInfo
                     {
