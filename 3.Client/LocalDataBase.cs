@@ -165,7 +165,7 @@ namespace MyClient
 
             if (realat.HasValue)
             {
-                if (((UserDeviceAuthority)realat).HasFlag(authority))
+                if (!((UserDeviceAuthority)realat).HasFlag(authority))
                 {
                     MessageBox.Show($"没有设备的{tip}权限", "提示");
                     return false;
