@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
-
+using System.Collections.Concurrent;
+using System.Collections.Generic.;
 namespace FdlWindows.View
 {
     public partial class FMain : Form, IViewHolder
@@ -84,59 +85,62 @@ namespace FdlWindows.View
         /// <param name="par"></param>
         public bool SwitchTo(string name, bool newwindow, params object[] par)
         {
-            if (newwindow)
+            lock (this)
             {
-                FormExitEventArg arg;
-                IView formold;
-                while (Windows.Count > 0)
+                if (newwindow)
                 {
-                    formold = Windows.Pop();
-                    arg = new FormExitEventArg() { IsForNewWindow = true };
-                    formold.OnEvent("Exit", arg);
-                    if (arg.Cancel)
+                    FormExitEventArg arg;
+                    IView formold;
+                    while (Windows.Count > 0)
                     {
-                        Windows.Push(formold);
-                        return false;
+                        formold = Windows.Pop();
+                        arg = new FormExitEventArg() { IsForNewWindow = true };
+                        formold.OnEvent("Exit", arg);
+                        if (arg.Cancel)
+                        {
+                            Windows.Push(formold);
+                            return false;
+                        }
+                        else
+                        {
+                            OnViewClose(formold);
+                        }
+                    }
+                    if (ViewNodes.ContainsKey(name))
+                    {//draw 高亮选中的节点
+                        if (highlighting != null)
+                        {
+                            highlighting.BackColor = Color.White;
+                            highlighting.ForeColor = Color.Black;
+                        }
+                        highlighting = ViewNodes[name];
+                        treeview_views.SelectedNode = highlighting;
+                        highlighting.BackColor = Color.Blue;
+                        highlighting.ForeColor = Color.White;
                     }
                     else
                     {
-                        OnViewClose(formold);
+                        throw new Exception("该界面只能附加在其他界面上");
                     }
                 }
-                if (ViewNodes.ContainsKey(name))
-                {//draw 高亮选中的节点
-                    if (highlighting != null)
-                    {
-                        highlighting.BackColor = Color.White;
-                        highlighting.ForeColor = Color.Black;
-                    }
-                    highlighting = ViewNodes[name];
-                    treeview_views.SelectedNode = highlighting;
-                    highlighting.BackColor = Color.Blue;
-                    highlighting.ForeColor = Color.White;
-                }
-                else
+                //显示界面
+                var iuserview = GetOrCreatView(name);
+                try
                 {
-                    throw new Exception("该界面只能附加在其他界面上");
+                    Windows.Push(iuserview);
+                    iuserview.View.Visible = true;
+                    iuserview.View.BringToFront();
+                    iuserview.SetViewHolder(this);
+                    iuserview.PrePare(par);
                 }
-            }
-            //显示界面
-            var iuserview = GetOrCreatView(name);
-            try
-            {
-                Windows.Push(iuserview);
-                iuserview.View.Visible = true;
-                iuserview.View.BringToFront();
-                iuserview.SetViewHolder(this);
-                iuserview.PrePare(par);
-            }
-            catch (Exception ex)
-            {
-                OnViewClose(iuserview);
-                MessageBox.Show(ex.Message, "界面初始化失败");
-            }
+                catch (Exception ex)
+                {
+                    OnViewClose(iuserview);
+                    MessageBox.Show(ex.Message, "界面初始化失败");
+                }
 
-            return true;
+                return true;
+            }
         }
 
         #region 创建View模块 
@@ -301,21 +305,23 @@ namespace FdlWindows.View
 
         public void Back()
         {
-            FormExitEventArg arg;
-            if (Windows.Count >= 1)
-            {
-                IView view = Windows.Pop();
-                arg = new FormExitEventArg();
-                view.OnEvent("Exit", arg);
-                if (arg.Cancel)
+            lock (this) {
+                FormExitEventArg arg;
+                if (Windows.Count >= 1)
                 {
-                    Windows.Push(view);
-                    return;
-                }
-                else
-                {
-                    view.View.Visible = false;
-                    OnViewClose(view);
+                    IView view = Windows.Pop();
+                    arg = new FormExitEventArg();
+                    view.OnEvent("Exit", arg);
+                    if (arg.Cancel)
+                    {
+                        Windows.Push(view);
+                        return;
+                    }
+                    else
+                    {
+                        view.View.Visible = false;
+                        OnViewClose(view);
+                    }
                 }
             }
         }
@@ -326,23 +332,34 @@ namespace FdlWindows.View
         /// <returns></returns>
         public bool Back(IView it)
         {
-            if (IsTopView(it))
+            lock (this)
             {
-                Back();
-                return true;
-            }
-            else
-            {
-                return false;
+
+
+                if (IsTopView(it))
+                {
+                    Back();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
         public bool IsTopView(IView it)
         {
-            return Windows.Count > 0 && Windows.Peek() == it;
+            lock (this)
+            {
+                return Windows.Count > 0 && Windows.Peek() == it;
+            }
         }
         public bool IsParentOfView(IView it)
         {
-            return NameofViewInstance.ContainsKey(it);
+            lock (this)
+            {
+                return NameofViewInstance.ContainsKey(it);
+            }
         }
         #region 事件
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -425,19 +442,24 @@ namespace FdlWindows.View
         {
             SwitchTo("Loading", false, load, retry, okcall, exitcall, (bool isloading) =>
             {
-                if (isloading)
+                lock (_ViewLoading)
                 {
-                    _ViewLoading.Add(view);
-                }
-                else
-                {
-                    _ViewLoading.Remove(view);
+                    if (isloading)
+                    {
+                        _ViewLoading.Add(view);
+                    }
+                    else
+                    {
+                        _ViewLoading.Remove(view);
+                    }
                 }
             });
         }
         public bool IsLoading(IView view)
         {
-            return _ViewLoading.Contains(view);
+            lock (_ViewLoading) {
+                return _ViewLoading.Contains(view);
+            } 
         }
         #endregion
 
