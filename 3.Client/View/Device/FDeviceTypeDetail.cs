@@ -12,6 +12,7 @@ namespace MyClient.View
     {
 
         DeviceTypeService.DeviceTypeServiceClient _typeServiceClient;
+        Action<TypeInfo>?OnCreatCall;
         IViewHolder _viewholder;
         bool isCreat;
         TypeInfo typeinfo;
@@ -47,11 +48,18 @@ namespace MyClient.View
 
         }
 
+        /// <summary>
+        ///  [0]isCreat=true [1]action<type> 
+        ///  [0]isCreat=false [1]typeid
+        /// </summary>
+        /// <param name="par"></param>
+        /// <exception cref="Exception"></exception>
         public async void PrePare(params object[] par)
         {
             isCreat = (bool)par[0];
             if (isCreat)
             {
+                OnCreatCall = (Action<TypeInfo>)par[1];
                 text_id.Text = "创建";
                 list_thingmodels.DataSource = null;
             }
@@ -69,6 +77,7 @@ namespace MyClient.View
                             throw new Exception();
                         }
                         typeinfo = rsp.TypeInfos[0];
+                        list_thingmodels.DataSource = null;
                         return true;
                     },
                     okcall: () =>
@@ -108,6 +117,7 @@ namespace MyClient.View
                 text_alterhigh.Text = "";
                 text_thingmodel_remark.Text = "";
                 check_thingmodel_abandonted.Checked = false;
+                text_thingmodel_type.SelectedIndex = -1;
                 return;
             }
             var thingModel = thingModels[list_thingmodels.SelectedIndex];
@@ -186,6 +196,7 @@ namespace MyClient.View
                     {
                         Info = typeinfo
                     });
+                    OnCreatCall?.Invoke(res.Info);
                 }
                 else
                 {
@@ -220,6 +231,19 @@ namespace MyClient.View
                 text_thingmodel_min.Enabled = true;
             }
 
+        }
+
+        private void btn_creatdevice_Click(object sender, EventArgs e)
+        {
+            //TODO
+            if (isCreat)
+            {
+
+            }
+            else
+            {
+
+            }
         }
     }
 }

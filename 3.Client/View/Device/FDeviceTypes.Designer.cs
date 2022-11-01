@@ -30,6 +30,7 @@
         {
             this.list_types = new System.Windows.Forms.ListBox();
             this.location_lab = new System.Windows.Forms.Label();
+            this.btn_creat = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // list_types
@@ -52,11 +53,22 @@
             this.location_lab.Text = "label1";
             this.location_lab.Visible = false;
             // 
+            // btn_creat
+            // 
+            this.btn_creat.Location = new System.Drawing.Point(12, 430);
+            this.btn_creat.Name = "btn_creat";
+            this.btn_creat.Size = new System.Drawing.Size(112, 34);
+            this.btn_creat.TabIndex = 2;
+            this.btn_creat.Text = "新建";
+            this.btn_creat.UseVisualStyleBackColor = true;
+            this.btn_creat.Click += new System.EventHandler(this.btn_creat_Click);
+            // 
             // FDeviceTypes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1037, 435);
+            this.ClientSize = new System.Drawing.Size(1037, 549);
+            this.Controls.Add(this.btn_creat);
             this.Controls.Add(this.location_lab);
             this.Controls.Add(this.list_types);
             this.Name = "FDeviceTypes";
@@ -70,5 +82,6 @@
 
         private ListBox list_types;
         private Label location_lab;
+        private Button btn_creat;
     }
 }

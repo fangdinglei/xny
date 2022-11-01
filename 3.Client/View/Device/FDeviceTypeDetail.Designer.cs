@@ -302,6 +302,7 @@
             this.btn_creatdevice.TabIndex = 28;
             this.btn_creatdevice.Text = "创建设备";
             this.btn_creatdevice.UseVisualStyleBackColor = true;
+            this.btn_creatdevice.Click += new System.EventHandler(this.btn_creatdevice_Click);
             // 
             // FDeviceTypeDetail
             // 
