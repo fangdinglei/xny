@@ -64,7 +64,7 @@ namespace MyClient.View
             this.COP,
             this.COP2});
             this.dataGridView1.Location = new System.Drawing.Point(246, 12);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowHeadersWidth = 62;
@@ -137,7 +137,7 @@ namespace MyClient.View
             // brefresh
             // 
             this.brefresh.Location = new System.Drawing.Point(1381, 125);
-            this.brefresh.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.brefresh.Margin = new System.Windows.Forms.Padding(4);
             this.brefresh.Name = "brefresh";
             this.brefresh.Size = new System.Drawing.Size(186, 68);
             this.brefresh.TabIndex = 1;
@@ -151,7 +151,7 @@ namespace MyClient.View
             this.CB_ShowOnline.Checked = true;
             this.CB_ShowOnline.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CB_ShowOnline.Location = new System.Drawing.Point(1409, 17);
-            this.CB_ShowOnline.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CB_ShowOnline.Margin = new System.Windows.Forms.Padding(4);
             this.CB_ShowOnline.Name = "CB_ShowOnline";
             this.CB_ShowOnline.Size = new System.Drawing.Size(108, 28);
             this.CB_ShowOnline.TabIndex = 2;
@@ -165,7 +165,7 @@ namespace MyClient.View
             this.CB_ShowNotOnline.Checked = true;
             this.CB_ShowNotOnline.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CB_ShowNotOnline.Location = new System.Drawing.Point(1409, 55);
-            this.CB_ShowNotOnline.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CB_ShowNotOnline.Margin = new System.Windows.Forms.Padding(4);
             this.CB_ShowNotOnline.Name = "CB_ShowNotOnline";
             this.CB_ShowNotOnline.Size = new System.Drawing.Size(108, 28);
             this.CB_ShowNotOnline.TabIndex = 3;
@@ -179,7 +179,7 @@ namespace MyClient.View
             this.list_Group.FormattingEnabled = true;
             this.list_Group.ItemHeight = 24;
             this.list_Group.Location = new System.Drawing.Point(15, 13);
-            this.list_Group.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.list_Group.Margin = new System.Windows.Forms.Padding(4);
             this.list_Group.Name = "list_Group";
             this.list_Group.Size = new System.Drawing.Size(223, 964);
             this.list_Group.TabIndex = 4;
@@ -190,7 +190,7 @@ namespace MyClient.View
             // btn_groupmgr
             // 
             this.btn_groupmgr.Location = new System.Drawing.Point(1381, 277);
-            this.btn_groupmgr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_groupmgr.Margin = new System.Windows.Forms.Padding(4);
             this.btn_groupmgr.Name = "btn_groupmgr";
             this.btn_groupmgr.Size = new System.Drawing.Size(186, 68);
             this.btn_groupmgr.TabIndex = 5;
@@ -201,7 +201,7 @@ namespace MyClient.View
             // b_sendcmd
             // 
             this.b_sendcmd.Location = new System.Drawing.Point(1381, 353);
-            this.b_sendcmd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.b_sendcmd.Margin = new System.Windows.Forms.Padding(4);
             this.b_sendcmd.Name = "b_sendcmd";
             this.b_sendcmd.Size = new System.Drawing.Size(186, 68);
             this.b_sendcmd.TabIndex = 6;
@@ -212,7 +212,7 @@ namespace MyClient.View
             // bgroupmove
             // 
             this.bgroupmove.Location = new System.Drawing.Point(1381, 429);
-            this.bgroupmove.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bgroupmove.Margin = new System.Windows.Forms.Padding(4);
             this.bgroupmove.Name = "bgroupmove";
             this.bgroupmove.Size = new System.Drawing.Size(186, 68);
             this.bgroupmove.TabIndex = 7;
@@ -223,7 +223,7 @@ namespace MyClient.View
             // bselectall
             // 
             this.bselectall.Location = new System.Drawing.Point(1381, 201);
-            this.bselectall.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bselectall.Margin = new System.Windows.Forms.Padding(4);
             this.bselectall.Name = "bselectall";
             this.bselectall.Size = new System.Drawing.Size(186, 68);
             this.bselectall.TabIndex = 8;
@@ -234,7 +234,7 @@ namespace MyClient.View
             // bsetting
             // 
             this.bsetting.Location = new System.Drawing.Point(1381, 505);
-            this.bsetting.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bsetting.Margin = new System.Windows.Forms.Padding(4);
             this.bsetting.Name = "bsetting";
             this.bsetting.Size = new System.Drawing.Size(186, 68);
             this.bsetting.TabIndex = 9;
@@ -251,6 +251,7 @@ namespace MyClient.View
             this.btn_creatdevice.TabIndex = 10;
             this.btn_creatdevice.Text = "创建设备";
             this.btn_creatdevice.UseVisualStyleBackColor = true;
+            this.btn_creatdevice.Click += new System.EventHandler(this.btn_creatdevice_Click);
             // 
             // FAccessibleDevice
             // 
@@ -268,7 +269,7 @@ namespace MyClient.View
             this.Controls.Add(this.CB_ShowOnline);
             this.Controls.Add(this.brefresh);
             this.Controls.Add(this.dataGridView1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FAccessibleDevice";
             this.Text = "FAccessibleDevice";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

@@ -58,8 +58,9 @@ namespace GrpcMain
                         if (at.NeedAudit && ex.Status.StatusCode == StatusCode.Cancelled)
                         {
                             await _Handle.RecordAudit(context, request, continuation, at, (User)context.UserState["user"]);
+                            throw new RpcException(new Status(StatusCode.Cancelled, "需要审计"));
                         }
-                        throw new RpcException(new Status(StatusCode.Cancelled, "需要审计"));
+                        throw;
                     }
                     return r;
                 }

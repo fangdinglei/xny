@@ -319,11 +319,31 @@ namespace FdlWindows.View
                 }
             }
         }
+        /// <summary>
+        /// TODO 异步环境下的一致性
+        /// </summary>
+        /// <param name="it"></param>
+        /// <returns></returns>
+        public bool Back(IView it)
+        {
+            if (IsTopView(it))
+            {
+                Back();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public bool IsTopView(IView it)
         {
             return Windows.Count > 0 && Windows.Peek() == it;
         }
-
+        public bool IsParentOfView(IView it)
+        {
+            return NameofViewInstance.ContainsKey(it);
+        }
         #region 事件
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -403,7 +423,6 @@ namespace FdlWindows.View
         public void ShowLoading(IView view, Func<Task<bool>> load, Func<Task<bool>>? retry = null,
             Action okcall = null, Action exitcall = null)
         {
-            _ViewLoading.Add(view);
             SwitchTo("Loading", false, load, retry, okcall, exitcall, (bool isloading) =>
             {
                 if (isloading)
@@ -426,6 +445,7 @@ namespace FdlWindows.View
         {
             SwitchTo("FDateSelector", false, call);
         }
+
 
     }
     public class FMainOption

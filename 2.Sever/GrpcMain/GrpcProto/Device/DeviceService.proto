@@ -54,6 +54,7 @@ message Request_AddDevice{
     Device Device=1;
 }   
 message Response_AddDevice{
+    //备用 当前无用
     Device Device=1;
 }  
 

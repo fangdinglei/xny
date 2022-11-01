@@ -7,6 +7,27 @@ using System.Text;
 
 namespace GrpcMain.Device
 {
+    static public class Ext
+    {
+        /// <summary>
+        /// 将请求对象转换为新的DB对象
+        /// </summary>
+        /// <returns></returns>
+        static public MyDBContext.Main.Device AsNewDeviceInDB(this GrpcMain.Device.Device dv,User us)
+        {
+            return new MyDBContext.Main.Device
+            {
+               Id = 0,
+               CreatorId=us.Id,
+               UserTreeId=us.UserTreeId,
+               DeviceTypeId=dv.DeviceTypeId,
+               Name=dv.Name,
+               Status=2,
+            };
+        }
+
+    }
+
     public class DeviceServiceImp : DeviceService.DeviceServiceBase
     {
         ITimeUtility _timeutility;
@@ -156,53 +177,40 @@ namespace GrpcMain.Device
             }
             return new CommonResponse() { Success = true };
         }
-        //[GrpcRequireAuthority(true, "UpdateDeviceType")]
-        //public override async Task<CommonResponse> UpdateDeviceType(Request_UpdateDeviceType request, ServerCallContext context)
-        //{
-        //    long id = (long)context.UserState["CreatorId"];
-        //    using (MainContext ct = new MainContext())
-        //    {
-        //        var ud = await ct.User_Devices
-        //           .Where(it => it.DeviceId == request.Dvid && it.UserId == id)
-        //            .AsNoTracking().FirstOrDefaultAsync();
-        //        if (ud == null || !ud._Authority.HasFlag(UserDeviceAuthority.Write_BaseInfo))
-        //        {
-        //            //没有权限
-        //            throw new RpcException(new Status(StatusCode.PermissionDenied, "没有设备基础信息修改"));
-        //        }
-        //        if (!ud._Authority.HasFlag(UserDeviceAuthority.Write_Type))
-        //        {
-        //            throw new RpcException(new Status(StatusCode.PermissionDenied, "没有设备类型修改权限"));
-        //        }
-        //        var dv = await ct.Devices.Where(it => it.Id == request.Dvid).FirstOrDefaultAsync();
-        //        if (dv == null)
-        //            throw new Exception("不一致:设备" + request.Dvid + " 应当存在却不存在");
 
-        //        var dvtypeownertype=await request.TypeId.GetOwnerTypeAsync(ct,id);
-        //        if (dvtypeownertype== AuthorityUtility.OwnerType.Non)
-        //            throw new Exception("没有该设备类型的权限");
-
-        //        var ownertype = await dv.GetOwnerTypeAsync(ct, id);
-        //        if (ownertype == AuthorityUtility.OwnerType.Non)
-        //        {
-        //            //没权限
-        //            throw new RpcException(new Status(StatusCode.PermissionDenied, "不一致"));
-        //        }
-        //        else if (ownertype == AuthorityUtility.OwnerType.SonOfCreator)
-        //        {
-        //            //子用户
-        //            context.Status = Status.DefaultCancelled;
-        //            return null;
-        //        }
-        //        else
-        //        {
-        //            dv.DeviceTypeId = request.TypeId;
-        //            await ct.SaveChangesAsync();
-        //        }
-        //    }
-        //    return new CommonResponse() { Success = true };
-
-        //}
+        /// <summary>
+        /// todo 加锁防止重名
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public override async Task<Response_AddDevice> AddDevice(Request_AddDevice request, ServerCallContext context)
+        {
+            User us = (User)context.UserState["user"];
+            using (MainContext ct = new MainContext())
+            {
+               var dvtypeownertype=await request.Device.DeviceTypeId.GetOwnerTypeAsync(ct,us.Id);
+               if (dvtypeownertype== AuthorityUtility.OwnerType.Non)
+                   throw new RpcException(new Status( StatusCode.PermissionDenied, "没有该设备类型的权限") );
+                await ct.Database.BeginTransactionAsync();
+                var dv = request.Device.AsNewDeviceInDB(us);
+                ct.Devices.Add(dv);
+                await ct.SaveChangesAsync();
+                ct.User_Devices.Add(new User_Device() { 
+                     UserTreeId=us.UserTreeId,
+                     DeviceId = dv.Id,
+                     UserId=us.Id,
+                     User_Device_GroupId=0,
+                     _Authority= UserDeviceAuthority.Every
+                });
+                await ct.SaveChangesAsync();
+                await ct.Database.CommitTransactionAsync();
+            }
+            return new Response_AddDevice() { 
+                 Device = request.Device,
+            };
+        }
 
     }
 }

@@ -24,7 +24,27 @@
         /// <param name="it"></param>
         /// <returns></returns>
         bool IsTopView(IView it);
+        /// <summary>
+        /// 判断一个控件是否是当前容器的直接子控件
+        /// </summary>
+        /// <param name="it"></param>
+        /// <returns></returns>
+        bool IsParentOfView(IView it);
         void Back();
+        /// <summary>
+        /// 如果传入界面是第一个界面则弹出 并返回是否能成功
+        /// </summary>
+        /// <param name="it"></param>
+        /// <returns></returns>
+        bool Back(IView it);
+        /// <summary>
+        /// 不太级联等待 应当在okcall 或exitcall中等待否则将会出现错误
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="load"></param>
+        /// <param name="retry"></param>
+        /// <param name="okcall"></param>
+        /// <param name="exitcall"></param>
         void ShowLoading(IView view, Func<Task<bool>> load, Func<Task<bool>>? retry = null
             , Action okcall = null, Action exitcall = null);
         bool IsLoading(IView view);

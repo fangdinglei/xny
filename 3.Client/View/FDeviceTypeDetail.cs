@@ -81,7 +81,15 @@ namespace MyClient.View
                     },
                     exitcall: () =>
                     {
-                        _viewholder.Back();
+                        if (_viewholder.IsParentOfView(this))
+                        {
+                            _viewholder.Back();
+                        }
+                        else
+                        {
+                            Visible = false;
+                        }
+                       
                     });
             }
 

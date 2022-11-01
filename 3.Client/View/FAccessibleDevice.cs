@@ -366,5 +366,9 @@ namespace MyClient.View
             ViewHolder.SwitchTo("自动控制配置", false, tb);
         }
 
+        private void btn_creatdevice_Click(object sender, EventArgs e)
+        {
+            ViewHolder.SwitchTo("FCreatDevice", false  );
+        }
     }
 }

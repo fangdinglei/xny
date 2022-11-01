@@ -6,8 +6,8 @@ namespace MyClient.View
     [AutoDetectView("Loading", "", "", false)]
     public partial class FLoading : Form, IView
     {
-        bool loading = false;
-        FLoadingOption Option;
+        bool loading = false;bool backfailed;
+        FLoadingOption? Option;
         public FLoading()
         {
             InitializeComponent();
@@ -17,7 +17,7 @@ namespace MyClient.View
             InitializeComponent();
             Option = option;
         }
-        Func<Task<bool>> retry;
+        Func<Task<bool>>? retry;
         /// <summary>
         /// 向界面管理器汇报是否在加载中 加载中的界面将不再被复用
         /// </summary>
@@ -44,7 +44,7 @@ namespace MyClient.View
             okcall = null;
             exitcall = null;
             tipui.RemoveAll();
-            _viewholder.Back();
+            backfailed= _viewholder.Back(this);
 
         }
         void OnFailure(Exception ex)
@@ -67,7 +67,7 @@ namespace MyClient.View
         async Task<bool> ShowLoading(Func<Task<bool>> task, Func<Task<bool>>? retry, Action okcall = null, Action exitcall = null, Action<bool> setisloading = null)
         {
             Debug.Assert(loading == false, "不能重复进入加载界面");
-
+            backfailed=false;
             this.retry = retry ?? task;
             this.setisloading = setisloading;
             this.okcall = okcall;
@@ -151,6 +151,14 @@ namespace MyClient.View
 
         public void OnTick()
         {
+        }
+
+        private void FLoading_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Visible=true && backfailed)
+            {
+                backfailed=_viewholder.Back(this);
+            }
         }
     }
 
