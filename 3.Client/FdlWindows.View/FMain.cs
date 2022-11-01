@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 using System.Collections.Concurrent;
-using System.Collections.Generic.;
 namespace FdlWindows.View
 {
     public partial class FMain : Form, IViewHolder
