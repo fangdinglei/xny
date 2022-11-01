@@ -44,7 +44,7 @@ namespace MyClient.View
             okcall = null;
             exitcall = null;
             tipui.RemoveAll();
-            backfailed= _viewholder.Back(this);
+            backfailed= !_viewholder.Back(this);
 
         }
         void OnFailure(Exception ex)
@@ -147,18 +147,17 @@ namespace MyClient.View
                 //FormExitEventArg arg = pars[0] as FormExitEventArg;
                 //arg.Cancel = !arg.IsForNewWindow; 
             }
+            else if (name== "UnCovered")
+            {
+                if (backfailed)
+                {
+                    backfailed = !_viewholder.Back(this);
+                }
+            }
         }
 
         public void OnTick()
         {
-        }
-
-        private void FLoading_VisibleChanged(object sender, EventArgs e)
-        {
-            if (Visible=true && backfailed)
-            {
-                backfailed=_viewholder.Back(this);
-            }
         }
     }
 

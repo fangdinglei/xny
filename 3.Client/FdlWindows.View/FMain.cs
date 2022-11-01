@@ -103,6 +103,19 @@ namespace FdlWindows.View
                         else
                         {
                             OnViewClose(formold);
+                            if (Windows.Count > 0)
+                            {
+                                try
+                                {
+                                    Windows.Peek().OnEvent("UnCovered");
+                                }
+                                catch (Exception)
+                                {
+
+                                    throw;
+                                }
+                              
+                            }
                         }
                     }
                     if (ViewNodes.ContainsKey(name))
@@ -126,6 +139,18 @@ namespace FdlWindows.View
                 var iuserview = GetOrCreatView(name);
                 try
                 {
+                    if (Windows.Count > 0)
+                    {
+                        try
+                        {
+                            Windows.Peek().OnEvent("Covered");
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
+                        }
+                    }
                     Windows.Push(iuserview);
                     iuserview.View.Visible = true;
                     iuserview.View.BringToFront();
@@ -320,6 +345,20 @@ namespace FdlWindows.View
                     {
                         view.View.Visible = false;
                         OnViewClose(view);
+
+                        if (Windows.Count > 0)
+                        {
+                            try
+                            {
+                                Windows.Peek().OnEvent("UnCovered");
+                            }
+                            catch (Exception)
+                            {
+
+                                throw;
+                            }
+
+                        }
                     }
                 }
             }

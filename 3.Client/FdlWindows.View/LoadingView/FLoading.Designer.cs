@@ -84,7 +84,6 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "FLoading";
             this.Text = "FLoading";
-            this.VisibleChanged += new System.EventHandler(this.FLoading_VisibleChanged);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
