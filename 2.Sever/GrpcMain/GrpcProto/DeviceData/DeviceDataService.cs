@@ -73,7 +73,7 @@ namespace GrpcMain.DeviceData
             }
             return res;
         }
-        [GrpcRequireAuthority("ColdData")]
+        [MyGrpcMethod("ColdData")]
         public override async Task<Response_GetDataPoints> GetColdDataPoints(Request_GetDataPoints request, ServerCallContext context)
         {
             if (!request.ColdData)

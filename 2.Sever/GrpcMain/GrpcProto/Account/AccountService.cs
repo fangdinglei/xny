@@ -1,5 +1,7 @@
 ﻿using Grpc.Core;
+using GrpcMain.Attributes;
 using GrpcMain.Common;
+using GrpcMain.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
@@ -66,7 +68,7 @@ namespace GrpcMain.Account
             _timeutility = time;
         }
 
-        [GrpcRequireAuthority(NeedLogin = false)]
+        [MyGrpcMethod(NeedLogin = false)]
         public override async Task<Response_LoginByUserName?>
             LoginByUserName(
             Request_LoginByUserName request, ServerCallContext context)

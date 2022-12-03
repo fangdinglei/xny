@@ -21,6 +21,10 @@ service AccountService {
     //修改用户信息 也可修改高级信息
     rpc UpdateUserInfo(DTODefine.Request_UpdateUserInfo)
         returns (DTODefine.Response_UpdateUserInfo);
+
+    //创建一个顶级用户 仅管理员可用
+    rpc CreatTopUser(DTODefine.Request_CreatUser)
+        returns (DTODefine.Response_CreatUser);
 }
 
 

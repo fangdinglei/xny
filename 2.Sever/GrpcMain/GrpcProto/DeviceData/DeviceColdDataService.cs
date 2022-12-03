@@ -59,7 +59,7 @@ namespace GrpcMain.DeviceData
             }
             return res;
         }
-        [GrpcRequireAuthority("SystemUser")]
+        [MyGrpcMethod("SystemUser")]
         public override async Task<CommonResponse> CompressDeviceData(Request_CompressDeviceData request, ServerCallContext context)
         {
             int maxcout1 = 100 + 1;

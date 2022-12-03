@@ -1,9 +1,12 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using GrpcMain.Account;
 using GrpcMain.AccountHistory;
+using GrpcMain.Attributes;
 using GrpcMain.Device;
 using GrpcMain.DeviceData;
 using GrpcMain.DeviceType;
+using GrpcMain.Interceptors;
 using GrpcMain.InternalMail;
 using GrpcMain.System;
 using GrpcMain.UserDevice;
@@ -14,8 +17,9 @@ using MyDBContext.Main;
 using MyJwtHelper;
 using MyUtility;
 using System.Reflection;
+using Type = System.Type;
 
-namespace GrpcMain
+namespace GrpcMain.Extensions
 {
     static public class MyGrpcExtension
     {
@@ -34,6 +38,28 @@ namespace GrpcMain
                 op.Interceptors.Add<GrpcInterceptor>();
                 op.EnableDetailedErrors = true;
             });
+            //获取方法属性和路由信息
+            Dictionary<string, MyGrpcMethodAttribute> dic = new Dictionary<string, MyGrpcMethodAttribute>();
+            foreach (var item in typeof(IGrpcAuthorityHandle).Assembly.GetTypes())
+            {
+                if (item.BaseType == null)
+                    continue;
+                var att = item.BaseType.GetCustomAttribute<BindServiceMethodAttribute>();
+                if (att == null)
+                    continue;
+                foreach (var func in item.GetMethods())
+                {
+                    if (!func.IsVirtual)
+                        continue;
+                    var atx = func.GetCustomAttribute<MyGrpcMethodAttribute>();
+                    if (atx == null)
+                        continue;
+                    var str = "/" + att.BindType.GetField("__ServiceName", BindingFlags.Static | BindingFlags.NonPublic).GetValue(att.BindType) + "/" + func.Name;
+                    dic.Add(str, atx);
+                }
+            }
+            services.TryAddSingleton(dic);
+
             //Test 测试
             using (MainContext ct = new MainContext())
             {
@@ -47,32 +73,25 @@ namespace GrpcMain
         /// <param name="app"></param>
         static public void RegistMyGrpc(this WebApplication app)
         {
-            app.MapGrpcService<AccountServiceImp>();
-            app.MapGrpcService<DeviceServiceImp>();
-            app.MapGrpcService<UserDeviceServiceImp>();
-            app.MapGrpcService<DeviceDataServiceImp>();
-            app.MapGrpcService<DeviceTypeServiceImp>();
-            app.MapGrpcService<InternalMailServiceImp>();
-            app.MapGrpcService<AccountHistoryServiceImp>();
-            app.MapGrpcService<RepairServiceImp>();
-            app.MapGrpcService<SystemServiceImp>();
+            var addmethod = typeof(GrpcEndpointRouteBuilderExtensions).GetMethod("MapGrpcService");
             foreach (var item in typeof(IGrpcAuthorityHandle).Assembly.GetTypes())
             {
-                var att = item.GetCustomAttribute<BindServiceMethodAttribute>();
+                if (item.BaseType == null)
+                    continue;
+                var att = item.BaseType.GetCustomAttribute<BindServiceMethodAttribute>();
                 if (att == null)
                     continue;
-                foreach (var func in item.GetMethods())
-                {
-                    if (!func.IsVirtual)
-                        continue;
-                    var atx = func.GetCustomAttribute<GrpcRequireAuthorityAttribute>();
-                    if (atx == null)
-                        continue;
-                    var str = "/" + att.BindType.GetField("__ServiceName", BindingFlags.Static | BindingFlags.NonPublic).GetValue(att.BindType) + "/" + func.Name;
-                    GrpcInterceptor.AuthorityAttributes.Add(str, atx);
-                }
-
+                _ = addmethod.MakeGenericMethod(item).Invoke(null, new object[] { app as IEndpointRouteBuilder });
             }
+            //app.MapGrpcService<AccountServiceImp>();
+            //app.MapGrpcService<DeviceServiceImp>();
+            //app.MapGrpcService<UserDeviceServiceImp>();
+            //app.MapGrpcService<DeviceDataServiceImp>();
+            //app.MapGrpcService<DeviceTypeServiceImp>();
+            //app.MapGrpcService<InternalMailServiceImp>();
+            //app.MapGrpcService<AccountHistoryServiceImp>();
+            //app.MapGrpcService<RepairServiceImp>();
+            //app.MapGrpcService<SystemServiceImp>();
         }
 
         static public bool TryDeserializeObject<T>(this string json, out T? obj) where T : class
@@ -112,7 +131,7 @@ namespace GrpcMain
                 _timeUtility = timeUtility;
             }
 
-            public async Task<(bool, string?)> Authorize(ServerCallContext context, GrpcRequireAuthorityAttribute att)
+            public async Task<(bool, string?)> Authorize(ServerCallContext context, MyGrpcMethodAttribute att)
             {
                 object token;
                 var et = context.RequestHeaders.Get("Token");
@@ -170,7 +189,7 @@ namespace GrpcMain
                 return;
             }
 
-            public async Task RecordAudit<TRequest, TResponse>(ServerCallContext context, object request, UnaryServerMethod<TRequest, TResponse> continuation, GrpcRequireAuthorityAttribute att, User user)
+            public async Task RecordAudit<TRequest, TResponse>(ServerCallContext context, object request, UnaryServerMethod<TRequest, TResponse> continuation, MyGrpcMethodAttribute att, User user)
                 where TResponse : class
                 where TRequest : class
             {

@@ -32,10 +32,22 @@ namespace GrpcMain.Managers
                 }
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="colddata"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"/>
         static public async Task DoStore(Device_DataPoint_Cold colddata)
         {
             await mgrs[colddata.ManagerName].Store(colddata);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="colddata"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"/>
         static public async Task<byte[]> DoLoad(Device_DataPoint_Cold colddata)
         {
             var bytes = await mgrs[colddata.ManagerName].Load(colddata);

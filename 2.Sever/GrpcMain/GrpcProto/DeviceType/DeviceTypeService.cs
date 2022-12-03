@@ -1,4 +1,5 @@
 ﻿using Grpc.Core;
+using GrpcMain.Attributes;
 using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
@@ -123,7 +124,7 @@ namespace GrpcMain.DeviceType
             }
         }
 
-        [GrpcRequireAuthority(true, "UpdateDeviceTypeInfo")]
+        [MyGrpcMethod(true, "UpdateDeviceTypeInfo")]
         public override async Task<CommonResponse?> UpdateTypeInfo(Request_UpdateTypeInfo request, ServerCallContext context)
         {//需要审计
             long id = (long)context.UserState["CreatorId"];

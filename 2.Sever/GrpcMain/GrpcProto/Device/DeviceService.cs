@@ -80,7 +80,7 @@ namespace GrpcMain.Device
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         /// <exception cref="RpcException"></exception>
-        [GrpcRequireAuthority(true, "DeletDevice")]
+        [MyGrpcMethod(true, "DeletDevice")]
         public override async Task<CommonResponse> DeletDevice(Request_DeletDevice request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];

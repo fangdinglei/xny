@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
-using GrpcMain;
+using GrpcMain.Extensions;
+using GrpcMain.Interceptors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,7 +58,7 @@ builder.Services.UseMyEmail();
 builder.Services.AddFluentValidationAutoValidation(
     c => c.DisableDataAnnotationsValidation = true
     );
-builder.Services.AddValidatorsFromAssemblyContaining<GrpcMain.GrpcInterceptor>();
+builder.Services.AddValidatorsFromAssemblyContaining<GrpcInterceptor>();
 
 //builder.Services.AddSwaggerGen(options =>
 //{

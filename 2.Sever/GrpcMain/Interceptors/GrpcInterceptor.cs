@@ -1,16 +1,18 @@
 ﻿using Grpc.Core;
 using Grpc.Core.Interceptors;
+using GrpcMain.Attributes;
 using MyDBContext.Main;
 
-namespace GrpcMain
+namespace GrpcMain.Interceptors
 {
     public class GrpcInterceptor : Interceptor
     {
-        static public Dictionary<string, GrpcRequireAuthorityAttribute> AuthorityAttributes = new Dictionary<string, GrpcRequireAuthorityAttribute>();
+        Dictionary<string, MyGrpcMethodAttribute> AuthorityAttributes;
         IGrpcAuthorityHandle _Handle;
-        public GrpcInterceptor(IGrpcAuthorityHandle handle)
+        public GrpcInterceptor(IGrpcAuthorityHandle handle, Dictionary<string, MyGrpcMethodAttribute> authorityAttributes)
         {
             _Handle = handle;
+            AuthorityAttributes = authorityAttributes;
         }
 
         public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
@@ -20,10 +22,10 @@ namespace GrpcMain
         {
             try
             {
-                GrpcRequireAuthorityAttribute? at;
+                MyGrpcMethodAttribute? at;
                 if (!AuthorityAttributes.TryGetValue(context.Method, out at) || at == null)
                 {  //默认鉴权 不审计
-                    at = GrpcRequireAuthorityAttribute.Default;
+                    at = MyGrpcMethodAttribute.Default;
 
                 }
 
