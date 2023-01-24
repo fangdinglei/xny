@@ -2,7 +2,7 @@
 
 namespace Sever.ColdData.Imp
 {
-    public class DeviceColdDataManagerImp : IDeviceColdDataManager
+    internal class DeviceColdDataManagerImp : IDeviceColdDataManager
     {
 
         static Dictionary<string, ColdDataManagerBase> mgrs = new();
@@ -18,17 +18,35 @@ namespace Sever.ColdData.Imp
             }
         }
 
+
+        public async Task<bool> DoDelet(Device_DataPoint_Cold colddata)
+        {
+            return await mgrs[colddata.ManagerName].Delet(colddata);
+        }
+
+        public async Task<int> DoGetStatus(Device_DataPoint_Cold colddata)
+        {
+            try
+            {
+                return await mgrs[colddata.ManagerName].GetStatus(colddata);
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+         
+        }
+
         public async Task<byte[]> DoLoad(Device_DataPoint_Cold colddata, Dictionary<string, object>? pars)
         {
             var bytes = await mgrs[colddata.ManagerName].Load(colddata);
             return bytes;
         }
 
-        public async Task DoStore(Device_DataPoint_Cold colddata, Dictionary<string, object>? pars)
+        public async Task DoStore(Device_DataPoint_Cold colddata, byte[] bytes, Dictionary<string, object>? pars)
         {
-            await mgrs[colddata.ManagerName].Store(colddata);
+            await mgrs[colddata.ManagerName].Store(colddata,bytes);
         }
-
     }
 
 }

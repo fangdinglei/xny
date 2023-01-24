@@ -11,7 +11,7 @@ namespace GrpcMain.Extensions
         static public void UseColdData(this IServiceCollection services)
         {
             services.AddSingleton<IDeviceColdDataLoader,DeviceColdDataLoaderImp>();
-            services.AddSingleton<IDeviceColdDataManager, DeviceColdDataManagerImp>();
+            //services.AddSingleton<IDeviceColdDataManager, DeviceColdDataManagerImp>();
         }
     
     }

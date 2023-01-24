@@ -24,7 +24,11 @@ namespace MyDBContext.Main
         public long StartTime { get; set; }
         public long EndTime { get; set; }
         public int Count { get; set; }
-        public byte[] Data { get; set; }
+        public string Pars { get; set; }
+        /// <summary>
+        /// 数据状态 0未知 1在线 2离线 3删除中 4已删除
+        /// </summary>
+        public byte status { get; set; }
         public string ManagerName { get; set; }
     }
 
