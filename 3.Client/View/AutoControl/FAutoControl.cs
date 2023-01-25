@@ -1,11 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms; 
-using System.Collections.Generic;
+﻿using FdlWindows.View;
 using XNYAPI.Model.AutoControl;
-using XNYAPI.Request.AutoControl;
-using XNYAPI.Model;
-using XNYAPI.Request.Device;
 
 namespace MyClient.View.AutoControl
 {
@@ -33,13 +27,14 @@ namespace MyClient.View.AutoControl
                 IDs = par[0] as List<ValueTuple<uint, string>>;
                 if (IDs.Count == 0)
                     throw new Exception("设备个数不能是0");
-                else if (IDs.Count == 1) {
+                else if (IDs.Count == 1)
+                {
                     try
                     {
                         var res = Global.client.Exec(new GetAutoControlSettingRequest(
                                               new List<uint>() { IDs[0].Item1 }
                                            ));
-                        if (res.IsError || res.Data == null )
+                        if (res.IsError || res.Data == null)
                             throw new Exception();
                         if (res.Data.Count != 0)
                             Settings = res.Data[0];
@@ -49,35 +44,36 @@ namespace MyClient.View.AutoControl
                         var res2 = Global.client.Exec(new GetAutoControlScheduleDataRequest(
                                             new List<uint>() { IDs[0].Item1 }
                                          ));
-                        if (res2.IsError || res2.Data == null )
+                        if (res2.IsError || res2.Data == null)
                             throw new Exception();
                         if (res2.Data.Count != 0)
                             SheduleInfo = res2.Data[0];
-                        else 
-                            SheduleInfo =new ScheduleInfo( ServiceType.DeviceLEDControl);
+                        else
+                            SheduleInfo = new ScheduleInfo(ServiceType.DeviceLEDControl);
 
 
-                       RefreshView();
-           
+                        RefreshView();
+
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("信息获取失败","错误");
+                        MessageBox.Show("信息获取失败", "错误");
                     }
                     linfo.Text = "设备[" + Utility.Utility.BuildLongString(IDs.Select(it => it.Item2), 40) + "]";
                     Changed = false;
                     //todo load
                     //throw new Exception("todo");
-                } 
-                else {
-                   
-                    SheduleInfo = new ScheduleInfo( ServiceType.DeviceLEDControl);
-                    Settings = new AutoControlSettings(0,0,false,false,false, ServiceType.DeviceLEDControl);
+                }
+                else
+                {
+
+                    SheduleInfo = new ScheduleInfo(ServiceType.DeviceLEDControl);
+                    Settings = new AutoControlSettings(0, 0, false, false, false, ServiceType.DeviceLEDControl);
                     linfo.Text = "设备[" + Utility.Utility.BuildLongString(IDs.Select(it => it.Item2), 40) + "]";
                     RefreshView();
                     Changed = false;
                 }
-              
+
             }
             else
             {
@@ -195,7 +191,8 @@ namespace MyClient.View.AutoControl
 
         //  }
 
-        void RefreshView() { 
+        void RefreshView()
+        {
             Func<int, string> valtostring = (v) =>
             {
                 return v == 0 ? "无控制" :
@@ -227,7 +224,7 @@ namespace MyClient.View.AutoControl
                     case TimeTriggerType.ALL:
                         return "总是";
                     case TimeTriggerType.Once:
-                        return  v.GetTimeStart() .ToString() + " - " + v.GetTimeEnd().ToString();
+                        return v.GetTimeStart().ToString() + " - " + v.GetTimeEnd().ToString();
                     case TimeTriggerType.EveryWeek:
                         s = v.GetTimeStart().ToString("HH-mm-ss") + " - " + v.GetTimeEnd().ToString("HH-mm-ss");
                         s += " 周";
@@ -243,16 +240,16 @@ namespace MyClient.View.AutoControl
                         return s;
                     default:
                         return "异常";
-                } 
+                }
             };
-            if (SheduleInfo!=null)
+            if (SheduleInfo != null)
             {
                 var ls = new List<string>();
                 foreach (var it in SheduleInfo.Data)
                 {
                     string s = "";
-                    s += $"任务事件:{ valtostring(it.GetValue())}\t";
-                    s += $"触发方式:{tiggertostring(it.TriggerType) }\t";
+                    s += $"任务事件:{valtostring(it.GetValue())}\t";
+                    s += $"触发方式:{tiggertostring(it.TriggerType)}\t";
                     s += $"触发时间:{tigtimetostring(it)}";
                     ls.Add(s);
 
@@ -261,17 +258,17 @@ namespace MyClient.View.AutoControl
             }
 
             //更新配置信息
-           // if (Settings.OwnerID!=0)
+            // if (Settings.OwnerID!=0)
             //{
-                ctimeplanopen.Checked = Settings.TimeScheduleEnabled;
-                cadvancedcontrol.Checked = Settings.AdvancedControlEnabled;
-           // }
-           
+            ctimeplanopen.Checked = Settings.TimeScheduleEnabled;
+            cadvancedcontrol.Checked = Settings.AdvancedControlEnabled;
+            // }
+
 
         }
         void OnDataChanged()
         {
-            Changed = true; 
+            Changed = true;
             RefreshView();
         }
         private void bdelete_Click(object sender, EventArgs e)
@@ -295,7 +292,7 @@ namespace MyClient.View.AutoControl
 
         private void bupdate_Click(object sender, EventArgs e)
         {
-           var sel=datalist.SelectedIndex;
+            var sel = datalist.SelectedIndex;
             if (sel < 0)
                 return;
             var s = SheduleInfo.Data[sel];
@@ -313,24 +310,24 @@ namespace MyClient.View.AutoControl
             var sel = datalist.SelectedIndex;
             if (sel <= 0)
                 return;
-         
+
             var t = SheduleInfo.Data[sel];
-            SheduleInfo.Data[sel] = SheduleInfo.Data[sel- 1];
-            SheduleInfo.Data[sel- 1] = t;
+            SheduleInfo.Data[sel] = SheduleInfo.Data[sel - 1];
+            SheduleInfo.Data[sel - 1] = t;
             OnDataChanged();
-            datalist.SelectedIndex = sel-1;
+            datalist.SelectedIndex = sel - 1;
         }
 
         private void bprioritydown_Click(object sender, EventArgs e)
         {
             var sel = datalist.SelectedIndex;
             if (sel < 0 || sel >= datalist.Items.Count - 1)
-                return; 
+                return;
             var t = SheduleInfo.Data[sel];
             SheduleInfo.Data[sel] = SheduleInfo.Data[sel + 1];
             SheduleInfo.Data[sel + 1] = t;
             OnDataChanged();
-            datalist.SelectedIndex = sel+1;
+            datalist.SelectedIndex = sel + 1;
         }
 
 
@@ -350,21 +347,21 @@ namespace MyClient.View.AutoControl
         {
             if (Changed)
             {
-                
+
                 try
-                { 
-                    var res=  Global.client.Exec(new SetAutoControlScheduleDataRequest(
-                            IDs.Select(it=>it.Item1).ToList(),
+                {
+                    var res = Global.client.Exec(new SetAutoControlScheduleDataRequest(
+                            IDs.Select(it => it.Item1).ToList(),
                             SheduleInfo
                      ));
                     if (res.IsError)
                     {
                         throw new Exception();
-                       
+
                     }
                     var res2 = Global.client.Exec(new SetAutoControlSettingRequest(
                             IDs.Select(it => it.Item1).ToList(),
-                            Settings.TimeScheduleEnabled,Settings.AdvancedControlEnabled,
+                            Settings.TimeScheduleEnabled, Settings.AdvancedControlEnabled,
                             Settings.GroupID
                      ));
                     if (res.IsError)
@@ -379,7 +376,7 @@ namespace MyClient.View.AutoControl
                 {
                     MessageBox.Show("失败", "提示");
                 }
-              
+
                 //todo 提交
             }
         }
@@ -444,7 +441,7 @@ namespace MyClient.View.AutoControl
 
 
 
-        int listselect => datalist.SelectedIndex; 
+        int listselect => datalist.SelectedIndex;
 
 
         public Control View => this;
@@ -455,11 +452,11 @@ namespace MyClient.View.AutoControl
 
         public void OnEvent(string name, params object[] pars)
         {
-            if (name=="Exit")
+            if (name == "Exit")
             {//退出界面
                 if (Changed)
                 {//询问是否退出
-                    if (MessageBox.Show("尚未保存,是否离开", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question,MessageBoxDefaultButton.Button2) == DialogResult.No)
+                    if (MessageBox.Show("尚未保存,是否离开", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
                     {
                         (pars[0] as FormExitEventArg).Cancel = true;
                     }
@@ -469,14 +466,14 @@ namespace MyClient.View.AutoControl
 
         public void OnTick()
         {
-           
+
         }
 
         private void bopen_Click(object sender, EventArgs e)
         {
             if (IDs == null || IDs.Count == 0)
             {
-                MessageBox.Show("未知错误","异常");
+                MessageBox.Show("未知错误", "异常");
                 return;
             }
             string s = "";
@@ -503,7 +500,7 @@ namespace MyClient.View.AutoControl
             {
                 MessageBox.Show("向设备[" + s + "]发送失败", "提示");
             }
-          
+
         }
 
         private void bclose_Click(object sender, EventArgs e)

@@ -1,8 +1,4 @@
-﻿ 
-using System;
-using System.Windows.Forms;
-using XNYAPI.Model;
-using XNYAPI.Model.AutoControl;
+﻿using XNYAPI.Model.AutoControl;
 
 namespace MyClient.View.AutoControl
 {
@@ -21,19 +17,19 @@ namespace MyClient.View.AutoControl
         /// </summary>
         /// <param name="deviceid"></param>
         /// <param name="callback"></param>
-        public void InitFor(  Action<ScheduleItem> callback)
+        public void InitFor(Action<ScheduleItem> callback)
         {
             CallBack = callback;
-           
+
             Org = null;
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
-           
+
         }
         /// <summary>
         /// 修改任务 TODO内容适应原有的值
         /// </summary>
-        public void InitFor( ScheduleItem org, Action<ScheduleItem> callback)
+        public void InitFor(ScheduleItem org, Action<ScheduleItem> callback)
         {
             CallBack = callback;
             Org = org;
@@ -44,13 +40,13 @@ namespace MyClient.View.AutoControl
                 case TimeTriggerType.ALL:
                     break;
                 case TimeTriggerType.Once:
-                    g2_startdatepicker.Value = org.GetTimeStart() ;
+                    g2_startdatepicker.Value = org.GetTimeStart();
                     g2_starttimepicker.Value = org.GetTimeStart();
                     g2_enddatepicker.Value = org.GetTimeEnd();
                     g2_endtimepicker.Value = org.GetTimeEnd();
                     break;
                 case TimeTriggerType.EveryWeek:
-                    g1_starttimepicker.Value = org.GetTimeStart().AddHours(-8);  
+                    g1_starttimepicker.Value = org.GetTimeStart().AddHours(-8);
                     g1_endtimepicker.Value = org.GetTimeEnd().AddHours(-8);
                     for (int i = 0; i < 7; i++)
                     {
@@ -113,7 +109,7 @@ namespace MyClient.View.AutoControl
             if ((string)comboBox1.SelectedItem == "总 是")
             {
                 //g0
-                sh = ScheduleItem.Creat(ServiceType.DeviceLEDControl,0,v,0);
+                sh = ScheduleItem.Creat(ServiceType.DeviceLEDControl, 0, v, 0);
             }
             else if ((string)comboBox1.SelectedItem == "时间段")
             {
@@ -148,7 +144,7 @@ namespace MyClient.View.AutoControl
                   g1_starttimepicker.Value.Hour,
                   g1_starttimepicker.Value.Minute,
                   g1_starttimepicker.Value.Second
-                  ) .AddHours(8);
+                  ).AddHours(8);
                 var dateend = new DateTime(
                  1970, 1, 1,
                   g1_endtimepicker.Value.Hour,
@@ -173,14 +169,14 @@ namespace MyClient.View.AutoControl
                     MessageBox.Show("请选择至少一天", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                sh = ScheduleItem.Creat(ServiceType.DeviceLEDControl, 0, v, datestart.BeijingTimeToJavaTicket(), dateend.BeijingTimeToJavaTicket(), week,0);
+                sh = ScheduleItem.Creat(ServiceType.DeviceLEDControl, 0, v, datestart.BeijingTimeToJavaTicket(), dateend.BeijingTimeToJavaTicket(), week, 0);
             }
             else
             {
                 MessageBox.Show("未知触发条件，请联系管理员");
                 return;
             }
-         
+
             CallBack(sh);
             Hide();
         }

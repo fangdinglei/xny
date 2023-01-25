@@ -9,24 +9,42 @@ service DeviceAutoControlService {
         returns(CommonResponse);
     //获取设备自动控制
     rpc GetDeviceSetting(Request_GetDeviceSetting)
-       returns(DeviceAutoControlSetting);
+       returns(Response_GetDeviceSetting);
 }
 
 
 message DeviceAutoControlSetting{
-    int64 Open=1;
-    //TODO
+    bool Open=1;
+    //排序
+    int32 Order=2;
+    //
+    string Name=3;
+    //
+    int64 DeviceId=4;
+    int32  TriggerType=6;
+    int64 TimeStart=7;
+    int64 TimeEnd=8;
+    //关联的设备id
+    int64 OwnerID=9;
+    //   周信息 1位代表1天  低位为周日
+    int32 Week=10; 
+    string Cmd=11;
 }
+//设置自动控制配置
 message Request_SetDeviceSetting{
+    //数量不应当超过20
     repeated int64 Dvids=1;
-    optional DeviceAutoControlSetting Setting=2;
+    //数量不应该超过40
+    repeated DeviceAutoControlSetting Setting=2;
 }   
 
 message Request_GetDeviceSetting{
+    //todo 改成单数
     int64 Dvids=1;
 }
 
 message Response_GetDeviceSetting{
+    //todo 改成单数
     int64 Dvids=1;
-    optional DeviceAutoControlSetting Setting=2;
+    repeated DeviceAutoControlSetting Setting=2;
 }
