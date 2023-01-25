@@ -38,6 +38,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.btn_search = new System.Windows.Forms.Button();
+            this.cb_colddown = new System.Windows.Forms.ComboBox();
+            this.cb_mincount = new System.Windows.Forms.ComboBox();
+            this.c_opencolddata = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btn_savesetting = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cb_coldmanager = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -145,11 +153,102 @@
             this.btn_search.UseVisualStyleBackColor = true;
             this.btn_search.Click += new System.EventHandler(this.btn_search_Click);
             // 
+            // cb_colddown
+            // 
+            this.cb_colddown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_colddown.FormattingEnabled = true;
+            this.cb_colddown.Items.AddRange(new object[] {
+            "10天",
+            "30天",
+            "90天"});
+            this.cb_colddown.Location = new System.Drawing.Point(1269, 89);
+            this.cb_colddown.Name = "cb_colddown";
+            this.cb_colddown.Size = new System.Drawing.Size(182, 32);
+            this.cb_colddown.TabIndex = 4;
+            this.cb_colddown.SelectedIndexChanged += new System.EventHandler(this.cb_colddown_SelectedIndexChanged_1);
+            // 
+            // cb_mincount
+            // 
+            this.cb_mincount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_mincount.FormattingEnabled = true;
+            this.cb_mincount.Location = new System.Drawing.Point(1269, 156);
+            this.cb_mincount.Name = "cb_mincount";
+            this.cb_mincount.Size = new System.Drawing.Size(182, 32);
+            this.cb_mincount.TabIndex = 5;
+            this.cb_mincount.SelectedIndexChanged += new System.EventHandler(this.cb_colddown_SelectedIndexChanged_1);
+            // 
+            // c_opencolddata
+            // 
+            this.c_opencolddata.AutoSize = true;
+            this.c_opencolddata.Location = new System.Drawing.Point(1269, 22);
+            this.c_opencolddata.Name = "c_opencolddata";
+            this.c_opencolddata.Size = new System.Drawing.Size(72, 28);
+            this.c_opencolddata.TabIndex = 6;
+            this.c_opencolddata.Text = "启用";
+            this.c_opencolddata.UseVisualStyleBackColor = true;
+            this.c_opencolddata.CheckStateChanged += new System.EventHandler(this.c_opencolddata_CheckStateChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(1269, 62);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(82, 24);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "冷却时间";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(1269, 129);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(100, 24);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "最小数据量";
+            // 
+            // btn_savesetting
+            // 
+            this.btn_savesetting.Enabled = false;
+            this.btn_savesetting.Location = new System.Drawing.Point(1281, 264);
+            this.btn_savesetting.Name = "btn_savesetting";
+            this.btn_savesetting.Size = new System.Drawing.Size(98, 40);
+            this.btn_savesetting.TabIndex = 10;
+            this.btn_savesetting.Text = "保存";
+            this.btn_savesetting.UseVisualStyleBackColor = true;
+            this.btn_savesetting.Click += new System.EventHandler(this.btn_savesetting_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1269, 199);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(118, 24);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "冷数据管理器";
+            // 
+            // cb_coldmanager
+            // 
+            this.cb_coldmanager.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_coldmanager.FormattingEnabled = true;
+            this.cb_coldmanager.Location = new System.Drawing.Point(1269, 226);
+            this.cb_coldmanager.Name = "cb_coldmanager";
+            this.cb_coldmanager.Size = new System.Drawing.Size(182, 32);
+            this.cb_coldmanager.TabIndex = 11;
+            this.cb_coldmanager.SelectedIndexChanged += new System.EventHandler(this.cb_colddown_SelectedIndexChanged_1);
+            // 
             // FColdDatas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1245, 561);
+            this.ClientSize = new System.Drawing.Size(1515, 560);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.cb_coldmanager);
+            this.Controls.Add(this.btn_savesetting);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.c_opencolddata);
+            this.Controls.Add(this.cb_mincount);
+            this.Controls.Add(this.cb_colddown);
             this.Controls.Add(this.btn_search);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label1);
@@ -174,5 +273,13 @@
         private DataGridViewTextBoxColumn col_status;
         private DataGridViewButtonColumn col_delet;
         private Button btn_search;
+        private ComboBox cb_colddown;
+        private ComboBox cb_mincount;
+        private CheckBox c_opencolddata;
+        private Label label2;
+        private Label label4;
+        private Button btn_savesetting;
+        private Label label3;
+        private ComboBox cb_coldmanager;
     }
 }

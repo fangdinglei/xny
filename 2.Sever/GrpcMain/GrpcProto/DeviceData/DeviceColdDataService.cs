@@ -208,6 +208,7 @@ namespace GrpcMain.DeviceData
                 {
                     Response_GetSetting res = new Response_GetSetting();
                     res.Data = new ColdDataSetting();
+                    res.Data.Open = false;
                     return res;
                 }
                 else
@@ -217,6 +218,7 @@ namespace GrpcMain.DeviceData
                         ColdDownTime = d.ColdDownTime,
                         ManagerName = d.ManagerName,
                         MinCount = d.MinCount,
+                        Open=d.Open
                     };
                     //TODO  res.Data.Managers
                     return res;
@@ -241,6 +243,7 @@ namespace GrpcMain.DeviceData
                         ManagerName = request.Data.ManagerName,
                         MinCount = request.Data.MinCount,
                         TreeId = user.UserTreeId,
+                        Open=request.Data.Open,
                     };
                     ct.Add(d);
                 }
@@ -257,6 +260,10 @@ namespace GrpcMain.DeviceData
                     if (request.Data.HasMinCount)
                     {
                         d.MinCount = request.Data.MinCount;
+                    }
+                    if (request.Data.HasOpen)
+                    {
+                        d.Open = request.Data.Open;
                     }
                 }
                 await ct.SaveChangesAsync();

@@ -65,6 +65,7 @@ message ColdDataSetting{
     //所有可用的管理器
     repeated string Managers=4;
     //optional int64 AutoDeletTime=5;
+    optional bool Open=5;
 }
 
 message Request_SetSetting{
