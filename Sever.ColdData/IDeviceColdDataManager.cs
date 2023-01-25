@@ -36,5 +36,7 @@ namespace Sever.ColdData
        /// <param name="data"></param>
        /// <returns>状态</returns>
         Task<int> DoGetStatus(Device_DataPoint_Cold data);
+
+        List<string> GetManagerNames();
     }
 }

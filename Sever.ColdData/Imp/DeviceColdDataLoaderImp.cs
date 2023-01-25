@@ -115,5 +115,10 @@ namespace Sever.ColdData.Imp
             }
             return true;
         }
+
+        public List<string> GetManagerNames()
+        {
+            return mgr.GetManagerNames();
+        }
     }
 }

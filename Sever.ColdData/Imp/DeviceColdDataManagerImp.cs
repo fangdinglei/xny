@@ -47,6 +47,11 @@ namespace Sever.ColdData.Imp
         {
             await mgrs[colddata.ManagerName].Store(colddata,bytes);
         }
+
+        public List<string> GetManagerNames()
+        {
+            return mgrs.Keys.ToList();
+        }
     }
 
 }

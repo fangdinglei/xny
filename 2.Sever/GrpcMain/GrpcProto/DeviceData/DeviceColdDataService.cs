@@ -209,6 +209,7 @@ namespace GrpcMain.DeviceData
                     Response_GetSetting res = new Response_GetSetting();
                     res.Data = new ColdDataSetting();
                     res.Data.Open = false;
+                    res.Data.Managers.AddRange(_deviceColdDataHandle.GetManagerNames());
                     return res;
                 }
                 else
@@ -220,7 +221,7 @@ namespace GrpcMain.DeviceData
                         MinCount = d.MinCount,
                         Open=d.Open
                     };
-                    //TODO  res.Data.Managers
+                    res.Data.Managers.AddRange(_deviceColdDataHandle.GetManagerNames()) ;
                     return res;
                 }
             }
