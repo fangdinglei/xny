@@ -28,7 +28,6 @@ namespace MyDBContext.Main
         public string Data { get; set; }
     }
 
-
     public class MainContext : DbContext
     {
         public DbSet<User> Users { get; set; }
@@ -45,7 +44,9 @@ namespace MyDBContext.Main
         public DbSet<Device_DataPoint_Cold> Device_DataPoint_Colds { get; set; }
         public DbSet<Internal_Mail> Internal_Mails { get; set; }
         public DbSet<Device_Repair> Device_Repairs { get; set; }
+        public DbSet<ColdDataSettings> ColdDataSettings { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
+
 
         static SqliteConnection? _connection;
 
@@ -119,7 +120,7 @@ namespace MyDBContext.Main
                 CreatorId = 0,
                 Authoritys = "[\"SystemUser\",\"测试权限1\"]",
                 UserTreeId = 1,
-
+                TreeDeep=0,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -132,6 +133,7 @@ namespace MyDBContext.Main
                 CreatorId = 0,
                 Authoritys = "[\"测试权限1\",\"测试权限2\"]",
                 UserTreeId = 2,
+                TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -144,6 +146,7 @@ namespace MyDBContext.Main
                 CreatorId = 2,
                 Authoritys = "[]",
                 UserTreeId = 2,
+                TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -156,6 +159,7 @@ namespace MyDBContext.Main
                 CreatorId = 2,
                 Authoritys = "[]",
                 UserTreeId = 2,
+                TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -168,6 +172,7 @@ namespace MyDBContext.Main
                 CreatorId = 3,
                 Authoritys = "[]",
                 UserTreeId = 2,
+                TreeDeep = 0,
             });
 
             modelBuilder.Entity<User>().HasData(new User()
@@ -181,6 +186,7 @@ namespace MyDBContext.Main
                 CreatorId = 0,
                 Authoritys = "[]",
                 UserTreeId = 3,
+                TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -193,6 +199,7 @@ namespace MyDBContext.Main
                 CreatorId = 10,
                 Authoritys = "[]",
                 UserTreeId = 3,
+                TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -205,6 +212,7 @@ namespace MyDBContext.Main
                 CreatorId = 10,
                 Authoritys = "[]",
                 UserTreeId = 3,
+                TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -217,6 +225,7 @@ namespace MyDBContext.Main
                 CreatorId = 10,
                 Authoritys = "[]",
                 UserTreeId = 3,
+                TreeDeep = 0,
             });
             #endregion
 

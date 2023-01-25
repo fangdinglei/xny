@@ -25,7 +25,7 @@ namespace GrpcMain.DeviceData
 
         async Task<List<(Device_DataPoint_Cold, byte[])>> CompressDeviceData(int maxcout, IEnumerable<A> data, IQueryable<Device_DataPoint> selector)
         {
-            List<(Device_DataPoint_Cold, byte[]) > res = new  ();
+            List<(Device_DataPoint_Cold, byte[])> res = new();
             foreach (var item in data)
             {
                 long cursor = 0;
@@ -86,14 +86,14 @@ namespace GrpcMain.DeviceData
                     cursor1 = 0;
                     var newlist = _grpcCursorUtility.Run(ls, maxcout1, (it) => cursor1 = it == null ? 0 : it.Id);
 
-                   var reses = await CompressDeviceData(request.MaxCountOneTime + 1, newlist, bd);
+                    var reses = await CompressDeviceData(request.MaxCountOneTime + 1, newlist, bd);
                     foreach (var item in newlist)
                     {
                         var all = reses.Where(it => it.Item1.DeviceId == item.Id && it.Item1.StreamId == item.Id);
                         //进行压缩
                         foreach (var colditem in all)
                         {
-                         
+
                             colditem.Item1.status = 5;
                             ct.Add(colditem.Item1);
                             await ct.SaveChangesAsync();
@@ -119,6 +119,103 @@ namespace GrpcMain.DeviceData
                 };
             }
         }
+
+        [MyGrpcMethod("ColdDataW")]
+        public override async Task<CommonResponse> Delet(Request_Delet request, ServerCallContext context)
+        {
+            try
+            {
+                var res = await _deviceColdDataHandle.DoDelet(request.Id);
+                return new CommonResponse()
+                {
+                    Success = res,
+                };
+            }
+            catch (Exception e)
+            {
+                return new CommonResponse()
+                {
+                    Success = false,
+                    Message = e.Message,
+                };
+            }
+           
+        }
+        [MyGrpcMethod("ColdDataW")]
+        public override Task<Response_GetInfos> GetInfos(Request_GetInfos request, ServerCallContext context)
+        {
+            //TODO
+            return base.GetInfos(request, context);
+        }
+        [MyGrpcMethod("ColdDataW")]
+        public override async Task<Response_GetSetting> GetSetting(Request_GetSetting request, ServerCallContext context)
+        {
+            User? user = context.UserState["user"] as User;
+            if (user == null)
+                throw new RpcException(new Status(StatusCode.PermissionDenied, "拒绝访问"));
+            using (MainContext ct = new MainContext())
+            {
+                var d = await ct.ColdDataSettings.Where(it => it.TreeId == user.UserTreeId).FirstOrDefaultAsync();
+                if (d == null)
+                {
+                    Response_GetSetting res = new Response_GetSetting();
+                    res.Data = new ColdDataSetting();
+                    return res;
+                }
+                else
+                {
+                    Response_GetSetting res = new Response_GetSetting();
+                    res.Data = new ColdDataSetting() {
+                        ColdDownTime = d.ColdDownTime,
+                        ManagerName = d.ManagerName,
+                        MinCount = d.MinCount,
+                    };
+                    //TODO  res.Data.Managers
+                    return res;
+                }
+            }
+        }
+
+        [MyGrpcMethod("ColdDataW")]
+        public override async Task<CommonResponse> SetSetting(Request_SetSetting request, ServerCallContext context)
+        {
+            User? user = context.UserState["user"] as User;
+            if (user == null)
+                throw new RpcException(new Status(StatusCode.PermissionDenied, "拒绝访问"));
+            using (MainContext ct = new MainContext())
+            {
+                var d = await ct.ColdDataSettings.Where(it => it.TreeId == user.UserTreeId).FirstOrDefaultAsync();
+                if (d == null)
+                {
+                    d = new ColdDataSettings()
+                    {
+                        ColdDownTime = request.Data.ColdDownTime,
+                        ManagerName = request.Data.ManagerName,
+                        MinCount = request.Data.MinCount,
+                        TreeId = user.UserTreeId,
+                    };
+                    ct.Add(d);
+                }
+                else
+                {
+                    if (request.Data.HasColdDownTime)
+                    {
+                        d.ColdDownTime = request.Data.ColdDownTime;
+                    }
+                    if (request.Data.HasManagerName)
+                    {
+                        d.ManagerName = request.Data.ManagerName;
+                    }
+                    if (request.Data.HasMinCount)
+                    {
+                        d.MinCount = request.Data.MinCount;
+                    }
+                }
+                await ct.SaveChangesAsync();
+            }
+            return new CommonResponse() { Success = true, Message = "" };
+        }
+
 
         //public async Task<List<(long, double)>> DeCompressDeviceData(long starttime, long endtime, long deviceid, long streamid)
         //{
