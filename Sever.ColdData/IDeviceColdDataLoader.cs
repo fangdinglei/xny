@@ -43,5 +43,7 @@ namespace Sever.ColdData
         /// <returns></returns>
         Task<bool> DoDelet(long id);
         Task<bool> DoCombine(long id1, long id2);
+
+        Task<bool> DoStore(Device_DataPoint_Cold data, byte[] data2);
     }
 }

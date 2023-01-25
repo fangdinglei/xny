@@ -34,16 +34,19 @@
             this.label3 = new System.Windows.Forms.Label();
             this.text_runtime = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.text_os = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.text_cpucount = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.text_pagesize = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.col_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_subuser = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_totaldevice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_devicetype = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_datapoints = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -97,56 +100,6 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "运行时长";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(295, 18);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(100, 24);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "冷数据时间";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "数据库",
-            "磁盘"});
-            this.comboBox1.Location = new System.Drawing.Point(401, 51);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(182, 32);
-            this.comboBox1.TabIndex = 10;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(295, 60);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(100, 24);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "冷数据方式";
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
-            "1天",
-            "2天",
-            "3天",
-            "4天",
-            "5天",
-            "6天",
-            "1周",
-            "2周",
-            "1月",
-            "2月"});
-            this.comboBox2.Location = new System.Drawing.Point(401, 16);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(182, 32);
-            this.comboBox2.TabIndex = 12;
-            // 
             // text_os
             // 
             this.text_os.Location = new System.Drawing.Point(102, 57);
@@ -198,21 +151,77 @@
             this.label7.TabIndex = 17;
             this.label7.Text = "页大小";
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.col_id,
+            this.col_subuser,
+            this.col_totaldevice,
+            this.col_devicetype,
+            this.col_datapoints});
+            this.dataGridView1.Location = new System.Drawing.Point(258, 18);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.RowHeadersWidth = 62;
+            this.dataGridView1.RowTemplate.Height = 32;
+            this.dataGridView1.Size = new System.Drawing.Size(1047, 647);
+            this.dataGridView1.TabIndex = 19;
+            // 
+            // col_id
+            // 
+            this.col_id.HeaderText = "ID";
+            this.col_id.MinimumWidth = 8;
+            this.col_id.Name = "col_id";
+            this.col_id.ReadOnly = true;
+            this.col_id.Width = 150;
+            // 
+            // col_subuser
+            // 
+            this.col_subuser.HeaderText = "子用户数量";
+            this.col_subuser.MinimumWidth = 8;
+            this.col_subuser.Name = "col_subuser";
+            this.col_subuser.ReadOnly = true;
+            this.col_subuser.Width = 150;
+            // 
+            // col_totaldevice
+            // 
+            this.col_totaldevice.HeaderText = "设备数量";
+            this.col_totaldevice.MinimumWidth = 8;
+            this.col_totaldevice.Name = "col_totaldevice";
+            this.col_totaldevice.ReadOnly = true;
+            this.col_totaldevice.Width = 150;
+            // 
+            // col_devicetype
+            // 
+            this.col_devicetype.HeaderText = "设备类型数量";
+            this.col_devicetype.MinimumWidth = 8;
+            this.col_devicetype.Name = "col_devicetype";
+            this.col_devicetype.ReadOnly = true;
+            this.col_devicetype.Width = 150;
+            // 
+            // col_datapoints
+            // 
+            this.col_datapoints.HeaderText = "数据数量";
+            this.col_datapoints.MinimumWidth = 8;
+            this.col_datapoints.Name = "col_datapoints";
+            this.col_datapoints.ReadOnly = true;
+            this.col_datapoints.Width = 150;
+            // 
             // FSystemInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(662, 358);
+            this.ClientSize = new System.Drawing.Size(1317, 703);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.text_pagesize);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.text_cpucount);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.text_os);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.comboBox2);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.text_runtime);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.text_totalmemory);
@@ -221,6 +230,7 @@
             this.Controls.Add(this.label1);
             this.Name = "FSystemInfo";
             this.Text = "FSystemInfo";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -234,15 +244,17 @@
         private Label label3;
         private TextBox text_runtime;
         private Label label4;
-        private Label label5;
-        private ComboBox comboBox1;
-        private Label label6;
-        private ComboBox comboBox2;
         private TextBox text_os;
         private Label label2;
         private TextBox text_cpucount;
         private Label label8;
         private TextBox text_pagesize;
         private Label label7;
+        private DataGridView dataGridView1;
+        private DataGridViewTextBoxColumn col_id;
+        private DataGridViewTextBoxColumn col_subuser;
+        private DataGridViewTextBoxColumn col_totaldevice;
+        private DataGridViewTextBoxColumn col_devicetype;
+        private DataGridViewTextBoxColumn col_datapoints;
     }
 }

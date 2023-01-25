@@ -48,6 +48,7 @@ namespace GrpcMain.System
         [MyGrpcMethod("SystemUser")]
         public override async Task<Response_GetStatics> GetStatics(Request_GetStatics request, ServerCallContext context)
         {
+            List<UserStatics> ls = new List<UserStatics>();
             using (MainContext ct=new MainContext())
             {
                var trees=await ct.Users.Select(it=>it.UserTreeId).Distinct().ToListAsync();
@@ -57,11 +58,14 @@ namespace GrpcMain.System
                     us.TotalDevice =await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
                     us.TotalDeviceType = await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
                     us.TotalDataPoint =await ct.Devices.Where(it => it.UserTreeId == item).Select(it=>it.Id).Join(
-                            ct.Device_DataPoints,it=>it,it=>it.DeviceId,(a,b)=>b).ToListAsync();
+                            ct.Device_DataPoints,it=>it,it=>it.DeviceId,(a,b)=>b).CountAsync();
                     us.SubUserCount = await ct.Users.Where(it => it.UserTreeId == item).CountAsync()-1;
-                    trees.Add(us);
+                    ls.Add(us);
                 }
             }
+            var res = new Response_GetStatics() { };
+            res.Data.AddRange(ls);
+            return res;
         }
 
 

@@ -1,11 +1,11 @@
 ﻿using Grpc.Core;
+using GrpcMain.Attributes;
 using GrpcMain.Common;
 using GrpcMain.DeviceData.Cold;
-using GrpcMain.Managers;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
-using static GrpcMain.Managers.ColdDataManagerBase;
+using Sever.ColdData;
 
 namespace GrpcMain.DeviceData
 {
@@ -14,16 +14,18 @@ namespace GrpcMain.DeviceData
         record A(long Id, long DeviceId, long StreamId);
         ITimeUtility _timeutility;
         IGrpcCursorUtility _grpcCursorUtility;
-        public ColdDataServiceImp(ITimeUtility time, IGrpcCursorUtility grpcCursorUtility)
+        IDeviceColdDataLoader _deviceColdDataHandle;
+        public ColdDataServiceImp(ITimeUtility time, IGrpcCursorUtility grpcCursorUtility, IDeviceColdDataLoader deviceColdDataHandle)
         {
             _timeutility = time;
             _grpcCursorUtility = grpcCursorUtility;
+            _deviceColdDataHandle = deviceColdDataHandle;
         }
 
 
-        async Task<List<Device_DataPoint_Cold>> CompressDeviceData(int maxcout, IEnumerable<A> data, IQueryable<Device_DataPoint> selector)
+        async Task<List<(Device_DataPoint_Cold, byte[])>> CompressDeviceData(int maxcout, IEnumerable<A> data, IQueryable<Device_DataPoint> selector)
         {
-            List<Device_DataPoint_Cold> res = new List<Device_DataPoint_Cold>();
+            List<(Device_DataPoint_Cold, byte[]) > res = new  ();
             foreach (var item in data)
             {
                 long cursor = 0;
@@ -51,8 +53,7 @@ namespace GrpcMain.DeviceData
                         binaryWriter.Write((int)(point.Time - cold.CreatTime));
                         binaryWriter.Write(point.Value);
                     }
-                    cold.Data = ms.GetBuffer();
-                    res.Add(cold);
+                    res.Add((cold, ms.GetBuffer()));
 
                 } while (cursor > 0);
 
@@ -85,18 +86,22 @@ namespace GrpcMain.DeviceData
                     cursor1 = 0;
                     var newlist = _grpcCursorUtility.Run(ls, maxcout1, (it) => cursor1 = it == null ? 0 : it.Id);
 
-                    List<Device_DataPoint_Cold> reses = await CompressDeviceData(request.MaxCountOneTime + 1, newlist, bd);
+                   var reses = await CompressDeviceData(request.MaxCountOneTime + 1, newlist, bd);
                     foreach (var item in newlist)
                     {
-                        var all = reses.Where(it => it.DeviceId == item.Id && it.StreamId == item.Id);
+                        var all = reses.Where(it => it.Item1.DeviceId == item.Id && it.Item1.StreamId == item.Id);
                         //进行压缩
                         foreach (var colditem in all)
                         {
-                            colditem.ManagerName = "TODO";
-                            await ColdDataManagerBase.DoStore(colditem);
-                            //TODO 执行压缩 添加冷数据条目
-                            ct.Add(colditem);
+                         
+                            colditem.Item1.status = 5;
+                            ct.Add(colditem.Item1);
                             await ct.SaveChangesAsync();
+                            colditem.Item1.ManagerName = "TODO";
+                            await _deviceColdDataHandle.DoStore(colditem.Item1, colditem.Item2);
+                            if (ct.ChangeTracker.HasChanges())
+                                await ct.SaveChangesAsync();
+
                         }
                         if (all.Count() != 0)
                         {
@@ -115,31 +120,31 @@ namespace GrpcMain.DeviceData
             }
         }
 
-        public async Task<List<(long, double)>> DeCompressDeviceData(long starttime, long endtime, long deviceid, long streamid)
-        {
-            List<(long, double)> res = new List<(long, double)>();
-            using (MainContext ct = new MainContext())
-            {
-                //时间有交叉部分
-                var colds = await ct.Device_DataPoint_Colds.Where(it => it.StartTime > endtime && it.EndTime <= starttime
-                     && it.DeviceId == deviceid && it.StreamId == streamid
-                 ).OrderBy(it => it.StartTime).AsNoTracking().ToListAsync();
-                foreach (var cold in colds)
-                {
-                    var bytes = await DoLoad(cold);
-                    var br = new BinaryReader(new MemoryStream(bytes));
-                    while (br.BaseStream.Position < br.BaseStream.Length)
-                    {
-                        var t = br.ReadInt32();
-                        var v = br.ReadSingle();
-                        if (t >= starttime && t < endtime)
-                        {
-                            res.Add((starttime + t, v));
-                        }
-                    }
-                }
-            }
-            return res;
-        }
+        //public async Task<List<(long, double)>> DeCompressDeviceData(long starttime, long endtime, long deviceid, long streamid)
+        //{
+        //    List<(long, double)> res = new List<(long, double)>();
+        //    using (MainContext ct = new MainContext())
+        //    {
+        //        //时间有交叉部分
+        //        var colds = await ct.Device_DataPoint_Colds.Where(it => it.StartTime > endtime && it.EndTime <= starttime
+        //             && it.DeviceId == deviceid && it.StreamId == streamid
+        //         ).OrderBy(it => it.StartTime).AsNoTracking().ToListAsync();
+        //        foreach (var cold in colds)
+        //        {
+        //            var bytes = await _deviceColdDataHandle.DeCompressDeviceData DoLoad(cold);
+        //            var br = new BinaryReader(new MemoryStream(bytes));
+        //            while (br.BaseStream.Position < br.BaseStream.Length)
+        //            {
+        //                var t = br.ReadInt32();
+        //                var v = br.ReadSingle();
+        //                if (t >= starttime && t < endtime)
+        //                {
+        //                    res.Add((starttime + t, v));
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return res;
+        //}
     }
 }

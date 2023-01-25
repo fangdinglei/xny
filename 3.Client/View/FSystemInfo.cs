@@ -37,6 +37,9 @@ namespace MyClient.View
                 text_totalmemory.Text = res.PhisicalMemory / 1024 + "GB";
                 text_cpucount.Text = res.ProcesserCount + "个";
                 text_runtime.Text = res.SystemTime / 1000 + "s";
+
+                var r2 = await _client.GetStatics(new GrpcMain.System.Request_GetStatics());
+                //TODO
                 return true;
             }, exitcall: () =>
             {

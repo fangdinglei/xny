@@ -1,15 +1,17 @@
 ﻿using Grpc.Core;
+using GrpcMain.Attributes;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using Sever.ColdData;
 
 namespace GrpcMain.DeviceData
 {
     public class DeviceDataServiceImp : DeviceDataService.DeviceDataServiceBase
     {
         ITimeUtility _timeutility;
-        IDeviceColdDataHandle _deviceColdDataHandle;
-        public DeviceDataServiceImp(ITimeUtility time, IDeviceColdDataHandle deviceColdDataHandle)
+        IDeviceColdDataLoader _deviceColdDataHandle;
+        public DeviceDataServiceImp(ITimeUtility time, IDeviceColdDataLoader deviceColdDataHandle)
         {
             _timeutility = time;
             _deviceColdDataHandle = deviceColdDataHandle;
@@ -112,7 +114,7 @@ namespace GrpcMain.DeviceData
                     return res;
                 }
                 var cursor = request.Cursor;
-                var r = await _deviceColdDataHandle.DeCompressDeviceData(request.Starttime, request.Endtime, request.Dvid, request.StreamId, ref cursor, maxcount);
+                var r = await _deviceColdDataHandle.DeCompressDeviceData(request.Starttime, request.Endtime, request.Dvid, request.StreamId, cursor, maxcount,(a)=>cursor=a);
                 res.Stream.Points.Add(r.Select(it => new DataPoinet { Time = it.Item1, Value = it.Item2 }));
                 if (cursor > 0)
                 {
