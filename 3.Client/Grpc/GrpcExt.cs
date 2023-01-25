@@ -5,6 +5,7 @@ using GrpcMain.AccountHistory;
 using GrpcMain.Common;
 using GrpcMain.Device;
 using GrpcMain.DeviceData;
+using GrpcMain.DeviceData.Cold;
 using GrpcMain.DeviceType;
 using GrpcMain.InternalMail;
 using GrpcMain.System;
@@ -40,6 +41,7 @@ namespace MyClient.Grpc
             serviceCollection.TryAddSingleton<AccountHistoryService.AccountHistoryServiceClient>();
             serviceCollection.TryAddSingleton<RepairService.RepairServiceClient>();
             serviceCollection.TryAddSingleton<SystemService.SystemServiceClient>();
+            serviceCollection.TryAddSingleton<ColdDataService.ColdDataServiceClient>();
         }
     }
 }
