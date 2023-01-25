@@ -6,7 +6,7 @@ namespace MyClient.View
     [AutoDetectView("Loading", "", "", false)]
     public partial class FLoading : Form, IView
     {
-        bool loading = false;bool backfailed;
+        bool loading = false; bool backfailed;
         FLoadingOption? Option;
         public FLoading()
         {
@@ -44,7 +44,7 @@ namespace MyClient.View
             okcall = null;
             exitcall = null;
             tipui.RemoveAll();
-            backfailed= !_viewholder.Back(this);
+            backfailed = !_viewholder.Back(this);
 
         }
         void OnFailure(Exception ex)
@@ -67,7 +67,7 @@ namespace MyClient.View
         async Task<bool> ShowLoading(Func<Task<bool>> task, Func<Task<bool>>? retry, Action okcall = null, Action exitcall = null, Action<bool> setisloading = null)
         {
             Debug.Assert(loading == false, "不能重复进入加载界面");
-            backfailed=false;
+            backfailed = false;
             this.retry = retry ?? task;
             this.setisloading = setisloading;
             this.okcall = okcall;
@@ -147,7 +147,7 @@ namespace MyClient.View
                 //FormExitEventArg arg = pars[0] as FormExitEventArg;
                 //arg.Cancel = !arg.IsForNewWindow; 
             }
-            else if (name== "UnCovered")
+            else if (name == "UnCovered")
             {
                 if (backfailed)
                 {

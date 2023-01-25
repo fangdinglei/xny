@@ -1,21 +1,14 @@
 ﻿using FdlWindows.View;
 using GrpcMain.DeviceType;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace MyClient.View.Device
 {
     [AutoDetectView("FDeviceTypes", "设备类型", "", true)]
-    public partial class FDeviceTypes : Form,IView
+    public partial class FDeviceTypes : Form, IView
     {
-        BindingList<ToStringHelper<TypeInfo>> _types=new BindingList<ToStringHelper<TypeInfo>>();
+        BindingList<ToStringHelper<TypeInfo>> _types = new BindingList<ToStringHelper<TypeInfo>>();
         Func<TypeInfo, string> tostringfunction = (it) => it.Name;
 
         DeviceTypeService.DeviceTypeServiceClient _client;
@@ -37,32 +30,35 @@ namespace MyClient.View.Device
 
         }
 
-        public Control View =>this;
+        public Control View => this;
 
         public void OnEvent(string name, params object[] pars)
         {
-            
+
         }
 
         public void OnTick()
         {
-         
+
         }
 
         public void PrePare(params object[] par)
         {
-            _viewholder.ShowLoading(this,async () =>
+            _viewholder.ShowLoading(this, async () =>
             {
-                var rsp=await _client.GetTypeInfosAsync(new DTODefine.Types.Request_GetTypeInfos() { 
-                 
+                var rsp = await _client.GetTypeInfosAsync(new DTODefine.Types.Request_GetTypeInfos()
+                {
+
                 });
                 _types = new BindingList<ToStringHelper<TypeInfo>>(
-                    rsp.TypeInfos.Select(it=>new ToStringHelper<TypeInfo>(it,tostringfunction)).ToList()
+                    rsp.TypeInfos.Select(it => new ToStringHelper<TypeInfo>(it, tostringfunction)).ToList()
                     );
                 return true;
-            }, okcall: () => {
+            }, okcall: () =>
+            {
                 list_types.DataSource = _types;
-            }, exitcall: () => {
+            }, exitcall: () =>
+            {
                 list_types.DataSource = null;
                 _viewholder.Back();
             });
@@ -80,7 +76,7 @@ namespace MyClient.View.Device
             if (list_types.SelectedIndex < 0)
                 return;
             _deviceTypeDetail.Visible = true;
-            _deviceTypeDetail.PrePare(false,_types[list_types.SelectedIndex].Value.Id);
+            _deviceTypeDetail.PrePare(false, _types[list_types.SelectedIndex].Value.Id);
         }
 
         private void btn_creat_Click(object sender, EventArgs e)
@@ -88,7 +84,8 @@ namespace MyClient.View.Device
             _deviceTypeDetail.Visible = false;
             list_types.SelectedIndex = -1;
             _deviceTypeDetail.Visible = true;
-            _deviceTypeDetail.PrePare(true, (TypeInfo it) =>{
+            _deviceTypeDetail.PrePare(true, (TypeInfo it) =>
+            {
                 //TODO
             });
 

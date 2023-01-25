@@ -34,7 +34,7 @@ namespace Sever.ColdData.Imp
             {
                 return 0;
             }
-         
+
         }
 
         public async Task<byte[]> DoLoad(Device_DataPoint_Cold colddata, Dictionary<string, object>? pars)
@@ -45,7 +45,7 @@ namespace Sever.ColdData.Imp
 
         public async Task DoStore(Device_DataPoint_Cold colddata, byte[] bytes, Dictionary<string, object>? pars)
         {
-            await mgrs[colddata.ManagerName].Store(colddata,bytes);
+            await mgrs[colddata.ManagerName].Store(colddata, bytes);
         }
 
         public List<string> GetManagerNames()

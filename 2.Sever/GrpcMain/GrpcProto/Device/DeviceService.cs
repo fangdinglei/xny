@@ -14,16 +14,16 @@ namespace GrpcMain.Device
         /// 将请求对象转换为新的DB对象
         /// </summary>
         /// <returns></returns>
-        static public MyDBContext.Main.Device AsNewDeviceInDB(this GrpcMain.Device.Device dv,User us)
+        static public MyDBContext.Main.Device AsNewDeviceInDB(this GrpcMain.Device.Device dv, User us)
         {
             return new MyDBContext.Main.Device
             {
-               Id = 0,
-               CreatorId=us.Id,
-               UserTreeId=us.UserTreeId,
-               DeviceTypeId=dv.DeviceTypeId,
-               Name=dv.Name,
-               Status=2,
+                Id = 0,
+                CreatorId = us.Id,
+                UserTreeId = us.UserTreeId,
+                DeviceTypeId = dv.DeviceTypeId,
+                Name = dv.Name,
+                Status = 2,
             };
         }
 
@@ -191,25 +191,27 @@ namespace GrpcMain.Device
             User us = (User)context.UserState["user"];
             using (MainContext ct = new MainContext())
             {
-               var dvtypeownertype=await request.Device.DeviceTypeId.GetOwnerTypeAsync(ct,us.Id);
-               if (dvtypeownertype== AuthorityUtility.OwnerType.Non)
-                   throw new RpcException(new Status( StatusCode.PermissionDenied, "没有该设备类型的权限") );
+                var dvtypeownertype = await request.Device.DeviceTypeId.GetOwnerTypeAsync(ct, us.Id);
+                if (dvtypeownertype == AuthorityUtility.OwnerType.Non)
+                    throw new RpcException(new Status(StatusCode.PermissionDenied, "没有该设备类型的权限"));
                 await ct.Database.BeginTransactionAsync();
                 var dv = request.Device.AsNewDeviceInDB(us);
                 ct.Devices.Add(dv);
                 await ct.SaveChangesAsync();
-                ct.User_Devices.Add(new User_Device() { 
-                     UserTreeId=us.UserTreeId,
-                     DeviceId = dv.Id,
-                     UserId=us.Id,
-                     User_Device_GroupId=0,
-                     _Authority= UserDeviceAuthority.Every
+                ct.User_Devices.Add(new User_Device()
+                {
+                    UserTreeId = us.UserTreeId,
+                    DeviceId = dv.Id,
+                    UserId = us.Id,
+                    User_Device_GroupId = 0,
+                    _Authority = UserDeviceAuthority.Every
                 });
                 await ct.SaveChangesAsync();
                 await ct.Database.CommitTransactionAsync();
             }
-            return new Response_AddDevice() { 
-                 Device = request.Device,
+            return new Response_AddDevice()
+            {
+                Device = request.Device,
             };
         }
 

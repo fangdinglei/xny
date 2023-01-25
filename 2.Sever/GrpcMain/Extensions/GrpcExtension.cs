@@ -1,15 +1,6 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
-using GrpcMain.Account;
-using GrpcMain.AccountHistory;
+﻿using Grpc.Core;
 using GrpcMain.Attributes;
-using GrpcMain.Device;
-using GrpcMain.DeviceData;
-using GrpcMain.DeviceType;
 using GrpcMain.Interceptors;
-using GrpcMain.InternalMail;
-using GrpcMain.System;
-using GrpcMain.UserDevice;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -17,7 +8,6 @@ using MyDBContext.Main;
 using MyJwtHelper;
 using MyUtility;
 using System.Reflection;
-using Type = System.Type;
 
 namespace GrpcMain.Extensions
 {

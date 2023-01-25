@@ -1,11 +1,4 @@
-﻿using Grpc.Core;
-using GrpcMain.Common;
-using Microsoft.EntityFrameworkCore;
-using MyDBContext.Main;
-using MyUtility;
-using System.Text;
-
-namespace GrpcMain.Device
+﻿namespace GrpcMain.Device
 {
     //static public class Ext
     //{

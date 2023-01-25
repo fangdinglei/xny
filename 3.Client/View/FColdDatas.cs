@@ -1,17 +1,7 @@
-﻿using CefSharp.DevTools.IO;
-using FdlWindows.View;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static GrpcMain.DeviceData.Cold.ColdDataService;
+﻿using FdlWindows.View;
 using MyClient.Grpc;
+using System.Data;
+using static GrpcMain.DeviceData.Cold.ColdDataService;
 
 namespace MyClient.View
 {
@@ -24,10 +14,10 @@ namespace MyClient.View
         {
             InitializeComponent();
             _client = client;
-            int[] colddownlist = new int[] { 10,30,90};
+            int[] colddownlist = new int[] { 10, 30, 90 };
             cb_colddown.DataSource = colddownlist.Select(it => it + "天").ToList();
             cb_colddown.SelectedIndex = 1;
-            int[] minlist = new int[] { 10, 100,1000,10000 };
+            int[] minlist = new int[] { 10, 100, 1000, 10000 };
             cb_mincount.DataSource = minlist.Select(it => it + "个").ToList();
             cb_mincount.SelectedIndex = 2;
         }
@@ -87,8 +77,10 @@ namespace MyClient.View
                 });
                 dataGridView1.DataSource = dt;
                 return true;
-            }, okcall: () => {
-                _viewholder.ShowLoading(this, async () => {
+            }, okcall: () =>
+            {
+                _viewholder.ShowLoading(this, async () =>
+                {
                     var r = await _client.GetSettingAsync(new GrpcMain.DeviceData.Cold.Request_GetSetting() { });
                     cb_coldmanager.DataSource = r.Data.Managers.ToList()/*.Union(new List<string>() { "测试TODO"}).ToList()*/;
                     cb_colddown.SelectedIndex = (cb_colddown.DataSource as List<string>).FindIndex(it => it == r.Data.ColdDownTime + "天");
@@ -118,9 +110,9 @@ namespace MyClient.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message,"错误");
+                MessageBox.Show(ex.Message, "错误");
             }
-          
+
 
 
         }
@@ -142,7 +134,7 @@ namespace MyClient.View
 
         private void c_opencolddata_CheckStateChanged(object sender, EventArgs e)
         {
-            btn_savesetting.Enabled = true; 
+            btn_savesetting.Enabled = true;
         }
 
         private void cb_colddown_SelectedIndexChanged_1(object sender, EventArgs e)
@@ -154,7 +146,7 @@ namespace MyClient.View
         {
             try
             {
-                if (cb_colddown.SelectedIndex<0|| cb_mincount.SelectedIndex < 0 || cb_coldmanager.SelectedIndex < 0)
+                if (cb_colddown.SelectedIndex < 0 || cb_mincount.SelectedIndex < 0 || cb_coldmanager.SelectedIndex < 0)
                 {
                     throw new Exception("请选择");
                 }
@@ -162,7 +154,7 @@ namespace MyClient.View
                 {
                     Data = new GrpcMain.DeviceData.Cold.ColdDataSetting
                     {
-                        Open=c_opencolddata.Checked,
+                        Open = c_opencolddata.Checked,
                         ColdDownTime = int.Parse(cb_colddown.SelectedItem.ToString().Replace("天", "")),
                         MinCount = int.Parse(cb_mincount.SelectedItem.ToString().Replace("个", "")),
                         ManagerName = cb_coldmanager.SelectedItem.ToString()
@@ -173,7 +165,7 @@ namespace MyClient.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message,"错误");
+                MessageBox.Show(ex.Message, "错误");
             }
         }
     }

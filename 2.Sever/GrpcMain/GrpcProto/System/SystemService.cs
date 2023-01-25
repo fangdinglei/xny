@@ -49,18 +49,18 @@ namespace GrpcMain.System
         public override async Task<Response_GetStatics> GetStatics(Request_GetStatics request, ServerCallContext context)
         {
             List<UserStatics> ls = new List<UserStatics>();
-            using (MainContext ct=new MainContext())
+            using (MainContext ct = new MainContext())
             {
-               var trees=await ct.Users.Select(it=>it.UserTreeId).Distinct().ToListAsync();
+                var trees = await ct.Users.Select(it => it.UserTreeId).Distinct().ToListAsync();
                 foreach (var item in trees)
                 {
                     var us = new UserStatics();
                     us.TreeId = item;
-                    us.TotalDevice =await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
+                    us.TotalDevice = await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
                     us.TotalDeviceType = await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
-                    us.TotalDataPoint =await ct.Devices.Where(it => it.UserTreeId == item).Select(it=>it.Id).Join(
-                            ct.Device_DataPoints,it=>it,it=>it.DeviceId,(a,b)=>b).CountAsync();
-                    us.SubUserCount = await ct.Users.Where(it => it.UserTreeId == item).CountAsync()-1;
+                    us.TotalDataPoint = await ct.Devices.Where(it => it.UserTreeId == item).Select(it => it.Id).Join(
+                            ct.Device_DataPoints, it => it, it => it.DeviceId, (a, b) => b).CountAsync();
+                    us.SubUserCount = await ct.Users.Where(it => it.UserTreeId == item).CountAsync() - 1;
                     ls.Add(us);
                 }
             }

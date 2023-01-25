@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
-using System.Collections.Concurrent;
 namespace FdlWindows.View
 {
     public partial class FMain : Form, IViewHolder
@@ -114,7 +113,7 @@ namespace FdlWindows.View
 
                                     throw;
                                 }
-                              
+
                             }
                         }
                     }
@@ -329,7 +328,8 @@ namespace FdlWindows.View
 
         public void Back()
         {
-            lock (this) {
+            lock (this)
+            {
                 FormExitEventArg arg;
                 if (Windows.Count >= 1)
                 {
@@ -495,9 +495,10 @@ namespace FdlWindows.View
         }
         public bool IsLoading(IView view)
         {
-            lock (_ViewLoading) {
+            lock (_ViewLoading)
+            {
                 return _ViewLoading.Contains(view);
-            } 
+            }
         }
         #endregion
 

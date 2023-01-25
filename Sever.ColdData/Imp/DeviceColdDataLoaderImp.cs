@@ -1,7 +1,5 @@
-﻿using MyDBContext.Main;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Runtime.ConstrainedExecution;
+﻿using Microsoft.EntityFrameworkCore;
+using MyDBContext.Main;
 
 namespace Sever.ColdData.Imp
 {
@@ -17,7 +15,7 @@ namespace Sever.ColdData.Imp
             using (var ct = new MainContext())
             {
                 var cur = Cursor;
-                var cds = await ct.Device_DataPoint_Colds.AsNoTracking().Where(it => it.Id >= cur&&it.status!=4 && it.StartTime <= endtime && it.EndTime > starttime
+                var cds = await ct.Device_DataPoint_Colds.AsNoTracking().Where(it => it.Id >= cur && it.status != 4 && it.StartTime <= endtime && it.EndTime > starttime
                 && it.DeviceId == deviceid && it.StreamId == streamid).OrderBy(it => it.StartTime).Take(count + 1).ToListAsync();
                 if (cds.Count == count + 1)
                     setcursor(cds.Last().Id);
@@ -57,7 +55,7 @@ namespace Sever.ColdData.Imp
                 }
                 cd.status = 3;
                 await ct.SaveChangesAsync();
-                var suc=await mgr.DoDelet(cd);
+                var suc = await mgr.DoDelet(cd);
                 if (suc)
                 {
                     cd.status = 4;
@@ -100,7 +98,7 @@ namespace Sever.ColdData.Imp
         {
             using (var ct = new MainContext())
             {
-                using var trans=await  ct.Database.BeginTransactionAsync();
+                using var trans = await ct.Database.BeginTransactionAsync();
                 ct.Add(ct);
                 await ct.SaveChangesAsync();
                 try

@@ -20,7 +20,7 @@ namespace Sever.ColdData
         /// <param name="setcursor"></param>
         /// <exception cref="Exception"/>
         /// <returns></returns>
-        Task<List<(long, float)>> DeCompressDeviceData(long starttime, long endtime, long deviceid, long streamid,long Cursor, int count, Action<long> setcursor);
+        Task<List<(long, float)>> DeCompressDeviceData(long starttime, long endtime, long deviceid, long streamid, long Cursor, int count, Action<long> setcursor);
         /// <summary>
         /// 获取冷数据信息
         /// </summary>
@@ -33,7 +33,7 @@ namespace Sever.ColdData
         /// <param name="setcursor"></param>
         /// <exception cref="Exception"/>
         /// <returns></returns>
-        Task<List<Device_DataPoint_Cold>>  GetDataInfo(long? deviceid, long? steamid, long? starttime, long? endtime, long Cursor, int count, Action<long> setcursor);
+        Task<List<Device_DataPoint_Cold>> GetDataInfo(long? deviceid, long? steamid, long? starttime, long? endtime, long Cursor, int count, Action<long> setcursor);
 
         /// <summary>
         /// 删除冷数据

@@ -368,7 +368,7 @@ namespace MyClient.View
 
         private void btn_creatdevice_Click(object sender, EventArgs e)
         {
-            ViewHolder.SwitchTo("FCreatDevice", false  );
+            ViewHolder.SwitchTo("FCreatDevice", false);
         }
     }
 }

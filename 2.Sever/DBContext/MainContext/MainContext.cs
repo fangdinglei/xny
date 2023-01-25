@@ -120,7 +120,7 @@ namespace MyDBContext.Main
                 CreatorId = 0,
                 Authoritys = "[\"SystemUser\",\"ColdDataR\",\"ColdDataW\",\"测试权限1\"]",
                 UserTreeId = 1,
-                TreeDeep=0,
+                TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {

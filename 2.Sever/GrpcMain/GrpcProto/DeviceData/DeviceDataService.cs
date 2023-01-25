@@ -114,7 +114,7 @@ namespace GrpcMain.DeviceData
                     return res;
                 }
                 var cursor = request.Cursor;
-                var r = await _deviceColdDataHandle.DeCompressDeviceData(request.Starttime, request.Endtime, request.Dvid, request.StreamId, cursor, maxcount,(a)=>cursor=a);
+                var r = await _deviceColdDataHandle.DeCompressDeviceData(request.Starttime, request.Endtime, request.Dvid, request.StreamId, cursor, maxcount, (a) => cursor = a);
                 res.Stream.Points.Add(r.Select(it => new DataPoinet { Time = it.Item1, Value = it.Item2 }));
                 if (cursor > 0)
                 {

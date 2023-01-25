@@ -12,7 +12,7 @@ namespace MyClient.View
     {
 
         DeviceTypeService.DeviceTypeServiceClient _typeServiceClient;
-        Action<TypeInfo>?OnCreatCall;
+        Action<TypeInfo>? OnCreatCall;
         IViewHolder _viewholder;
         bool isCreat;
         TypeInfo typeinfo;
@@ -98,7 +98,7 @@ namespace MyClient.View
                         {
                             Visible = false;
                         }
-                       
+
                     });
             }
 

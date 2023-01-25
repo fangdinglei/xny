@@ -94,7 +94,7 @@ namespace GrpcMain.DeviceData
                         foreach (var colditem in all)
                         {
                             //TODO 校验treeid
-                            colditem.Item1.TreeId=await ct.Devices.Where(it=>it.Id==colditem.Item1.DeviceId).Select(it=>it.UserTreeId).FirstOrDefaultAsync();
+                            colditem.Item1.TreeId = await ct.Devices.Where(it => it.Id == colditem.Item1.DeviceId).Select(it => it.UserTreeId).FirstOrDefaultAsync();
                             colditem.Item1.status = 5;
                             ct.Add(colditem.Item1);
                             await ct.SaveChangesAsync();
@@ -127,17 +127,17 @@ namespace GrpcMain.DeviceData
             {
                 using var ct = new MainContext();
                 User? user = context.UserState["user"] as User;
-                if (user==null)
+                if (user == null)
                 {
                     return new CommonResponse()
                     {
                         Success = false,
-                        Message="拒绝访问",
+                        Message = "拒绝访问",
                     };
                 }
-                if (await ct.Device_DataPoint_Colds.Where(it=>it.Id==request.Id&&it.TreeId==user.UserTreeId).CountAsync()==0)
+                if (await ct.Device_DataPoint_Colds.Where(it => it.Id == request.Id && it.TreeId == user.UserTreeId).CountAsync() == 0)
                 {
-                    return new CommonResponse() {  Success=false,Message="拒绝访问"};
+                    return new CommonResponse() { Success = false, Message = "拒绝访问" };
                 }
                 var res = await _deviceColdDataHandle.DoDelet(request.Id);
                 return new CommonResponse()
@@ -153,7 +153,7 @@ namespace GrpcMain.DeviceData
                     Message = e.Message,
                 };
             }
-           
+
         }
         [MyGrpcMethod("ColdDataR")]
         public override async Task<Response_GetInfos> GetInfos(Request_GetInfos request, ServerCallContext context)
@@ -162,11 +162,11 @@ namespace GrpcMain.DeviceData
             using var ct = new MainContext();
             User? user = context.UserState["user"] as User;
             if (user == null)
-                throw new RpcException(new Status(StatusCode.PermissionDenied, "拒绝访问")  );
-            IQueryable<Device_DataPoint_Cold> q = ct.Device_DataPoint_Colds.Where(it=>it.TreeId==user.UserTreeId);
+                throw new RpcException(new Status(StatusCode.PermissionDenied, "拒绝访问"));
+            IQueryable<Device_DataPoint_Cold> q = ct.Device_DataPoint_Colds.Where(it => it.TreeId == user.UserTreeId);
             if (request.HasStarttime)
             {
-               q= q.Where(it => it.EndTime > request.Starttime);
+                q = q.Where(it => it.EndTime > request.Starttime);
             }
             if (request.HasEndtime)
             {
@@ -174,15 +174,16 @@ namespace GrpcMain.DeviceData
             }
             if (request.HasDeviceId)
             {
-                q = q.Where(it => it.DeviceId==request.DeviceId);
+                q = q.Where(it => it.DeviceId == request.DeviceId);
             }
             if (request.HasStreamId)
             {
                 q = q.Where(it => it.StreamId == request.StreamId);
             }
-            q=q.AsNoTracking();
+            q = q.AsNoTracking();
             Response_GetInfos res = new Response_GetInfos();
-            res.Info.AddRange((await q.ToListAsync()).Select(it=>new ColdDataInfo() {
+            res.Info.AddRange((await q.ToListAsync()).Select(it => new ColdDataInfo()
+            {
                 Count = it.Count,
                 CreatTime = it.CreatTime,
                 DeviceId = it.DeviceId,
@@ -215,13 +216,14 @@ namespace GrpcMain.DeviceData
                 else
                 {
                     Response_GetSetting res = new Response_GetSetting();
-                    res.Data = new ColdDataSetting() {
+                    res.Data = new ColdDataSetting()
+                    {
                         ColdDownTime = d.ColdDownTime,
                         ManagerName = d.ManagerName,
                         MinCount = d.MinCount,
-                        Open=d.Open
+                        Open = d.Open
                     };
-                    res.Data.Managers.AddRange(_deviceColdDataHandle.GetManagerNames()) ;
+                    res.Data.Managers.AddRange(_deviceColdDataHandle.GetManagerNames());
                     return res;
                 }
             }
@@ -244,7 +246,7 @@ namespace GrpcMain.DeviceData
                         ManagerName = request.Data.ManagerName,
                         MinCount = request.Data.MinCount,
                         TreeId = user.UserTreeId,
-                        Open=request.Data.Open,
+                        Open = request.Data.Open,
                     };
                     ct.Add(d);
                 }
