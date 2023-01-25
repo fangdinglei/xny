@@ -40,13 +40,13 @@
             this.label8 = new System.Windows.Forms.Label();
             this.text_pagesize = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.grid_userstatics = new System.Windows.Forms.DataGridView();
             this.col_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_subuser = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_totaldevice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_devicetype = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_datapoints = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grid_userstatics)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -151,71 +151,77 @@
             this.label7.TabIndex = 17;
             this.label7.Text = "页大小";
             // 
-            // dataGridView1
+            // grid_userstatics
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.grid_userstatics.AllowUserToAddRows = false;
+            this.grid_userstatics.AllowUserToDeleteRows = false;
+            this.grid_userstatics.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grid_userstatics.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.col_id,
             this.col_subuser,
             this.col_totaldevice,
             this.col_devicetype,
             this.col_datapoints});
-            this.dataGridView1.Location = new System.Drawing.Point(258, 18);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersWidth = 62;
-            this.dataGridView1.RowTemplate.Height = 32;
-            this.dataGridView1.Size = new System.Drawing.Size(1047, 647);
-            this.dataGridView1.TabIndex = 19;
+            this.grid_userstatics.Location = new System.Drawing.Point(258, 18);
+            this.grid_userstatics.Name = "grid_userstatics";
+            this.grid_userstatics.ReadOnly = true;
+            this.grid_userstatics.RowHeadersWidth = 62;
+            this.grid_userstatics.RowTemplate.Height = 32;
+            this.grid_userstatics.Size = new System.Drawing.Size(1047, 647);
+            this.grid_userstatics.TabIndex = 19;
             // 
             // col_id
             // 
+            this.col_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_id.DataPropertyName = "TreeId";
             this.col_id.HeaderText = "ID";
             this.col_id.MinimumWidth = 8;
             this.col_id.Name = "col_id";
             this.col_id.ReadOnly = true;
-            this.col_id.Width = 150;
             // 
             // col_subuser
             // 
+            this.col_subuser.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_subuser.DataPropertyName = "SubUserCount";
             this.col_subuser.HeaderText = "子用户数量";
             this.col_subuser.MinimumWidth = 8;
             this.col_subuser.Name = "col_subuser";
             this.col_subuser.ReadOnly = true;
-            this.col_subuser.Width = 150;
             // 
             // col_totaldevice
             // 
+            this.col_totaldevice.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_totaldevice.DataPropertyName = "TotalDevice";
             this.col_totaldevice.HeaderText = "设备数量";
             this.col_totaldevice.MinimumWidth = 8;
             this.col_totaldevice.Name = "col_totaldevice";
             this.col_totaldevice.ReadOnly = true;
-            this.col_totaldevice.Width = 150;
             // 
             // col_devicetype
             // 
+            this.col_devicetype.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.col_devicetype.DataPropertyName = "TotalDeviceType";
             this.col_devicetype.HeaderText = "设备类型数量";
             this.col_devicetype.MinimumWidth = 8;
             this.col_devicetype.Name = "col_devicetype";
             this.col_devicetype.ReadOnly = true;
-            this.col_devicetype.Width = 150;
+            this.col_devicetype.Width = 154;
             // 
             // col_datapoints
             // 
+            this.col_datapoints.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_datapoints.DataPropertyName = "TotalDataPoint";
             this.col_datapoints.HeaderText = "数据数量";
             this.col_datapoints.MinimumWidth = 8;
             this.col_datapoints.Name = "col_datapoints";
             this.col_datapoints.ReadOnly = true;
-            this.col_datapoints.Width = 150;
             // 
             // FSystemInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1317, 703);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.grid_userstatics);
             this.Controls.Add(this.text_pagesize);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.text_cpucount);
@@ -230,7 +236,7 @@
             this.Controls.Add(this.label1);
             this.Name = "FSystemInfo";
             this.Text = "FSystemInfo";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grid_userstatics)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -250,7 +256,7 @@
         private Label label8;
         private TextBox text_pagesize;
         private Label label7;
-        private DataGridView dataGridView1;
+        private DataGridView grid_userstatics;
         private DataGridViewTextBoxColumn col_id;
         private DataGridViewTextBoxColumn col_subuser;
         private DataGridViewTextBoxColumn col_totaldevice;

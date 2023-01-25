@@ -38,7 +38,8 @@ namespace MyClient.View
                 text_cpucount.Text = res.ProcesserCount + "个";
                 text_runtime.Text = res.SystemTime / 1000 + "s";
 
-                var r2 = await _client.GetStatics(new GrpcMain.System.Request_GetStatics());
+                var r2 = await _client.GetStaticsAsync(new GrpcMain.System.Request_GetStatics());
+                grid_userstatics.DataSource = r2.Data.ToList();
                 //TODO
                 return true;
             }, exitcall: () =>

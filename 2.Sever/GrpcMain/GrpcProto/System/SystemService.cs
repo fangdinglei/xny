@@ -55,6 +55,7 @@ namespace GrpcMain.System
                 foreach (var item in trees)
                 {
                     var us = new UserStatics();
+                    us.TreeId = item;
                     us.TotalDevice =await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
                     us.TotalDeviceType = await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
                     us.TotalDataPoint =await ct.Devices.Where(it => it.UserTreeId == item).Select(it=>it.Id).Join(
