@@ -7,14 +7,75 @@ service ColdDataService {
     //压缩数据
     rpc CompressDeviceData( Request_CompressDeviceData)
         returns (CommonResponse); 
+    //获取冷数据信息
+    rpc GetInfos(Request_GetInfos)
+        returns(Response_GetInfos);
     //删除冷数据
-    //移动冷数据
-    //自动迁移冷数据
-
+    rpc Delet(Request_Delet)
+        returns(CommonResponse);
+    //设置冷数据处理配置
+    rpc SetSetting(Request_SetSetting)
+        returns(CommonResponse);
+    //获取冷数据处理配置
+    rpc GetSetting(Request_GetSetting)
+        returns(Response_GetSetting);
 }
+
 
 message Request_CompressDeviceData{
     int64 StartTime=1;
     int64 EndTime=2; 
     optional int32 MaxCountOneTime=3;
+}
+
+
+message ColdDataInfo{
+    int32 Id=1;
+    int64 DeviceId=2;
+    int64 StreamId=3;
+    int64 CreatTime=4;
+    int64 StartTime=5;
+    int64 EndTime=6;
+    int64 Count=7;
+    int32 Status=8;
+    string ManagerName=9;
+}
+message Request_GetInfos{
+    int64 Starttime=1;
+    int64 Endtime=2;
+    int64 DeviceId=3;
+    int64 StreamId=4;
+}
+
+message Response_GetInfos{
+    repeated ColdDataInfo Info=1;
+}
+
+message Request_Delet{
+    int64 Id=1;
+}
+
+message ColdDataSetting{
+    //当前管理器名称
+    optional string ManagerName=1;
+    //变成冷数据的时间
+    optional int64 ColdDownTime=2;
+    //压缩的数据量的最小值 如果低于最小值则不进行压缩
+    optional int64 MinCount=3;
+    //所有可用的管理器
+    repeated string Managers=4;
+    //optional int64 AutoDeletTime=5;
+}
+
+message Request_SetSetting{
+    ColdDataSetting Data=1;
+
+}
+
+
+message Request_GetSetting{
+
+}
+message Response_GetSetting{
+     ColdDataSetting Data=1;
 }

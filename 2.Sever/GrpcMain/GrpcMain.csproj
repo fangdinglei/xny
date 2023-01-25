@@ -16,6 +16,7 @@
 	  <None Remove="GrpcProto\DeviceData\DeviceColdDataService.proto" />
 	  <None Remove="GrpcProto\DeviceData\DeviceDataService.proto" />
 	  <None Remove="GrpcProto\DeviceType\DeviceTypeService.proto" />
+	  <None Remove="GrpcProto\Device\DeviceAutoControlService.proto" />
 	  <None Remove="GrpcProto\Device\DeviceService.proto" />
 	  <None Remove="GrpcProto\Device\RepairService.proto" />
 	  <None Remove="GrpcProto\Histroy\Account\AccountService.proto" />
@@ -39,6 +40,13 @@
     <ProjectReference Include="..\..\1.Utility\MyJwtHelper\MyJwtHelper.csproj" />
     <ProjectReference Include="..\..\1.Utility\MyUtility\MyUtility.csproj" />
     <ProjectReference Include="..\DBContext\MyDBContext.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Update="GrpcProto\Device\DeviceAutoControlService.proto">
+      <ProtoRoot>GrpcProto\</ProtoRoot>
+      <GrpcServices>Sever</GrpcServices>
+    </Protobuf>
   </ItemGroup>
  
 

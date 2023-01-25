@@ -9,9 +9,27 @@ service SystemService {
     //获取系统基础信息
     rpc GetSystemBaseInfo( Request_GetSystemBaseInfo)
         returns (Response_GetSystemBaseInfo);
-        
+    //获取系统统计数据
+    rpc GetStatics(Request_GetStatics)
+        returns (Response_GetStatics);
 }
 
+
+message UserStatics{
+    int32 SubUserCount=1;
+    int32 TotalDevice=2;
+    int32 TotalDeviceType=3;
+    int32 TotalDataPoint=4;
+    //MB
+    int32 TotalColdData=5;
+
+}
+message Request_GetStatics{
+
+}
+message Response_GetStatics{
+    repeated UserStatics Data=1;
+}
 
 
 message Request_GetSystemBaseInfo{

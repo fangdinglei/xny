@@ -1,5 +1,7 @@
 ﻿using Grpc.Core;
 using GrpcMain.Attributes;
+using Microsoft.EntityFrameworkCore;
+using MyDBContext.Main;
 using System.Management;
 
 namespace GrpcMain.System
@@ -43,6 +45,24 @@ namespace GrpcMain.System
             });
         }
 
+        [MyGrpcMethod("SystemUser")]
+        public override async Task<Response_GetStatics> GetStatics(Request_GetStatics request, ServerCallContext context)
+        {
+            using (MainContext ct=new MainContext())
+            {
+               var trees=await ct.Users.Select(it=>it.UserTreeId).Distinct().ToListAsync();
+                foreach (var item in trees)
+                {
+                    var us = new UserStatics();
+                    us.TotalDevice =await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
+                    us.TotalDeviceType = await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
+                    us.TotalDataPoint =await ct.Devices.Where(it => it.UserTreeId == item).Select(it=>it.Id).Join(
+                            ct.Device_DataPoints,it=>it,it=>it.DeviceId,(a,b)=>b).ToListAsync();
+                    us.SubUserCount = await ct.Users.Where(it => it.UserTreeId == item).CountAsync()-1;
+                    trees.Add(us);
+                }
+            }
+        }
 
 
         private string GetOsVersion(Version ver)
