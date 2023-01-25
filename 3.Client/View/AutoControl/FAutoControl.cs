@@ -535,5 +535,23 @@ namespace MyClient.View.AutoControl
                 MessageBox.Show("向设备[" + s + "]发送失败", "提示");
             }
         }
+
+        private void btn_addname_Click(object sender, EventArgs e)
+        {
+            string name;
+            var dr=InputBox.GetString("创建","请输入自动控制项目名称",out name);
+            if (dr != DialogResult.OK)
+                return;
+            var index=list_names.SelectedIndex;
+            var ls = list_names.DataSource as List<string>;
+            if (ls.Contains(name))
+            {
+                MessageBox.Show("已经存在","提示");
+                return;
+            }
+            ls.Add(name);
+            list_names.DataSource= ls.OrderBy(it => it).ToList();
+            list_names.SelectedIndex = index;
+        }
     }
 }
