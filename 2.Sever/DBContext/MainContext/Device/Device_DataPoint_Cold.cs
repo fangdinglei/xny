@@ -30,6 +30,7 @@ namespace MyDBContext.Main
         /// </summary>
         public byte status { get; set; }
         public string ManagerName { get; set; }
+        public long TreeId { get; set; }
     }
 
 }

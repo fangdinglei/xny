@@ -93,7 +93,8 @@ namespace GrpcMain.DeviceData
                         //进行压缩
                         foreach (var colditem in all)
                         {
-
+                            //TODO 校验treeid
+                            colditem.Item1.TreeId=await ct.Devices.Where(it=>it.Id==colditem.Item1.DeviceId).Select(it=>it.UserTreeId).FirstOrDefaultAsync();
                             colditem.Item1.status = 5;
                             ct.Add(colditem.Item1);
                             await ct.SaveChangesAsync();
@@ -101,7 +102,6 @@ namespace GrpcMain.DeviceData
                             await _deviceColdDataHandle.DoStore(colditem.Item1, colditem.Item2);
                             if (ct.ChangeTracker.HasChanges())
                                 await ct.SaveChangesAsync();
-
                         }
                         if (all.Count() != 0)
                         {
@@ -125,6 +125,20 @@ namespace GrpcMain.DeviceData
         {
             try
             {
+                using var ct = new MainContext();
+                User? user = context.UserState["user"] as User;
+                if (user==null)
+                {
+                    return new CommonResponse()
+                    {
+                        Success = false,
+                        Message="拒绝访问",
+                    };
+                }
+                if (await ct.Device_DataPoint_Colds.Where(it=>it.Id==request.Id&&it.TreeId==user.UserTreeId).CountAsync()==0)
+                {
+                    return new CommonResponse() {  Success=false,Message="拒绝访问"};
+                }
                 var res = await _deviceColdDataHandle.DoDelet(request.Id);
                 return new CommonResponse()
                 {
@@ -141,11 +155,45 @@ namespace GrpcMain.DeviceData
             }
            
         }
-        [MyGrpcMethod("ColdDataW")]
-        public override Task<Response_GetInfos> GetInfos(Request_GetInfos request, ServerCallContext context)
+        [MyGrpcMethod("ColdDataR")]
+        public override async Task<Response_GetInfos> GetInfos(Request_GetInfos request, ServerCallContext context)
         {
             //TODO
-            return base.GetInfos(request, context);
+            using var ct = new MainContext();
+            User? user = context.UserState["user"] as User;
+            if (user == null)
+                throw new RpcException(new Status(StatusCode.PermissionDenied, "拒绝访问")  );
+            IQueryable<Device_DataPoint_Cold> q = ct.Device_DataPoint_Colds.Where(it=>it.TreeId==user.UserTreeId);
+            if (request.HasStarttime)
+            {
+               q= q.Where(it => it.EndTime > request.Starttime);
+            }
+            if (request.HasEndtime)
+            {
+                q = q.Where(it => it.StartTime <= request.Endtime);
+            }
+            if (request.HasDeviceId)
+            {
+                q = q.Where(it => it.DeviceId==request.DeviceId);
+            }
+            if (request.HasStreamId)
+            {
+                q = q.Where(it => it.StreamId == request.StreamId);
+            }
+            q=q.AsNoTracking();
+            Response_GetInfos res = new Response_GetInfos();
+            res.Info.AddRange((await q.ToListAsync()).Select(it=>new ColdDataInfo() {
+                Count = it.Count,
+                CreatTime = it.CreatTime,
+                DeviceId = it.DeviceId,
+                EndTime = it.EndTime,
+                Id = it.Id,
+                ManagerName = it.ManagerName,
+                StartTime = it.StartTime,
+                Status = it.status,
+                StreamId = it.StreamId,
+            }));
+            return res;
         }
         [MyGrpcMethod("ColdDataW")]
         public override async Task<Response_GetSetting> GetSetting(Request_GetSetting request, ServerCallContext context)

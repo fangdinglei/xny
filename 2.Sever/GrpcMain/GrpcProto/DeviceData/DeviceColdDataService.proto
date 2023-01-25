@@ -30,7 +30,7 @@ message Request_CompressDeviceData{
 
 
 message ColdDataInfo{
-    int32 Id=1;
+     int64 Id=1;
     int64 DeviceId=2;
     int64 StreamId=3;
     int64 CreatTime=4;
@@ -41,10 +41,10 @@ message ColdDataInfo{
     string ManagerName=9;
 }
 message Request_GetInfos{
-    int64 Starttime=1;
-    int64 Endtime=2;
-    int64 DeviceId=3;
-    int64 StreamId=4;
+    optional int64 Starttime=1;
+    optional int64 Endtime=2;
+    optional   int64 DeviceId=3;
+    optional   int64 StreamId=4;
 }
 
 message Response_GetInfos{
