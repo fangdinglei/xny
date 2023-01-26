@@ -1,5 +1,6 @@
 ﻿using FdlWindows.View;
 using GrpcMain.Device.AutoControl;
+using MyClient.Grpc;
 using MyUtility;
 using System.ComponentModel;
 using XNYAPI.Model.AutoControl;
@@ -44,9 +45,9 @@ namespace MyClient.View.AutoControl
                             {
                                 Dvids = IDs[0].Item1
                             });
-                            var settings = r.Setting.OrderBy(it => new { it.Name, it.Order });
+                            var settings = r.Setting.OrderBy(it =>it.Name).ThenBy(it=>it.Order);
                             names = new BindingList<string>(settings.Select(it => it.Name).Distinct().ToList());
-
+                            groupedsettings = new Dictionary<string, List<DeviceAutoControlSetting>>();
                             names.ToList().ForEach(it =>
                             {
                                 groupedsettings.Add(it, new List<DeviceAutoControlSetting>());
@@ -204,8 +205,8 @@ namespace MyClient.View.AutoControl
         void RefreshView()
         {
 
-            var sel = datalist.SelectedIndex;
-            if (sel < 0 || sel >= names.Count - 1)
+            var sel = list_names.SelectedIndex;
+            if (sel < 0 || sel > names.Count - 1)
                 return;
             var list = groupedsettings[list_names.SelectedItem as string];
 
@@ -275,7 +276,7 @@ namespace MyClient.View.AutoControl
         private void bdelete_Click(object sender, EventArgs e)
         {
             var sel = list_names.SelectedIndex;
-            if (sel < 0 || sel >= names.Count - 1)
+            if (sel < 0 || sel > names.Count - 1)
                 return;
             var ls = groupedsettings[list_names.SelectedItem as string];
             ls.RemoveAt(datalist.SelectedIndex);
@@ -285,7 +286,7 @@ namespace MyClient.View.AutoControl
         private void bcreat_Click(object sender, EventArgs e)
         {
             var sel = list_names.SelectedIndex;
-            if (sel < 0 || sel >= names.Count - 1)
+            if (sel < 0 || sel > names.Count - 1)
                 return;
             f.InitFor((sh) =>
            {
@@ -299,11 +300,11 @@ namespace MyClient.View.AutoControl
 
         private void bupdate_Click(object sender, EventArgs e)
         {
-            var sel = datalist.SelectedIndex;
-            if (sel < 0 || sel >= names.Count - 1)
+            var sel = list_names.SelectedIndex;
+            if (sel < 0 || sel > names.Count - 1)
                 return;
             sel = datalist.SelectedIndex;
-            if (sel < 0 || sel >= groupedsettings[list_names.SelectedItem as string].Count - 1)
+            if (sel < 0 || sel > groupedsettings[list_names.SelectedItem as string].Count - 1)
                 return;
             var s = groupedsettings[list_names.SelectedItem as string][datalist.SelectedIndex];
             f.InitFor(s, (sh) =>
@@ -318,8 +319,11 @@ namespace MyClient.View.AutoControl
 
         private void bpriorityup_Click(object sender, EventArgs e)
         {
-            var sel = datalist.SelectedIndex;
-            if (sel < 0 || sel >= names.Count - 1)
+            var sel = list_names.SelectedIndex;
+            if (sel < 0 || sel > names.Count - 1)
+                return;
+              sel = datalist.SelectedIndex;
+            if (sel <= 0)
                 return;
 
             var ls = groupedsettings[list_names.SelectedItem as string];
@@ -332,8 +336,11 @@ namespace MyClient.View.AutoControl
 
         private void bprioritydown_Click(object sender, EventArgs e)
         {
-            var sel = datalist.SelectedIndex;
-            if (sel < 0 || sel >= names.Count - 1)
+            var sel = list_names.SelectedIndex;
+            if (sel < 0 || sel > names.Count - 1)
+                return;
+            sel = datalist.SelectedIndex;
+            if (sel >= groupedsettings[list_names.SelectedItem as string].Count - 1 )
                 return;
 
             var ls = groupedsettings[list_names.SelectedItem as string];
@@ -353,48 +360,36 @@ namespace MyClient.View.AutoControl
             //OnDataChanged();
         }
 
-        private void bok_Click(object sender, EventArgs e)
+        private async void bok_Click(object sender, EventArgs e)
         {
             if (Changed)
             {
 
                 try
                 {
-                    //TODO
-                    //var res = Global.client.Exec(new SetAutoControlScheduleDataRequest(
-                    //        IDs.Select(it => it.Item1).ToList(),
-                    //        SheduleInfo
-                    // ));
-                    //if (res.IsError)
-                    //{
-                    //    throw new Exception();
-
-                    //}
-                    //var res2 = Global.client.Exec(new SetAutoControlSettingRequest(
-                    //        IDs.Select(it => it.Item1).ToList(),
-                    //        Settings.TimeScheduleEnabled, Settings.AdvancedControlEnabled,
-                    //        Settings.GroupID
-                    // ));
-                    //if (res.IsError)
-                    //{
-                    //    throw new Exception();
-
-                    //}
-                    //MessageBox.Show("成功", "提示");
-                    //Changed = false;
+                    var req = new Request_SetDeviceSetting()
+                    {
+                    };
+                    req.Dvids.Add(IDs[0].Item1);
+                    groupedsettings.Values.ToList().ForEach(it =>
+                    {
+                        req.Setting.AddRange(it);
+                    });
+                    var r = await _client.SetDeviceSettingAsync(req);
+                    r.ThrowIfNotSuccess();
+                    MessageBox.Show("成功", "提示");
+                    Changed = false;
                 }
                 catch (Exception)
                 {
                     MessageBox.Show("失败", "提示");
                 }
-
-                //todo 提交
             }
         }
         private void btest_Click(object sender, EventArgs e)
         {
-            var sel = datalist.SelectedIndex;
-            if (sel < 0 || sel >= names.Count - 1)
+            var sel = list_names.SelectedIndex;
+            if (sel < 0 || sel > names.Count - 1)
                 return;
             var cmd = groupedsettings[list_names.SelectedItem as string].GetCmd(DateTime.Now);
             MessageBox.Show(string.IsNullOrWhiteSpace(cmd) ? "无" : cmd);
