@@ -77,7 +77,7 @@ namespace GrpcMain.Device.AutoControl
                 throw new RpcException(new Status(StatusCode.PermissionDenied, "需要设备自动控制访问权限"));
             var data = await ct.Device_AutoControl_Settings_Items
                 .Where(it => it.DeviceId == request.Dvids)
-                .OrderBy(it => it.Name ).ThenBy(it=> it.Order)
+                .OrderBy(it => it.Name).ThenBy(it => it.Order)
                 .AsNoTracking().ToListAsync();
             var res = new Response_GetDeviceSetting();
             res.Dvids = request.Dvids;

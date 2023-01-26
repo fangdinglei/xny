@@ -43,11 +43,11 @@ namespace MyClient.View.AutoControl
                 case TimeTriggerType.Once:
                     g2_startdatepicker.Value = tu.GetDateTime(org.TimeStart);
                     g2_starttimepicker.Value = tu.GetDateTime(org.TimeStart);
-                    g2_enddatepicker.Value = tu.GetDateTime(org. TimeEnd );
-                    g2_endtimepicker.Value = tu.GetDateTime(org. TimeEnd );
+                    g2_enddatepicker.Value = tu.GetDateTime(org.TimeEnd);
+                    g2_endtimepicker.Value = tu.GetDateTime(org.TimeEnd);
                     break;
                 case TimeTriggerType.EveryWeek:
-                    g1_starttimepicker.Value =tu.GetDateTime(tu.GetTicket(DateTime.Now.Date) + org.TimeStart) ;
+                    g1_starttimepicker.Value = tu.GetDateTime(tu.GetTicket(DateTime.Now.Date) + org.TimeStart);
                     g1_endtimepicker.Value = tu.GetDateTime(tu.GetTicket(DateTime.Now.Date) + org.TimeEnd);
                     for (int i = 0; i < 7; i++)
                     {
@@ -97,12 +97,12 @@ namespace MyClient.View.AutoControl
 
         private void bok_Click(object sender, EventArgs e)
         {
-            var v =t_cmd.Text;
+            var v = t_cmd.Text;
             DeviceAutoControlSetting sh;
             if ((string)comboBox1.SelectedItem == "总 是")
             {
                 //g0
-                sh =DeviceAutoControlUtility. Creat("", 0, v);
+                sh = DeviceAutoControlUtility.Creat("", 0, v);
             }
             else if ((string)comboBox1.SelectedItem == "时间段")
             {
@@ -127,7 +127,7 @@ namespace MyClient.View.AutoControl
                     MessageBox.Show("结束时间不能在开始时间之前", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                sh = DeviceAutoControlUtility.Creat("", 0, v,tu.GetTicket(datestart) , tu.GetTicket(dateend));
+                sh = DeviceAutoControlUtility.Creat("", 0, v, tu.GetTicket(datestart), tu.GetTicket(dateend));
             }
             else if ((string)comboBox1.SelectedItem == "周定时")
             {
@@ -162,7 +162,7 @@ namespace MyClient.View.AutoControl
                     MessageBox.Show("请选择至少一天", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                sh = DeviceAutoControlUtility.Creat( "", 0, v,tu.GetTicket(datestart)-tu.GetTicket(datestart.Date), tu.GetTicket(dateend) - tu.GetTicket(dateend.Date), week);
+                sh = DeviceAutoControlUtility.Creat("", 0, v, tu.GetTicket(datestart) - tu.GetTicket(datestart.Date), tu.GetTicket(dateend) - tu.GetTicket(dateend.Date), week);
             }
             else
             {

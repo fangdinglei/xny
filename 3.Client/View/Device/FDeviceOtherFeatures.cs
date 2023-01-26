@@ -58,9 +58,9 @@ namespace MyClient.View
             if (dv == null)
             {
                 MessageBox.Show("请求超时或设备不存在", "错误");
-                return; 
+                return;
             }
-            _viewholder.SwitchTo(nameof(FAutoControl), false,new List<(long, string)> { (dv.Id, dv.Name) });
+            _viewholder.SwitchTo(nameof(FAutoControl), false, new List<(long, string)> { (dv.Id, dv.Name) });
         }
     }
 }

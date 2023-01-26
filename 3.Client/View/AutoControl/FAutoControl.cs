@@ -1,13 +1,13 @@
 ﻿using FdlWindows.View;
+using GrpcMain.Device.AutoControl;
+using MyUtility;
+using System.ComponentModel;
 using XNYAPI.Model.AutoControl;
 using static GrpcMain.Device.AutoControl.DeviceAutoControlService;
-using GrpcMain.Device.AutoControl;
-using System.ComponentModel;
-using MyUtility;
 
 namespace MyClient.View.AutoControl
 {
-   [AutoDetectView(nameof(FAutoControl),"自动控制配置","",false)]
+    [AutoDetectView(nameof(FAutoControl), "自动控制配置", "", false)]
     public partial class FAutoControl : Form, IView
     {
         FCreatOrUpdate f = new FCreatOrUpdate();
@@ -234,7 +234,7 @@ namespace MyClient.View.AutoControl
                     case TimeTriggerType.Once:
                         return tu.GetDateTime(v.TimeStart).ToString() + " - " + tu.GetDateTime(v.TimeEnd).ToString();
                     case TimeTriggerType.EveryWeek:
-                        s =tu.GetDateTime(tu.GetTicket(DateTime.Now.Date)+v.TimeStart) .ToString("HH-mm-ss") + " - " 
+                        s = tu.GetDateTime(tu.GetTicket(DateTime.Now.Date) + v.TimeStart).ToString("HH-mm-ss") + " - "
                         + tu.GetDateTime(tu.GetTicket(DateTime.Now.Date) + v.TimeEnd).ToString("HH-mm-ss");
                         s += " 周";
                         var vl = v.Week;
@@ -262,7 +262,7 @@ namespace MyClient.View.AutoControl
                 s += $"触发时间:{tigtimetostring(it)}";
                 ls.Add(s);
             }
-            datalist.DataSource = ls; 
+            datalist.DataSource = ls;
         }
         /// <summary>
         /// 设置数据变更并更新界面 <see cref="RefreshView"/>
@@ -554,7 +554,7 @@ namespace MyClient.View.AutoControl
         /// 校验时间信息是否合法
         /// </summary>
         /// <returns></returns>
-       static  public bool Check(this DeviceAutoControlSetting item)
+        static public bool Check(this DeviceAutoControlSetting item)
         {
             switch ((TimeTriggerType)item.TriggerType)
             {
