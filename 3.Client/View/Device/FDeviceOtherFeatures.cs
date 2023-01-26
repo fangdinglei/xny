@@ -1,4 +1,5 @@
 ﻿using FdlWindows.View;
+using MyClient.View.AutoControl;
 
 namespace MyClient.View
 {
@@ -49,6 +50,17 @@ namespace MyClient.View
                 return;
             }
             _viewholder.SwitchTo("FDeviceTypeDetail", false, false, dv.DeviceTypeId);
+        }
+
+        private void btn_timeplan_Click(object sender, EventArgs e)
+        {
+            var dv = _localDataBase.GetDevice(_dvid);
+            if (dv == null)
+            {
+                MessageBox.Show("请求超时或设备不存在", "错误");
+                return; 
+            }
+            _viewholder.SwitchTo(nameof(FAutoControl), false,new List<(long, string)> { (dv.Id, dv.Name) });
         }
     }
 }

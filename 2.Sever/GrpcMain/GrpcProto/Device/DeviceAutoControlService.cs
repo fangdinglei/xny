@@ -16,7 +16,6 @@ namespace GrpcMain.Device.AutoControl
         {
             return new DeviceAutoControlSetting
             {
-                DeviceId = item.DeviceId,
                 Cmd = item.Cmd,
                 Name = item.Name,
                 Open = item.Open,
@@ -78,7 +77,7 @@ namespace GrpcMain.Device.AutoControl
                 throw new RpcException(new Status(StatusCode.PermissionDenied, "需要设备自动控制访问权限"));
             var data = await ct.Device_AutoControl_Settings_Items
                 .Where(it => it.DeviceId == request.Dvids)
-                .OrderBy(it => new { it.Name, it.Order })
+                .OrderBy(it => it.Name ).ThenBy(it=> it.Order)
                 .AsNoTracking().ToListAsync();
             var res = new Response_GetDeviceSetting();
             res.Dvids = request.Dvids;
@@ -99,7 +98,8 @@ namespace GrpcMain.Device.AutoControl
             using var ct = new MainContext();
             using var trans = await ct.Database.BeginTransactionAsync();
             bool partfail = false;
-            var settinglist = request.Setting.ToList().OrderBy(it => new { it.Name, it.Order });
+            var settinglist = request.Setting.ToList()
+                  .OrderBy(it => it.Name).ThenBy(it => it.Order);
             foreach (var item in request.Dvids)
             {
                 var dv = await ct.Devices.Where(it => it.Id == item).FirstOrDefaultAsync();

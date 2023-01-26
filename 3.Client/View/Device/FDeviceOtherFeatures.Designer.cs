@@ -30,6 +30,7 @@
         {
             this.btn_repair = new System.Windows.Forms.Button();
             this.btn_type = new System.Windows.Forms.Button();
+            this.btn_timeplan = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_repair
@@ -52,11 +53,22 @@
             this.btn_type.UseVisualStyleBackColor = true;
             this.btn_type.Click += new System.EventHandler(this.btn_type_Click);
             // 
+            // btn_timeplan
+            // 
+            this.btn_timeplan.Location = new System.Drawing.Point(304, 12);
+            this.btn_timeplan.Name = "btn_timeplan";
+            this.btn_timeplan.Size = new System.Drawing.Size(134, 53);
+            this.btn_timeplan.TabIndex = 2;
+            this.btn_timeplan.Text = "定时控制";
+            this.btn_timeplan.UseVisualStyleBackColor = true;
+            this.btn_timeplan.Click += new System.EventHandler(this.btn_timeplan_Click);
+            // 
             // FDeviceOtherFeatures
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btn_timeplan);
             this.Controls.Add(this.btn_type);
             this.Controls.Add(this.btn_repair);
             this.Name = "FDeviceOtherFeatures";
@@ -69,5 +81,6 @@
 
         private Button btn_repair;
         private Button btn_type;
+        private Button btn_timeplan;
     }
 }

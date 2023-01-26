@@ -20,7 +20,7 @@ message DeviceAutoControlSetting{
     //
     string Name=3;
     //
-    int64 DeviceId=4;
+    //int64 DeviceId=4;
     int32  TriggerType=6;
     int64 TimeStart=7;
     int64 TimeEnd=8;

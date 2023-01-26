@@ -4,6 +4,7 @@ using GrpcMain.Account;
 using GrpcMain.AccountHistory;
 using GrpcMain.Common;
 using GrpcMain.Device;
+using GrpcMain.Device.AutoControl;
 using GrpcMain.DeviceData;
 using GrpcMain.DeviceData.Cold;
 using GrpcMain.DeviceType;
@@ -42,6 +43,7 @@ namespace MyClient.Grpc
             serviceCollection.TryAddSingleton<RepairService.RepairServiceClient>();
             serviceCollection.TryAddSingleton<SystemService.SystemServiceClient>();
             serviceCollection.TryAddSingleton<ColdDataService.ColdDataServiceClient>();
+            serviceCollection.TryAddSingleton<DeviceAutoControlService.DeviceAutoControlServiceClient>();
         }
     }
 }

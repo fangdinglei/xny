@@ -123,6 +123,7 @@ namespace MyClient.View.AutoControl
             this.ctimeplanopen.TabIndex = 6;
             this.ctimeplanopen.Text = "定时控制";
             this.ctimeplanopen.UseVisualStyleBackColor = true;
+            this.ctimeplanopen.Visible = false;
             this.ctimeplanopen.CheckedChanged += new System.EventHandler(this.ctimeplanopen_CheckedChanged);
             // 
             // bpriorityup
@@ -181,6 +182,7 @@ namespace MyClient.View.AutoControl
             this.list_names.Name = "list_names";
             this.list_names.Size = new System.Drawing.Size(175, 436);
             this.list_names.TabIndex = 14;
+            this.list_names.SelectedIndexChanged += new System.EventHandler(this.list_names_SelectedIndexChanged);
             // 
             // btn_addname
             // 

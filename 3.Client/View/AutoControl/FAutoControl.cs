@@ -1,21 +1,28 @@
 ﻿using FdlWindows.View;
 using XNYAPI.Model.AutoControl;
+using static GrpcMain.Device.AutoControl.DeviceAutoControlService;
+using GrpcMain.Device.AutoControl;
+using System.ComponentModel;
+using MyUtility;
 
 namespace MyClient.View.AutoControl
 {
-    //TODO 错误处理
+   [AutoDetectView(nameof(FAutoControl),"自动控制配置","",false)]
     public partial class FAutoControl : Form, IView
     {
         FCreatOrUpdate f = new FCreatOrUpdate();
-        ScheduleInfo SheduleInfo;
-        AutoControlSettings Settings;
-        List<ValueTuple<uint, string>> IDs;
+        DeviceAutoControlServiceClient _client;
+        Dictionary<string, List<DeviceAutoControlSetting>> groupedsettings = new();
+        BindingList<string> names = new BindingList<string>();
+        List<ValueTuple<long, string>> IDs;
+        TimeUtility tu = new TimeUtility();
         bool Changed;
+        IViewHolder _viewholder;
 
-
-        public FAutoControl()
+        public FAutoControl(DeviceAutoControlServiceClient client)
         {
             InitializeComponent();
+            _client = client;
         }
 
 
@@ -24,34 +31,42 @@ namespace MyClient.View.AutoControl
             Changed = false;
             if (par.Count() == 1)
             {
-                IDs = par[0] as List<ValueTuple<uint, string>>;
+                IDs = par[0] as List<ValueTuple<long, string>>;
                 if (IDs.Count == 0)
                     throw new Exception("设备个数不能是0");
                 else if (IDs.Count == 1)
                 {
                     try
                     {
-                        var res = Global.client.Exec(new GetAutoControlSettingRequest(
-                                              new List<uint>() { IDs[0].Item1 }
-                                           ));
-                        if (res.IsError || res.Data == null)
-                            throw new Exception();
-                        if (res.Data.Count != 0)
-                            Settings = res.Data[0];
-                        else
-                            Settings = default;
+                        _viewholder.ShowLoading(this, async () =>
+                        {
+                            var r = await _client.GetDeviceSettingAsync(new Request_GetDeviceSetting()
+                            {
+                                Dvids = IDs[0].Item1
+                            });
+                            var settings = r.Setting.OrderBy(it => new { it.Name, it.Order });
+                            names = new BindingList<string>(settings.Select(it => it.Name).Distinct().ToList());
 
-                        var res2 = Global.client.Exec(new GetAutoControlScheduleDataRequest(
-                                            new List<uint>() { IDs[0].Item1 }
-                                         ));
-                        if (res2.IsError || res2.Data == null)
-                            throw new Exception();
-                        if (res2.Data.Count != 0)
-                            SheduleInfo = res2.Data[0];
-                        else
-                            SheduleInfo = new ScheduleInfo(ServiceType.DeviceLEDControl);
+                            names.ToList().ForEach(it =>
+                            {
+                                groupedsettings.Add(it, new List<DeviceAutoControlSetting>());
+                            });
+                            settings.ToList().ForEach(it =>
+                            {
+                                groupedsettings[it.Name].Add(it);
+                            });
 
-
+                            list_names.DataSource = names;
+                            if (names.Count != 0)
+                            {
+                                list_names.SelectedIndex = 0;
+                            }
+                            else
+                            {
+                                list_names.SelectedIndex = -1;
+                            }
+                            return true;
+                        });
                         RefreshView();
 
                     }
@@ -66,12 +81,7 @@ namespace MyClient.View.AutoControl
                 }
                 else
                 {
-
-                    SheduleInfo = new ScheduleInfo(ServiceType.DeviceLEDControl);
-                    Settings = new AutoControlSettings(0, 0, false, false, false, ServiceType.DeviceLEDControl);
-                    linfo.Text = "设备[" + Utility.Utility.BuildLongString(IDs.Select(it => it.Item2), 40) + "]";
-                    RefreshView();
-                    Changed = false;
+                    throw new Exception("暂时只支持一个设备");
                 }
 
             }
@@ -193,14 +203,12 @@ namespace MyClient.View.AutoControl
 
         void RefreshView()
         {
-            Func<int, string> valtostring = (v) =>
-            {
-                return v == 0 ? "无控制" :
-                (int)v == 1 ? "关" :
-                (int)v == 2 ? "开" :
-                (int)v == 3 ? "高级自动" :
-                "异常";
-            };
+
+            var sel = datalist.SelectedIndex;
+            if (sel < 0 || sel >= names.Count - 1)
+                return;
+            var list = groupedsettings[list_names.SelectedItem as string];
+
             Func<TimeTriggerType, string> tiggertostring = (v) =>
             {
                 switch (v)
@@ -216,17 +224,18 @@ namespace MyClient.View.AutoControl
                 }
 
             };
-            Func<ScheduleItem, string> tigtimetostring = (v) =>
+            Func<DeviceAutoControlSetting, string> tigtimetostring = (v) =>
             {
                 string s;
-                switch (v.TriggerType)
+                switch ((TimeTriggerType)v.TriggerType)
                 {
                     case TimeTriggerType.ALL:
                         return "总是";
                     case TimeTriggerType.Once:
-                        return v.GetTimeStart().ToString() + " - " + v.GetTimeEnd().ToString();
+                        return tu.GetDateTime(v.TimeStart).ToString() + " - " + tu.GetDateTime(v.TimeEnd).ToString();
                     case TimeTriggerType.EveryWeek:
-                        s = v.GetTimeStart().ToString("HH-mm-ss") + " - " + v.GetTimeEnd().ToString("HH-mm-ss");
+                        s =tu.GetDateTime(tu.GetTicket(DateTime.Now.Date)+v.TimeStart) .ToString("HH-mm-ss") + " - " 
+                        + tu.GetDateTime(tu.GetTicket(DateTime.Now.Date) + v.TimeEnd).ToString("HH-mm-ss");
                         s += " 周";
                         var vl = v.Week;
                         for (int i = 0; i < 7; i++)
@@ -242,30 +251,22 @@ namespace MyClient.View.AutoControl
                         return "异常";
                 }
             };
-            if (SheduleInfo != null)
+
+
+            var ls = new List<string>();
+            foreach (var it in list)
             {
-                var ls = new List<string>();
-                foreach (var it in SheduleInfo.Data)
-                {
-                    string s = "";
-                    s += $"任务事件:{valtostring(it.GetValue())}\t";
-                    s += $"触发方式:{tiggertostring(it.TriggerType)}\t";
-                    s += $"触发时间:{tigtimetostring(it)}";
-                    ls.Add(s);
-
-                }
-                datalist.DataSource = ls;
+                string s = "";
+                s += $"任务事件:{it.Cmd}\t";
+                s += $"触发方式:{tiggertostring((TimeTriggerType)it.TriggerType)}\t";
+                s += $"触发时间:{tigtimetostring(it)}";
+                ls.Add(s);
             }
-
-            //更新配置信息
-            // if (Settings.OwnerID!=0)
-            //{
-            ctimeplanopen.Checked = Settings.TimeScheduleEnabled;
-            cadvancedcontrol.Checked = Settings.AdvancedControlEnabled;
-            // }
-
-
+            datalist.DataSource = ls; 
         }
+        /// <summary>
+        /// 设置数据变更并更新界面 <see cref="RefreshView"/>
+        /// </summary>
         void OnDataChanged()
         {
             Changed = true;
@@ -273,17 +274,22 @@ namespace MyClient.View.AutoControl
         }
         private void bdelete_Click(object sender, EventArgs e)
         {
-            if (listselect < 0)
+            var sel = list_names.SelectedIndex;
+            if (sel < 0 || sel >= names.Count - 1)
                 return;
-            SheduleInfo.Data.RemoveAt(datalist.SelectedIndex);
+            var ls = groupedsettings[list_names.SelectedItem as string];
+            ls.RemoveAt(datalist.SelectedIndex);
             OnDataChanged();
         }
 
         private void bcreat_Click(object sender, EventArgs e)
         {
+            var sel = list_names.SelectedIndex;
+            if (sel < 0 || sel >= names.Count - 1)
+                return;
             f.InitFor((sh) =>
            {
-               SheduleInfo.Data.Add(sh);
+               groupedsettings[list_names.SelectedItem as string].Add(sh);
            });
             f.ShowDialog();
             OnDataChanged();
@@ -293,12 +299,15 @@ namespace MyClient.View.AutoControl
         private void bupdate_Click(object sender, EventArgs e)
         {
             var sel = datalist.SelectedIndex;
-            if (sel < 0)
+            if (sel < 0 || sel >= names.Count - 1)
                 return;
-            var s = SheduleInfo.Data[sel];
+            sel = datalist.SelectedIndex;
+            if (sel < 0 || sel >= groupedsettings[list_names.SelectedItem as string].Count - 1)
+                return;
+            var s = groupedsettings[list_names.SelectedItem as string][datalist.SelectedIndex];
             f.InitFor(s, (sh) =>
             {
-                SheduleInfo.Data[sel] = sh;
+                groupedsettings[list_names.SelectedItem as string][datalist.SelectedIndex] = sh;
             });
             f.ShowDialog();
             OnDataChanged();
@@ -308,12 +317,13 @@ namespace MyClient.View.AutoControl
         private void bpriorityup_Click(object sender, EventArgs e)
         {
             var sel = datalist.SelectedIndex;
-            if (sel <= 0)
+            if (sel < 0 || sel >= names.Count - 1)
                 return;
 
-            var t = SheduleInfo.Data[sel];
-            SheduleInfo.Data[sel] = SheduleInfo.Data[sel - 1];
-            SheduleInfo.Data[sel - 1] = t;
+            var ls = groupedsettings[list_names.SelectedItem as string];
+            var t = ls[sel];
+            ls[sel] = ls[sel - 1];
+            ls[sel - 1] = t;
             OnDataChanged();
             datalist.SelectedIndex = sel - 1;
         }
@@ -321,11 +331,13 @@ namespace MyClient.View.AutoControl
         private void bprioritydown_Click(object sender, EventArgs e)
         {
             var sel = datalist.SelectedIndex;
-            if (sel < 0 || sel >= datalist.Items.Count - 1)
+            if (sel < 0 || sel >= names.Count - 1)
                 return;
-            var t = SheduleInfo.Data[sel];
-            SheduleInfo.Data[sel] = SheduleInfo.Data[sel + 1];
-            SheduleInfo.Data[sel + 1] = t;
+
+            var ls = groupedsettings[list_names.SelectedItem as string];
+            var t = ls[sel];
+            ls[sel] = ls[sel + 1];
+            ls[sel + 1] = t;
             OnDataChanged();
             datalist.SelectedIndex = sel + 1;
         }
@@ -334,15 +346,11 @@ namespace MyClient.View.AutoControl
 
         private void ctimeplanopen_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.TimeScheduleEnabled = ctimeplanopen.Checked;
-            OnDataChanged();
+            //TODO
+
+            //OnDataChanged();
         }
 
-        private void cadvancedcontrol_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.AdvancedControlEnabled = cadvancedcontrol.Checked;
-            OnDataChanged();
-        }
         private void bok_Click(object sender, EventArgs e)
         {
             if (Changed)
@@ -350,27 +358,28 @@ namespace MyClient.View.AutoControl
 
                 try
                 {
-                    var res = Global.client.Exec(new SetAutoControlScheduleDataRequest(
-                            IDs.Select(it => it.Item1).ToList(),
-                            SheduleInfo
-                     ));
-                    if (res.IsError)
-                    {
-                        throw new Exception();
+                    //TODO
+                    //var res = Global.client.Exec(new SetAutoControlScheduleDataRequest(
+                    //        IDs.Select(it => it.Item1).ToList(),
+                    //        SheduleInfo
+                    // ));
+                    //if (res.IsError)
+                    //{
+                    //    throw new Exception();
 
-                    }
-                    var res2 = Global.client.Exec(new SetAutoControlSettingRequest(
-                            IDs.Select(it => it.Item1).ToList(),
-                            Settings.TimeScheduleEnabled, Settings.AdvancedControlEnabled,
-                            Settings.GroupID
-                     ));
-                    if (res.IsError)
-                    {
-                        throw new Exception();
+                    //}
+                    //var res2 = Global.client.Exec(new SetAutoControlSettingRequest(
+                    //        IDs.Select(it => it.Item1).ToList(),
+                    //        Settings.TimeScheduleEnabled, Settings.AdvancedControlEnabled,
+                    //        Settings.GroupID
+                    // ));
+                    //if (res.IsError)
+                    //{
+                    //    throw new Exception();
 
-                    }
-                    MessageBox.Show("成功", "提示");
-                    Changed = false;
+                    //}
+                    //MessageBox.Show("成功", "提示");
+                    //Changed = false;
                 }
                 catch (Exception)
                 {
@@ -382,72 +391,17 @@ namespace MyClient.View.AutoControl
         }
         private void btest_Click(object sender, EventArgs e)
         {
-            Func<int, string> valtostring = (v) =>
-            {
-                return v == 0 ? "无控制" :
-  (int)v == 1 ? "关" :
-  (int)v == 2 ? "开" :
-  (int)v == 3 ? "高级自动" :
-  "异常";
-            };
-
-            MessageBox.Show(valtostring(SheduleInfo.GetValue(DateTime.Now, 4)));
+            var sel = datalist.SelectedIndex;
+            if (sel < 0 || sel >= names.Count - 1)
+                return;
+            var cmd = groupedsettings[list_names.SelectedItem as string].GetCmd(DateTime.Now);
+            MessageBox.Show(string.IsNullOrWhiteSpace(cmd) ? "无" : cmd);
         }
-
-
-
-
-        //private async void timer1_TickAsync(object sender, EventArgs e)
-        //{
-        //    if (!Visible)
-        //    {
-        //        return;
-        //    }
-        //    bool hasdvcmdsended = false;
-        //    string info = "已向设备: \n ";
-        //    bool exed = await SigleExecute.ExecuteAsync(GetType().FullName + "tic", () =>
-        //    {
-        //        try
-        //        {
-        //            foreach (var key in new List<string>(needsend.Keys))
-        //            {
-        //                if (NetWork.CommonNetUtility.Device.IsCmdSended(needsend[key].Item2))
-        //                {
-        //                    needsend.Remove(key);
-        //                    info += key + "\n";
-        //                    hasdvcmdsended = true;
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        }
-
-        //    });
-        //    if (exed)
-        //    {
-        //        if (needsend.Count == 0)
-        //        {
-        //            timer1.Stop();
-        //        }
-        //        if (hasdvcmdsended)
-        //        {
-        //            MessageBox.Show(info + "发送命令");
-        //        }
-        //    }
-
-        //}
-
-
-
-        int listselect => datalist.SelectedIndex;
-
 
         public Control View => this;
         public void SetViewHolder(IViewHolder viewholder)
         {
-
+            _viewholder = viewholder;
         }
 
         public void OnEvent(string name, params object[] pars)
@@ -469,89 +423,151 @@ namespace MyClient.View.AutoControl
 
         }
 
-        private void bopen_Click(object sender, EventArgs e)
-        {
-            if (IDs == null || IDs.Count == 0)
-            {
-                MessageBox.Show("未知错误", "异常");
-                return;
-            }
-            string s = "";
-            for (int i = 0; i < IDs.Count; i++)
-            {
-                s += IDs[i].Item2 + ",";
-                if (s.Length > 40)
-                {
-                    break;
-                }
-            }
-            if (s.Length > 40)
-                s = s.Substring(0, 40) + "...";
-            else
-                s = s.Substring(0, s.Length - 1);
-            try
-            {
-                var res = Global.client.Exec(new SendCMDRequest(IDs.Select(it => it.Item1).ToList(), "status:2"));
-                if (res.IsError)
-                    throw new Exception();
-                MessageBox.Show("向设备[" + s + "]发送成功", "提示");
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("向设备[" + s + "]发送失败", "提示");
-            }
-
-        }
-
-        private void bclose_Click(object sender, EventArgs e)
-        {
-            if (IDs == null || IDs.Count == 0)
-            {
-                MessageBox.Show("未知错误", "异常");
-                return;
-            }
-            string s = "";
-            for (int i = 0; i < IDs.Count; i++)
-            {
-                s += IDs[i].Item2 + ",";
-                if (s.Length > 40)
-                {
-                    break;
-                }
-            }
-            if (s.Length > 40)
-                s = s.Substring(0, 40) + "...";
-            else
-                s = s.Substring(0, s.Length - 1);
-            try
-            {
-                var res = Global.client.Exec(new SendCMDRequest(IDs.Select(it => it.Item1).ToList(), "status:3"));
-                if (res.IsError)
-                    throw new Exception();
-                MessageBox.Show("向设备[" + s + "]发送成功", "提示");
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("向设备[" + s + "]发送失败", "提示");
-            }
-        }
 
         private void btn_addname_Click(object sender, EventArgs e)
         {
             string name;
-            var dr=InputBox.GetString("创建","请输入自动控制项目名称",out name);
+            var dr = InputBox.GetString("创建", "请输入自动控制项目名称", out name);
             if (dr != DialogResult.OK)
                 return;
-            var index=list_names.SelectedIndex;
-            var ls = list_names.DataSource as List<string>;
+            var ls = names;
             if (ls.Contains(name))
             {
-                MessageBox.Show("已经存在","提示");
+                MessageBox.Show("已经存在", "提示");
                 return;
             }
             ls.Add(name);
-            list_names.DataSource= ls.OrderBy(it => it).ToList();
-            list_names.SelectedIndex = index;
+            groupedsettings[name] = new List<DeviceAutoControlSetting>();
         }
+
+        private void list_names_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (list_names.SelectedIndex < 0)
+                return;
+            RefreshView();
+        }
+    }
+
+
+    static public class DeviceAutoControlUtility
+    {
+        static TimeUtility tu = new TimeUtility();
+
+        ///  <summary>
+        ///   创建一个星期定时任务
+        ///  </summary>
+        ///  <param name="week">[周日,周一,...]是否生效</param>
+        static public DeviceAutoControlSetting Creat
+            (string name, long ownerID, string cmd, long start, long end, bool[] week)
+        {
+            var re = new DeviceAutoControlSetting()
+            {
+                Name = name,
+                TriggerType = (int)TimeTriggerType.EveryWeek,
+                TimeStart = start,
+                TimeEnd = end,
+                OwnerID = ownerID,
+                Cmd = cmd,
+            };
+            re.Week = 0;
+            for (int i = 0; i < week.Length; i++)
+            {
+                if (week[i])
+                    re.Week |= (byte)(1 << i);
+            }
+            return re;
+        }
+
+        /// <summary>
+        /// 创建一个时间任务
+        /// </summary>
+        static public DeviceAutoControlSetting Creat
+            (string name, long ownerID, string cmd, long start, long end)
+        {
+            return new DeviceAutoControlSetting()
+            {
+                Name = name,
+                TriggerType = (int)TimeTriggerType.Once,
+                TimeStart = start,
+                TimeEnd = end,
+                OwnerID = ownerID,
+                Cmd = cmd,
+            };
+        }
+
+        /// <summary>
+        /// 创建一个一直生效的任务 
+        /// </summary>
+        static public DeviceAutoControlSetting Creat
+            (string name, long ownerID, string cmd)
+        {
+            return new DeviceAutoControlSetting()
+            {
+                Name = name,
+                TriggerType = (int)TimeTriggerType.ALL,
+                OwnerID = ownerID,
+                Cmd = cmd,
+            };
+        }
+
+        /// <summary>
+        /// 给定时间是否在此时间内
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        static public bool IsTimeIn(this DeviceAutoControlSetting item, DateTime time)
+        {
+            switch ((TimeTriggerType)item.TriggerType)
+            {
+                case TimeTriggerType.ALL:
+                    return true;
+                case TimeTriggerType.Once:
+                    return (time.Ticks >= item.TimeStart) && (time.Ticks <= item.TimeEnd);
+                case TimeTriggerType.EveryWeek:
+                    //time = time.AddHours(8);
+                    long t = tu.GetTicket(time) - tu.GetTicket(time.Date);
+                    return (t >= item.TimeStart) && (t <= item.TimeEnd) && (item.Week & (1 << (int)time.DayOfWeek)) > 0;
+                default:
+                    return false;
+            }
+        }
+
+        static public string? GetCmd(this List<DeviceAutoControlSetting> item, DateTime time)
+        {
+            item = item.OrderBy(it => it.Order).ToList();
+            for (int i = item.Count - 1; i >= 0; i--)
+            {
+                if (item[i].IsTimeIn(time))
+                {
+                    return item[i].Cmd;
+                }
+            }
+            return null;
+        }
+
+
+
+        const long TicketADay = 24L * 60 * 60 * 1000;
+        /// <summary>
+        /// 校验时间信息是否合法
+        /// </summary>
+        /// <returns></returns>
+       static  public bool Check(this DeviceAutoControlSetting item)
+        {
+            switch ((TimeTriggerType)item.TriggerType)
+            {
+                case TimeTriggerType.ALL:
+                    return true;
+                case TimeTriggerType.Once:
+                    return true;
+                case TimeTriggerType.EveryWeek:
+
+                    return (item.TimeStart >= 0 && item.TimeStart < TicketADay) && (item.TimeEnd >= 0 && item.TimeEnd < TicketADay);
+                default:
+                    return true;
+            }
+        }
+
+
     }
 }
