@@ -289,6 +289,7 @@ namespace MyClient.View.AutoControl
                 return;
             f.InitFor((sh) =>
            {
+               sh.Name = list_names.SelectedItem.ToString();
                groupedsettings[list_names.SelectedItem as string].Add(sh);
            });
             f.ShowDialog();
@@ -307,6 +308,7 @@ namespace MyClient.View.AutoControl
             var s = groupedsettings[list_names.SelectedItem as string][datalist.SelectedIndex];
             f.InitFor(s, (sh) =>
             {
+                sh.Name = list_names.SelectedItem.ToString();
                 groupedsettings[list_names.SelectedItem as string][datalist.SelectedIndex] = sh;
             });
             f.ShowDialog();
