@@ -240,7 +240,7 @@ namespace GrpcMain.DeviceData
                 var d = await ct.ColdDataSettings.Where(it => it.TreeId == user.UserTreeId).FirstOrDefaultAsync();
                 if (d == null)
                 {
-                    d = new ColdDataSettings()
+                    d = new DeviceColdDataSettings()
                     {
                         ColdDownTime = request.Data.ColdDownTime,
                         ManagerName = request.Data.ManagerName,

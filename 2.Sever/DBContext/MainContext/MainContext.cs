@@ -272,9 +272,10 @@ namespace MyDBContext.Main
         public DbSet<Device_DataPoint_Cold> Device_DataPoint_Colds { get; set; }
         public DbSet<Internal_Mail> Internal_Mails { get; set; }
         public DbSet<Device_Repair> Device_Repairs { get; set; }
-        public DbSet<ColdDataSettings> ColdDataSettings { get; set; }
+        public DbSet<DeviceColdDataSettings> ColdDataSettings { get; set; }
         public DbSet<KeyValue> KeyValues { get; set; }
-
+        public DbSet<DeviceCmdHistory> DeviceCmdHistorys { get; set; }
+       
 
         static SqliteConnection? _connection;
 

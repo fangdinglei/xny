@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace MyDBContext.Main
 {
-    public class ColdDataSettings
+    public class DeviceColdDataSettings
     {
         [Key]
         public long TreeId { get; set; }
