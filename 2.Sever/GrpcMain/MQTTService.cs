@@ -1,10 +1,38 @@
-﻿using MyDBContext.Main;
+﻿using Grpc.Core;
+using GrpcMain.Attributes;
+using GrpcMain.Extensions;
+using GrpcMain.Interceptors;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using MyDBContext.Main;
+using MyJwtHelper;
 using MyUtility;
+using System.Reflection;
 
 namespace GrpcMain
 {
+    /// <summary>
+    /// 传输协议接口
+    /// </summary>
+    public interface IProto
+    {
+        public Task<bool> SendCmd(string deviceid, string cmd);
+    }
+    static public class MQTTExtension
+    {
+        static public void UseMQTT(this IServiceCollection services )
+        {
+            services.TryAddSingleton<MQTTSeverClient>(new MQTTSeverClient());
+        }
+    }
+
     public class MQTTSeverClient
     {
+
+        public MQTTSeverClient()
+        {
+            //TODO 开启服务
+        }
         public Task<bool> SendCmd(string deviceid, string cmd) {
             throw new NotImplementedException();
         }
@@ -14,22 +42,15 @@ namespace GrpcMain
 
     }
 
-    public class MQTTUtility
-    {
-        public Task<bool> SendCmd(string deviceid, string cmd)
-        {
-            //TODO
-            return new Task<bool>(() => { return true; });
-        }
-
-    }
+    
     public class DeviceUtility
     {
-        ITimeUtility tu;
-
-        public DeviceUtility(ITimeUtility tu)
+        ITimeUtility _tu;
+        IProto _proto;
+        public DeviceUtility(ITimeUtility tu, IProto proto)
         {
-            this.tu = tu;
+            this._tu = tu;
+            _proto = proto;
         }
 
         /// <summary>
@@ -39,15 +60,24 @@ namespace GrpcMain
         /// <param name="cmd"></param>
         /// <param name="sendertype"></param>
         /// <param name="senderid"></param>
-        public async void SendCmd(long deviceid, string cmd, DeviceCmdSenderType sendertype, long senderid)
+        public async Task<bool> SendCmd(long deviceid, string cmd, DeviceCmdSenderType sendertype, long senderid)
         {
             using var ct = new MainContext();
-            var record = new DeviceCmdHistory(deviceid, cmd, sendertype, senderid, tu.GetTicket(DateTime.Now));
+            var record = new DeviceCmdHistory(deviceid, cmd, sendertype, senderid, _tu.GetTicket(DateTime.Now));
             ct.DeviceCmdHistorys.Add(record);
             await ct.SaveChangesAsync();
-            //TODO 发送命令
-            record.Success = true;
-            await ct.SaveChangesAsync();
+            var suc=await _proto.SendCmd(deviceid.ToString(),cmd);
+            if (suc)
+            {
+                record.Success = true;
+                await ct.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+      
         }
 
     }
