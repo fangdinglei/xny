@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\2.Sever\BaseDefines\BaseDefines.csproj" />
     <ProjectReference Include="..\2.Sever\DBContext\MyDBContext.csproj" />
   </ItemGroup>
 

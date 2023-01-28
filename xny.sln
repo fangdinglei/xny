@@ -36,7 +36,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcTest", "GrpcTest\GrpcTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GRPCTest", "99.Test\GRPCTest\GRPCTest.csproj", "{4E842ECF-3338-476F-B7AF-59F8BC6669E7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnumDefines", "2.Sever\EnumDefines\EnumDefines.csproj", "{5292F3FE-ABC2-4DC2-B9D8-30E744F3EEF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaseDefines", "2.Sever\BaseDefines\BaseDefines.csproj", "{5292F3FE-ABC2-4DC2-B9D8-30E744F3EEF2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sever.ColdData", "Sever.ColdData\Sever.ColdData.csproj", "{60BF30D4-6679-4E6B-A2B4-7E43C11CECC3}"
 EndProject

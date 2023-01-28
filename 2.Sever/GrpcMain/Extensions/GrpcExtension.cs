@@ -18,6 +18,8 @@ namespace GrpcMain.Extensions
             services.Configure<MyGrpcHandleCongig>(op => op.JwtKey = jwtkey);
             services.TryAddSingleton<IJwtHelper, JwtHelper>();
             services.TryAddSingleton<IGrpcCursorUtility, GrpcCursorUtilityImp>();
+            services.TryAddSingleton<DeviceUtility>();
+            
             services.UseColdData();
             //添加处理器
             services.TryAddSingleton<IGrpcAuthorityHandle, MyGrpcHandle>();

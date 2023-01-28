@@ -4,10 +4,13 @@ using GrpcMain.Extensions;
 using GrpcMain.Interceptors;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using MQTTnet;
+using MQTTnet.Client;
 using MyDBContext.Main;
 using MyJwtHelper;
 using MyUtility;
 using System.Reflection;
+using System.Text;
 
 namespace GrpcMain
 {
@@ -28,21 +31,97 @@ namespace GrpcMain
 
     public class MQTTSeverClient
     {
+        /*
+         协议
+        /deviceid/cmd:string 向设备发送命令
+        /deviceid/data:string 设备上传数据
+
+         */
+
+       
+
+        string UserName = "admin";
+        string UserPass = "admin";
+        string HostIP = "localhost";
+        int Port = 1883;
 
         public MQTTSeverClient()
         {
             //TODO 开启服务
         }
-        public Task<bool> SendCmd(string deviceid, string cmd) {
-            throw new NotImplementedException();
+
+        public MQTTSeverClient(string userName, string userPass, string hostIP, int port)
+        {
+            UserName = userName;
+            UserPass = userPass;
+            HostIP = hostIP;
+            Port = port;
         }
-        public void OnMsg(string title, byte[] data) { 
-            
+
+        public MqttClient Client;
+
+        async Task<MqttClient> GetClient()
+        {
+            var options = new MqttClientOptions();
+
+            options.ClientId = Guid.NewGuid().ToString().Replace("-", "").ToUpper();
+
+            //设置服务器地址与端口
+            options.ChannelOptions = new MqttClientTcpOptions()
+            {
+
+                Server = HostIP,
+                Port = Port
+            };
+            //设置账号与密码
+            options.Credentials = new MqttClientCredentials(UserName, Encoding.Default.GetBytes(UserPass));
+            options.CleanSession = true;
+
+            //保持期
+            options.KeepAlivePeriod = TimeSpan.FromSeconds(100.5);
+
+            //构建客户端对象
+            var _mqttClient = new MqttFactory().CreateMqttClient() as MqttClient;
+            _mqttClient.ApplicationMessageReceivedAsync += arg => { return OnMsg(arg.ApplicationMessage.Topic,arg.ApplicationMessage.Payload); };
+            //_mqttClient.ConnectedAsync += arg => { return MQTTHandler.OnConnect(_mqttClient, arg); };
+            await _mqttClient.ConnectAsync(options);
+            return _mqttClient;
+        }
+        public async void RunAsync()
+        {
+            try
+            {
+                var c = await GetClient();
+                Client = c;
+            }
+            catch (Exception e)
+            {
+                //Logger.Log(Logger.ERROR, "MQTT无法启动", e.Message + "||" + e.StackTrace);
+            }
+
+        }
+
+
+
+        public async Task<bool> SendCmd(string deviceid, string cmd)
+        {
+            var r = await Client.PublishAsync(new MqttApplicationMessage()
+            {
+                Topic = $"/{deviceid}/cmd",
+                Payload = UTF8Encoding.UTF8.GetBytes(cmd)
+            });
+            return r.IsSuccess;
+        }
+        public async Task OnMsg(string title, byte[] data) {
+            Console.WriteLine("*******************");
+            Console.WriteLine(title + ":" + UTF32Encoding.UTF8.GetString(data));
         }
 
     }
 
-    
+    /// <summary>
+    /// 设备工具 负责设备通讯相关操作
+    /// </summary>
     public class DeviceUtility
     {
         ITimeUtility _tu;
@@ -80,5 +159,9 @@ namespace GrpcMain
       
         }
 
+    }
+
+    public class DeviceTimePlanManager { 
+        
     }
 }
