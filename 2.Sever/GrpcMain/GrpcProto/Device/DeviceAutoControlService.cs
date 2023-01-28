@@ -36,12 +36,11 @@ namespace GrpcMain.Device.AutoControl
         {
             return new Device_AutoControl_Settings_Item
             {
-                DeviceId = deviceid,
                 Cmd = item.Cmd,
                 Name = item.Name,
                 Open = item.Open,
                 Order = (byte)item.Order,
-                OwnerID = item.OwnerID,
+                OwnerID = deviceid,
                 TimeEnd = item.TimeEnd,
                 TimeStart = item.TimeStart,
                 TriggerType = (byte)item.TriggerType,
@@ -76,7 +75,7 @@ namespace GrpcMain.Device.AutoControl
             if (!((UserDeviceAuthority)ud.Authority).HasFlag(UserDeviceAuthority.Control_TimeSetting))
                 throw new RpcException(new Status(StatusCode.PermissionDenied, "需要设备自动控制访问权限"));
             var data = await ct.Device_AutoControl_Settings_Items
-                .Where(it => it.DeviceId == request.Dvids)
+                .Where(it => it.OwnerID== request.Dvids)
                 .OrderBy(it => it.Name).ThenBy(it => it.Order)
                 .AsNoTracking().ToListAsync();
             var res = new Response_GetDeviceSetting();
@@ -113,7 +112,7 @@ namespace GrpcMain.Device.AutoControl
                     throw new RpcException(new Status(StatusCode.PermissionDenied, "需要设备自动控制访问权限"));
 
                 await ct.Device_AutoControl_Settings_Items
-                    .DeleteRangeAsync(ct, it => it.DeviceId == item);
+                    .DeleteRangeAsync(ct, it => it.OwnerID == item);
                 ct.AddRange(settinglist.Select(it => it.AsDb(item)));
                 await ct.SaveChangesAsync();
             }

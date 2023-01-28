@@ -19,7 +19,7 @@ namespace GrpcMain.Extensions
             services.TryAddSingleton<IJwtHelper, JwtHelper>();
             services.TryAddSingleton<IGrpcCursorUtility, GrpcCursorUtilityImp>();
             services.TryAddSingleton<DeviceUtility>();
-            
+            services.TryAddSingleton<IProto, MQTTSeverClient>();
             services.UseColdData();
             //添加处理器
             services.TryAddSingleton<IGrpcAuthorityHandle, MyGrpcHandle>();

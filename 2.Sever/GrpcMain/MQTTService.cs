@@ -33,7 +33,7 @@ namespace GrpcMain
         }
     }
 
-    public class MQTTSeverClient
+    public class MQTTSeverClient: IProto
     {
         /*
          协议
