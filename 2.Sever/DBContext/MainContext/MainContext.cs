@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Org.BouncyCastle.Utilities.Date;
 using System.Collections.Generic;
 using System.Diagnostics;
-using XNYAPI.Model.AutoControl;
 //Add-Migration [--context MainContext]
 //Remove-Migration 取消最近一次迁移
 //Update-Database [迁移名称  迁移直到(包含)或回退直到(不回退指定的版本) 0表示一开始]
@@ -217,7 +216,6 @@ namespace MyDBContext.Main
     {
         //public string Name { get; set; } 
         public long Id { get; set; }
-        public long DeviceId { get; set; }
         public bool Open { get; set; }
         public byte Order { get; set; }
         public string Name { get; set; }

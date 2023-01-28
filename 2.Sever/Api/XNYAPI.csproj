@@ -72,7 +72,7 @@
 		<ProjectReference Include="..\..\1.Utility\MyJwtHelper\MyJwtHelper.csproj" />
 		<ProjectReference Include="..\..\1.Utility\MyUtility\MyUtility.csproj" />
 		<ProjectReference Include="..\DBContext\MyDBContext.csproj" />
-		<ProjectReference Include="..\EnumDefines\EnumDefines.csproj" />
+		<ProjectReference Include="..\BaseDefines\BaseDefines.csproj" />
 		<ProjectReference Include="..\GrpcMain\GrpcMain.csproj" /> 
 	</ItemGroup>
 

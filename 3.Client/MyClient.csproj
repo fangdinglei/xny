@@ -41,7 +41,7 @@
 	
 	<ItemGroup>
 	  <ProjectReference Include="..\1.Utility\MyUtility\MyUtility.csproj" />
-	  <ProjectReference Include="..\2.Sever\EnumDefines\EnumDefines.csproj" />
+	  <ProjectReference Include="..\2.Sever\BaseDefines\BaseDefines.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup>
