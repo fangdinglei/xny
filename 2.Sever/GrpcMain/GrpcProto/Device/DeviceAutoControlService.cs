@@ -75,7 +75,7 @@ namespace GrpcMain.Device.AutoControl
             if (!((UserDeviceAuthority)ud.Authority).HasFlag(UserDeviceAuthority.Control_TimeSetting))
                 throw new RpcException(new Status(StatusCode.PermissionDenied, "需要设备自动控制访问权限"));
             var data = await ct.Device_AutoControl_Settings_Items
-                .Where(it => it.OwnerID== request.Dvids)
+                .Where(it => it.OwnerID == request.Dvids)
                 .OrderBy(it => it.Name).ThenBy(it => it.Order)
                 .AsNoTracking().ToListAsync();
             var res = new Response_GetDeviceSetting();

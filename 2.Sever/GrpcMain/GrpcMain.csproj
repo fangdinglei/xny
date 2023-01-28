@@ -41,6 +41,7 @@
     <ProjectReference Include="..\..\1.Utility\MyJwtHelper\MyJwtHelper.csproj" />
     <ProjectReference Include="..\..\1.Utility\MyUtility\MyUtility.csproj" />
     <ProjectReference Include="..\..\Sever.ColdData\Sever.ColdData.csproj" />
+    <ProjectReference Include="..\..\Sever.DeviceProto\Sever.DeviceProto.csproj" />
     <ProjectReference Include="..\DBContext\MyDBContext.csproj" />
   </ItemGroup>
 

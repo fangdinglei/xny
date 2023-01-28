@@ -45,7 +45,7 @@ namespace MyClient.View.AutoControl
                             {
                                 Dvids = IDs[0].Item1
                             });
-                            var settings = r.Setting.OrderBy(it =>it.Name).ThenBy(it=>it.Order);
+                            var settings = r.Setting.OrderBy(it => it.Name).ThenBy(it => it.Order);
                             names = new BindingList<string>(settings.Select(it => it.Name).Distinct().ToList());
                             groupedsettings = new Dictionary<string, List<DeviceAutoControlSetting>>();
                             names.ToList().ForEach(it =>
@@ -322,7 +322,7 @@ namespace MyClient.View.AutoControl
             var sel = list_names.SelectedIndex;
             if (sel < 0 || sel > names.Count - 1)
                 return;
-              sel = datalist.SelectedIndex;
+            sel = datalist.SelectedIndex;
             if (sel <= 0)
                 return;
 
@@ -340,7 +340,7 @@ namespace MyClient.View.AutoControl
             if (sel < 0 || sel > names.Count - 1)
                 return;
             sel = datalist.SelectedIndex;
-            if (sel >= groupedsettings[list_names.SelectedItem as string].Count - 1 )
+            if (sel >= groupedsettings[list_names.SelectedItem as string].Count - 1)
                 return;
 
             var ls = groupedsettings[list_names.SelectedItem as string];

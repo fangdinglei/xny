@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MQTTnet;
 using MQTTnet.Client;
+using System.Reflection.Metadata;
 using System.Text;
 
 namespace Sever.DeviceProto
@@ -13,11 +14,15 @@ namespace Sever.DeviceProto
     {
         public Task<bool> SendCmd(string deviceid, string cmd);
     }
+    public interface IDeviceMessageHandle {
+        public void OnMsg(string topic, byte[] data);
+    }
+
     static public class MQTTExtension
     {
-        static public void UseMQTT(this IServiceCollection services)
+        static public void UseMQTT(this IServiceCollection services,IDeviceMessageHandle handle)
         {
-            services.TryAddSingleton<MQTTSeverClient>(new MQTTSeverClient());
+            services.TryAddSingleton<IProto>(new MQTTSeverClient(handle));
         }
     }
 
@@ -36,18 +41,20 @@ namespace Sever.DeviceProto
         string UserPass = "admin";
         string HostIP = "localhost";
         int Port = 1883;
-
-        public MQTTSeverClient()
+        IDeviceMessageHandle _handle;
+        public MQTTSeverClient(IDeviceMessageHandle handle)
         {
+            _handle = handle;
             //TODO 开启服务
         }
 
-        public MQTTSeverClient(string userName, string userPass, string hostIP, int port)
+        public MQTTSeverClient(string userName, string userPass, string hostIP, int port, IDeviceMessageHandle handle)
         {
             UserName = userName;
             UserPass = userPass;
             HostIP = hostIP;
             Port = port;
+            _handle = handle;
         }
 
         public MqttClient Client;
@@ -106,6 +113,7 @@ namespace Sever.DeviceProto
         }
         public async Task OnMsg(string title, byte[] data)
         {
+            _handle.OnMsg(title , data);
             Console.WriteLine("*******************");
             Console.WriteLine(title + ":" + UTF32Encoding.UTF8.GetString(data));
         }

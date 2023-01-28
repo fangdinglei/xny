@@ -1,6 +1,7 @@
 ﻿namespace MyDBContext.Main
 {
-    public class DeviceCmdHistory {
+    public class DeviceCmdHistory
+    {
         public long ID { set; get; }
         public long DeviceId { set; get; }
         public string Cmd { set; get; }

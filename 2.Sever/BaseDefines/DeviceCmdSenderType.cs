@@ -13,10 +13,11 @@ namespace MyDBContext.Main
     /// <summary>
     /// 设备命令发送者的类型
     /// </summary>
-    public enum DeviceCmdSenderType:byte { 
-        Non=1,
-        User=2,
-        System=3,
+    public enum DeviceCmdSenderType : byte
+    {
+        Non = 1,
+        User = 2,
+        System = 3,
     }
 }
 

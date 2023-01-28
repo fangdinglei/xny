@@ -32,7 +32,7 @@ namespace GrpcMain.Device
     public class DeviceServiceImp : DeviceService.DeviceServiceBase
     {
         DeviceUtility _du;
-       ITimeUtility _timeutility;
+        ITimeUtility _timeutility;
         public DeviceServiceImp(ITimeUtility time, DeviceUtility du)
         {
             _timeutility = time;
@@ -66,7 +66,7 @@ namespace GrpcMain.Device
                     //var dv = await ct.Devices.Where(it => it.Id == dvid).FirstOrDefaultAsync();
                     //if (dv == null)
                     //    throw new Exception("不一致:设备" + dvid + " 应当存在却不存在");
-                    var r= await _du.SendCmd(dvid,request.Cmd, DeviceCmdSenderType.User,id);
+                    var r = await _du.SendCmd(dvid, request.Cmd, DeviceCmdSenderType.User, id);
                     if (r)
                         return new CommonResponse()
                         {
