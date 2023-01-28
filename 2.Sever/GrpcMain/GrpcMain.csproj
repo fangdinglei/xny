@@ -13,6 +13,7 @@
 
 	<ItemGroup>
 	  <None Remove="GrpcProto\Account\AccountService.proto" />
+	  <None Remove="GrpcProto\Account\AuditService.proto" />
 	  <None Remove="GrpcProto\DeviceData\DeviceColdDataService.proto" />
 	  <None Remove="GrpcProto\DeviceData\DeviceDataService.proto" />
 	  <None Remove="GrpcProto\DeviceType\DeviceTypeService.proto" />

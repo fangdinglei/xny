@@ -1,6 +1,7 @@
 ﻿using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
 using GrpcMain.Account;
+using GrpcMain.Account.Audit;
 using GrpcMain.AccountHistory;
 using GrpcMain.Common;
 using GrpcMain.Device;
@@ -44,6 +45,7 @@ namespace MyClient.Grpc
             serviceCollection.TryAddSingleton<SystemService.SystemServiceClient>();
             serviceCollection.TryAddSingleton<ColdDataService.ColdDataServiceClient>();
             serviceCollection.TryAddSingleton<DeviceAutoControlService.DeviceAutoControlServiceClient>();
+            serviceCollection.TryAddSingleton<AuditService.AuditServiceClient>();
         }
     }
 }

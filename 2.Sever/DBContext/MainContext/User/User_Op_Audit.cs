@@ -40,12 +40,17 @@ namespace MyDBContext.Main
         /// 发起人
         /// </summary>
         public long SponsorId { get; set; }
-        public virtual User Sponsor { get; }
+        public virtual User Sponsor { get; set; }
         /// <summary>
         /// 审计人
         /// </summary>
         public long AuditorId { get; set; }
         public int UserTreeId { get; set; }
-        public virtual User Auditor { get; }
+        public virtual User Auditor { get; set; }
+
+        /// <summary>
+        /// 状态 <see cref="UserOpAuditStatus"/>
+        /// </summary>
+        public byte Status { get; set; }
     }
 }

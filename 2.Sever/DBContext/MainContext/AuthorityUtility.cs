@@ -56,9 +56,9 @@ namespace MyDBContext.Main
 
         }
         /// <summary>
-        /// 获取用户和实体的权限关系
+        /// 获取用户和实体创建者的权限关系
         /// </summary>
-        /// <param name="creator"></param>
+        /// <param name="creator">实体创建者id</param>
         /// <param name="ct"></param>
         /// <param name="uid"></param>
         /// <returns></returns>
@@ -79,11 +79,11 @@ namespace MyDBContext.Main
             }
             else if (sf.IsFather)
             {
-                return OwnerType.FatherOfCreator;
+                return OwnerType.SonOfCreator;
             }
             else
             {
-                return OwnerType.SonOfCreator;
+                return OwnerType.FatherOfCreator;
             }
 
         }

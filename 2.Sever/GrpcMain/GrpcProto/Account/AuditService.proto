@@ -1,0 +1,44 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcMain.Account.Audit";
+import "Common/CommonResponse.proto";
+
+
+
+service AuditService {
+    //获取需要审计的数据
+    rpc Get(Request_Get)
+        returns (Response_Get);
+    //执行操作
+    rpc Set(Request_Set)
+        returns (CommonResponse);
+
+}
+
+message AuditInfo{
+    int64 Id=1;
+    string Op=2;
+    string Data=3;
+    int64 Time=4;
+    int64 SponsorId=5;
+    int64 AuditorId=6;
+}
+
+message Request_Get{
+    //游标
+    optional int64 Cursor=1;
+    //一次获取的数量 [10-3000] 默认500
+    optional int32 Count=2;
+    //0 仅直接子用户的审计请求 1仅自己的审计请求 2自己和子用户的 3全部
+    int32 Mode=3;
+}
+message Response_Get{
+    repeated AuditInfo Infos=1;
+    int64 Cursor=2;
+}
+
+message Request_Set{
+    int64 ID=1;
+    //是否接受并执行
+    bool Accept=2;
+}
