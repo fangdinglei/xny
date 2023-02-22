@@ -1,12 +1,14 @@
 ﻿using Grpc.Core;
 using GrpcMain.Attributes;
 using GrpcMain.Interceptors;
+using GrpcMain.MQTT;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using MyDBContext.Main;
 using MyJwtHelper;
 using MyUtility;
+using Sever.DeviceProto;
 using System.Reflection;
 
 namespace GrpcMain.Extensions
@@ -18,8 +20,8 @@ namespace GrpcMain.Extensions
             services.Configure<MyGrpcHandleCongig>(op => op.JwtKey = jwtkey);
             services.TryAddSingleton<IJwtHelper, JwtHelper>();
             services.TryAddSingleton<IGrpcCursorUtility, GrpcCursorUtilityImp>();
+
             services.TryAddSingleton<DeviceUtility>();
-            services.TryAddSingleton<IProto, MQTTSeverClient>();
             services.UseColdData();
             //添加处理器
             services.TryAddSingleton<IGrpcAuthorityHandle, MyGrpcHandle>();

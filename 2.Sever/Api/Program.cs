@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using MyEmailUtility;
+using Sever.DeviceProto;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.TryAddSingleton<MyUtility.IRandomUtility, MyUtility.RandomUtili
 builder.Services.TryAddSingleton<MyUtility.ITimeUtility, MyUtility.TimeUtility>();
 builder.Services.UseMyGrpc("2432114474");
 builder.Services.UseMyEmail();
+builder.Services.UseMQTT(null);
 
 #region 禁用模型校验
 
