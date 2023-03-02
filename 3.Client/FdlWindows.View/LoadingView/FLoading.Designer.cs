@@ -1,4 +1,4 @@
-﻿namespace MyClient.View
+﻿namespace FdlWindows.View
 {
     partial class FLoading
     {

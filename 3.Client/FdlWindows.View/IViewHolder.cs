@@ -43,22 +43,22 @@
         /// <param name="it"></param>
         /// <returns></returns>
         bool Back(IView it);
-        /// <summary>
-        /// 不太级联等待 应当在okcall 或exitcall中等待否则将会出现错误  
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="load"></param>
-        /// <param name="retry"></param>
-        /// <param name="okcall"></param>
-        /// <param name="exitcall"></param>
-        void ShowLoading(IView view, Func<Task<bool>> load, Func<Task<bool>>? retry = null
-            , Action okcall = null, Action exitcall = null);
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <param name="view"></param>
-        /// <returns></returns>
-        bool IsLoading(IView view);
+        ///// <summary>
+        ///// 不太级联等待 应当在okcall 或exitcall中等待否则将会出现错误  
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <param name="load"></param>
+        ///// <param name="retry"></param>
+        ///// <param name="okcall"></param>
+        ///// <param name="exitcall"></param>
+        //void ShowLoading(IView view, Func<Task<bool>> load, Func<Task<bool>>? retry = null
+        //    , Action okcall = null, Action exitcall = null);
+        ///// <summary>
+        /////  
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <returns></returns>
+        //bool IsLoading(IView view);
         /// <summary>
         ///  
         /// </summary>

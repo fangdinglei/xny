@@ -44,8 +44,9 @@ namespace MyClient.View.Device
 
         public void PrePare(params object[] par)
         {
-            _viewholder.ShowLoading(this, async () =>
+            list_types.ShowLoading(async () =>
             {
+                list_types.DataSource = null;
                 var rsp = await _client.GetTypeInfosAsync(new DTODefine.Types.Request_GetTypeInfos()
                 {
 
@@ -57,10 +58,6 @@ namespace MyClient.View.Device
             }, okcall: () =>
             {
                 list_types.DataSource = _types;
-            }, exitcall: () =>
-            {
-                list_types.DataSource = null;
-                _viewholder.Back();
             });
         }
 

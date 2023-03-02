@@ -28,7 +28,7 @@ namespace MyClient.View
 
         public void PrePare(params object[] par)
         {
-            _viewholder.ShowLoading(this, async () =>
+           this.ShowLoading( async () =>
             {
                 var res = await _client.GetSystemBaseInfoAsync(new GrpcMain.System.Request_GetSystemBaseInfo { });
                 text_id.Text = res.SeverId + "";
@@ -42,9 +42,6 @@ namespace MyClient.View
                 grid_userstatics.DataSource = r2.Data.ToList();
                 //TODO
                 return true;
-            }, exitcall: () =>
-            {
-                _viewholder.Back();
             });
 
         }

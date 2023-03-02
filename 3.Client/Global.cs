@@ -4,7 +4,6 @@ using Grpc.Core;
 using GrpcMain.Account;
 using Microsoft.Extensions.DependencyInjection;
 using MyClient.Grpc;
-using MyClient.View;
 using MyUtility;
 
 namespace MyClient

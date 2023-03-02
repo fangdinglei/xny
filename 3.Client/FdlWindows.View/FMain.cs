@@ -26,10 +26,7 @@ namespace FdlWindows.View
         /// 用于名称找节点 key name value treenode
         /// </summary>
         Dictionary<string, TreeNode> ViewNodes = new();
-        /// <summary>
-        /// key name value view 界面缓存
-        /// </summary>
-        Dictionary<string, Queue<IView>> Views = new Dictionary<string, Queue<IView>>();
+      
         /// <summary>
         ///用于创建实例获取名称以缓存 key IView value NameofViewInstance
         /// </summary>
@@ -192,18 +189,8 @@ namespace FdlWindows.View
                 highlighting = null;
             }
 
-
-            if (IsLoading(view) || Views[iname].Count > MaxSameViewInstance)
-            {
-                NameofViewInstance.Remove(view);
-                MainHolder.Controls.Remove(view.View);
-            }
-            else
-            {
-                view.View.Visible = false;
-                Views[iname].Enqueue(view);
-            }
-
+            NameofViewInstance.Remove(view);
+            MainHolder.Controls.Remove(view.View);
 
         }
         /// <summary>
@@ -216,11 +203,7 @@ namespace FdlWindows.View
         /// <returns></returns>
         IView GetOrCreatView(string name)
         {
-            if (Views.ContainsKey(name) && Views[name].Count > 0)
-            {
-                var t = Views[name].Dequeue();
-                return t;
-            }
+           
 
             IView? _interface = serviceProvider.GetService(ViewClassType[name]) as IView;
             if (_interface == null)
@@ -250,11 +233,6 @@ namespace FdlWindows.View
             }
 
             MainHolder.Controls.Add(view);
-
-            if (!Views.ContainsKey(name))
-            {
-                Views.Add(name, new Queue<IView>());
-            }
             NameofViewInstance.Add(_interface, name);
             return _interface;
         }
@@ -473,34 +451,6 @@ namespace FdlWindows.View
             Windows.Peek().OnTick();
         }
 
-        #region 加载中模块
-        HashSet<IView> _ViewLoading = new();
-        public void ShowLoading(IView view, Func<Task<bool>> load, Func<Task<bool>>? retry = null,
-            Action okcall = null, Action exitcall = null)
-        {
-            SwitchTo("Loading", false, load, retry, okcall, exitcall, (bool isloading) =>
-            {
-                lock (_ViewLoading)
-                {
-                    if (isloading)
-                    {
-                        _ViewLoading.Add(view);
-                    }
-                    else
-                    {
-                        _ViewLoading.Remove(view);
-                    }
-                }
-            });
-        }
-        public bool IsLoading(IView view)
-        {
-            lock (_ViewLoading)
-            {
-                return _ViewLoading.Contains(view);
-            }
-        }
-        #endregion
 
         public void ShowDatePicker(Action<DateTime, DateTime> call)
         {

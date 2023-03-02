@@ -58,7 +58,7 @@ namespace MyClient.View.User
             long st = _timeUtility.GetTicket(vs);
             long ed = _timeUtility.GetTicket(ve);
             group_loginhistory_list.DataSource = null;
-            BaseManager._viewHolder.ShowLoading(_father, async () =>
+            this.ShowLoading( async () =>
             {
                 try
                 {
@@ -90,8 +90,6 @@ namespace MyClient.View.User
             {
                 group_loginhistory_list.DataSource = _histories;
                 group_loginhistory_list.DisplayMember = "Time";
-            }, exitcall: () =>
-            {
             });
 
 

@@ -114,33 +114,40 @@ namespace MyClient.View
         private void btn_search_Click(object sender, EventArgs e)
         {
             var smode = IsSingleMode;
-            SigleExecute.Execute(nameof(FDeviceRepair), unlock =>
+            SigleExecute.Execute(nameof(FDeviceRepair),(lockx, unlock) =>
             {
                 _viewHolder.ShowDatePicker((ds, de) =>
                 {
-                    _viewHolder.ShowLoading(this, async () =>
+                    list_infos.ShowLoading(async () =>
                     {
-                        var req1 = new Request_GetRepairInfos
+                        try
                         {
-                            Cursor = 0,
-                            StartTime = _timeUtility.GetTicket(ds),
-                            EndTime = _timeUtility.GetTicket(de),
-                        };
-                        if (smode)
-                        {
-                            req1.DeviceId = dvid;
+                            if (!lockx())
+                                return false;
+                            var req1 = new Request_GetRepairInfos
+                            {
+                                Cursor = 0,
+                                StartTime = _timeUtility.GetTicket(ds),
+                                EndTime = _timeUtility.GetTicket(de),
+                            };
+                            if (smode)
+                            {
+                                req1.DeviceId = dvid;
+                            }
+                            var res1 = await _repairServiceClient.GetRepairInfosAsync(req1);
+                            _repairInfos = new BindingList<ToStringHelper<RepairInfo>>(
+                                res1.Info.Select(it => new ToStringHelper<RepairInfo>(it, it => it.Id + "")).ToList());
+                            unlock();
+                            return true;
                         }
-                        var res1 = await _repairServiceClient.GetRepairInfosAsync(req1);
-                        _repairInfos = new BindingList<ToStringHelper<RepairInfo>>(
-                            res1.Info.Select(it => new ToStringHelper<RepairInfo>(it, it => it.Id + "")).ToList());
-                        return true;
+                        catch (Exception)
+                        {
+                            unlock();
+                            return false;
+                        }
                     }, okcall: () =>
                     {
                         list_infos.DataSource = _repairInfos;
-                        unlock();
-                    }, exitcall: () =>
-                    {
-                        unlock();
                     });
                 });
             });

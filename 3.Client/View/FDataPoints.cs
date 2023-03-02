@@ -44,14 +44,15 @@ namespace MyClient.View
         {
             var res3 = await _deviceTypeServiceClient.GetTypeInfosAsync(new Request_GetTypeInfos { });
             types = res3.TypeInfos.ToList();
-            list_Type.DataSource = types;
             list_Type.DisplayMember = "Name";
+            list_Type.DataSource = types;
+            
 
-            var res2 = await _deviceTypeServiceClient.GetTypeInfosAsync(new GrpcMain.DeviceType.DTODefine.Types.Request_GetTypeInfos()
-            {
+            //var res2 = await _deviceTypeServiceClient.GetTypeInfosAsync(new GrpcMain.DeviceType.DTODefine.Types.Request_GetTypeInfos()
+            //{
 
-            });
-            types = res2.TypeInfos.ToList();
+            //});
+            //types = res2.TypeInfos.ToList();
 
 
 
@@ -263,7 +264,7 @@ namespace MyClient.View
 
         private async void list_Type_SelectedIndexChangedAsync(object sender, EventArgs e)
         {
-            if (types == null)
+            if (types == null&& (sender as ListBox).SelectedIndex>=0)
             {
                 (sender as ListBox).SelectedIndex = -1;
                 return;
@@ -272,15 +273,19 @@ namespace MyClient.View
             CStreamName.DataSource = null;
 
             var type = types[(sender as ListBox).SelectedIndex];
-
-            var res = await _userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices
-            { TypeId = type.Id });
-            var lsx = res.Info.Where(it => ((UserDeviceAuthority)it.UserDevice.Authority).HasFlag(UserDeviceAuthority.Read_Data))
-                .Select(it => new ToStringHelper<DeviceWithUserDeviceInfo>
-            (it, (it) => it.Device.Id + ":" + it.Device.Name)).ToList();
-            devices = new BindingList<ToStringHelper<DeviceWithUserDeviceInfo>>(lsx);
-            CDevice.DataSource = devices;
             LoadAllStreamName(type);
+            CDevice.ShowLoading(async () => 
+            {
+                var res = await _userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices
+                { TypeId = type.Id });
+                var lsx = res.Info.Where(it => ((UserDeviceAuthority)it.UserDevice.Authority).HasFlag(UserDeviceAuthority.Read_Data))
+                    .Select(it => new ToStringHelper<DeviceWithUserDeviceInfo>
+                (it, (it) => it.Device.Id + ":" + it.Device.Name)).ToList();
+                devices = new BindingList<ToStringHelper<DeviceWithUserDeviceInfo>>(lsx);
+                CDevice.DataSource = devices;
+                return true;
+            });
+         
         }
         private void CDevice_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -314,15 +319,7 @@ namespace MyClient.View
             }
             else
             {
-                _viewHolder.ShowLoading(this, async () => { await PreGetData(); return true; },
-                    okcall: () =>
-                    {
-
-                    },
-                    exitcall: () =>
-                    {
-                        _viewHolder.Back();
-                    });
+                list_Type.ShowLoading( async () => { await PreGetData(); return true; });
             }
 
         }

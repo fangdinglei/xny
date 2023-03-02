@@ -64,7 +64,41 @@ namespace FDL.Program
             }
             return true;
         }
-
+        /// <summary>
+        /// 通过回调获取和释放锁
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="action"> 进入时不检查锁</param>
+        /// <returns></returns>
+        static public bool Execute(string name, Action<Func<bool>, Action> action)
+        {
+            Debuger.Assert(action != null, "action不能为空");
+           
+            try
+            {
+                action(() => {
+                    lock (acts)
+                    {
+                        if (acts.Contains(name))
+                            return false;
+                        else
+                            acts.Add(name);
+                        return true;
+                    }
+                },() =>
+                {
+                    lock (acts)
+                        acts.Remove(name);
+                });
+            }
+            catch (Exception)
+            {
+                lock (acts)
+                    acts.Remove(name);
+                throw;
+            }
+            return true;
+        }
         /// <summary>
         /// 开启新的task并在结束后释放锁
         /// </summary>

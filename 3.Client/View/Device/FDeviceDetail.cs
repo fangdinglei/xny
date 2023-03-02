@@ -90,9 +90,7 @@ DeviceService.DeviceServiceClient deviceServiceClient)
         }
         public void PrePare(params object[] par)
         {
-            _viewholder.ShowLoading(this, async () =>
-            {
-
+            chromiumWebBrowser1.ShowLoading(async () => {
                 while (!chromiumWebBrowser1.IsBrowserInitialized || chromiumWebBrowser1.IsLoading)
                 {
                     //Application.DoEvents();
@@ -116,10 +114,6 @@ DeviceService.DeviceServiceClient deviceServiceClient)
                     _ => "未知",
                 };
                 text_type.Text = typeinfo.Id + ":" + typeinfo.Name;
-            },
-            exitcall: () =>
-            {
-                _viewholder.Back();
             });
         }
 

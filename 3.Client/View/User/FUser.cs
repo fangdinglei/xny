@@ -63,7 +63,7 @@ namespace MyClient.View.User
         {
             list_user.DataSource = null;
             list_user.Items.Clear();
-            _viewholder.ShowLoading(this, async () =>
+            list_user.ShowLoading( async () =>
             {
                 _userInfos = null;
                 var r1 = await _accountServiceClient.GetUserInfoAsync(new GrpcMain.Account.DTODefine.Types.Request_GetUserInfo()
@@ -71,14 +71,6 @@ namespace MyClient.View.User
                     SubUser = true,
                 });
                 _userInfos = new BindingList<UserInfo>(r1.UserInfo);
-
-                //devicewithuserdeviceinfos = null;
-                //var r2 = await userDeviceServiceClient.GetDevicesAsync(new GrpcMain.UserDevice.DTODefine.Types.Request_GetDevices
-                //{
-
-                //});
-                //devicewithuserdeviceinfos = r2.Info.ToList();
-
                 return true;
             },
             okcall: () =>
@@ -283,9 +275,6 @@ namespace MyClient.View.User
 
             //}
         }
-
-
-
 
 
     }

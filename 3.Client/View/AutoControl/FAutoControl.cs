@@ -39,8 +39,9 @@ namespace MyClient.View.AutoControl
                 {
                     try
                     {
-                        _viewholder.ShowLoading(this, async () =>
+                        list_names.ShowLoading( async () =>
                         {
+                            datalist.Visible = false;
                             var r = await _client.GetDeviceSettingAsync(new Request_GetDeviceSetting()
                             {
                                 Dvids = IDs[0].Item1
@@ -67,9 +68,11 @@ namespace MyClient.View.AutoControl
                                 list_names.SelectedIndex = -1;
                             }
                             return true;
+                        }, okcall: () => {
+                            datalist.Visible = true;
+                            RefreshView();
                         });
-                        RefreshView();
-
+                     
                     }
                     catch (Exception ex)
                     {

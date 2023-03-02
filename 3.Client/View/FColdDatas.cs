@@ -37,6 +37,20 @@ namespace MyClient.View
         public void PrePare(params object[] par)
         {
             btn_search_Click(null, null);
+            pcoldsetting.ShowLoading( async () =>
+            {
+                var r = await _client.GetSettingAsync(new GrpcMain.DeviceData.Cold.Request_GetSetting() { });
+                cb_coldmanager.DataSource = r.Data.Managers.ToList()/*.Union(new List<string>() { "测试TODO"}).ToList()*/;
+                cb_colddown.SelectedIndex = (cb_colddown.DataSource as List<string>).FindIndex(it => it == r.Data.ColdDownTime + "天");
+                cb_mincount.SelectedIndex = (cb_mincount.DataSource as List<string>).FindIndex(it => it == r.Data.MinCount + "个");
+                cb_coldmanager.SelectedIndex = (cb_coldmanager.DataSource as List<string>).FindIndex(it => it == r.Data.ManagerName);
+                c_opencolddata.Checked = r.Data.Open;
+                btn_savesetting.Enabled = false;
+                return true;
+            }, okcall: () => {
+                pcoldsetting.Visible = true;
+            });
+
         }
 
         public void SetViewHolder(IViewHolder viewholder)
@@ -46,8 +60,7 @@ namespace MyClient.View
 
         private void btn_search_Click(object sender, EventArgs e)
         {
-            _viewholder.ShowLoading(this, async () =>
-            {
+            dataGridView1.ShowLoading(async () => {
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Id");
                 dt.Columns.Add("Device");
@@ -77,22 +90,6 @@ namespace MyClient.View
                 });
                 dataGridView1.DataSource = dt;
                 return true;
-            }, okcall: () =>
-            {
-                _viewholder.ShowLoading(this, async () =>
-                {
-                    var r = await _client.GetSettingAsync(new GrpcMain.DeviceData.Cold.Request_GetSetting() { });
-                    cb_coldmanager.DataSource = r.Data.Managers.ToList()/*.Union(new List<string>() { "测试TODO"}).ToList()*/;
-                    cb_colddown.SelectedIndex = (cb_colddown.DataSource as List<string>).FindIndex(it => it == r.Data.ColdDownTime + "天");
-                    cb_mincount.SelectedIndex = (cb_mincount.DataSource as List<string>).FindIndex(it => it == r.Data.MinCount + "个");
-                    cb_coldmanager.SelectedIndex = (cb_coldmanager.DataSource as List<string>).FindIndex(it => it == r.Data.ManagerName);
-                    c_opencolddata.Checked = r.Data.Open;
-                    btn_savesetting.Enabled = false;
-                    return true;
-                });
-            }, exitcall: () =>
-            {
-                //_viewholder.Back();
             });
         }
 

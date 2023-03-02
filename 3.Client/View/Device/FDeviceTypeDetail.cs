@@ -66,7 +66,7 @@ namespace MyClient.View
             else
             {
                 var typeid = (long)par[1];
-                _viewholder.ShowLoading(this,
+                this.ShowLoading(
                     async () =>
                     {
                         var req = new DTODefine.Types.Request_GetTypeInfos { };
@@ -87,18 +87,6 @@ namespace MyClient.View
                         thingModels = new BindingList<ThingModel>(typeinfo.ThingModels.Clone());
                         list_thingmodels.DataSource = thingModels;
                         list_thingmodels.DisplayMember = "Name";
-                    },
-                    exitcall: () =>
-                    {
-                        if (_viewholder.IsParentOfView(this))
-                        {
-                            _viewholder.Back();
-                        }
-                        else
-                        {
-                            Visible = false;
-                        }
-
                     });
             }
 

@@ -1,12 +1,14 @@
 ﻿using FdlWindows.View;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
-namespace MyClient.View
+namespace FdlWindows.View
 {
-    [AutoDetectView("Loading", "", "", false)]
-    public partial class FLoading : Form, IView
+    public partial class FLoading : Form
     {
-        bool loading = false; bool backfailed;
+        //用于跳过任务直接执行最新的任务
+        int taskid = 0;
+        public bool LoadingX = false; 
         FLoadingOption? Option;
         public FLoading()
         {
@@ -18,20 +20,13 @@ namespace MyClient.View
             Option = option;
         }
         Func<Task<bool>>? retry;
-        /// <summary>
-        /// 向界面管理器汇报是否在加载中 加载中的界面将不再被复用
-        /// </summary>
-        Action<bool> setisloading;
         Action? okcall;
-        Action? exitcall;
-        public Control View => this;
-        IViewHolder _viewholder;
+        Task<bool>? tsk;
 
-        ToolTip tipui = new ToolTip();
+
+       ToolTip tipui = new ToolTip();
         void OnSuccess()
         {
-            setisloading(false);
-            loading = false;
             try
             {
                 okcall?.Invoke();
@@ -40,45 +35,92 @@ namespace MyClient.View
             {
                 Debug.Assert(false, "回调失败" + ex.Message);
             }
-
             okcall = null;
-            exitcall = null;
+            this.tsk = null;
             tipui.RemoveAll();
-            backfailed = !_viewholder.Back(this);
+            LoadingX = false;
 
         }
         void OnFailure(Exception ex)
         {
-            setisloading(false);
-            loading = false;
             var str = Option?.Convertor(ex) ?? ex.Message;
             label1.Text = str.Length > 7 ? str.Substring(0, 7) + ".." : str;
             tipui.SetToolTip(label1, str);
             button1.Visible = true;
+            this.tsk = null;
+            LoadingX = false;
         }
         void OnStartLoad()
         {
             tipui.RemoveAll();
-            loading = true; setisloading(true);
+            LoadingX = true; 
             button1.Visible = false;
             label1.Text = "加载中";
         }
+        /// <summary>
+        /// 内置取消加载
+        /// </summary>
+        /// <returns></returns>
+        public bool CancelLoad() {
+            Task<bool>? tsk=null;
+            lock (this)
+            {
+                if (LoadingX)
+                {
+                    this.Visible = false;
+                    retry = null;
+                    okcall = null;
+                }
+                tsk = this.tsk;
+            }
+            if (tsk != null)
+                Task.WaitAll(tsk);
+            lock (this)
+            {
+                if (tsk==this.tsk)
+                {
+                    this.tsk = null;
+                }
+            }
+            return true;
+        }
 
-        async Task<bool> ShowLoading(Func<Task<bool>> task, Func<Task<bool>>? retry, Action okcall = null, Action exitcall = null, Action<bool> setisloading = null)
+        public int GetTaskId() {
+            lock (this)
+            {
+
+                int res = taskid ;
+                taskid = (taskid + 1) & 0xFFFFFF;
+                return res;
+            }
+        }
+        public bool CheckTaskId(int taskid) {
+            lock (this)
+            {
+                return ((taskid + 1) & 0xFFFFFF) ==this.taskid;
+            }
+        }
+
+        public async void ShowLoading2(int taskid,Func<Task<bool>> task, Func<Task<bool>>? retry, Action okcall = null)
         {
-            Debug.Assert(loading == false, "不能重复进入加载界面");
-            backfailed = false;
+            Debug.Assert(!LoadingX,"请等待加载结束后在加载");
+            lock (this)
+            {
+                if (!CheckTaskId(taskid))
+                {
+                    return;
+                }
+            }
             this.retry = retry ?? task;
-            this.setisloading = setisloading;
             this.okcall = okcall;
-            this.exitcall = exitcall;
             try
             {
                 OnStartLoad();
-                if (await task())
+                tsk = task(); 
+                if (await tsk)
                 {
                     OnSuccess();
-                    return true;
+                    return;
                 }
                 else
                 {
@@ -89,18 +131,17 @@ namespace MyClient.View
             catch (Exception ex)
             {
                 OnFailure(ex);
-                return false;
+                return;
             }
         }
-
         private async void button1_ClickAsync(object sender, EventArgs e)
         {
-
 
             try
             {
                 OnStartLoad();
-                if (await retry())
+                tsk = retry(); 
+                if (await tsk)
                 {
                     OnSuccess();
                     return;
@@ -116,49 +157,7 @@ namespace MyClient.View
             }
         }
 
-        public async void PrePare(params object[] par)
-        {
-            await ShowLoading(par[0] as Func<Task<bool>>, par[1] as Func<Task<bool>>, par[2] as Action, par[3] as Action, par[4] as Action<bool>);
-        }
-
-        public void SetViewHolder(IViewHolder viewholder)
-        {
-            _viewholder = viewholder;
-        }
-
-        public void OnEvent(string name, params object[] pars)
-        {
-            if (name == "Exit")
-            {
-                try
-                {
-                    if (loading)
-                    {
-                        loading = false;
-                        setisloading(false);
-                    }
-                    exitcall?.Invoke();
-                }
-                catch (Exception)
-                {
-                    Debug.Assert(false, "回调失败");
-                }
-
-                //FormExitEventArg arg = pars[0] as FormExitEventArg;
-                //arg.Cancel = !arg.IsForNewWindow; 
-            }
-            else if (name == "UnCovered")
-            {
-                if (backfailed)
-                {
-                    backfailed = !_viewholder.Back(this);
-                }
-            }
-        }
-
-        public void OnTick()
-        {
-        }
+      
     }
 
 }
