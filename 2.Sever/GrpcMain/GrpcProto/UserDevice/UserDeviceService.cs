@@ -304,7 +304,7 @@ namespace GrpcMain.UserDevice
             long id = (long)context.UserState["CreatorId"];
             long qid = id;
             if (request.HasUserId)
-                id = request.UserId;
+                qid = request.UserId;
             using (MainContext ct = new MainContext())
             {
                 IQueryable<MyDBContext.Main.User_Device> bd;
@@ -313,8 +313,7 @@ namespace GrpcMain.UserDevice
                     var count = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == qid && it.IsFather).CountAsync();
                     if (count == 0)
                     {
-                        context.Status = new Status(StatusCode.PermissionDenied, "只能查询自己和子用户");
-                        return null;
+                        throw new RpcException(new Status(StatusCode.PermissionDenied, "只能查询自己和子用户"));
                     }
                 }
                 bd = ct.User_Devices.Where(it => it.UserId == id);
@@ -457,7 +456,7 @@ namespace GrpcMain.UserDevice
             long id = (long)context.UserState["CreatorId"];
             long qid = id;
             if (request.HasUserId)
-                id = request.UserId;
+                qid = request.UserId;
             using (MainContext ct = new MainContext())
             {
                 IQueryable<MyDBContext.Main.User_Device> bd;
@@ -466,8 +465,7 @@ namespace GrpcMain.UserDevice
                     var count = await ct.User_SFs.Where(it => it.User1Id == id && it.User2Id == qid && it.IsFather).CountAsync();
                     if (count == 0)
                     {
-                        context.Status = new Status(StatusCode.PermissionDenied, "只能查询自己和子用户");
-                        return null;
+                        throw new RpcException(new Status(StatusCode.PermissionDenied, "只能查询自己和子用户"));
                     }
                 }
                 bd = ct.User_Devices.Where(it => it.UserId == request.UserId);

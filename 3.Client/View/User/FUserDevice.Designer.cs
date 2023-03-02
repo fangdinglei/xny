@@ -36,34 +36,34 @@
             this.check_write_baseinfo = new System.Windows.Forms.CheckBox();
             this.check_control_timesetting = new System.Windows.Forms.CheckBox();
             this.check_read_repair = new System.Windows.Forms.CheckBox();
-            this.check_write_data = new System.Windows.Forms.CheckBox();
+            this.check_write_deletdata = new System.Windows.Forms.CheckBox();
             this.check_read_status = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lay_read = new System.Windows.Forms.TableLayoutPanel();
+            this.check_read_baseinfo = new System.Windows.Forms.CheckBox();
             this.check_read_timesetting = new System.Windows.Forms.CheckBox();
             this.check_read_cmd = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lay_write = new System.Windows.Forms.TableLayoutPanel();
-            this.check_write_device = new System.Windows.Forms.CheckBox();
+            this.check_write_deletdevice = new System.Windows.Forms.CheckBox();
             this.check_write_repair = new System.Windows.Forms.CheckBox();
             this.check_write_type = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lay_control = new System.Windows.Forms.TableLayoutPanel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.check_delegate = new System.Windows.Forms.CheckBox();
-            this.btn_sel_all = new System.Windows.Forms.Button();
             this.btn_sel_read = new System.Windows.Forms.Button();
             this.btn_sel_rw = new System.Windows.Forms.Button();
             this.btn_sel_rwc = new System.Windows.Forms.Button();
             this.btn_submit = new System.Windows.Forms.Button();
-            this.check_quickop = new System.Windows.Forms.CheckBox();
-            this.check_read_baseinfo = new System.Windows.Forms.CheckBox();
+            this.op_panel = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             this.lay_read.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.lay_write.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.lay_control.SuspendLayout();
+            this.op_panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // list_devicegroup
@@ -74,15 +74,17 @@
             this.list_devicegroup.Name = "list_devicegroup";
             this.list_devicegroup.Size = new System.Drawing.Size(180, 580);
             this.list_devicegroup.TabIndex = 0;
+            this.list_devicegroup.SelectedIndexChanged += new System.EventHandler(this.list_devicegroup_SelectedIndexChanged);
             // 
             // list_devices
             // 
             this.list_devices.FormattingEnabled = true;
             this.list_devices.ItemHeight = 24;
-            this.list_devices.Location = new System.Drawing.Point(198, 41);
+            this.list_devices.Location = new System.Drawing.Point(198, 38);
             this.list_devices.Name = "list_devices";
             this.list_devices.Size = new System.Drawing.Size(180, 580);
             this.list_devices.TabIndex = 1;
+            this.list_devices.SelectedIndexChanged += new System.EventHandler(this.list_devices_SelectedIndexChanged);
             // 
             // check_read_data
             // 
@@ -134,15 +136,15 @@
             this.check_read_repair.Text = "读维修记录";
             this.check_read_repair.UseVisualStyleBackColor = true;
             // 
-            // check_write_data
+            // check_write_deletdata
             // 
-            this.check_write_data.AutoSize = true;
-            this.check_write_data.Location = new System.Drawing.Point(3, 3);
-            this.check_write_data.Name = "check_write_data";
-            this.check_write_data.Size = new System.Drawing.Size(90, 28);
-            this.check_write_data.TabIndex = 7;
-            this.check_write_data.Text = "删数据";
-            this.check_write_data.UseVisualStyleBackColor = true;
+            this.check_write_deletdata.AutoSize = true;
+            this.check_write_deletdata.Location = new System.Drawing.Point(3, 3);
+            this.check_write_deletdata.Name = "check_write_deletdata";
+            this.check_write_deletdata.Size = new System.Drawing.Size(90, 28);
+            this.check_write_deletdata.TabIndex = 7;
+            this.check_write_deletdata.Text = "删数据";
+            this.check_write_deletdata.UseVisualStyleBackColor = true;
             // 
             // check_read_status
             // 
@@ -157,7 +159,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.lay_read);
-            this.groupBox1.Location = new System.Drawing.Point(411, 12);
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(300, 180);
             this.groupBox1.TabIndex = 9;
@@ -186,6 +188,16 @@
             this.lay_read.Size = new System.Drawing.Size(294, 151);
             this.lay_read.TabIndex = 12;
             // 
+            // check_read_baseinfo
+            // 
+            this.check_read_baseinfo.AutoSize = true;
+            this.check_read_baseinfo.Location = new System.Drawing.Point(3, 3);
+            this.check_read_baseinfo.Name = "check_read_baseinfo";
+            this.check_read_baseinfo.Size = new System.Drawing.Size(126, 28);
+            this.check_read_baseinfo.TabIndex = 9;
+            this.check_read_baseinfo.Text = "读基础信息";
+            this.check_read_baseinfo.UseVisualStyleBackColor = true;
+            // 
             // check_read_timesetting
             // 
             this.check_read_timesetting.AutoSize = true;
@@ -209,7 +221,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.lay_write);
-            this.groupBox2.Location = new System.Drawing.Point(411, 198);
+            this.groupBox2.Location = new System.Drawing.Point(3, 189);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(300, 150);
             this.groupBox2.TabIndex = 10;
@@ -221,9 +233,9 @@
             this.lay_write.ColumnCount = 2;
             this.lay_write.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.lay_write.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_write.Controls.Add(this.check_write_data, 0, 0);
+            this.lay_write.Controls.Add(this.check_write_deletdata, 0, 0);
             this.lay_write.Controls.Add(this.check_write_baseinfo, 1, 0);
-            this.lay_write.Controls.Add(this.check_write_device, 0, 1);
+            this.lay_write.Controls.Add(this.check_write_deletdevice, 0, 1);
             this.lay_write.Controls.Add(this.check_write_repair, 1, 1);
             this.lay_write.Controls.Add(this.check_write_type, 1, 2);
             this.lay_write.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -236,15 +248,15 @@
             this.lay_write.Size = new System.Drawing.Size(294, 121);
             this.lay_write.TabIndex = 12;
             // 
-            // check_write_device
+            // check_write_deletdevice
             // 
-            this.check_write_device.AutoSize = true;
-            this.check_write_device.Location = new System.Drawing.Point(3, 39);
-            this.check_write_device.Name = "check_write_device";
-            this.check_write_device.Size = new System.Drawing.Size(90, 28);
-            this.check_write_device.TabIndex = 8;
-            this.check_write_device.Text = "删设备";
-            this.check_write_device.UseVisualStyleBackColor = true;
+            this.check_write_deletdevice.AutoSize = true;
+            this.check_write_deletdevice.Location = new System.Drawing.Point(3, 39);
+            this.check_write_deletdevice.Name = "check_write_deletdevice";
+            this.check_write_deletdevice.Size = new System.Drawing.Size(90, 28);
+            this.check_write_deletdevice.TabIndex = 8;
+            this.check_write_deletdevice.Text = "删设备";
+            this.check_write_deletdevice.UseVisualStyleBackColor = true;
             // 
             // check_write_repair
             // 
@@ -269,7 +281,7 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.lay_control);
-            this.groupBox3.Location = new System.Drawing.Point(411, 354);
+            this.groupBox3.Location = new System.Drawing.Point(3, 345);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(300, 150);
             this.groupBox3.TabIndex = 11;
@@ -295,25 +307,16 @@
             // check_delegate
             // 
             this.check_delegate.AutoSize = true;
-            this.check_delegate.Location = new System.Drawing.Point(417, 524);
+            this.check_delegate.Location = new System.Drawing.Point(9, 501);
             this.check_delegate.Name = "check_delegate";
             this.check_delegate.Size = new System.Drawing.Size(72, 28);
             this.check_delegate.TabIndex = 9;
             this.check_delegate.Text = "转授";
             this.check_delegate.UseVisualStyleBackColor = true;
             // 
-            // btn_sel_all
-            // 
-            this.btn_sel_all.Location = new System.Drawing.Point(730, 89);
-            this.btn_sel_all.Name = "btn_sel_all";
-            this.btn_sel_all.Size = new System.Drawing.Size(112, 34);
-            this.btn_sel_all.TabIndex = 12;
-            this.btn_sel_all.Text = "全选";
-            this.btn_sel_all.UseVisualStyleBackColor = true;
-            // 
             // btn_sel_read
             // 
-            this.btn_sel_read.Location = new System.Drawing.Point(730, 128);
+            this.btn_sel_read.Location = new System.Drawing.Point(322, 119);
             this.btn_sel_read.Name = "btn_sel_read";
             this.btn_sel_read.Size = new System.Drawing.Size(112, 34);
             this.btn_sel_read.TabIndex = 13;
@@ -323,7 +326,7 @@
             // 
             // btn_sel_rw
             // 
-            this.btn_sel_rw.Location = new System.Drawing.Point(730, 167);
+            this.btn_sel_rw.Location = new System.Drawing.Point(322, 158);
             this.btn_sel_rw.Name = "btn_sel_rw";
             this.btn_sel_rw.Size = new System.Drawing.Size(112, 34);
             this.btn_sel_rw.TabIndex = 14;
@@ -333,7 +336,7 @@
             // 
             // btn_sel_rwc
             // 
-            this.btn_sel_rwc.Location = new System.Drawing.Point(730, 206);
+            this.btn_sel_rwc.Location = new System.Drawing.Point(322, 197);
             this.btn_sel_rwc.Name = "btn_sel_rwc";
             this.btn_sel_rwc.Size = new System.Drawing.Size(112, 34);
             this.btn_sel_rwc.TabIndex = 15;
@@ -343,48 +346,36 @@
             // 
             // btn_submit
             // 
-            this.btn_submit.Location = new System.Drawing.Point(730, 245);
+            this.btn_submit.Location = new System.Drawing.Point(322, 236);
             this.btn_submit.Name = "btn_submit";
             this.btn_submit.Size = new System.Drawing.Size(112, 34);
             this.btn_submit.TabIndex = 16;
             this.btn_submit.Text = "确定";
             this.btn_submit.UseVisualStyleBackColor = true;
+            this.btn_submit.Click += new System.EventHandler(this.btn_submit_Click);
             // 
-            // check_quickop
+            // op_panel
             // 
-            this.check_quickop.AutoSize = true;
-            this.check_quickop.Location = new System.Drawing.Point(734, 285);
-            this.check_quickop.Name = "check_quickop";
-            this.check_quickop.Size = new System.Drawing.Size(108, 28);
-            this.check_quickop.TabIndex = 17;
-            this.check_quickop.Text = "快捷操作";
-            this.check_quickop.UseVisualStyleBackColor = true;
-            // 
-            // check_read_baseinfo
-            // 
-            this.check_read_baseinfo.AutoSize = true;
-            this.check_read_baseinfo.Location = new System.Drawing.Point(3, 3);
-            this.check_read_baseinfo.Name = "check_read_baseinfo";
-            this.check_read_baseinfo.Size = new System.Drawing.Size(126, 28);
-            this.check_read_baseinfo.TabIndex = 9;
-            this.check_read_baseinfo.Text = "读基础信息";
-            this.check_read_baseinfo.UseVisualStyleBackColor = true;
+            this.op_panel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.op_panel.Controls.Add(this.groupBox1);
+            this.op_panel.Controls.Add(this.check_delegate);
+            this.op_panel.Controls.Add(this.groupBox2);
+            this.op_panel.Controls.Add(this.btn_submit);
+            this.op_panel.Controls.Add(this.groupBox3);
+            this.op_panel.Controls.Add(this.btn_sel_rwc);
+            this.op_panel.Controls.Add(this.btn_sel_rw);
+            this.op_panel.Controls.Add(this.btn_sel_read);
+            this.op_panel.Location = new System.Drawing.Point(384, 38);
+            this.op_panel.Name = "op_panel";
+            this.op_panel.Size = new System.Drawing.Size(468, 568);
+            this.op_panel.TabIndex = 18;
             // 
             // FUserDevice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(925, 639);
-            this.Controls.Add(this.check_quickop);
-            this.Controls.Add(this.btn_submit);
-            this.Controls.Add(this.btn_sel_rwc);
-            this.Controls.Add(this.btn_sel_rw);
-            this.Controls.Add(this.btn_sel_read);
-            this.Controls.Add(this.btn_sel_all);
-            this.Controls.Add(this.check_delegate);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.op_panel);
             this.Controls.Add(this.list_devices);
             this.Controls.Add(this.list_devicegroup);
             this.Name = "FUserDevice";
@@ -398,8 +389,9 @@
             this.groupBox3.ResumeLayout(false);
             this.lay_control.ResumeLayout(false);
             this.lay_control.PerformLayout();
+            this.op_panel.ResumeLayout(false);
+            this.op_panel.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -412,7 +404,7 @@
         private CheckBox check_write_baseinfo;
         private CheckBox check_control_timesetting;
         private CheckBox check_read_repair;
-        private CheckBox check_write_data;
+        private CheckBox check_write_deletdata;
         private CheckBox check_read_status;
         private GroupBox groupBox1;
         private TableLayoutPanel lay_read;
@@ -420,19 +412,18 @@
         private CheckBox check_read_cmd;
         private GroupBox groupBox2;
         private TableLayoutPanel lay_write;
-        private CheckBox check_write_device;
+        private CheckBox check_write_deletdevice;
         private CheckBox check_write_repair;
         private GroupBox groupBox3;
         private TableLayoutPanel lay_control;
         private ToolTip toolTip1;
         private CheckBox check_write_type;
         private CheckBox check_delegate;
-        private Button btn_sel_all;
         private Button btn_sel_read;
         private Button btn_sel_rw;
         private Button btn_sel_rwc;
         private Button btn_submit;
-        private CheckBox check_quickop;
         private CheckBox check_read_baseinfo;
+        private Panel op_panel;
     }
 }

@@ -57,7 +57,7 @@ namespace MyClient.View
             }, okcall: () => {
 
                 RefreshGroupList();
-
+                dataGridView1.Visible = true;
                 dataGridView1.ShowLoading(async () => {
                     var res4 = await userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices());
                     dvinfos = res4.Info.ToList();

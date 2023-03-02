@@ -41,7 +41,7 @@ namespace MyClient.View.User
             _FUserInfo = new FUserInfo(accountServiceClient);
             _FUserPriority = new FUserPriority(accountServiceClient);
             _FUserLoginHistory = new FUserLoginHistory(AccountHistoryServiceClient, _timeUtility, this);
-            _FUserDevice = new FUserDevice();
+            _FUserDevice = new FUserDevice(_userDeviceServiceClient);
 
             for (int i = 0; i < Managers.Length; i++)
             {

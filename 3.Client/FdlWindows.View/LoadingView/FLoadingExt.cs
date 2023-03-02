@@ -42,6 +42,7 @@ namespace FdlWindows.View
                 loading.Parent = form;
                 loading.Dock = DockStyle.Fill;
                 loading.FormBorderStyle = FormBorderStyle.None;
+                loading.BringToFront();
                 dt = datas.GetOrCreateValue(form);
             }
             var tid = loading.GetTaskId();
@@ -51,6 +52,7 @@ namespace FdlWindows.View
                 return;
             lock (form)
             {
+                form.Visible = true;
                 //记录加载前控件的状态
                 foreach (Control ctl in form.Controls)
                 {
@@ -73,8 +75,8 @@ namespace FdlWindows.View
                         if (ctl is FLoading)
                             continue;
                         Tuple<bool, bool> ctldt = dt.GetOrCreateValue(ctl);
-                        ctl.Visible = ctldt.Item1;
-                        ctl.Enabled = ctldt.Item2;
+                        ctl.Visible = ctl.Visible||ctldt.Item1;
+                        ctl.Enabled = ctl.Enabled||ctldt.Item2;
                     }
                     datas.Remove(form);
                 }
