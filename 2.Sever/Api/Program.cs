@@ -19,7 +19,7 @@ builder.Services.TryAddSingleton<MyUtility.IRandomUtility, MyUtility.RandomUtili
 builder.Services.TryAddSingleton<MyUtility.ITimeUtility, MyUtility.TimeUtility>();
 builder.Services.UseMyGrpc("2432114474");
 builder.Services.UseMyEmail();
-builder.Services.UseMQTT(null);
+builder.Services.UseMQTT();
 
 #region 禁用模型校验
 

@@ -22,6 +22,8 @@ namespace GrpcMain.Extensions
             services.TryAddSingleton<IGrpcCursorUtility, GrpcCursorUtilityImp>();
 
             services.TryAddSingleton<DeviceUtility>();
+            //todo 从此模块移出
+            services.TryAddSingleton<IDeviceMessageHandle,DeviceMessageManager>();
             services.UseColdData();
             //添加处理器
             services.TryAddSingleton<IGrpcAuthorityHandle, MyGrpcHandle>();

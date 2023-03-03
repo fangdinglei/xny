@@ -14,26 +14,35 @@ namespace Sever.DeviceProto
     {
         public Task<bool> SendCmd(string deviceid, string cmd);
     }
-    public interface IDeviceMessageHandle {
+
+
+    /// <summary>
+    ///  协议
+    ///deviceid/cmd:string 向设备发送命令
+    ///deviceid/data:string 设备上传数据
+    ///name:string,data
+    /// </summary>
+    public interface IDeviceMessageHandle
+    {
         public void OnMsg(string topic, byte[] data);
     }
 
     static public class MQTTExtension
     {
-        static public void UseMQTT(this IServiceCollection services,IDeviceMessageHandle handle)
+        static public void UseMQTT(this IServiceCollection services)
         {
-            services.TryAddSingleton<IProto>(new MQTTSeverClient(handle));
+            services.TryAddSingleton<IProto, MQTTSeverClient>();
         }
     }
 
+    /// <summary>
+    ///  协议
+    ///deviceid/cmd:string 向设备发送命令
+    ///deviceid/data:string 设备上传数据
+    /// </summary>
     public class MQTTSeverClient : IProto
     {
-        /*
-         协议
-        /deviceid/cmd:string 向设备发送命令
-        /deviceid/data:string 设备上传数据
 
-         */
 
 
 
@@ -104,18 +113,34 @@ namespace Sever.DeviceProto
 
         public async Task<bool> SendCmd(string deviceid, string cmd)
         {
-            var r = await Client.PublishAsync(new MqttApplicationMessage()
+            try
             {
-                Topic = $"/{deviceid}/cmd",
-                Payload = UTF8Encoding.UTF8.GetBytes(cmd)
-            });
-            return r.IsSuccess;
+                var r = await Client.PublishAsync(new MqttApplicationMessage()
+                {
+                    Topic = $"/{deviceid}/cmd",
+                    Payload = UTF8Encoding.UTF8.GetBytes(cmd)
+                });
+                return r.IsSuccess;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
         }
         public async Task OnMsg(string title, byte[] data)
         {
-            _handle.OnMsg(title , data);
+#if DEBUG
             Console.WriteLine("*******************");
             Console.WriteLine(title + ":" + UTF32Encoding.UTF8.GetString(data));
+#endif
+            try
+            {
+                _handle.OnMsg(title, data);
+            }
+            catch (Exception)
+            {
+            }
         }
 
     }
