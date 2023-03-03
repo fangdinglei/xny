@@ -256,22 +256,73 @@ namespace MyDBContext.Main
 
     public class MainContext : DbContext
     {
+        /// <summary>
+        /// 用户
+        /// </summary>
         public DbSet<User> Users { get; set; }
+        /// <summary>
+        /// 用户历史操作信息
+        /// </summary>
         public DbSet<AccountHistory> AccountHistorys { get; set; }
+        /// <summary>
+        /// 用户关系映射表
+        /// </summary>
         public DbSet<User_SF> User_SFs { get; set; }
+        /// <summary>
+        /// 设备类型数据
+        /// </summary>
         public DbSet<Device_Type> Device_Types { get; set; }
-        public DbSet<Device> Devices { get; set; }
+        /// <summary>
+        /// 设备类型数据-数据定义
+        /// </summary>
         public DbSet<ThingModel> ThingModels { get; set; }
+        /// <summary>
+        /// 设备
+        /// </summary>
+        public DbSet<Device> Devices { get; set; }
+        /// <summary>
+        /// 用户设备分组
+        /// </summary>
         public DbSet<User_Device_Group> User_Device_Groups { get; set; }
+        /// <summary>
+        /// 用户设备
+        /// </summary>
         public DbSet<User_Device> User_Devices { get; set; }
+        /// <summary>
+        /// 设备自动控制信息
+        /// </summary>
         public DbSet<Device_AutoControl_Settings_Item> Device_AutoControl_Settings_Items { get; set; }
+        /// <summary>
+        /// 操作审计
+        /// </summary>
         public DbSet<User_Op_Audit> User_Op_Audits { get; set; }
+        /// <summary>
+        /// 设备数据
+        /// </summary>
         public DbSet<Device_DataPoint> Device_DataPoints { get; set; }
+        /// <summary>
+        /// 设备冷数据摘要
+        /// </summary>
         public DbSet<Device_DataPoint_Cold> Device_DataPoint_Colds { get; set; }
+        /// <summary>
+        /// 站内信
+        /// </summary>
         public DbSet<Internal_Mail> Internal_Mails { get; set; }
+        /// <summary>
+        /// 设备维修信息
+        /// </summary>
         public DbSet<Device_Repair> Device_Repairs { get; set; }
+        /// <summary>
+        /// 租户冷数据配置
+        /// </summary>
         public DbSet<DeviceColdDataSettings> ColdDataSettings { get; set; }
+        /// <summary>
+        /// 系统kv表
+        /// </summary>
         public DbSet<KeyValue> KeyValues { get; set; }
+        /// <summary>
+        /// 设备命令历史信息
+        /// </summary>
         public DbSet<DeviceCmdHistory> DeviceCmdHistorys { get; set; }
 
 
