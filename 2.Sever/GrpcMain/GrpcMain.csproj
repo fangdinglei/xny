@@ -32,7 +32,6 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
     <PackageReference Include="Grpc.Core" Version="2.46.5" />
     <PackageReference Include="JWT" Version="9.0.3" />
-    <PackageReference Include="MQTTnet" Version="4.1.4.563" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Management" Version="6.0.0" />
   </ItemGroup>

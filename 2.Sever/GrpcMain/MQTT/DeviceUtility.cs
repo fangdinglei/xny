@@ -57,7 +57,7 @@ namespace GrpcMain.MQTT
         public void OnMsg(string topic, byte[] data)
         {
             Task.Run(async  () => {
-                var sec = topic.Split("/");
+                var sec = topic.Split("/",StringSplitOptions.RemoveEmptyEntries);
                 if (sec.Length != 2)
                     return;
                 long dvid = 0;
@@ -67,20 +67,21 @@ namespace GrpcMain.MQTT
                     return;
                 if (sec[1] == "data")
                 {
-                    var datastr = UTF8Encoding.UTF8.GetString(data);
+                    var datastr = UTF8Encoding.UTF8.GetString(MyDecode(data));
                     var datasec = datastr.Split(',');
                     if (datasec.Length % 2 == 1)//数据包含名称和值 只能为偶数个
                         return;
                     //将数据转换为可接收的格式
-                    var ls = new List<ValueTuple<string, float>>();
+                    var ls = new List<ValueTuple<long, float>>();
                     for (int i = 0; i < datasec.Length / 2; i++)
                     {
+                        long tid;
                         float f;
-                        if (string.IsNullOrEmpty(datasec[i * 2]))
+                        if (long.TryParse(datasec[i * 2], out tid))
                             continue;
                         if (!float.TryParse(datasec[i * 2 + 1], out f))
                             continue;
-                        ls.Add((datasec[i * 2], f));
+                        ls.Add((tid, f));
                     }
                     using (MainContext ct = new MainContext())
                     {
@@ -93,14 +94,14 @@ namespace GrpcMain.MQTT
                             .AsNoTracking().FirstOrDefaultAsync();
                         if (type == null)
                             return;
-                        var thingmodels = await ct.ThingModels.Where(it => it.DeviceTypeId == type.Id).AsNoTracking().ToDictionaryAsync(it => it.Name, it => it);
+                        var thingmodels = await ct.ThingModels.Where(it => it.DeviceTypeId == type.Id).AsNoTracking().ToDictionaryAsync(it => it.Id, it => it);
                         string lateststr = "{";
                         //检查并插入
                         foreach (var item in ls)
                         {
                             if (!thingmodels.ContainsKey(item.Item1))
                                 continue;
-                            lateststr +=  thingmodels[item.Item1].Id + ":" + item.Item2 +",";
+                            lateststr += item.Item1 + ":" + item.Item2 +",";
                             ct.Add(new Device_DataPoint()
                             {
                                 DeviceId = dvid,
@@ -117,6 +118,49 @@ namespace GrpcMain.MQTT
 
                 }
             });
+        }
+        
+
+        static short CRC16(byte[] data, int start, int end)
+        {
+            uint CRC = 0xFFFF;
+            int i = 0, j = 0;
+            for (i = start; i < end; i++)
+            {
+                CRC = CRC ^ data[i];
+                for (j = 0; j < 8; j++)
+                {
+                    if ((CRC & 0x01) != 0)
+                        CRC = ((CRC >> 1) ^ 0xA001);
+                    else
+                        CRC = CRC >> 1;
+                }
+            }
+            return (short)(CRC);
+        }
+        static public byte[] MyEncode(byte[] data)
+        {
+            byte[] res = new byte[2 + data.Length];
+            var crc = CRC16(data, 0, data.Length);
+            res[0] = (byte)(crc & 0xFF);
+            res[1] = (byte)((crc >> 8) & 0xFF);
+            Array.Copy(data, 0, res, 2, data.Length);
+            return res;
+        }
+        static public byte[] MyDecode(byte[] data)
+        {
+            if (data.Length < 2)
+            {
+                throw new Exception("内容长度异常");
+            }
+            byte[] res = new byte[data.Length - 2];
+            var crc = CRC16(data, 2, data.Length);
+            if ((crc & 0xFFFF) != (data[0] & 0xFF | (data[1] & 0xFF) << 8))
+            {
+                throw new Exception("数据无法通过校验");
+            }
+            Array.Copy(data, 2, res, 0, data.Length - 2);
+            return res;
         }
     }
 }

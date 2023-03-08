@@ -40,7 +40,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaseDefines", "2.Sever\Base
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sever.ColdData", "Sever.ColdData\Sever.ColdData.csproj", "{60BF30D4-6679-4E6B-A2B4-7E43C11CECC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sever.DeviceProto", "Sever.DeviceProto\Sever.DeviceProto.csproj", "{0B73E5FC-10D0-4AC7-9DEC-DE475513723B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sever.DeviceProto", "Sever.DeviceProto\Sever.DeviceProto.csproj", "{0B73E5FC-10D0-4AC7-9DEC-DE475513723B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceSimulator", "4.DeviceSimulator\DeviceSimulator\DeviceSimulator.csproj", "{C7C220EF-45F4-4F37-A95D-07F81D14B371}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +102,10 @@ Global
 		{0B73E5FC-10D0-4AC7-9DEC-DE475513723B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B73E5FC-10D0-4AC7-9DEC-DE475513723B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B73E5FC-10D0-4AC7-9DEC-DE475513723B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7C220EF-45F4-4F37-A95D-07F81D14B371}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7C220EF-45F4-4F37-A95D-07F81D14B371}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7C220EF-45F4-4F37-A95D-07F81D14B371}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7C220EF-45F4-4F37-A95D-07F81D14B371}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,6 +123,7 @@ Global
 		{5292F3FE-ABC2-4DC2-B9D8-30E744F3EEF2} = {5EBAFB10-BB07-4EFC-8821-F50E60B131C3}
 		{60BF30D4-6679-4E6B-A2B4-7E43C11CECC3} = {5EBAFB10-BB07-4EFC-8821-F50E60B131C3}
 		{0B73E5FC-10D0-4AC7-9DEC-DE475513723B} = {5EBAFB10-BB07-4EFC-8821-F50E60B131C3}
+		{C7C220EF-45F4-4F37-A95D-07F81D14B371} = {BD55A21B-FAED-4B0F-8F4B-EB681BC748C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E17810C-DD97-4C64-8C32-E3E4FB2B015A}
