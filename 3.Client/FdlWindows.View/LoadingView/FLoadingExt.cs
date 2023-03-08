@@ -10,10 +10,12 @@ namespace FdlWindows.View
 {
     static public class FLoadingExt
     {
+        static FLoadingOption option;
         static public void UseFLoading(this IServiceCollection serviceCollection, FLoadingOption option)
         {
             serviceCollection.TryAddTransient<FLoading>();
             serviceCollection.TryAddSingleton(option);
+            FLoadingExt.option = option;
         }
 
         static string LOADING_NAME = "___loading___";
@@ -37,12 +39,16 @@ namespace FdlWindows.View
             lock (datas)
             {
                 loading = loadingview.GetOrCreateValue(form);
-                loading.Visible = false;
-                loading.TopLevel = false;
-                loading.Parent = form;
-                loading.Dock = DockStyle.Fill;
-                loading.FormBorderStyle = FormBorderStyle.None;
-                loading.BringToFront();
+                if (loading.TopLevel)
+                {//初始化
+                    loading.Visible = false;
+                    loading.TopLevel = false;
+                    loading.Parent = form;
+                    loading.Dock = DockStyle.Fill;
+                    loading.FormBorderStyle = FormBorderStyle.None;
+                    loading.BringToFront();
+                    loading.Option = option;
+                }
                 dt = datas.GetOrCreateValue(form);
             }
             var tid = loading.GetTaskId();

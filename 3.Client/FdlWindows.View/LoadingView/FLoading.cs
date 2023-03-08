@@ -8,8 +8,8 @@ namespace FdlWindows.View
     {
         //用于跳过任务直接执行最新的任务
         int taskid = 0;
-        public bool LoadingX = false; 
-        FLoadingOption? Option;
+        public bool LoadingX = false;
+        public FLoadingOption? Option;
         public FLoading()
         {
             InitializeComponent();
