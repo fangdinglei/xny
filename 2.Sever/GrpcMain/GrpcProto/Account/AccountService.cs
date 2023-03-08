@@ -115,6 +115,19 @@ namespace GrpcMain.Account
             };
         }
 
+        public override Task<Response_LoginByToken> LoginByToken(Request_LoginByToken request, ServerCallContext context)
+        {
+            long id = (long)context.UserState["CreatorId"];
+            var token = _handle.GetToken(
+                new MyJwtHelper.TokenClass
+                {
+                    Id = id
+                });
+            return Task.FromResult(new Response_LoginByToken() { 
+                 Token = token,
+            });
+        }
+
         public override async Task<CommonResponse?> DeletUser(Request_DeletUser request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];

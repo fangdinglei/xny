@@ -1,14 +1,31 @@
 ﻿using Grpc.Core;
 using Grpc.Core.Interceptors;
+using Newtonsoft.Json.Linq;
 
 namespace MyClient.Grpc
 {
     public class ClientCallContextInterceptor : Interceptor, IClientCallContextInterceptor
     {
+        DateTime _time;
+        Func<string, string> _retoken;
         public string? _Token;
         IResopnseInterceptor _Interceptor;
+        public ClientCallContextInterceptor(Func<string,string> retoken)
+        {
+            _retoken=retoken;
+        }
+
+        private void CheckToken() {
+            if ((DateTime.Now - _time).TotalMinutes>10)
+            {
+                _Token = _retoken.Invoke(_Token);
+                _time = DateTime.Now;
+            }
+        }
+
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
+            CheckToken();
             CallOptions options = context.Options;
             if (_Token != null)
             {
@@ -42,6 +59,7 @@ namespace MyClient.Grpc
 
         public override TResponse BlockingUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, BlockingUnaryCallContinuation<TRequest, TResponse> continuation) where TRequest : class where TResponse : class
         {
+            CheckToken();
             CallOptions options = context.Options;
             if (_Token != null)
             {
@@ -72,6 +90,7 @@ namespace MyClient.Grpc
 
         public void SetToken(string token)
         {
+            _time = DateTime.Now;
             _Token = token;
         }
     }

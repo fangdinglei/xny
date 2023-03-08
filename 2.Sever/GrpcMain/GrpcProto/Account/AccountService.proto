@@ -6,6 +6,9 @@ service AccountService {
     //登陆
     rpc LoginByUserName(DTODefine.Request_LoginByUserName)
         returns (DTODefine.Response_LoginByUserName);
+    //登陆
+    rpc LoginByToken(Request_LoginByToken)
+        returns (Response_LoginByToken);
     //新建用户
     rpc CreatUser(DTODefine.Request_CreatUser)
         returns (DTODefine.Response_CreatUser);
@@ -25,6 +28,15 @@ service AccountService {
     //创建一个顶级用户 仅管理员可用
     rpc CreatTopUser(DTODefine.Request_CreatUser)
         returns (DTODefine.Response_CreatUser);
+}
+
+message Request_LoginByToken{
+    //原本的Token 备用
+    string Token=1;
+}  
+message Response_LoginByToken{
+    //空则登陆失败
+    optional string Token=1;
 }
 
 
