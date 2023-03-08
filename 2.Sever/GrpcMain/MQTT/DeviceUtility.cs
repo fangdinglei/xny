@@ -94,21 +94,23 @@ namespace GrpcMain.MQTT
                         if (type == null)
                             return;
                         var thingmodels = await ct.ThingModels.Where(it => it.DeviceTypeId == type.Id).AsNoTracking().ToDictionaryAsync(it => it.Name, it => it);
-                        string lateststr = "";
+                        string lateststr = "{";
                         //检查并插入
                         foreach (var item in ls)
                         {
                             if (!thingmodels.ContainsKey(item.Item1))
                                 continue;
-                            lateststr += "{" + thingmodels[item.Item1].Id + ":" + item.Item2 + "}";
+                            lateststr +=  thingmodels[item.Item1].Id + ":" + item.Item2 +",";
                             ct.Add(new Device_DataPoint()
                             {
                                 DeviceId = dvid,
                                 StreamId = thingmodels[item.Item1].Id,
                                 Time = tu.GetTicket(DateTime.Now),
                                 Value = item.Item2,
-                            }); ;
+                            });
                         }
+                        lateststr =lateststr.Trim(',')+"}";
+                        dv.LatestData = lateststr;
                         //批量提交 新数据和修改最新数据
                         await ct.SaveChangesAsync();
                     }
