@@ -10,13 +10,16 @@ namespace MyClient.Grpc
         Func<string, string> _retoken;
         public string? _Token;
         IResopnseInterceptor _Interceptor;
-        public ClientCallContextInterceptor(Func<string,string> retoken)
+        public ClientCallContextInterceptor(Func<string, string> retoken)
         {
-            _retoken=retoken;
+            _retoken = retoken;
         }
 
-        private void CheckToken() {
-            if ((DateTime.Now - _time).TotalMinutes>10)
+        private void CheckToken<TRequest, TResponse>(ClientInterceptorContext<TRequest, TResponse> context)where TRequest :class where TResponse :class
+        {
+            if (context.Method.FullName.ToLower().Contains("login"))
+                return;
+            if ((DateTime.Now - _time).TotalMinutes > 10 && _Token != null)
             {
                 _Token = _retoken.Invoke(_Token);
                 _time = DateTime.Now;
@@ -25,7 +28,8 @@ namespace MyClient.Grpc
 
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
-            CheckToken();
+
+            CheckToken(context);
             CallOptions options = context.Options;
             if (_Token != null)
             {
@@ -59,7 +63,8 @@ namespace MyClient.Grpc
 
         public override TResponse BlockingUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, BlockingUnaryCallContinuation<TRequest, TResponse> continuation) where TRequest : class where TResponse : class
         {
-            CheckToken();
+            CheckToken(context);
+
             CallOptions options = context.Options;
             if (_Token != null)
             {

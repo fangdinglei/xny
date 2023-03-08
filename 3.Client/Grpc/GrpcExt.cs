@@ -36,13 +36,16 @@ namespace MyClient.Grpc
             var interceptor = new ClientCallContextInterceptor((token) =>
             {
                 var client = new AccountService.AccountServiceClient(grpcChannel);
+                var meta = new Metadata();
+                meta.Add("token", token);
                 var r = client.LoginByToken(new Request_LoginByToken
-                {
-                    Token = token,
-                },
-                new CallOptions(new Metadata(), DateTime.UtcNow.AddSeconds(8)));
-                return r.Token;
-            });
+                    {
+                        Token = token,
+                    },
+                    new CallOptions(meta
+                    , DateTime.UtcNow.AddSeconds(8)));
+                        return r.Token;
+                    });
             var interceptorchannel = grpcChannel.Intercept(interceptor);
             serviceCollection.TryAddSingleton<IClientCallContextInterceptor>(interceptor);
             serviceCollection.TryAddSingleton(interceptorchannel);

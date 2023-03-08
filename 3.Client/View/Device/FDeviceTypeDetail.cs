@@ -184,7 +184,7 @@ namespace MyClient.View
                     {
                         Info = typeinfo
                     });
-                    OnCreatCall?.Invoke(res.Info);
+                    OnCreatCall?.Invoke(typeinfo);
                 }
                 else
                 {
