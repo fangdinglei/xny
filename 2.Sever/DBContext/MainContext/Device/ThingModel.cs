@@ -6,7 +6,7 @@ namespace MyDBContext.Main
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-        public int UserTreeId { get; set; }
+        public long UserTreeId { get; set; }
         public virtual Device_Type DeviceType { get; set; }
         public long DeviceTypeId { get; set; }
         public string Name { get; set; }

@@ -24,7 +24,7 @@ message Request_AddTypeInfo{
     TypeInfo Info=1;
 }
 message Response_AddTypeInfo{
-    TypeInfo Info=1;
+    CommonResponse Status=1;
 }
 
 message  ThingModel{

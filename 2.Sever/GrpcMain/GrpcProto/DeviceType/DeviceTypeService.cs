@@ -8,6 +8,41 @@ using static GrpcMain.DeviceType.DTODefine.Types;
 
 namespace GrpcMain.DeviceType
 {
+    static public class Ext
+    {
+        static public MyDBContext.Main.ThingModel AsDBObj(this GrpcMain.DeviceType.ThingModel model,long typeid,long usertreeid) {
+            return new MyDBContext.Main.ThingModel
+            {
+                Abandonted=model.Abandonted,
+                AlertHighValue = model.AlertHighValue,
+                AlertLowValue = model.AlertLowValue,
+                DeviceTypeId=typeid,
+                MaxValue=model.MaxValue,
+                MinValue=model.MinValue,
+                Name=model.Name,
+                Remark=model.Remark,
+                Unit=model.Unit,
+                UserTreeId=usertreeid,
+                Type=(byte)model.ValueType,
+            };
+        }
+        /// <summary>
+        /// 将请求对象转换为新的DB对象
+        /// </summary>
+        /// <returns></returns>
+        static public MyDBContext.Main.Device_Type AsDBObj(this GrpcMain.DeviceType.TypeInfo type,User creator)
+        {
+            var res = new Device_Type()
+            {
+                CreatorId=creator.Id,
+                Name=type.Name,
+                Script=type.Script,
+                UserTreeId=creator.UserTreeId,
+            };
+            return res;
+        }
+    }
+
     /// <summary>
     /// TODO 审计
     /// </summary>
@@ -223,9 +258,61 @@ namespace GrpcMain.DeviceType
             }
         }
 
-        public override Task<Response_AddTypeInfo> AddTypeInfo(Request_AddTypeInfo request, ServerCallContext context)
-        {//todo 鉴定数量
-            throw new Exception();
+        public override async Task<Response_AddTypeInfo> AddTypeInfo(Request_AddTypeInfo request, ServerCallContext context)
+        {
+            long id = (long)context.UserState["CreatorId"];
+            User us = (User)context.UserState["user"];
+            try
+            {
+                using (MainContext ct = new MainContext())
+                {
+                    using (var trans = await ct.Database.BeginTransactionAsync())
+                    {
+                        //校验设备类型数量
+                        var typecount= await ct.Device_Types.Where(it => it.UserTreeId == us.UserTreeId).CountAsync();
+                        if (typecount>MaxType)
+                        {
+                            return new Response_AddTypeInfo()
+                            {
+                                Status = new CommonResponse()
+                                {
+                                    Success = false,
+                                    Message = $"设备类型只能有{MaxType}个",
+                                }
+                            };
+                        }
+
+                        var obj = request.Info.AsDBObj(us);
+                        ct.Add(obj);
+                        await ct.SaveChangesAsync();
+                        var ls = request.Info.ThingModels.Select(it => it.AsDBObj(obj.Id, us.UserTreeId))
+                            .ToList();
+                        ct.Add(ls);
+                        await ct.SaveChangesAsync();
+                        await trans.CommitAsync();
+                    }
+                }
+                return new Response_AddTypeInfo()
+                {
+                    Status = new CommonResponse()
+                    {
+                        Success = true,
+                        Message = "",
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response_AddTypeInfo()
+                {
+                    Status = new CommonResponse()
+                    {
+                        Success = false,
+                        Message = ex.Message,
+                    }
+                };
+            }
+          
         }
 
     }
