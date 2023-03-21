@@ -5,7 +5,7 @@ namespace Sever.ColdData
     /// <summary>
     /// 设备冷数据加载器
     /// </summary>
-    public interface IDeviceColdDataLoader
+    public interface IDeviceColdDataService
     {
         bool UsingColdData { get; }
         /// <summary>

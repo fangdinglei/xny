@@ -32,11 +32,15 @@
             this.col_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_device = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_stream = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_creattime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_starttime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_endtime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_count = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_manager = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_delet = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label1 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.c_timesearch = new System.Windows.Forms.CheckBox();
             this.btn_search = new System.Windows.Forms.Button();
             this.cb_colddown = new System.Windows.Forms.ComboBox();
             this.cb_mincount = new System.Windows.Forms.ComboBox();
@@ -60,94 +64,146 @@
             this.col_id,
             this.col_device,
             this.col_stream,
+            this.col_creattime,
+            this.col_starttime,
+            this.col_endtime,
             this.col_count,
+            this.col_manager,
             this.col_status,
             this.col_delet});
-            this.dataGridView1.Location = new System.Drawing.Point(209, 12);
+            this.dataGridView1.Location = new System.Drawing.Point(130, 12);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 32;
-            this.dataGridView1.Size = new System.Drawing.Size(1024, 492);
+            this.dataGridView1.Size = new System.Drawing.Size(1103, 492);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // col_id
             // 
+            this.col_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.col_id.DataPropertyName = "Id";
             this.col_id.HeaderText = "ID";
             this.col_id.MinimumWidth = 8;
             this.col_id.Name = "col_id";
             this.col_id.ReadOnly = true;
-            this.col_id.Width = 150;
+            this.col_id.Width = 65;
             // 
             // col_device
             // 
+            this.col_device.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.col_device.DataPropertyName = "Device";
             this.col_device.HeaderText = "设备";
             this.col_device.MinimumWidth = 8;
             this.col_device.Name = "col_device";
             this.col_device.ReadOnly = true;
-            this.col_device.Width = 150;
+            this.col_device.Width = 82;
             // 
             // col_stream
             // 
+            this.col_stream.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.col_stream.DataPropertyName = "Stream";
             this.col_stream.HeaderText = "数据名称";
             this.col_stream.MinimumWidth = 8;
             this.col_stream.Name = "col_stream";
             this.col_stream.ReadOnly = true;
-            this.col_stream.Width = 150;
+            this.col_stream.Width = 118;
+            // 
+            // col_creattime
+            // 
+            this.col_creattime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.col_creattime.DataPropertyName = "CreatTime";
+            this.col_creattime.HeaderText = "创建时间";
+            this.col_creattime.MinimumWidth = 8;
+            this.col_creattime.Name = "col_creattime";
+            this.col_creattime.ReadOnly = true;
+            this.col_creattime.Width = 118;
+            // 
+            // col_starttime
+            // 
+            this.col_starttime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.col_starttime.DataPropertyName = "StartTime";
+            this.col_starttime.HeaderText = "数据开始";
+            this.col_starttime.MinimumWidth = 8;
+            this.col_starttime.Name = "col_starttime";
+            this.col_starttime.ReadOnly = true;
+            this.col_starttime.ToolTipText = "第一个数据的时间";
+            this.col_starttime.Width = 118;
+            // 
+            // col_endtime
+            // 
+            this.col_endtime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.col_endtime.DataPropertyName = "EndTime";
+            this.col_endtime.HeaderText = "数据结束";
+            this.col_endtime.MinimumWidth = 8;
+            this.col_endtime.Name = "col_endtime";
+            this.col_endtime.ReadOnly = true;
+            this.col_endtime.ToolTipText = "最后一个数据的时间";
+            this.col_endtime.Width = 118;
             // 
             // col_count
             // 
+            this.col_count.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.col_count.DataPropertyName = "Count";
             this.col_count.HeaderText = "数量";
             this.col_count.MinimumWidth = 8;
             this.col_count.Name = "col_count";
             this.col_count.ReadOnly = true;
-            this.col_count.Width = 150;
+            this.col_count.Width = 82;
+            // 
+            // col_manager
+            // 
+            this.col_manager.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.col_manager.DataPropertyName = "ManagerName";
+            this.col_manager.HeaderText = "管理器";
+            this.col_manager.MinimumWidth = 8;
+            this.col_manager.Name = "col_manager";
+            this.col_manager.ReadOnly = true;
+            this.col_manager.ToolTipText = "冷数据管理器名称";
             // 
             // col_status
             // 
+            this.col_status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.col_status.DataPropertyName = "Status";
             this.col_status.HeaderText = "状态";
             this.col_status.MinimumWidth = 8;
             this.col_status.Name = "col_status";
             this.col_status.ReadOnly = true;
-            this.col_status.Width = 150;
+            this.col_status.Width = 82;
             // 
             // col_delet
             // 
+            this.col_delet.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.col_delet.DataPropertyName = "OP1";
             this.col_delet.HeaderText = "操作1";
             this.col_delet.MinimumWidth = 8;
             this.col_delet.Name = "col_delet";
             this.col_delet.ReadOnly = true;
-            this.col_delet.Width = 150;
+            this.col_delet.Width = 63;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 24);
+            this.label1.Size = new System.Drawing.Size(100, 24);
             this.label1.TabIndex = 1;
-            this.label1.Text = "时间***";
+            this.label1.Text = "时间筛选器";
             // 
-            // checkBox1
+            // c_timesearch
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(12, 39);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(72, 28);
-            this.checkBox1.TabIndex = 2;
-            this.checkBox1.Text = "启用";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.c_timesearch.AutoSize = true;
+            this.c_timesearch.Location = new System.Drawing.Point(12, 39);
+            this.c_timesearch.Name = "c_timesearch";
+            this.c_timesearch.Size = new System.Drawing.Size(72, 28);
+            this.c_timesearch.TabIndex = 2;
+            this.c_timesearch.Text = "启用";
+            this.c_timesearch.UseVisualStyleBackColor = true;
             // 
             // btn_search
             // 
-            this.btn_search.Location = new System.Drawing.Point(12, 111);
+            this.btn_search.Location = new System.Drawing.Point(12, 131);
             this.btn_search.Name = "btn_search";
             this.btn_search.Size = new System.Drawing.Size(112, 34);
             this.btn_search.TabIndex = 3;
@@ -260,7 +316,7 @@
             this.ClientSize = new System.Drawing.Size(1515, 560);
             this.Controls.Add(this.pcoldsetting);
             this.Controls.Add(this.btn_search);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.c_timesearch);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Name = "FColdDatas";
@@ -277,13 +333,7 @@
 
         private DataGridView dataGridView1;
         private Label label1;
-        private CheckBox checkBox1;
-        private DataGridViewTextBoxColumn col_id;
-        private DataGridViewTextBoxColumn col_device;
-        private DataGridViewTextBoxColumn col_stream;
-        private DataGridViewTextBoxColumn col_count;
-        private DataGridViewTextBoxColumn col_status;
-        private DataGridViewButtonColumn col_delet;
+        private CheckBox c_timesearch;
         private Button btn_search;
         private ComboBox cb_colddown;
         private ComboBox cb_mincount;
@@ -294,5 +344,15 @@
         private Label label3;
         private ComboBox cb_coldmanager;
         private Panel pcoldsetting;
+        private DataGridViewTextBoxColumn col_id;
+        private DataGridViewTextBoxColumn col_device;
+        private DataGridViewTextBoxColumn col_stream;
+        private DataGridViewTextBoxColumn col_creattime;
+        private DataGridViewTextBoxColumn col_starttime;
+        private DataGridViewTextBoxColumn col_endtime;
+        private DataGridViewTextBoxColumn col_count;
+        private DataGridViewTextBoxColumn col_manager;
+        private DataGridViewTextBoxColumn col_status;
+        private DataGridViewButtonColumn col_delet;
     }
 }

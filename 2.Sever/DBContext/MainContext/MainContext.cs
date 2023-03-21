@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Org.BouncyCastle.Utilities.Date;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 //Add-Migration [--context MainContext]
@@ -351,6 +352,7 @@ namespace MyDBContext.Main
             User_Device.OnModelCreating(modelBuilder);
             User_SF.OnModelCreating(modelBuilder);
             new BaseValueBuilder().OnModelCreating(modelBuilder);
+            new ColdDataBuilder().OnModelCreating(modelBuilder);
             //modelBuilder.Entity<User>().HasMany(it => it.Devices).WithMany(it => it.Creator).
             //    UsingEntity<User_Device>( 
             //    it=> it.HasOne(it => it.Device).WithMany(it=>it.User_Devices),
@@ -993,6 +995,27 @@ namespace MyDBContext.Main
               );
             }
             #endregion
+
+        }
+    }
+    public class ColdDataBuilder : IDBValueBuilder
+    {
+        public void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            var time = new MyUtility.TimeUtility();
+            modelBuilder.Entity<Device_DataPoint_Cold>().HasData(new Device_DataPoint_Cold { 
+                Count = 1,
+                CreatTime=time.GetTicket(),
+                DeviceId = 1,
+                StreamId=1,
+                EndTime=time.GetTicket(),
+                StartTime= time.GetTicket(DateTime.Now.AddDays(-2)),
+                Id = 1,
+                ManagerName= "InFile",
+                Pars="",
+                status=0,
+                TreeId=2,
+            });
 
         }
     }

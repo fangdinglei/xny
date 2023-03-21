@@ -2,17 +2,17 @@
 
 namespace Sever.ColdData.Imp
 {
-    internal class DeviceColdDataManagerImp : IDeviceColdDataManager
+    internal class DeviceColdDataHandleManagerImp : IDeviceColdDataHandleManager
     {
 
-        static Dictionary<string, ColdDataManagerBase> mgrs = new();
-        static DeviceColdDataManagerImp()
+        static Dictionary<string, ColdDataHandleBase> mgrs = new();
+        static DeviceColdDataHandleManagerImp()
         {
-            foreach (var tp in typeof(ColdDataManagerBase).Assembly.GetTypes())
+            foreach (var tp in typeof(ColdDataHandleBase).Assembly.GetTypes())
             {
-                if (tp.BaseType == typeof(ColdDataManagerBase))
+                if (tp.BaseType == typeof(ColdDataHandleBase))
                 {
-                    var mgr = (ColdDataManagerBase)Activator.CreateInstance(tp);
+                    var mgr = (ColdDataHandleBase)Activator.CreateInstance(tp);
                     mgrs.Add(mgr.Name, mgr);
                 }
             }

@@ -1,5 +1,6 @@
 ﻿using FdlWindows.View;
 using MyClient.Grpc;
+using MyUtility;
 using System.Data;
 using static GrpcMain.DeviceData.Cold.ColdDataService;
 
@@ -9,8 +10,9 @@ namespace MyClient.View
     public partial class FColdDatas : Form, IView
     {
         ColdDataServiceClient _client;
+        ITimeUtility _tu;
         IViewHolder _viewholder;
-        public FColdDatas(ColdDataServiceClient client)
+        public FColdDatas(ColdDataServiceClient client, ITimeUtility tu)
         {
             InitializeComponent();
             _client = client;
@@ -20,6 +22,7 @@ namespace MyClient.View
             int[] minlist = new int[] { 10, 100, 1000, 10000 };
             cb_mincount.DataSource = minlist.Select(it => it + "个").ToList();
             cb_mincount.SelectedIndex = 2;
+            _tu = tu;
         }
 
         public Control View => this;
@@ -36,6 +39,7 @@ namespace MyClient.View
 
         public void PrePare(params object[] par)
         {
+            c_timesearch.Checked = false;
             btn_search_Click(null, null);
             pcoldsetting.ShowLoading( async () =>
             {
@@ -60,50 +64,82 @@ namespace MyClient.View
 
         private void btn_search_Click(object sender, EventArgs e)
         {
-            dataGridView1.ShowLoading(async () => {
-                DataTable dt = new DataTable();
-                dt.Columns.Add("Id");
-                dt.Columns.Add("Device");
-                dt.Columns.Add("Stream");
-                dt.Columns.Add("CreatTime");
-                dt.Columns.Add("StartTime");
-                dt.Columns.Add("EndTime");
-                dt.Columns.Add("Count");
-                dt.Columns.Add("Status");
-                dt.Columns.Add("ManagerName");
-                dt.Columns.Add("OP1");
-                var res = await _client.GetInfosAsync(new GrpcMain.DeviceData.Cold.Request_GetInfos());
-                res.Info.ToList().ForEach(it =>
-                {
-                    var row = dt.NewRow();
-                    row["Id"] = it.Id;
-                    row["Device"] = it.DeviceId;
-                    row["Stream"] = it.StreamId;
-                    row["CreatTime"] = it.CreatTime;
-                    row["StartTime"] = it.StreamId;
-                    row["EndTime"] = it.EndTime;
-                    row["Count"] = it.Count;
-                    row["Status"] = it.Status;
-                    row["ManagerName"] = it.ManagerName;
-                    row["OP1"] = "删除";
-                    dt.Rows.Add(row);
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Id");
+            dt.Columns.Add("Device");
+            dt.Columns.Add("Stream");
+            dt.Columns.Add("CreatTime");
+            dt.Columns.Add("StartTime");
+            dt.Columns.Add("EndTime");
+            dt.Columns.Add("Count");
+            dt.Columns.Add("Status");
+            dt.Columns.Add("ManagerName");
+            dt.Columns.Add("OP1");
+
+
+            Action<GrpcMain.DeviceData.Cold.Request_GetInfos> loadcall = (r) => {
+                dataGridView1.ShowLoading(async () => {
+                    var res = await _client.GetInfosAsync(r);
+                    res.Info.ToList().ForEach(it =>
+                    {
+                        var row = dt.NewRow();
+                        row["Id"] = it.Id;
+                        row["Device"] = it.DeviceId;
+                        row["Stream"] = it.StreamId;
+                        row["CreatTime"] = _tu.GetDateTime(it.CreatTime);
+                        row["StartTime"] = _tu.GetDateTime(it.StartTime);
+                        row["EndTime"] = _tu.GetDateTime(it.EndTime);
+                        row["Count"] = it.Count;
+                        //0未知 1在线 2离线 3删除中 4已删除 5 创建中
+                        row["Status"] = it.Status switch {
+                            0 => "未知",
+                            1 => "在线",
+                            2 => "离线",
+                            3 => "删除中",
+                            4 => "已删除",
+                            5 => "创建中",
+                            _=>"未知",
+                        };
+                        row["ManagerName"] = it.ManagerName;
+                        row["OP1"] = "删除";
+                        dt.Rows.Add(row);
+                    });
+                    dataGridView1.DataSource = dt;
+                    return true;
                 });
-                dataGridView1.DataSource = dt;
-                return true;
-            });
+            };
+
+            //选择时间搜索
+            if (c_timesearch.Checked)
+            {
+                _viewholder.ShowDatePicker((s, e) => {
+                    var req = new GrpcMain.DeviceData.Cold.Request_GetInfos()
+                    {
+                        Starttime =_tu.GetTicket(s),
+                        Endtime=_tu.GetTicket(e),
+                    };
+                    loadcall(req);
+                });
+                return;
+            }
+            //不使用时间搜索
+            loadcall(new GrpcMain.DeviceData.Cold.Request_GetInfos());
         }
 
         private async void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
-                var id = (long)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
-                var res = await _client.DeletAsync(new GrpcMain.DeviceData.Cold.Request_Delet()
+                if (dataGridView1.Columns[e.ColumnIndex].HeaderText=="操作1" )
                 {
-                    Id = id
-                });
-                res.ThrowIfNotSuccess();
-                MessageBox.Show("成功", "提示");
+                    var id = long.Parse(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
+                    var res = await _client.DeletAsync(new GrpcMain.DeviceData.Cold.Request_Delet()
+                    {
+                        Id = id
+                    });
+                    res.ThrowIfNotSuccess();
+                    MessageBox.Show("成功", "提示");
+                }
             }
             catch (Exception ex)
             {

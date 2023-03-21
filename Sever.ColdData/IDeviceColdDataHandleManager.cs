@@ -3,7 +3,7 @@
 
 namespace Sever.ColdData
 {
-    internal interface IDeviceColdDataManager
+    internal interface IDeviceColdDataHandleManager
     {
         /// <summary>
         /// 

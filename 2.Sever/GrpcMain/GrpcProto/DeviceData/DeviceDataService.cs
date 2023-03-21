@@ -10,8 +10,8 @@ namespace GrpcMain.DeviceData
     public class DeviceDataServiceImp : DeviceDataService.DeviceDataServiceBase
     {
         ITimeUtility _timeutility;
-        IDeviceColdDataLoader _deviceColdDataHandle;
-        public DeviceDataServiceImp(ITimeUtility time, IDeviceColdDataLoader deviceColdDataHandle)
+        IDeviceColdDataService _deviceColdDataHandle;
+        public DeviceDataServiceImp(ITimeUtility time, IDeviceColdDataService deviceColdDataHandle)
         {
             _timeutility = time;
             _deviceColdDataHandle = deviceColdDataHandle;

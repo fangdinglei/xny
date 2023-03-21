@@ -4,10 +4,10 @@ using MyDBContext.Main;
 namespace Sever.ColdData.Imp
 {
 
-    public class DeviceColdDataLoaderImp : IDeviceColdDataLoader
+    public class DeviceColdDataServiceImp : IDeviceColdDataService
     {
         public bool UsingColdData => true;
-        IDeviceColdDataManager mgr = new DeviceColdDataManagerImp();
+        IDeviceColdDataHandleManager mgr = new DeviceColdDataHandleManagerImp();
 
         public async Task<List<(long, float)>> DeCompressDeviceData(long starttime, long endtime, long deviceid, long streamid, long Cursor, int count, Action<long> setcursor)
         {

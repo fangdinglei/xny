@@ -2,7 +2,7 @@
 
 namespace Sever.ColdData.Imp
 {
-    public abstract class ColdDataManagerBase
+    public abstract class ColdDataHandleBase
     {
 
         public abstract string Name { get; }

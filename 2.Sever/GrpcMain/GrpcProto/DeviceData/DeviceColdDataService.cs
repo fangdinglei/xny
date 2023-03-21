@@ -14,8 +14,8 @@ namespace GrpcMain.DeviceData
         record A(long Id, long DeviceId, long StreamId);
         ITimeUtility _timeutility;
         IGrpcCursorUtility _grpcCursorUtility;
-        IDeviceColdDataLoader _deviceColdDataHandle;
-        public ColdDataServiceImp(ITimeUtility time, IGrpcCursorUtility grpcCursorUtility, IDeviceColdDataLoader deviceColdDataHandle)
+        IDeviceColdDataService _deviceColdDataHandle;
+        public ColdDataServiceImp(ITimeUtility time, IGrpcCursorUtility grpcCursorUtility, IDeviceColdDataService deviceColdDataHandle)
         {
             _timeutility = time;
             _grpcCursorUtility = grpcCursorUtility;
