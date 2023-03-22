@@ -39,8 +39,12 @@ namespace MyClient.View.User
                 op_panel.Visible = false;
                 var res1 = await userDeviceServiceClient.GetGroupInfosAsync(new Google.Protobuf.WellKnownTypes.Empty());
                 groups = res1.Groups.ToList();
+                groups.Insert(0,new User_Device_Group() { 
+                    Id=0,
+                    Name="默认",
+                });
                 list_devicegroup.DisplayMember = "Name";
-                list_devicegroup.DataSource = groups;
+                list_devicegroup.DataSource = groups;  
                 return true;
             });
 
@@ -169,7 +173,7 @@ namespace MyClient.View.User
             var bool_12 = check_delegate.Enabled = authority.HasFlag(UserDeviceAuthority.Delegate);
 
             var userdevice2 = devices_selecteduser.Where(it => it.Dvid == userdevice.Dvid).FirstOrDefault();
-            var authority2 = (UserDeviceAuthority)userdevice2.Authority;
+            
             if (userdevice2 == null)
             {
                 check_read_baseinfo.Checked = false;
@@ -187,20 +191,20 @@ namespace MyClient.View.User
                 check_delegate.Checked = false;
             }
             else
-            {
-                check_read_baseinfo.Checked = bool_0 && authority.HasFlag(UserDeviceAuthority.Read_BaseInfo);
-                check_read_repair.Checked = bool_1 && authority.HasFlag(UserDeviceAuthority.Read_Repair);
-                check_read_cmd.Checked = bool_2 && authority.HasFlag(UserDeviceAuthority.Read_Cmd);
-                check_read_timesetting.Checked = bool_3 && authority.HasFlag(UserDeviceAuthority.Read_TimeSetting);
-                check_read_status.Checked = bool_4 && authority.HasFlag(UserDeviceAuthority.Read_Status);
-                check_read_data.Checked = bool_5 && authority.HasFlag(UserDeviceAuthority.Read_Data);
-                check_write_deletdata.Checked = bool_6 && authority.HasFlag(UserDeviceAuthority.Write_DeletData);
-                check_write_deletdevice.Checked = bool_7 && authority.HasFlag(UserDeviceAuthority.Write_DeletDevice);
-                check_write_baseinfo.Checked = bool_8 && authority.HasFlag(UserDeviceAuthority.Write_BaseInfo);
-                check_write_repair.Checked = bool_9 && authority.HasFlag(UserDeviceAuthority.Write_Repair);
-                check_control_cmd.Checked = bool_10 && authority.HasFlag(UserDeviceAuthority.Control_Cmd);
-                check_control_timesetting.Checked = bool_11 && authority.HasFlag(UserDeviceAuthority.Control_TimeSetting);
-                check_delegate.Checked = bool_12 && authority.HasFlag(UserDeviceAuthority.Delegate);
+            { var authority2 = (UserDeviceAuthority)userdevice2.Authority;
+                check_read_baseinfo.Checked = bool_0 && authority2.HasFlag(UserDeviceAuthority.Read_BaseInfo);
+                check_read_repair.Checked = bool_1 && authority2.HasFlag(UserDeviceAuthority.Read_Repair);
+                check_read_cmd.Checked = bool_2 && authority2.HasFlag(UserDeviceAuthority.Read_Cmd);
+                check_read_timesetting.Checked = bool_3 && authority2.HasFlag(UserDeviceAuthority.Read_TimeSetting);
+                check_read_status.Checked = bool_4 && authority2.HasFlag(UserDeviceAuthority.Read_Status);
+                check_read_data.Checked = bool_5 && authority2.HasFlag(UserDeviceAuthority.Read_Data);
+                check_write_deletdata.Checked = bool_6 && authority2.HasFlag(UserDeviceAuthority.Write_DeletData);
+                check_write_deletdevice.Checked = bool_7 && authority2.HasFlag(UserDeviceAuthority.Write_DeletDevice);
+                check_write_baseinfo.Checked = bool_8 && authority2.HasFlag(UserDeviceAuthority.Write_BaseInfo);
+                check_write_repair.Checked = bool_9 && authority2.HasFlag(UserDeviceAuthority.Write_Repair);
+                check_control_cmd.Checked = bool_10 && authority2.HasFlag(UserDeviceAuthority.Control_Cmd);
+                check_control_timesetting.Checked = bool_11 && authority2.HasFlag(UserDeviceAuthority.Control_TimeSetting);
+                check_delegate.Checked = bool_12 && authority2.HasFlag(UserDeviceAuthority.Delegate);
             }
 
 
