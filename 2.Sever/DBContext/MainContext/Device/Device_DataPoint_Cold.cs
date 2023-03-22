@@ -8,12 +8,14 @@
 //dotnet ef -h
 //
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
     [Index(nameof(DeviceId), nameof(StreamId), nameof(StartTime), nameof(EndTime))]
     public class Device_DataPoint_Cold
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public long DeviceId { get; set; }
         public long StreamId { get; set; }

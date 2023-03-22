@@ -1017,6 +1017,14 @@ namespace MyDBContext.Main
                 status = 0,
                 TreeId = 2,
             });
+            modelBuilder.Entity<DeviceColdDataSettings>().HasData(new DeviceColdDataSettings
+            {
+                ColdDownTime=10,
+                ManagerName = "InFile",
+                TreeId = 2,
+                MinCount = 100,
+                Open=false,
+            });
 
         }
     }
