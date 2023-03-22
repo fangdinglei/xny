@@ -6,6 +6,9 @@ namespace MyDBContext.Main
         [Key]
         public long TreeId { get; set; }
         public string ManagerName { get; set; }
+        /// <summary>
+        /// 单位 天
+        /// </summary>
         public long ColdDownTime { get; set; }
         public long MinCount { get; set; }
         public bool Open { get; set; }

@@ -5,8 +5,8 @@ import "google/protobuf/empty.proto";
 import "Common/CommonResponse.proto";
 service ColdDataService {
     //压缩数据
-    rpc CompressDeviceData( Request_CompressDeviceData)
-        returns (CommonResponse); 
+    //rpc CompressDeviceData( Request_CompressDeviceData)
+    //    returns (CommonResponse); 
     //获取冷数据信息
     rpc GetInfos(Request_GetInfos)
         returns(Response_GetInfos);
