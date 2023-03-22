@@ -96,22 +96,15 @@ namespace Sever.ColdData.Imp
 
         public async Task<bool> DoStore(Device_DataPoint_Cold data, byte[] data2)
         {
-            using (var ct = new MainContext())
+            try
             {
-                using var trans = await ct.Database.BeginTransactionAsync();
-                ct.Add(ct);
-                await ct.SaveChangesAsync();
-                try
-                {
-                    await mgr.DoStore(data, data2, null);
-                    trans.Commit();
-                }
-                catch (Exception)
-                {
-                    throw new Exception("删除失败");
-                }
+                await mgr.DoStore(data, data2, null);
+                return true;
             }
-            return true;
+            catch (Exception)
+            {
+                throw new Exception("删除失败");
+            }
         }
 
         public List<string> GetManagerNames()

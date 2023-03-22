@@ -17,10 +17,10 @@ namespace MyClient.View
         {
             InitializeComponent();
             _client = client;
-            int[] colddownlist = new int[] { 10, 30, 90 };
+            int[] colddownlist = new int[] { 0, 10, 30, 90 };
             cb_colddown.DataSource = colddownlist.Select(it => it + "天").ToList();
             cb_colddown.SelectedIndex = 1;
-            int[] minlist = new int[] { 10, 100, 1000, 10000 };
+            int[] minlist = new int[] { 1, 10, 100, 1000, 10000 };
             cb_mincount.DataSource = minlist.Select(it => it + "个").ToList();
             cb_mincount.SelectedIndex = 2;
             _tu = tu;

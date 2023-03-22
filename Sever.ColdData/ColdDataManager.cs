@@ -10,7 +10,7 @@ namespace Sever.ColdData
     /// <summary>
     /// 用于管理自动
     /// </summary>
-    [AutoTask(Name = "ColdDataManager", OnTimeCall = "Run", IntervalSeconds = 60 * 60 * 24)]
+    [AutoTask(Name = "ColdDataManager", OnTimeCall = "Run", IntervalSeconds = 1)]
     public class ColdDataManager
     {
         static ITimeUtility tu = new TimeUtility();
@@ -33,10 +33,11 @@ namespace Sever.ColdData
                 {
                     IQueryable<Device_DataPoint> bd = ct.Device_DataPoints;
                     //按时间筛选
+                    var maxtime = tu.GetTicket(DateTime.Now) - settings.ColdDownTime * 60 * 60 * 24;
                     bd = bd.Where(it =>
                         it.StreamId == modelid && it.DeviceId == deviceid
                         && it.Time > cursor1
-                        && it.Time < tu.GetTicket(DateTime.Now) - settings.ColdDownTime * 60 * 60 * 24
+                        && it.Time < maxtime
                     );
                     bd = bd.OrderBy(it => it.Time);
                     //先选择
