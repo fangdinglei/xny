@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using MyEmailUtility;
 using Sever.DeviceProto;
+using System.Threading;
+using TimerMvcWeb.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,15 @@ builder.Services.TryAddSingleton<MyUtility.ITimeUtility, MyUtility.TimeUtility>(
 builder.Services.UseMyGrpc("2432114474");
 builder.Services.UseMyEmail();
 builder.Services.UseMQTT();
+
+//启动定时任务
+new Thread(() =>
+{
+AutoTaskAttribute.RegisterTask();
+})
+{ 
+     IsBackground=true
+}.Start();
 
 #region 禁用模型校验
 

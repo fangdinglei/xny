@@ -63,26 +63,30 @@ namespace TimerMvcWeb.Filters
         /// </summary>
         private static void StartAutoTask()
         {
-            var types = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => Attribute.IsDefined(t, typeof(AutoTaskAttribute))).ToList();
-            foreach (var t in types)
-            {
-                try
+            AppDomain.CurrentDomain.GetAssemblies().ToList().ForEach((asms) => {
+
+                var types = asms.DefinedTypes.Where(t => Attribute.IsDefined(t, typeof(AutoTaskAttribute))).ToList();
+                foreach (var t in types)
                 {
-                    var atts = (AutoTaskAttribute[])Attribute.GetCustomAttributes(t, typeof(AutoTaskAttribute));
-                    foreach (var att in atts)
+                    try
                     {
-                        if (att == null)
-                            continue;
-                        RegisterTask(att, t);
+                        var atts = (AutoTaskAttribute[])Attribute.GetCustomAttributes(t, typeof(AutoTaskAttribute));
+                        foreach (var att in atts)
+                        {
+                            if (att == null)
+                                continue;
+                            RegisterTask(att, t);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //LogHelper.Error(t.FullName + " 任务启动失败", ex);
+                        //Debug.WriteLine(t.FullName + " 任务启动失败", ex);
+
                     }
                 }
-                catch (Exception ex)
-                {
-                    //LogHelper.Error(t.FullName + " 任务启动失败", ex);
-                    //Debug.WriteLine(t.FullName + " 任务启动失败", ex);
-
-                }
-            }
+            });
+          
         }
         /// <summary>
         /// 注册一个自动任务

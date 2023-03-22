@@ -5,10 +5,10 @@ namespace Sever.ColdData
     /// <summary>
     /// 用于管理自动
     /// </summary>
-    [AutoTask(Name = "ColdDataManager", OnTimeCall = "Run", IntervalSeconds = 60 * 60 * 5)]
+    [AutoTask(Name = "ColdDataManager", OnTimeCall = "Run", IntervalSeconds = 60*60*24)]
     public class ColdDataManager
     {
-        public async void Run()
+        public static async void Run()
         {
 
         }
