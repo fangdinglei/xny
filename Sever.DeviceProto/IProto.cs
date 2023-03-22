@@ -93,6 +93,14 @@ namespace Sever.DeviceProto
             _mqttClient.ApplicationMessageReceivedAsync += arg => { return OnMsg(arg.ApplicationMessage.Topic, arg.ApplicationMessage.Payload); };
             //_mqttClient.ConnectedAsync += arg => { return MQTTHandler.OnConnect(_mqttClient, arg); };
             await _mqttClient.ConnectAsync(options);
+            await _mqttClient.SubscribeAsync(new MqttClientSubscribeOptions() { 
+                SubscriptionIdentifier=(uint)Math.Abs((new Random()).Next()),
+                TopicFilters = new List<MQTTnet.Packets.MqttTopicFilter>() {
+                    new MQTTnet.Packets.MqttTopicFilter() {
+                     Topic="/+/data"
+                    }
+                },
+            });
             return _mqttClient;
         }
         public async void RunAsync()
