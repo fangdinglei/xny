@@ -1,5 +1,6 @@
 ﻿using FdlWindows.View;
 using MyClient.Grpc;
+using MyClient.View.Ext;
 using MyUtility;
 using System.Data;
 using static GrpcMain.DeviceData.Cold.ColdDataService;
@@ -40,6 +41,7 @@ namespace MyClient.View
         public void PrePare(params object[] par)
         {
             c_timesearch.Checked = false;
+            c_device.Checked=false; 
             btn_search_Click(null, null);
             pcoldsetting.ShowLoading( async () =>
             {
@@ -108,7 +110,7 @@ namespace MyClient.View
                     return true;
                 });
             };
-
+            
             //选择时间搜索
             if (c_timesearch.Checked)
             {
@@ -118,12 +120,38 @@ namespace MyClient.View
                         Starttime =_tu.GetTicket(s),
                         Endtime=_tu.GetTicket(e),
                     };
-                    loadcall(req);
+                    if (c_device.Checked)
+                    {
+                        Action<List<long>> call2 = (ls) => {
+                            if (ls!=null&&ls.Count==1)
+                                req.DeviceId = ls[0];
+                            loadcall(req);
+                        };
+                        _viewholder.SwitchTo(nameof(FDeviceSelector), false, call2);
+                    }
+                    else
+                    {
+                        loadcall(req);
+                    }
+                  
                 });
                 return;
             }
             //不使用时间搜索
-            loadcall(new GrpcMain.DeviceData.Cold.Request_GetInfos());
+            var req = new GrpcMain.DeviceData.Cold.Request_GetInfos();
+            if (c_device.Checked)
+            {
+                Action<List<long>> call2 = (ls) => {
+                    if (ls != null && ls.Count == 1)
+                        req.DeviceId = ls[0];
+                    loadcall(req);
+                };
+                _viewholder.SwitchTo(nameof(FDeviceSelector), false, call2);
+            }
+            else
+            {
+                loadcall(req);
+            }
         }
 
         private async void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)

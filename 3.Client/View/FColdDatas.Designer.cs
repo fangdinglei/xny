@@ -51,6 +51,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cb_coldmanager = new System.Windows.Forms.ComboBox();
             this.pcoldsetting = new System.Windows.Forms.Panel();
+            this.c_device = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.pcoldsetting.SuspendLayout();
             this.SuspendLayout();
@@ -203,7 +205,7 @@
             // 
             // btn_search
             // 
-            this.btn_search.Location = new System.Drawing.Point(12, 131);
+            this.btn_search.Location = new System.Drawing.Point(12, 142);
             this.btn_search.Name = "btn_search";
             this.btn_search.Size = new System.Drawing.Size(112, 34);
             this.btn_search.TabIndex = 3;
@@ -309,11 +311,32 @@
             this.pcoldsetting.Size = new System.Drawing.Size(193, 304);
             this.pcoldsetting.TabIndex = 13;
             // 
+            // c_device
+            // 
+            this.c_device.AutoSize = true;
+            this.c_device.Location = new System.Drawing.Point(12, 97);
+            this.c_device.Name = "c_device";
+            this.c_device.Size = new System.Drawing.Size(72, 28);
+            this.c_device.TabIndex = 15;
+            this.c_device.Text = "启用";
+            this.c_device.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 70);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(100, 24);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "设备筛选器";
+            // 
             // FColdDatas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1515, 560);
+            this.Controls.Add(this.c_device);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.pcoldsetting);
             this.Controls.Add(this.btn_search);
             this.Controls.Add(this.c_timesearch);
@@ -354,5 +377,7 @@
         private DataGridViewTextBoxColumn col_manager;
         private DataGridViewTextBoxColumn col_status;
         private DataGridViewButtonColumn col_delet;
+        private CheckBox c_device;
+        private Label label5;
     }
 }
