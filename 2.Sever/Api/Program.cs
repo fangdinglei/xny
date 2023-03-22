@@ -26,6 +26,7 @@ builder.Services.UseMQTT();
 //启动定时任务
 new Thread(() =>
 {
+    Thread.Sleep(1000*5);
     AutoTaskAttribute.RegisterTask();
 })
 {
