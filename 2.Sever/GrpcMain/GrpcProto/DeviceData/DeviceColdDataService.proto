@@ -30,8 +30,8 @@ message Request_CompressDeviceData{
 
 
 message ColdDataInfo{
-     int64 Id=1;
-    int64 DeviceId=2;
+    int64 Id=1;
+    int64 DeviceId=2; 
     int64 StreamId=3;
     int64 CreatTime=4;
     int64 StartTime=5;
@@ -39,12 +39,14 @@ message ColdDataInfo{
     int64 Count=7;
     int32 Status=8;
     string ManagerName=9;
+    string DeviceName=10;
+    string StreamName=11;
 }
 message Request_GetInfos{
     optional int64 Starttime=1;
     optional int64 Endtime=2;
-    optional   int64 DeviceId=3;
-    optional   int64 StreamId=4;
+    optional int64 DeviceId=3;
+    optional int64 StreamId=4;
 }
 
 message Response_GetInfos{
@@ -70,12 +72,10 @@ message ColdDataSetting{
 
 message Request_SetSetting{
     ColdDataSetting Data=1;
-
 }
 
 
 message Request_GetSetting{
-
 }
 message Response_GetSetting{
      ColdDataSetting Data=1;

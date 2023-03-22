@@ -181,19 +181,31 @@ namespace GrpcMain.DeviceData
                 q = q.Where(it => it.StreamId == request.StreamId);
             }
             q = q.AsNoTracking();
+
+
+            //变换格式和获取其他信息
+            var resls = new List<ColdDataInfo>();
+            foreach (var it in await q.ToListAsync()) {
+                var dev = await ct.Devices.Where(it2 => it2.Id == it.DeviceId).AsNoTracking().FirstOrDefaultAsync();
+                var model = await ct.ThingModels.Where(it2 => it2.Id == it.StreamId).AsNoTracking().FirstOrDefaultAsync();
+                var add= new ColdDataInfo()
+                {
+                    Count = it.Count,
+                    CreatTime = it.CreatTime,
+                    DeviceId = it.DeviceId,
+                    EndTime = it.EndTime,
+                    Id = it.Id,
+                    ManagerName = it.ManagerName,
+                    StartTime = it.StartTime,
+                    Status = it.status,
+                    StreamId = it.StreamId,
+                    DeviceName = dev?.Name ?? "未知",
+                    StreamName = model?.Name ?? "未知",
+                };
+                resls.Add(add);
+            }
             Response_GetInfos res = new Response_GetInfos();
-            res.Info.AddRange((await q.ToListAsync()).Select(it => new ColdDataInfo()
-            {
-                Count = it.Count,
-                CreatTime = it.CreatTime,
-                DeviceId = it.DeviceId,
-                EndTime = it.EndTime,
-                Id = it.Id,
-                ManagerName = it.ManagerName,
-                StartTime = it.StartTime,
-                Status = it.status,
-                StreamId = it.StreamId,
-            }));
+            res.Info.AddRange(resls);
             return res;
         }
         [MyGrpcMethod("ColdDataW")]

@@ -84,8 +84,8 @@ namespace MyClient.View
                     {
                         var row = dt.NewRow();
                         row["Id"] = it.Id;
-                        row["Device"] = it.DeviceId;
-                        row["Stream"] = it.StreamId;
+                        row["Device"] = $"{it.DeviceId}:{it.DeviceName}";
+                        row["Stream"] = it.StreamName;
                         row["CreatTime"] = _tu.GetDateTime(it.CreatTime);
                         row["StartTime"] = _tu.GetDateTime(it.StartTime);
                         row["EndTime"] = _tu.GetDateTime(it.EndTime);
