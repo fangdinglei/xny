@@ -90,7 +90,8 @@ DeviceService.DeviceServiceClient deviceServiceClient)
         }
         public void PrePare(params object[] par)
         {
-            chromiumWebBrowser1.ShowLoading(async () => {
+            chromiumWebBrowser1.ShowLoading(async () =>
+            {
                 while (!chromiumWebBrowser1.IsBrowserInitialized || chromiumWebBrowser1.IsLoading)
                 {
                     //Application.DoEvents();

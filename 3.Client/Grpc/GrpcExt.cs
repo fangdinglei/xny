@@ -15,8 +15,6 @@ using GrpcMain.System;
 using GrpcMain.UserDevice;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Newtonsoft.Json.Linq;
-using static System.Windows.Forms.Design.AxImporter;
 
 namespace MyClient.Grpc
 {
@@ -39,13 +37,13 @@ namespace MyClient.Grpc
                 var meta = new Metadata();
                 meta.Add("token", token);
                 var r = client.LoginByToken(new Request_LoginByToken
-                    {
-                        Token = token,
-                    },
+                {
+                    Token = token,
+                },
                     new CallOptions(meta
                     , DateTime.UtcNow.AddSeconds(8)));
-                        return r.Token;
-                    });
+                return r.Token;
+            });
             var interceptorchannel = grpcChannel.Intercept(interceptor);
             serviceCollection.TryAddSingleton<IClientCallContextInterceptor>(interceptor);
             serviceCollection.TryAddSingleton(interceptorchannel);

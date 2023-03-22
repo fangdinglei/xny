@@ -114,7 +114,7 @@ namespace MyClient.View
         private void btn_search_Click(object sender, EventArgs e)
         {
             var smode = IsSingleMode;
-            SigleExecute.Execute(nameof(FDeviceRepair),(lockx, unlock) =>
+            SigleExecute.Execute(nameof(FDeviceRepair), (lockx, unlock) =>
             {
                 _viewHolder.ShowDatePicker((ds, de) =>
                 {

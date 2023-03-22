@@ -46,7 +46,7 @@ namespace MyClient.View
             types = res3.TypeInfos.ToList();
             list_Type.DisplayMember = "Name";
             list_Type.DataSource = types;
-            
+
 
             //var res2 = await _deviceTypeServiceClient.GetTypeInfosAsync(new GrpcMain.DeviceType.DTODefine.Types.Request_GetTypeInfos()
             //{
@@ -264,7 +264,7 @@ namespace MyClient.View
 
         private async void list_Type_SelectedIndexChangedAsync(object sender, EventArgs e)
         {
-            if (types == null&& (sender as ListBox).SelectedIndex>=0)
+            if (types == null && (sender as ListBox).SelectedIndex >= 0)
             {
                 (sender as ListBox).SelectedIndex = -1;
                 return;
@@ -274,7 +274,7 @@ namespace MyClient.View
 
             var type = types[(sender as ListBox).SelectedIndex];
             LoadAllStreamName(type);
-            CDevice.ShowLoading(async () => 
+            CDevice.ShowLoading(async () =>
             {
                 var res = await _userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices
                 { TypeId = type.Id });
@@ -285,7 +285,7 @@ namespace MyClient.View
                 CDevice.DataSource = devices;
                 return true;
             });
-         
+
         }
         private void CDevice_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -319,7 +319,7 @@ namespace MyClient.View
             }
             else
             {
-                list_Type.ShowLoading( async () => { await PreGetData(); return true; });
+                list_Type.ShowLoading(async () => { await PreGetData(); return true; });
             }
 
         }

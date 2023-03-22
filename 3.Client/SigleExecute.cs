@@ -73,10 +73,11 @@ namespace FDL.Program
         static public bool Execute(string name, Action<Func<bool>, Action> action)
         {
             Debuger.Assert(action != null, "action不能为空");
-           
+
             try
             {
-                action(() => {
+                action(() =>
+                {
                     lock (acts)
                     {
                         if (acts.Contains(name))
@@ -85,7 +86,7 @@ namespace FDL.Program
                             acts.Add(name);
                         return true;
                     }
-                },() =>
+                }, () =>
                 {
                     lock (acts)
                         acts.Remove(name);

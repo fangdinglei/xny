@@ -2,7 +2,6 @@
 using MyDBContext.Main;
 using MyUtility;
 using Sever.DeviceProto;
-using System.ComponentModel;
 using System.Text;
 
 namespace GrpcMain.MQTT
@@ -56,8 +55,9 @@ namespace GrpcMain.MQTT
         }
         public void OnMsg(string topic, byte[] data)
         {
-            Task.Run(async  () => {
-                var sec = topic.Split("/",StringSplitOptions.RemoveEmptyEntries);
+            Task.Run(async () =>
+            {
+                var sec = topic.Split("/", StringSplitOptions.RemoveEmptyEntries);
                 if (sec.Length != 2)
                     return;
                 long dvid = 0;
@@ -101,7 +101,7 @@ namespace GrpcMain.MQTT
                         {
                             if (!thingmodels.ContainsKey(item.Item1))
                                 continue;
-                            lateststr += item.Item1 + ":" + item.Item2 +",";
+                            lateststr += item.Item1 + ":" + item.Item2 + ",";
                             ct.Add(new Device_DataPoint()
                             {
                                 DeviceId = dvid,
@@ -110,7 +110,7 @@ namespace GrpcMain.MQTT
                                 Value = item.Item2,
                             });
                         }
-                        lateststr =lateststr.Trim(',')+"}";
+                        lateststr = lateststr.Trim(',') + "}";
                         dv.LatestData = lateststr;
                         //批量提交 新数据和修改最新数据
                         await ct.SaveChangesAsync();
@@ -119,7 +119,7 @@ namespace GrpcMain.MQTT
                 }
             });
         }
-        
+
 
         static short CRC16(byte[] data, int start, int end)
         {

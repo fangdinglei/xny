@@ -10,34 +10,35 @@ namespace GrpcMain.DeviceType
 {
     static public class Ext
     {
-        static public MyDBContext.Main.ThingModel AsDBObj(this GrpcMain.DeviceType.ThingModel model,long typeid,long usertreeid) {
+        static public MyDBContext.Main.ThingModel AsDBObj(this GrpcMain.DeviceType.ThingModel model, long typeid, long usertreeid)
+        {
             return new MyDBContext.Main.ThingModel
             {
-                Abandonted=model.Abandonted,
+                Abandonted = model.Abandonted,
                 AlertHighValue = model.AlertHighValue,
                 AlertLowValue = model.AlertLowValue,
-                DeviceTypeId=typeid,
-                MaxValue=model.MaxValue,
-                MinValue=model.MinValue,
-                Name=model.Name,
-                Remark=model.Remark,
-                Unit=model.Unit,
-                UserTreeId=usertreeid,
-                Type=(byte)model.ValueType,
+                DeviceTypeId = typeid,
+                MaxValue = model.MaxValue,
+                MinValue = model.MinValue,
+                Name = model.Name,
+                Remark = model.Remark,
+                Unit = model.Unit,
+                UserTreeId = usertreeid,
+                Type = (byte)model.ValueType,
             };
         }
         /// <summary>
         /// 将请求对象转换为新的DB对象
         /// </summary>
         /// <returns></returns>
-        static public MyDBContext.Main.Device_Type AsDBObj(this GrpcMain.DeviceType.TypeInfo type,User creator)
+        static public MyDBContext.Main.Device_Type AsDBObj(this GrpcMain.DeviceType.TypeInfo type, User creator)
         {
             var res = new Device_Type()
             {
-                CreatorId=creator.Id,
-                Name=type.Name,
-                Script=type.Script,
-                UserTreeId=creator.UserTreeId,
+                CreatorId = creator.Id,
+                Name = type.Name,
+                Script = type.Script,
+                UserTreeId = creator.UserTreeId,
             };
             return res;
         }
@@ -269,8 +270,8 @@ namespace GrpcMain.DeviceType
                     using (var trans = await ct.Database.BeginTransactionAsync())
                     {
                         //校验设备类型数量
-                        var typecount= await ct.Device_Types.Where(it => it.UserTreeId == us.UserTreeId).CountAsync();
-                        if (typecount>MaxType)
+                        var typecount = await ct.Device_Types.Where(it => it.UserTreeId == us.UserTreeId).CountAsync();
+                        if (typecount > MaxType)
                         {
                             return new Response_AddTypeInfo()
                             {
@@ -312,7 +313,7 @@ namespace GrpcMain.DeviceType
                     }
                 };
             }
-          
+
         }
 
     }

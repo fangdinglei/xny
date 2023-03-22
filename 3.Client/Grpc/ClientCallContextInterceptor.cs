@@ -1,6 +1,5 @@
 ﻿using Grpc.Core;
 using Grpc.Core.Interceptors;
-using Newtonsoft.Json.Linq;
 
 namespace MyClient.Grpc
 {
@@ -15,7 +14,7 @@ namespace MyClient.Grpc
             _retoken = retoken;
         }
 
-        private void CheckToken<TRequest, TResponse>(ClientInterceptorContext<TRequest, TResponse> context)where TRequest :class where TResponse :class
+        private void CheckToken<TRequest, TResponse>(ClientInterceptorContext<TRequest, TResponse> context) where TRequest : class where TResponse : class
         {
             if (context.Method.FullName.ToLower().Contains("login"))
                 return;

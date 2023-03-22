@@ -1,10 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using MyClient.View;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using static Grpc.Core.Metadata;
-using System.Threading.Tasks;
 
 namespace FdlWindows.View
 {
@@ -73,7 +69,8 @@ namespace FdlWindows.View
             }
             loading.ShowLoading2(tid, task, retry, () =>
             {
-               lock (datas)  {
+                lock (datas)
+                {
                     ConditionalWeakTable<Control, Tuple<bool, bool>>? dt
                         = datas.GetOrCreateValue(form);
                     foreach (Control ctl in form.Controls)
@@ -81,8 +78,8 @@ namespace FdlWindows.View
                         if (ctl is FLoading)
                             continue;
                         Tuple<bool, bool> ctldt = dt.GetOrCreateValue(ctl);
-                        ctl.Visible = ctl.Visible||ctldt.Item1;
-                        ctl.Enabled = ctl.Enabled||ctldt.Item2;
+                        ctl.Visible = ctl.Visible || ctldt.Item1;
+                        ctl.Enabled = ctl.Enabled || ctldt.Item2;
                     }
                     datas.Remove(form);
                 }

@@ -30,7 +30,7 @@ namespace MyClient.View
 
         void LoadPage(int page)
         {
-            list_mails.ShowLoading( async () =>
+            list_mails.ShowLoading(async () =>
             {
                 _countMail = await _client.CountMailAsync(new Request_CountMail());
                 var res2 = await _client.GetMailAsync(new Request_GetMail()
@@ -75,7 +75,8 @@ namespace MyClient.View
 
         private void list_mails_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (list_mails.SelectedIndex < 0) {
+            if (list_mails.SelectedIndex < 0)
+            {
                 text_context.Text = "";
                 text_baseinfo.Text = "";
                 return;

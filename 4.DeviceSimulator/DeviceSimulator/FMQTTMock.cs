@@ -1,9 +1,6 @@
-﻿
-using System.Net;
-using System.Text;
-
-using MQTTnet;
+﻿using MQTTnet;
 using MQTTnet.Client;
+using System.Text;
 
 namespace DeviceSimulator
 {
@@ -21,7 +18,7 @@ namespace DeviceSimulator
         {
             if (button1.Text == "开始")
             {
-                if (!long.TryParse(textBox1.Text,out DeviceID))
+                if (!long.TryParse(textBox1.Text, out DeviceID))
                 {
                     MessageBox.Show("请输入数字设备ID");
                     return;

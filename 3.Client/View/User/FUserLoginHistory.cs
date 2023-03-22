@@ -58,7 +58,7 @@ namespace MyClient.View.User
             long st = _timeUtility.GetTicket(vs);
             long ed = _timeUtility.GetTicket(ve);
             group_loginhistory_list.DataSource = null;
-            this.ShowLoading( async () =>
+            this.ShowLoading(async () =>
             {
                 try
                 {

@@ -2,7 +2,6 @@
 using MyDBContext.Main;
 using MyUtility;
 using Sever.ColdData.Imp;
-using System.ComponentModel;
 using TimerMvcWeb.Filters;
 
 namespace Sever.ColdData
@@ -11,13 +10,13 @@ namespace Sever.ColdData
     /// <summary>
     /// 用于管理自动
     /// </summary>
-    [AutoTask(Name = "ColdDataManager", OnTimeCall = "Run", IntervalSeconds =60 * 60 * 24)]
+    [AutoTask(Name = "ColdDataManager", OnTimeCall = "Run", IntervalSeconds = 60 * 60 * 24)]
     public class ColdDataManager
     {
         static ITimeUtility tu = new TimeUtility();
         static IDeviceColdDataService service = new DeviceColdDataServiceImp();
 
-        static bool runing=false;
+        static bool runing = false;
 
         private static async Task ForOneModel(DeviceColdDataSettings settings,
             long deviceid, long modelid, MainContext ct
@@ -34,9 +33,9 @@ namespace Sever.ColdData
                 {
                     IQueryable<Device_DataPoint> bd = ct.Device_DataPoints;
                     //按时间筛选
-                    bd = bd.Where(it=>
+                    bd = bd.Where(it =>
                         it.StreamId == modelid && it.DeviceId == deviceid
-                        && it.Time > cursor1 
+                        && it.Time > cursor1
                         && it.Time < tu.GetTicket(DateTime.Now) - settings.ColdDownTime * 60 * 60 * 24
                     );
                     bd = bd.OrderBy(it => it.Time);
@@ -96,7 +95,7 @@ namespace Sever.ColdData
                 catch (Exception)
                 {
                 }
-            
+
             }
 
         }
@@ -126,7 +125,7 @@ namespace Sever.ColdData
             {
                 return;
             }
-            runing=true;
+            runing = true;
             try
             {
                 using MainContext ct = new MainContext();
@@ -145,7 +144,8 @@ namespace Sever.ColdData
             catch (Exception)
             {
             }
-            finally{
+            finally
+            {
                 runing = false;
             }
         }

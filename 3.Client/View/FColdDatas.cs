@@ -41,9 +41,9 @@ namespace MyClient.View
         public void PrePare(params object[] par)
         {
             c_timesearch.Checked = false;
-            c_device.Checked=false; 
+            c_device.Checked = false;
             btn_search_Click(null, null);
-            pcoldsetting.ShowLoading( async () =>
+            pcoldsetting.ShowLoading(async () =>
             {
                 var r = await _client.GetSettingAsync(new GrpcMain.DeviceData.Cold.Request_GetSetting() { });
                 cb_coldmanager.DataSource = r.Data.Managers.ToList()/*.Union(new List<string>() { "测试TODO"}).ToList()*/;
@@ -53,7 +53,8 @@ namespace MyClient.View
                 c_opencolddata.Checked = r.Data.Open;
                 btn_savesetting.Enabled = false;
                 return true;
-            }, okcall: () => {
+            }, okcall: () =>
+            {
                 pcoldsetting.Visible = true;
             });
 
@@ -79,8 +80,10 @@ namespace MyClient.View
             dt.Columns.Add("OP1");
 
             var req = new GrpcMain.DeviceData.Cold.Request_GetInfos();
-            Action<GrpcMain.DeviceData.Cold.Request_GetInfos> loadcall = (r) => {
-                dataGridView1.ShowLoading(async () => {
+            Action<GrpcMain.DeviceData.Cold.Request_GetInfos> loadcall = (r) =>
+            {
+                dataGridView1.ShowLoading(async () =>
+                {
                     var res = await _client.GetInfosAsync(r);
                     res.Info.ToList().ForEach(it =>
                     {
@@ -93,14 +96,15 @@ namespace MyClient.View
                         row["EndTime"] = _tu.GetDateTime(it.EndTime);
                         row["Count"] = it.Count;
                         //0未知 1在线 2离线 3删除中 4已删除 5 创建中
-                        row["Status"] = it.Status switch {
+                        row["Status"] = it.Status switch
+                        {
                             0 => "未知",
                             1 => "在线",
                             2 => "离线",
                             3 => "删除中",
                             4 => "已删除",
                             5 => "创建中",
-                            _=>"未知",
+                            _ => "未知",
                         };
                         row["ManagerName"] = it.ManagerName;
                         row["OP1"] = "删除";
@@ -112,7 +116,8 @@ namespace MyClient.View
             };
 
 
-            Action<List<long>> call2 = (ls) => {
+            Action<List<long>> call2 = (ls) =>
+            {
                 if (ls != null && ls.Count == 1)
                     req.DeviceId = ls[0];
                 loadcall(req);
@@ -120,7 +125,8 @@ namespace MyClient.View
             //选择时间搜索
             if (c_timesearch.Checked)
             {
-                _viewholder.ShowDatePicker((s, e) => {
+                _viewholder.ShowDatePicker((s, e) =>
+                {
                     req.Starttime = _tu.GetTicket(s);
                     req.Endtime = _tu.GetTicket(e);
                     _viewholder.SwitchTo(nameof(FDeviceSelector), false, call2, c_device.Checked ? 1 : 0);
@@ -135,7 +141,7 @@ namespace MyClient.View
         {
             try
             {
-                if (dataGridView1.Columns[e.ColumnIndex].HeaderText=="操作1" )
+                if (dataGridView1.Columns[e.ColumnIndex].HeaderText == "操作1")
                 {
                     var id = long.Parse(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
                     var res = await _client.DeletAsync(new GrpcMain.DeviceData.Cold.Request_Delet()

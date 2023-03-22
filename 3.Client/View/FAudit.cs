@@ -1,5 +1,4 @@
-﻿using FdlWindows.View;
-using GrpcMain.Account.Audit;
+﻿using GrpcMain.Account.Audit;
 
 namespace MyClient.View
 {
@@ -11,7 +10,7 @@ namespace MyClient.View
         {
             InitializeComponent();
             cb_mode.SelectedIndex = 0;
-            _client = client; 
+            _client = client;
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -22,14 +21,15 @@ namespace MyClient.View
         private async void btn_search_Click(object sender, EventArgs e)
         {
             //TODO 总数量
-            var r=await  _client.GetAsync(new Request_Get() { 
-                 Count=PerPage,
-                 Cursor=0,
-                 Mode= cb_mode.SelectedIndex,
+            var r = await _client.GetAsync(new Request_Get()
+            {
+                Count = PerPage,
+                Cursor = 0,
+                Mode = cb_mode.SelectedIndex,
             });
-            pageController1.OnPageChanged-= PageController1_OnPageChanged;
+            pageController1.OnPageChanged -= PageController1_OnPageChanged;
             pageController1.PageSize = PerPage;
-            pageController1.RecordCount=r.Infos.Count;
+            pageController1.RecordCount = r.Infos.Count;
             pageController1.OnPageChanged += PageController1_OnPageChanged;
         }
 
@@ -38,7 +38,7 @@ namespace MyClient.View
             var r = await _client.GetAsync(new Request_Get()
             {
                 Count = PerPage,
-                Cursor = (pageController1.Page - 1) *PerPage,
+                Cursor = (pageController1.Page - 1) * PerPage,
                 Mode = cb_mode.SelectedIndex,
             });
             pageController1.OnPageChanged -= PageController1_OnPageChanged;

@@ -63,7 +63,8 @@ namespace TimerMvcWeb.Filters
         /// </summary>
         private static void StartAutoTask()
         {
-            AppDomain.CurrentDomain.GetAssemblies().ToList().ForEach((asms) => {
+            AppDomain.CurrentDomain.GetAssemblies().ToList().ForEach((asms) =>
+            {
 
                 var types = asms.DefinedTypes.Where(t => Attribute.IsDefined(t, typeof(AutoTaskAttribute))).ToList();
                 foreach (var t in types)
@@ -86,7 +87,7 @@ namespace TimerMvcWeb.Filters
                     }
                 }
             });
-          
+
         }
         /// <summary>
         /// 注册一个自动任务

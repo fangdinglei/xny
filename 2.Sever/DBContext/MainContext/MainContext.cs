@@ -1003,18 +1003,19 @@ namespace MyDBContext.Main
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             var time = new MyUtility.TimeUtility();
-            modelBuilder.Entity<Device_DataPoint_Cold>().HasData(new Device_DataPoint_Cold { 
+            modelBuilder.Entity<Device_DataPoint_Cold>().HasData(new Device_DataPoint_Cold
+            {
                 Count = 1,
-                CreatTime=time.GetTicket(),
+                CreatTime = time.GetTicket(),
                 DeviceId = 1,
-                StreamId=1,
-                EndTime=time.GetTicket(),
-                StartTime= time.GetTicket(DateTime.Now.AddDays(-2)),
+                StreamId = 1,
+                EndTime = time.GetTicket(),
+                StartTime = time.GetTicket(DateTime.Now.AddDays(-2)),
                 Id = 1,
-                ManagerName= "InFile",
-                Pars="",
-                status=0,
-                TreeId=2,
+                ManagerName = "InFile",
+                Pars = "",
+                status = 0,
+                TreeId = 2,
             });
 
         }

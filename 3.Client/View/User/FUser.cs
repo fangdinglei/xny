@@ -63,7 +63,7 @@ namespace MyClient.View.User
         {
             list_user.DataSource = null;
             list_user.Items.Clear();
-            list_user.ShowLoading( async () =>
+            list_user.ShowLoading(async () =>
             {
                 _userInfos = null;
                 var r1 = await _accountServiceClient.GetUserInfoAsync(new GrpcMain.Account.DTODefine.Types.Request_GetUserInfo()

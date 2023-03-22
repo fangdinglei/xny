@@ -39,7 +39,7 @@ namespace MyClient.View.AutoControl
                 {
                     try
                     {
-                        list_names.ShowLoading( async () =>
+                        list_names.ShowLoading(async () =>
                         {
                             datalist.Visible = false;
                             var r = await _client.GetDeviceSettingAsync(new Request_GetDeviceSetting()
@@ -68,11 +68,12 @@ namespace MyClient.View.AutoControl
                                 list_names.SelectedIndex = -1;
                             }
                             return true;
-                        }, okcall: () => {
+                        }, okcall: () =>
+                        {
                             datalist.Visible = true;
                             RefreshView();
                         });
-                     
+
                     }
                     catch (Exception ex)
                     {

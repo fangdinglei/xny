@@ -10,10 +10,11 @@
 
 namespace MyDBContext.Main
 {
-    public enum UserOpAuditStatus { 
-        Posted=0,
-        Accepted=1,
-        Rejected=2,
+    public enum UserOpAuditStatus
+    {
+        Posted = 0,
+        Accepted = 1,
+        Rejected = 2,
     }
 }
 

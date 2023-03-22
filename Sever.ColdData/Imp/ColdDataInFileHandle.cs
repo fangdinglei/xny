@@ -5,7 +5,7 @@ namespace Sever.ColdData.Imp
     public class ColdDataInFileHandle : ColdDataHandleBase
     {
         public override string Name => "InFile";
-        public string FilePath= "ColdData/";
+        public string FilePath = "ColdData/";
         public string SettingFileName = "_setting";
         public string DiskID;
         public ColdDataInFileHandle()
@@ -27,10 +27,11 @@ namespace Sever.ColdData.Imp
         }
         public override Task<bool> Delet(Device_DataPoint_Cold colddata)
         {
-            var exist=File.Exists(FilePath + colddata.Id);
-            if (exist) {
+            var exist = File.Exists(FilePath + colddata.Id);
+            if (exist)
+            {
                 File.Delete(FilePath + colddata.Id);
-            } 
+            }
             return Task.FromResult(exist);
         }
 
@@ -53,7 +54,7 @@ namespace Sever.ColdData.Imp
         public override async Task<byte[]?> Load(Device_DataPoint_Cold colddata)
         {
             var name = FilePath + colddata.Id;
-            if (DiskID==colddata.Pars&& File.Exists(FilePath + colddata.Id))
+            if (DiskID == colddata.Pars && File.Exists(FilePath + colddata.Id))
             {
                 var bytes = await File.ReadAllBytesAsync(name);
                 return bytes;
@@ -67,7 +68,7 @@ namespace Sever.ColdData.Imp
 
         public override async Task Store(Device_DataPoint_Cold colddata, byte[] bytes)
         {
-           
+
             var name = FilePath + colddata.Id;
             if (File.Exists(FilePath + colddata.Id))
             {

@@ -185,10 +185,11 @@ namespace GrpcMain.DeviceData
 
             //变换格式和获取其他信息
             var resls = new List<ColdDataInfo>();
-            foreach (var it in await q.ToListAsync()) {
+            foreach (var it in await q.ToListAsync())
+            {
                 var dev = await ct.Devices.Where(it2 => it2.Id == it.DeviceId).AsNoTracking().FirstOrDefaultAsync();
                 var model = await ct.ThingModels.Where(it2 => it2.Id == it.StreamId).AsNoTracking().FirstOrDefaultAsync();
-                var add= new ColdDataInfo()
+                var add = new ColdDataInfo()
                 {
                     Count = it.Count,
                     CreatTime = it.CreatTime,

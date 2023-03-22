@@ -1,16 +1,6 @@
 ﻿using FdlWindows.View;
-using Grpc.Core;
-using GrpcMain.Device;
 using GrpcMain.UserDevice;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace MyClient.View.Ext
 {
@@ -34,23 +24,23 @@ namespace MyClient.View.Ext
             this.userDeviceServiceClient = userDeviceServiceClient;
         }
 
-        public Control View =>this;
+        public Control View => this;
 
         public void OnEvent(string name, params object[] pars)
         {
-         
+
         }
 
         public void OnTick()
         {
-     
+
         }
 
         public void PrePare(params object[] par)
         {
             call = (par[0] as Action<List<long>>);
-            mode = (int)  par[1];
-            if (mode==0)
+            mode = (int)par[1];
+            if (mode == 0)
             {
                 call?.Invoke(null);
                 _viewholder.Back();
@@ -106,10 +96,10 @@ namespace MyClient.View.Ext
 
         private void btn_ok_Click(object sender, EventArgs e)
         {
-            if (list_devices.Items.Count>0&& list_devices.SelectedIndex>=0)
+            if (list_devices.Items.Count > 0 && list_devices.SelectedIndex >= 0)
             {
-                var id= (list_devices.SelectedItem as GrpcMain. Device. Device).Id;
-                call?.Invoke(new List<long> { id});
+                var id = (list_devices.SelectedItem as GrpcMain.Device.Device).Id;
+                call?.Invoke(new List<long> { id });
                 _viewholder.Back();
             }
         }

@@ -1,12 +1,7 @@
 ﻿using Grpc.Core;
-using GrpcMain.Attributes;
 using GrpcMain.Common;
-using GrpcMain.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
-using MyUtility;
-using System.Linq;
-using static GrpcMain.Account.DTODefine.Types;
 
 namespace GrpcMain.Account.Audit
 {
@@ -52,7 +47,7 @@ namespace GrpcMain.Account.Audit
             using var ct = new MainContext();
 
             //设置 take数量
-            var take=0;
+            var take = 0;
             if (request.HasCount)
                 take = request.Count + 1;
             else
@@ -66,7 +61,7 @@ namespace GrpcMain.Account.Audit
             //按模式设置条件
             if (request.Mode == 0)
             {
-                q = q.Where(it => ct.Users.Where(it => it.CreatorId == userid).Select(it=>it.Id).Contains(it.SponsorId));
+                q = q.Where(it => ct.Users.Where(it => it.CreatorId == userid).Select(it => it.Id).Contains(it.SponsorId));
             }
             else if (request.Mode == 1)
             {
@@ -86,12 +81,12 @@ namespace GrpcMain.Account.Audit
             q.Take(take);
 
             //提取结果
-            var ls=(await q.ToListAsync()).Select(it => it.AsGrpc()).ToList();
+            var ls = (await q.ToListAsync()).Select(it => it.AsGrpc()).ToList();
             var res = new Response_Get();
-            if (ls.Count== take)
+            if (ls.Count == take)
             {
                 //还有其他数据
-                res.Infos.Add(ls.Take(ls.Count-1));
+                res.Infos.Add(ls.Take(ls.Count - 1));
                 res.Cursor = ls.Last().Id;
             }
             else
@@ -146,7 +141,8 @@ namespace GrpcMain.Account.Audit
                     Message = "已经审计完成"
                 };
             }
-            else {
+            else
+            {
                 throw new Exception("未知分支");
             }
         }

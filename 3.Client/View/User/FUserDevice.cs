@@ -5,8 +5,6 @@ using MyClient.Grpc;
 using MyDBContext.Main;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Security.Cryptography;
-using System.Windows.Forms;
 using static GrpcMain.Account.DTODefine.Types;
 
 namespace MyClient.View.User
@@ -39,12 +37,13 @@ namespace MyClient.View.User
                 op_panel.Visible = false;
                 var res1 = await userDeviceServiceClient.GetGroupInfosAsync(new Google.Protobuf.WellKnownTypes.Empty());
                 groups = res1.Groups.ToList();
-                groups.Insert(0,new User_Device_Group() { 
-                    Id=0,
-                    Name="默认",
+                groups.Insert(0, new User_Device_Group()
+                {
+                    Id = 0,
+                    Name = "默认",
                 });
                 list_devicegroup.DisplayMember = "Name";
-                list_devicegroup.DataSource = groups;  
+                list_devicegroup.DataSource = groups;
                 return true;
             });
 
@@ -54,7 +53,7 @@ namespace MyClient.View.User
         {
             if (!Active)
                 return;
-            if (SelectedUser == null || SelectedUser == bm.FatherInfo|| devices_self==null)
+            if (SelectedUser == null || SelectedUser == bm.FatherInfo || devices_self == null)
                 return;//TODO 未加载完时异常进入
             op_panel.Enabled = SelectedUser != bm.FatherInfo;
             var req = new Request_GetUserDevices()
@@ -173,7 +172,7 @@ namespace MyClient.View.User
             var bool_12 = check_delegate.Enabled = authority.HasFlag(UserDeviceAuthority.Delegate);
 
             var userdevice2 = devices_selecteduser.Where(it => it.Dvid == userdevice.Dvid).FirstOrDefault();
-            
+
             if (userdevice2 == null)
             {
                 check_read_baseinfo.Checked = false;
@@ -191,7 +190,8 @@ namespace MyClient.View.User
                 check_delegate.Checked = false;
             }
             else
-            { var authority2 = (UserDeviceAuthority)userdevice2.Authority;
+            {
+                var authority2 = (UserDeviceAuthority)userdevice2.Authority;
                 check_read_baseinfo.Checked = bool_0 && authority2.HasFlag(UserDeviceAuthority.Read_BaseInfo);
                 check_read_repair.Checked = bool_1 && authority2.HasFlag(UserDeviceAuthority.Read_Repair);
                 check_read_cmd.Checked = bool_2 && authority2.HasFlag(UserDeviceAuthority.Read_Cmd);
@@ -214,10 +214,10 @@ namespace MyClient.View.User
         {
             try
             {
-                if (SelectedUser==null|| devices_self==null||list_devices.SelectedIndex<0
+                if (SelectedUser == null || devices_self == null || list_devices.SelectedIndex < 0
                     || list_devices.SelectedIndex > devices_self.Count)
                 {
-                    MessageBox.Show("请选择合适的用户和设备" , "提示");
+                    MessageBox.Show("请选择合适的用户和设备", "提示");
                     return;
                 }
                 var req = new Request_UpdateUserDeviceAuthority();
@@ -240,9 +240,9 @@ namespace MyClient.View.User
                 req.UserDevice.Authority |= (int)UserDeviceAuthority.Control_TimeSetting;
                 req.UserDevice.Authority |= (int)UserDeviceAuthority.Delegate;
                 #endregion
-                var rsp= userDeviceServiceClient.UpdateUserDeviceAuthority(req);
+                var rsp = userDeviceServiceClient.UpdateUserDeviceAuthority(req);
                 rsp.ThrowIfNotSuccess();
-                MessageBox.Show(String.IsNullOrWhiteSpace(rsp.Message)?"成功":rsp.Message,"提示");
+                MessageBox.Show(String.IsNullOrWhiteSpace(rsp.Message) ? "成功" : rsp.Message, "提示");
             }
             catch (Exception ex)
             {

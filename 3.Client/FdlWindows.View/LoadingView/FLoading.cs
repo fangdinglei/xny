@@ -1,6 +1,4 @@
-﻿using FdlWindows.View;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
 
 namespace FdlWindows.View
 {
@@ -24,7 +22,7 @@ namespace FdlWindows.View
         Task<bool>? tsk;
 
 
-       ToolTip tipui = new ToolTip();
+        ToolTip tipui = new ToolTip();
         void OnSuccess()
         {
             try
@@ -53,7 +51,7 @@ namespace FdlWindows.View
         void OnStartLoad()
         {
             tipui.RemoveAll();
-            LoadingX = true; 
+            LoadingX = true;
             button1.Visible = false;
             label1.Text = "加载中";
         }
@@ -61,8 +59,9 @@ namespace FdlWindows.View
         /// 内置取消加载
         /// </summary>
         /// <returns></returns>
-        public bool CancelLoad() {
-            Task<bool>? tsk=null;
+        public bool CancelLoad()
+        {
+            Task<bool>? tsk = null;
             lock (this)
             {
                 if (LoadingX)
@@ -77,7 +76,7 @@ namespace FdlWindows.View
                 Task.WaitAll(tsk);
             lock (this)
             {
-                if (tsk==this.tsk)
+                if (tsk == this.tsk)
                 {
                     this.tsk = null;
                 }
@@ -85,25 +84,27 @@ namespace FdlWindows.View
             return true;
         }
 
-        public int GetTaskId() {
+        public int GetTaskId()
+        {
             lock (this)
             {
 
-                int res = taskid ;
+                int res = taskid;
                 taskid = (taskid + 1) & 0xFFFFFF;
                 return res;
             }
         }
-        public bool CheckTaskId(int taskid) {
+        public bool CheckTaskId(int taskid)
+        {
             lock (this)
             {
-                return ((taskid + 1) & 0xFFFFFF) ==this.taskid;
+                return ((taskid + 1) & 0xFFFFFF) == this.taskid;
             }
         }
 
-        public async void ShowLoading2(int taskid,Func<Task<bool>> task, Func<Task<bool>>? retry, Action okcall = null)
+        public async void ShowLoading2(int taskid, Func<Task<bool>> task, Func<Task<bool>>? retry, Action okcall = null)
         {
-            Debug.Assert(!LoadingX,"请等待加载结束后在加载");
+            Debug.Assert(!LoadingX, "请等待加载结束后在加载");
             lock (this)
             {
                 if (!CheckTaskId(taskid))
@@ -116,7 +117,7 @@ namespace FdlWindows.View
             try
             {
                 OnStartLoad();
-                tsk = task(); 
+                tsk = task();
                 if (await tsk)
                 {
                     OnSuccess();
@@ -140,7 +141,7 @@ namespace FdlWindows.View
             try
             {
                 OnStartLoad();
-                tsk = retry(); 
+                tsk = retry();
                 if (await tsk)
                 {
                     OnSuccess();
@@ -157,7 +158,7 @@ namespace FdlWindows.View
             }
         }
 
-      
+
     }
 
 }

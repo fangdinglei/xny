@@ -123,8 +123,9 @@ namespace GrpcMain.Account
                 {
                     Id = id
                 });
-            return Task.FromResult(new Response_LoginByToken() { 
-                 Token = token,
+            return Task.FromResult(new Response_LoginByToken()
+            {
+                Token = token,
             });
         }
 

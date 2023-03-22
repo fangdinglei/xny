@@ -47,22 +47,26 @@ namespace MyClient.View
             if (!brefresh.Enabled)
                 return;
             brefresh.Enabled = false;
-            list_Group.ShowLoading(async () => {
+            list_Group.ShowLoading(async () =>
+            {
                 dataGridView1.Visible = false;
                 var res1 = await userDeviceServiceClient.GetGroupInfosAsync(new Google.Protobuf.WellKnownTypes.Empty());
                 groups = res1.Groups.ToList();
                 var res3 = await deviceTypeServiceClient.GetTypeInfosAsync(new Request_GetTypeInfos());
                 typeInfos = res3.TypeInfos.ToList();
                 return true;
-            }, okcall: () => {
+            }, okcall: () =>
+            {
 
                 RefreshGroupList();
                 dataGridView1.Visible = true;
-                dataGridView1.ShowLoading(async () => {
+                dataGridView1.ShowLoading(async () =>
+                {
                     var res4 = await userDeviceServiceClient.GetDevicesAsync(new Request_GetDevices());
                     dvinfos = res4.Info.ToList();
                     return true;
-                }, okcall: () => {
+                }, okcall: () =>
+                {
                     RefreshDeviceInTab();
                 });
             });
@@ -87,7 +91,7 @@ namespace MyClient.View
             });
             ginfo.AddRange(groups);
             list_Group.DataSource = ginfo.Select(it => it.Name).ToList();
-        } 
+        }
         void RefreshDeviceInTab()
         {
             var idx =

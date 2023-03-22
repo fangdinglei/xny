@@ -26,10 +26,10 @@ builder.Services.UseMQTT();
 //启动定时任务
 new Thread(() =>
 {
-AutoTaskAttribute.RegisterTask();
+    AutoTaskAttribute.RegisterTask();
 })
-{ 
-     IsBackground=true
+{
+    IsBackground = true
 }.Start();
 
 #region 禁用模型校验

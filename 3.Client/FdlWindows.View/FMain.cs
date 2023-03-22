@@ -26,7 +26,7 @@ namespace FdlWindows.View
         /// 用于名称找节点 key name value treenode
         /// </summary>
         Dictionary<string, TreeNode> ViewNodes = new();
-      
+
         /// <summary>
         ///用于创建实例获取名称以缓存 key IView value NameofViewInstance
         /// </summary>
@@ -203,7 +203,7 @@ namespace FdlWindows.View
         /// <returns></returns>
         IView GetOrCreatView(string name)
         {
-           
+
 
             IView? _interface = serviceProvider.GetService(ViewClassType[name]) as IView;
             if (_interface == null)
