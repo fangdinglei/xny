@@ -78,7 +78,7 @@ namespace MyClient.View
             dt.Columns.Add("ManagerName");
             dt.Columns.Add("OP1");
 
-
+            var req = new GrpcMain.DeviceData.Cold.Request_GetInfos();
             Action<GrpcMain.DeviceData.Cold.Request_GetInfos> loadcall = (r) => {
                 dataGridView1.ShowLoading(async () => {
                     var res = await _client.GetInfosAsync(r);
@@ -110,48 +110,25 @@ namespace MyClient.View
                     return true;
                 });
             };
-            
+
+
+            Action<List<long>> call2 = (ls) => {
+                if (ls != null && ls.Count == 1)
+                    req.DeviceId = ls[0];
+                loadcall(req);
+            };
             //选择时间搜索
             if (c_timesearch.Checked)
             {
                 _viewholder.ShowDatePicker((s, e) => {
-                    var req = new GrpcMain.DeviceData.Cold.Request_GetInfos()
-                    {
-                        Starttime =_tu.GetTicket(s),
-                        Endtime=_tu.GetTicket(e),
-                    };
-                    if (c_device.Checked)
-                    {
-                        Action<List<long>> call2 = (ls) => {
-                            if (ls!=null&&ls.Count==1)
-                                req.DeviceId = ls[0];
-                            loadcall(req);
-                        };
-                        _viewholder.SwitchTo(nameof(FDeviceSelector), false, call2);
-                    }
-                    else
-                    {
-                        loadcall(req);
-                    }
-                  
+                    req.Starttime = _tu.GetTicket(s);
+                    req.Endtime = _tu.GetTicket(e);
+                    _viewholder.SwitchTo(nameof(FDeviceSelector), false, call2, c_device.Checked ? 1 : 0);
                 });
                 return;
             }
-            //不使用时间搜索
-            var req = new GrpcMain.DeviceData.Cold.Request_GetInfos();
-            if (c_device.Checked)
-            {
-                Action<List<long>> call2 = (ls) => {
-                    if (ls != null && ls.Count == 1)
-                        req.DeviceId = ls[0];
-                    loadcall(req);
-                };
-                _viewholder.SwitchTo(nameof(FDeviceSelector), false, call2);
-            }
-            else
-            {
-                loadcall(req);
-            }
+            //不使用时间搜索 级联设备搜索器
+            _viewholder.SwitchTo(nameof(FDeviceSelector), false, call2, c_device.Checked ? 1 : 0);
         }
 
         private async void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)

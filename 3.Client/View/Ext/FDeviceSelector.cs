@@ -14,6 +14,11 @@ using System.Windows.Forms;
 
 namespace MyClient.View.Ext
 {
+    /// <summary>
+    /// Action<List<long>>
+    /// mode 0不选调用空 1单选 2多选
+    /// mode0用于方便级联
+    /// </summary>
     [AutoDetectView(nameof(FDeviceSelector), "设备选择器", "", false)]
     public partial class FDeviceSelector : Form, IView
     {
@@ -21,6 +26,7 @@ namespace MyClient.View.Ext
         List<DeviceWithUserDeviceInfo>? devices;
         List<User_Device_Group>? groups;
         Action<List<long>>? call;
+        int mode = 0;
         IViewHolder _viewholder;
         public FDeviceSelector(UserDeviceService.UserDeviceServiceClient userDeviceServiceClient)
         {
@@ -43,6 +49,13 @@ namespace MyClient.View.Ext
         public void PrePare(params object[] par)
         {
             call = (par[0] as Action<List<long>>);
+            mode = (int)  par[1];
+            if (mode==0)
+            {
+                call?.Invoke(null);
+                _viewholder.Back();
+                return;
+            }
             list_devicegroup.ShowLoading(async () =>
             {
                 list_devices.DataSource = null;
