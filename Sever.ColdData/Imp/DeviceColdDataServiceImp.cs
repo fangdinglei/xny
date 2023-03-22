@@ -58,7 +58,8 @@ namespace Sever.ColdData.Imp
                 var suc = await mgr.DoDelet(cd);
                 if (suc)
                 {
-                    cd.status = 4;
+                    //cd.status = 4;
+                    ct.Remove(cd);
                     await ct.SaveChangesAsync();
                 }
                 else
