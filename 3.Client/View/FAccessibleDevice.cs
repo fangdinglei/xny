@@ -3,6 +3,7 @@ using FdlWindows.View;
 using GrpcMain.Device;
 using GrpcMain.DeviceType;
 using GrpcMain.UserDevice;
+using MyClient.View.AutoControl;
 using System.Data;
 using System.Runtime.InteropServices;
 using static GrpcMain.DeviceType.DTODefine.Types;
@@ -332,17 +333,17 @@ namespace MyClient.View
 
         private void bsetting_Click(object sender, EventArgs e)
         {
-            var tb = new List<ValueTuple<uint, string>>();
+            var tb = new List<ValueTuple<long, string>>();
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 if ((bool)row.Cells[0].EditedFormattedValue)
                 {
-                    tb.Add((uint.Parse((string)row.Cells[1].EditedFormattedValue), (string)row.Cells[2].EditedFormattedValue));
+                    tb.Add((long.Parse((string)row.Cells[1].EditedFormattedValue), (string)row.Cells[2].EditedFormattedValue));
                 }
             }
             if (tb.Count == 0)
                 return;
-            ViewHolder.SwitchTo("自动控制配置", false, tb);
+            ViewHolder.SwitchTo(nameof(FAutoControl), false, tb);
         }
 
         private void btn_creatdevice_Click(object sender, EventArgs e)

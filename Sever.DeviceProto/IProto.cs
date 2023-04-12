@@ -46,7 +46,7 @@ namespace Sever.DeviceProto
 
 
         string UserName = "admin";
-        string UserPass = "admin";
+        string UserPass = "admin123";
         string HostIP = "localhost";
         int Port = 1883;
         IDeviceMessageHandle _handle;

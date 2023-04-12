@@ -83,7 +83,7 @@ namespace MyClient.View.Device
             _deviceTypeDetail.Visible = true;
             _deviceTypeDetail.PrePare(true, (TypeInfo it) =>
             {
-                //TODO
+                PrePare();
             });
 
         }

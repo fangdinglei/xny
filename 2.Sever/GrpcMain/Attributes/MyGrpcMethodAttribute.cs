@@ -11,11 +11,8 @@
 
         public string[]? Authoritys;
         public bool NeedLogin;
-        /// <summary>
-        ///  当NeedAudit并且状态为Cancel并且包含AuditorId 自动记录审计
-        /// </summary>
-        public bool NeedAudit { get; private set; }
-        public string? NeedAudit_OpName { get; private set; }
+        public bool NeedDB;
+        public bool NeedTransaction;
         public MyGrpcMethodAttribute()
         {
             NeedLogin = true;
@@ -25,19 +22,5 @@
             NeedLogin = true;
             Authoritys = authoritys;
         }
-
-        public MyGrpcMethodAttribute(bool needAudit, string needAudit_OpName)
-        {
-            if (!needAudit || string.IsNullOrWhiteSpace(needAudit_OpName))
-            {
-                throw new Exception("错误的构造参数");
-            }
-            NeedAudit = needAudit;
-            NeedLogin = true;
-            NeedAudit_OpName = needAudit_OpName;
-        }
-
-
-
     }
 }

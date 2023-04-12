@@ -1,8 +1,11 @@
 ﻿using FdlWindows.View;
+using GrpcMain.Device;
 using GrpcMain.DeviceType;
 using MyClient.Grpc;
+using MyClient.View.Device;
 using MyDBContext.Main;
 using System.ComponentModel;
+using System.Reflection;
 using TypeInfo = GrpcMain.DeviceType.TypeInfo;
 
 namespace MyClient.View
@@ -27,6 +30,8 @@ namespace MyClient.View
             text_thingmodel_type.SelectedIndex = 0;
             _typeServiceClient = typeServiceClient;
             _localData = localData;
+            thingModels=new BindingList<ThingModel>();
+            list_thingmodels.DataSource = thingModels;
         }
 
 
@@ -61,7 +66,13 @@ namespace MyClient.View
             {
                 OnCreatCall = (Action<TypeInfo>)par[1];
                 text_id.Text = "创建";
-                list_thingmodels.DataSource = null;
+                thingModels.Clear();
+                typeinfo = new TypeInfo
+                {
+                     Id=0,
+                     Name="创建分组",
+                     Script="",
+                };
             }
             else
             {
@@ -77,15 +88,15 @@ namespace MyClient.View
                             throw new Exception();
                         }
                         typeinfo = rsp.TypeInfos[0];
-                        list_thingmodels.DataSource = null;
+                        thingModels.Clear();
                         return true;
                     },
                     okcall: () =>
                     {
+                        thingModels.Clear();
                         text_id.Text = typeinfo.Id + "";
                         text_name.Text = typeinfo.Name;
-                        thingModels = new BindingList<ThingModel>(typeinfo.ThingModels.Clone());
-                        list_thingmodels.DataSource = thingModels;
+                        typeinfo.ThingModels.ToList().ForEach(thingModels.Add);
                         list_thingmodels.DisplayMember = "Name";
                     });
             }
@@ -158,18 +169,25 @@ namespace MyClient.View
                 MessageBox.Show("该名称的物模型已经存在", "提示");
                 return;
             }
-            var thingModel = new ThingModel();
-            thingModel.Id = 0;
-            thingModel.Name = text_thingmodel_name.Text;
-            thingModel.ValueType = (int)Enum.Parse<ThingModelValueType>(text_thingmodel_type.Text); ;
-            thingModel.Unit = text_thingmodel_unit.Text;
-            thingModel.MaxValue = float.Parse(text_thingmodel_max.Text);
-            thingModel.MinValue = float.Parse(text_thingmodel_min.Text);
-            thingModel.Remark = text_thingmodel_remark.Text;
-            thingModel.Abandonted = check_thingmodel_abandonted.Checked;
-            thingModel.AlertLowValue = float.Parse(text_alterlow.Text);
-            thingModel.AlertHighValue = float.Parse(text_alterhigh.Text);
-            thingModels.Add(thingModel);
+            try
+            {
+                var thingModel = new ThingModel();
+                thingModel.Id = 0;
+                thingModel.Name = text_thingmodel_name.Text;
+                thingModel.ValueType = (int)Enum.Parse<ThingModelValueType>(text_thingmodel_type.Text); ;
+                thingModel.Unit = text_thingmodel_unit.Text;
+                thingModel.MaxValue = float.Parse(text_thingmodel_max.Text);
+                thingModel.MinValue = float.Parse(text_thingmodel_min.Text);
+                thingModel.Remark = text_thingmodel_remark.Text;
+                thingModel.Abandonted = check_thingmodel_abandonted.Checked;
+                thingModel.AlertLowValue = float.Parse(text_alterlow.Text);
+                thingModel.AlertHighValue = float.Parse(text_alterhigh.Text);
+                thingModels.Add(thingModel);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("请输入合法的数据","错误");
+            }
         }
 
         private void btn_submit_Click(object sender, EventArgs e)
@@ -180,10 +198,12 @@ namespace MyClient.View
                 typeinfo.ThingModels.AddRange(thingModels);
                 if (isCreat)
                 {//创建
+                    typeinfo.Name = text_name.Text;
                     var res = _typeServiceClient.AddTypeInfo(new Request_AddTypeInfo()
                     {
-                        Info = typeinfo
+                        Info = typeinfo,
                     });
+                    res.Status.ThrowIfNotSuccess();
                     OnCreatCall?.Invoke(typeinfo);
                 }
                 else
@@ -223,15 +243,15 @@ namespace MyClient.View
 
         private void btn_creatdevice_Click(object sender, EventArgs e)
         {
-            //TODO
-            if (isCreat)
+            if (long.TryParse(text_id.Text,out var id))
             {
-
+                _viewholder.SwitchTo(nameof(FCreatDevice),false, id);
             }
             else
             {
-
+                MessageBox.Show("请先创建类型","错误");
             }
+           
         }
     }
 }

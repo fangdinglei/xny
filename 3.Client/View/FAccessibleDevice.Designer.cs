@@ -238,7 +238,7 @@ namespace MyClient.View
             this.bsetting.Name = "bsetting";
             this.bsetting.Size = new System.Drawing.Size(186, 68);
             this.bsetting.TabIndex = 9;
-            this.bsetting.Text = "LED配置";
+            this.bsetting.Text = "定时配置";
             this.bsetting.UseVisualStyleBackColor = true;
             this.bsetting.Click += new System.EventHandler(this.bsetting_Click);
             // 

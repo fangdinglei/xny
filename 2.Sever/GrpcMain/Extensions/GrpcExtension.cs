@@ -141,6 +141,7 @@ namespace GrpcMain.Extensions
                 {
                     return (false, "token无效");
                 }
+                //TODO 使用传入的MainContext
                 using MainContext ct = new MainContext();
                 var select = await ct.Users.Where(it => it.Id == jwt.Id).Select(it => new { it.Id, it.Status, it.UserTreeId, it.Authoritys }).FirstOrDefaultAsync();
                 if (select == null)
@@ -185,28 +186,28 @@ namespace GrpcMain.Extensions
                 return;
             }
 
-            public async Task RecordAudit<TRequest, TResponse>(ServerCallContext context, object request, UnaryServerMethod<TRequest, TResponse> continuation, MyGrpcMethodAttribute att, User user)
-                where TResponse : class
-                where TRequest : class
-            {
-                long Sponsorid = (long)context.UserState["CreatorId"];
-                long AuditorId = (long)context.UserState["AuditorId"];
-                using (MainContext ct = new MainContext())
-                {
-                    ct.User_Op_Audits.Add(
-                        new User_Op_Audit()
-                        {
-                            SponsorId = Sponsorid,
-                            AuditorId = AuditorId,
-                            Time = _timeUtility.GetTicket(),
-                            Op = att.NeedAudit_OpName,
-                            Data = Newtonsoft.Json.JsonConvert.SerializeObject(request),
-                            UserTreeId = user.UserTreeId,
-                        }
-                        ); ;
-                    await ct.SaveChangesAsync();
-                }
-            }
+            //public async Task RecordAudit<TRequest, TResponse>(ServerCallContext context, object request, UnaryServerMethod<TRequest, TResponse> continuation, MyGrpcMethodAttribute att, User user)
+            //    where TResponse : class
+            //    where TRequest : class
+            //{
+            //    long Sponsorid = (long)context.UserState["CreatorId"];
+            //    long AuditorId = (long)context.UserState["AuditorId"];
+            //    using (MainContext ct = new MainContext())
+            //    {
+            //        ct.User_Op_Audits.Add(
+            //            new User_Op_Audit()
+            //            {
+            //                SponsorId = Sponsorid,
+            //                AuditorId = AuditorId,
+            //                Time = _timeUtility.GetTicket(),
+            //                Op = att.NeedAudit_OpName,
+            //                Data = Newtonsoft.Json.JsonConvert.SerializeObject(request),
+            //                UserTreeId = user.UserTreeId,
+            //            }
+            //            ); ;
+            //        await ct.SaveChangesAsync();
+            //    }
+            //}
         }
 
         internal class MyGrpcHandleCongig

@@ -14,6 +14,7 @@ namespace GrpcMain.DeviceType
         {
             return new MyDBContext.Main.ThingModel
             {
+                Id=model.Id,
                 Abandonted = model.Abandonted,
                 AlertHighValue = model.AlertHighValue,
                 AlertLowValue = model.AlertLowValue,
@@ -160,103 +161,59 @@ namespace GrpcMain.DeviceType
             }
         }
 
-        [MyGrpcMethod(true, "UpdateDeviceTypeInfo")]
+        [MyGrpcMethod( "devicetype:save",NeedDB =true, NeedTransaction=true)]
         public override async Task<CommonResponse?> UpdateTypeInfo(Request_UpdateTypeInfo request, ServerCallContext context)
-        {//需要审计
+        {
             long id = (long)context.UserState["CreatorId"];
             User us = (User)context.UserState["user"];
-            using (MainContext ct = new MainContext())
+            var ct=(MainContext)context.UserState[nameof(MainContext)];
+            var type = await ct.Device_Types
+                .Where(it => it.Id == request.Info.Id).Include(it => it.ThingModels)
+                .FirstOrDefaultAsync();
+            if (type == null
+                || type.UserTreeId != us.UserTreeId)
             {
-                var type = await ct.Device_Types
-                    .Where(it => it.Id == request.Info.Id).Include(it => it.ThingModels)
-                    .FirstOrDefaultAsync();
-                if (type == null)
+                //没有权限
+                return new CommonResponse()
                 {
-                    //没有权限
-                    context.Status = new Status(StatusCode.PermissionDenied, "");
-                    return null;
-                }
-
-                var ot = await type.GetOwnerTypeAsync(ct, id);
-                if (ot == AuthorityUtility.OwnerType.Non)
-                {
-                    return new CommonResponse()
-                    {
-                        Success = false,
-                        Message = "没有该实例的权限",
-                    };
-                }
-                else if (ot == AuthorityUtility.OwnerType.Creator
-                    || ot == AuthorityUtility.OwnerType.FatherOfCreator)
-                {
-                    //自己访问或者父用户访问 不要审计
-                    if (type.ThingModels.Count > 0)
-                    {
-                        //只能插入 不能删除
-                        var old = type.ThingModels.Select(it => it.Id).ToList();
-                        var _new = request.Info.ThingModels.Select(it => it.Id).ToList();
-                        if (old.Except(_new).Count() != 0)
-                        {
-                            return new CommonResponse()
-                            {
-                                Success = false,
-                                Message = "物模型只能插入不能删除",
-                            };
-                        }
-
-                        //todo 修改变成添加
-                        type.ThingModels.Clear();
-                        foreach (var item in
-                            request.Info.ThingModels.Select(
-                            it => new MyDBContext.Main.ThingModel
-                            {
-                                Abandonted = it.Abandonted,
-                                DeviceTypeId = type.Id,
-                                Id = old.Contains(it.Id) ? it.Id : 0,
-                                UserTreeId = us.UserTreeId,
-                                MaxValue = it.MaxValue,
-                                MinValue = it.MinValue,
-                                Name = it.Name,
-                                Remark = it.Remark,
-                                Type = (byte)it.ValueType,
-                                Unit = it.Unit,
-                                AlertHighValue = it.AlertHighValue,
-                                AlertLowValue = it.AlertLowValue,
-                            }))
-                        {
-                            type.ThingModels.Add(item);
-                        }
-
-                    }
-                    if (request.Info.HasName)
-                    {
-                        type.Name = request.Info.Name;
-                    }
-                    if (request.Info.HasScript)
-                    {
-                        type.Script = request.Info.Script;
-                    }
-                    await ct.SaveChangesAsync();
-                    return new CommonResponse()
-                    {
-                        Success = true,
-                    };
-                }
-                else if (ot == AuthorityUtility.OwnerType.SonOfCreator)
-                {
-                    //自己是子用户 要审计 
-                    context.Status = Status.DefaultCancelled;
-                    return new CommonResponse()
-                    {
-                        Success = true,
-                        Message = "提交完成,等待审计",
-                    };
-                }
-                else
-                {
-                    throw new Exception();
-                }
+                    Success = false,
+                    Message = "没有该实例的权限",
+                };
             }
+
+            //只能插入 不能删除
+            var old = type.ThingModels.Select(it => it.Id).ToList();
+            var _new = request.Info.ThingModels.Select(it => it.Id).ToList();
+            if (old.Except(_new).Count() != 0)
+            {
+                return new CommonResponse()
+                {
+                    Success = false,
+                    Message = "物模型只能插入不能删除",
+                };
+            }
+
+            //todo 修改变成添加
+            type.ThingModels.Clear();
+            foreach (var item in
+                request.Info.ThingModels.Select(
+                it => it.AsDBObj(request.Info.Id, type.UserTreeId)).ToList())
+            {
+                type.ThingModels.Add(item);
+            }
+            if (request.Info.HasName)
+            {
+                type.Name = request.Info.Name;
+            }
+            if (request.Info.HasScript)
+            {
+                type.Script = request.Info.Script;
+            }
+            await ct.SaveChangesAsync();
+            return new CommonResponse()
+            {
+                Success = true,
+            };
         }
 
         public override async Task<Response_AddTypeInfo> AddTypeInfo(Request_AddTypeInfo request, ServerCallContext context)
@@ -288,7 +245,7 @@ namespace GrpcMain.DeviceType
                         await ct.SaveChangesAsync();
                         var ls = request.Info.ThingModels.Select(it => it.AsDBObj(obj.Id, us.UserTreeId))
                             .ToList();
-                        ct.Add(ls);
+                        ct.AddRange(ls);
                         await ct.SaveChangesAsync();
                         await trans.CommitAsync();
                     }
