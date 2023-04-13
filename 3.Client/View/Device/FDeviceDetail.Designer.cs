@@ -187,6 +187,7 @@
             this.btn_timesetting.TabIndex = 16;
             this.btn_timesetting.Text = "定时任务";
             this.btn_timesetting.UseVisualStyleBackColor = true;
+            this.btn_timesetting.Click += new System.EventHandler(this.btn_timesetting_Click);
             // 
             // FDeviceDetail
             // 

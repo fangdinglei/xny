@@ -3,7 +3,9 @@ using FDL.Program;
 using FdlWindows.View;
 using GrpcMain.Device;
 using MyClient.Grpc;
+using MyClient.View.AutoControl;
 using MyDBContext.Main;
+using System.Windows.Forms;
 
 namespace MyClient.View.Device
 {
@@ -187,6 +189,17 @@ DeviceService.DeviceServiceClient deviceServiceClient)
                 return;
             }
             _viewholder.SwitchTo("FDeviceRepair", false, device.Id);
+        }
+
+        private void btn_timesetting_Click(object sender, EventArgs e)
+        {
+            if (!_localdata.TestDeviceAuthorityWithMessageBox(device.Id, UserDeviceAuthority.Control_TimeSetting, "定时控制"))
+            {
+                return;
+            }
+            var tb = new List<ValueTuple<long, string>>();
+            tb.Add((device.Id, device.Name));
+            _viewholder.SwitchTo(nameof(FAutoControl), false, tb);
         }
     }
 }

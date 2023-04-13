@@ -46,7 +46,6 @@ namespace MyClient.View
             this.bgroupmove = new System.Windows.Forms.Button();
             this.bselectall = new System.Windows.Forms.Button();
             this.bsetting = new System.Windows.Forms.Button();
-            this.btn_creatdevice = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -242,23 +241,11 @@ namespace MyClient.View
             this.bsetting.UseVisualStyleBackColor = true;
             this.bsetting.Click += new System.EventHandler(this.bsetting_Click);
             // 
-            // btn_creatdevice
-            // 
-            this.btn_creatdevice.Location = new System.Drawing.Point(1382, 581);
-            this.btn_creatdevice.Margin = new System.Windows.Forms.Padding(4);
-            this.btn_creatdevice.Name = "btn_creatdevice";
-            this.btn_creatdevice.Size = new System.Drawing.Size(186, 68);
-            this.btn_creatdevice.TabIndex = 10;
-            this.btn_creatdevice.Text = "创建设备";
-            this.btn_creatdevice.UseVisualStyleBackColor = true;
-            this.btn_creatdevice.Click += new System.EventHandler(this.btn_creatdevice_Click);
-            // 
             // FAccessibleDevice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1611, 1005);
-            this.Controls.Add(this.btn_creatdevice);
             this.Controls.Add(this.bsetting);
             this.Controls.Add(this.bselectall);
             this.Controls.Add(this.bgroupmove);
@@ -297,6 +284,5 @@ namespace MyClient.View
         private System.Windows.Forms.DataGridViewButtonColumn COP;
         private System.Windows.Forms.DataGridViewButtonColumn COP2;
         private System.Windows.Forms.Button bsetting;
-        private Button btn_creatdevice;
     }
 }

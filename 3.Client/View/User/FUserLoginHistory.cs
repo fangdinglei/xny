@@ -53,8 +53,8 @@ namespace MyClient.View.User
             var vs = group_loginhistory_datepicker1.Value;
             var ve = group_loginhistory_datepicker2.Value;
             vs = new DateTime(vs.Year, vs.Month, vs.Day);
-            ve = new DateTime(ve.Year, ve.Month, ve.Day, 23, 59, 59);
-
+            ve = new DateTime(ve.Year, ve.Month, ve.Day);
+            ve = ve.AddDays(1);
             long st = _timeUtility.GetTicket(vs);
             long ed = _timeUtility.GetTicket(ve);
             group_loginhistory_list.DataSource = null;

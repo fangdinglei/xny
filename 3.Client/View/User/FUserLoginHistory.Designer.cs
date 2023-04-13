@@ -44,7 +44,7 @@
             this.group_loginhistory_datepicker1.CustomFormat = " ";
             this.group_loginhistory_datepicker1.Font = new System.Drawing.Font("Microsoft YaHei UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.group_loginhistory_datepicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.group_loginhistory_datepicker1.Location = new System.Drawing.Point(208, 55);
+            this.group_loginhistory_datepicker1.Location = new System.Drawing.Point(208, 1);
             this.group_loginhistory_datepicker1.Name = "group_loginhistory_datepicker1";
             this.group_loginhistory_datepicker1.Size = new System.Drawing.Size(214, 48);
             this.group_loginhistory_datepicker1.TabIndex = 19;
@@ -54,7 +54,7 @@
             this.group_loginhistory_datepicker2.CustomFormat = " ";
             this.group_loginhistory_datepicker2.Font = new System.Drawing.Font("Microsoft YaHei UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.group_loginhistory_datepicker2.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.group_loginhistory_datepicker2.Location = new System.Drawing.Point(208, 1);
+            this.group_loginhistory_datepicker2.Location = new System.Drawing.Point(208, 52);
             this.group_loginhistory_datepicker2.Name = "group_loginhistory_datepicker2";
             this.group_loginhistory_datepicker2.Size = new System.Drawing.Size(214, 48);
             this.group_loginhistory_datepicker2.TabIndex = 20;
