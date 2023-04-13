@@ -56,7 +56,7 @@ namespace GrpcMain.Account
     {
         /*
          it =>it.User1Id == id && it.IsFather 查询的User2Id为子用户
-         it =>it.User1Id == id && !it.IsFather 查询的User2Id父用户和自己
+         it =>it.User1Id == id && !it.IsFather 查询的User2Id为父用户和自己
          it =>it.User2Id == id && it.IsFather 查询的User1Id为父用户
          it =>it.User2Id == id && !it.IsFather 查询的User1Id子用户和自己
          */

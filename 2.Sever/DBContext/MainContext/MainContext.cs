@@ -398,7 +398,7 @@ namespace MyDBContext.Main
                 Pass = "123",
                 Phone = "15850798245",
                 CreatorId = 0,
-                Authoritys = "[\"devicetype:save\",\"SystemUser\",\"ColdDataR\",\"ColdDataW\",\"测试权限1\"]",
+                Authoritys = "[\"device:add\",\"devicetype:save\",\"SystemUser\",\"ColdDataR\",\"ColdDataW\",\"测试权限1\"]",
                 UserTreeId = 1,
                 TreeDeep = 0,
             });
@@ -411,7 +411,7 @@ namespace MyDBContext.Main
                 Pass = "123",
                 Phone = "15850798245",
                 CreatorId = 0,
-                Authoritys = "[\"devicetype:save\",\"ColdDataR\",\"ColdDataW\",\"测试权限1\",\"测试权限2\"]",
+                Authoritys = "[\"device:add\",\"devicetype:save\",\"ColdDataR\",\"ColdDataW\",\"测试权限1\",\"测试权限2\"]",
                 UserTreeId = 2,
                 TreeDeep = 0,
             });

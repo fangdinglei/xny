@@ -74,15 +74,11 @@ namespace GrpcMain.Interceptors
                         }
                         catch (Exception ex)
                         {
-                            commitfail = true;
+                            throw new RpcException(new Status(StatusCode.Internal, "事务提交失败"));
                         }
                     }
                     ct.Dispose();
                 }
-            }
-            if (commitfail)
-            {
-                throw new RpcException(new Status(StatusCode.Internal, "事务提交失败"));
             }
         }
         async Task<TResponse> AuthorityWrap<TRequest, TResponse>(
@@ -143,7 +139,10 @@ namespace GrpcMain.Interceptors
 
             try
             {
-               return await authoritynode.Run(request, context);
+                return await authoritynode.Run(request, context);
+            }
+            catch (RpcException ex) {
+                throw;
             }
             catch (Exception ex)
             {

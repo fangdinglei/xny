@@ -4,6 +4,7 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using System.Diagnostics;
 using static GrpcMain.DeviceType.DTODefine.Types;
 
 namespace GrpcMain.DeviceType
@@ -216,40 +217,35 @@ namespace GrpcMain.DeviceType
             };
         }
 
+        [MyGrpcMethod("devicetype:save", NeedDB = true, NeedTransaction = true)]
         public override async Task<Response_AddTypeInfo> AddTypeInfo(Request_AddTypeInfo request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
             User us = (User)context.UserState["user"];
+            var ct = (MainContext)context.UserState[nameof(MainContext)];
             try
             {
-                using (MainContext ct = new MainContext())
+                //校验设备类型数量
+                var typecount = await ct.Device_Types.Where(it => it.UserTreeId == us.UserTreeId).CountAsync();
+                if (typecount > MaxType)
                 {
-                    using (var trans = await ct.Database.BeginTransactionAsync())
+                    return new Response_AddTypeInfo()
                     {
-                        //校验设备类型数量
-                        var typecount = await ct.Device_Types.Where(it => it.UserTreeId == us.UserTreeId).CountAsync();
-                        if (typecount > MaxType)
+                        Status = new CommonResponse()
                         {
-                            return new Response_AddTypeInfo()
-                            {
-                                Status = new CommonResponse()
-                                {
-                                    Success = false,
-                                    Message = $"设备类型只能有{MaxType}个",
-                                }
-                            };
+                            Success = false,
+                            Message = $"设备类型只能有{MaxType}个",
                         }
-
-                        var obj = request.Info.AsDBObj(us);
-                        ct.Add(obj);
-                        await ct.SaveChangesAsync();
-                        var ls = request.Info.ThingModels.Select(it => it.AsDBObj(obj.Id, us.UserTreeId))
-                            .ToList();
-                        ct.AddRange(ls);
-                        await ct.SaveChangesAsync();
-                        await trans.CommitAsync();
-                    }
+                    };
                 }
+
+                var obj = request.Info.AsDBObj(us);
+                ct.Add(obj);
+                await ct.SaveChangesAsync();
+                var ls = request.Info.ThingModels.Select(it => it.AsDBObj(obj.Id, us.UserTreeId))
+                    .ToList();
+                ct.AddRange(ls);
+                await ct.SaveChangesAsync();
                 return new Response_AddTypeInfo()
                 {
                     Status = new CommonResponse()
