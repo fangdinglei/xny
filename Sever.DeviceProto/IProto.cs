@@ -54,16 +54,17 @@ namespace Sever.DeviceProto
         {
             _handle = handle;
             //TODO 开启服务
+            RunAsync();
         }
 
-        public MQTTSeverClient(string userName, string userPass, string hostIP, int port, IDeviceMessageHandle handle)
-        {
-            UserName = userName;
-            UserPass = userPass;
-            HostIP = hostIP;
-            Port = port;
-            _handle = handle;
-        }
+        //public MQTTSeverClient(string userName, string userPass, string hostIP, int port, IDeviceMessageHandle handle)
+        //{
+        //    UserName = userName;
+        //    UserPass = userPass;
+        //    HostIP = hostIP;
+        //    Port = port;
+        //    _handle = handle;
+        //}
 
         public MqttClient Client;
 

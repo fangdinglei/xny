@@ -68,7 +68,7 @@ namespace GrpcMain.MQTT
                 if (sec[1] == "data")
                 {
                     var datastr = UTF8Encoding.UTF8.GetString(MyDecode(data));
-                    var datasec = datastr.Split(',');
+                    var datasec = datastr.Split(',', StringSplitOptions.RemoveEmptyEntries);
                     if (datasec.Length % 2 == 1)//数据包含名称和值 只能为偶数个
                         return;
                     //将数据转换为可接收的格式
@@ -77,7 +77,7 @@ namespace GrpcMain.MQTT
                     {
                         long tid;
                         float f;
-                        if (long.TryParse(datasec[i * 2], out tid))
+                        if (!long.TryParse(datasec[i * 2], out tid))
                             continue;
                         if (!float.TryParse(datasec[i * 2 + 1], out f))
                             continue;

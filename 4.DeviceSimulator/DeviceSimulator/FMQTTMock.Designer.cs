@@ -42,6 +42,7 @@ namespace DeviceSimulator
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // bar1
@@ -144,14 +145,25 @@ namespace DeviceSimulator
             // 
             // timer1
             // 
-            this.timer1.Interval = 1000;
+            this.timer1.Interval = 20000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(467, 18);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(137, 50);
+            this.button2.TabIndex = 19;
+            this.button2.Text = "一次";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // FMQTTMock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1056, 342);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
@@ -185,5 +197,6 @@ namespace DeviceSimulator
         private TextBox textBox1;
         private Label label2;
         private System.Windows.Forms.Timer timer1;
+        private Button button2;
     }
 }

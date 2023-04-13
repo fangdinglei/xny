@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using MyEmailUtility;
 using Sever.DeviceProto;
 using System.Threading;
+using System.Threading.Tasks;
 using TimerMvcWeb.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,14 +25,11 @@ builder.Services.UseMyEmail();
 builder.Services.UseMQTT();
 
 //启动定时任务
-new Thread(() =>
+_=Task.Run(() =>
 {
     Thread.Sleep(1000 * 5);
     AutoTaskAttribute.RegisterTask();
-})
-{
-    IsBackground = true
-}.Start();
+});
 
 #region 禁用模型校验
 
@@ -102,6 +100,7 @@ else
 }
 
 app.RegistMyGrpc();
+app.StartMqtt();
 //app.UseHttpsRedirection();
 //app.UseStaticFiles();
 

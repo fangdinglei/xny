@@ -7,7 +7,7 @@ namespace DeviceSimulator
     public partial class FMQTTMock : Form
     {
         long DeviceID = 1;
-
+        bool running = false;
         public FMQTTMock()
         {
             InitializeComponent();
@@ -37,24 +37,48 @@ namespace DeviceSimulator
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (running)
+            {
+                return;
+            }
             try
             {
-                var dic = new Dictionary<string, float>();
+                running = true;
+                var dic = new Dictionary<long, float>();
                 float Temperature, Humidity, Lumination, PowerRate;
                 Temperature = bar1.Value / 10f;
-                Humidity = bar2.Value / 10f;
-                Lumination = bar3.Value / 10f;
-                PowerRate = bar4.Value / 10f;
-                dic.Add(nameof(Temperature), Temperature);
-                dic.Add(nameof(Humidity), Humidity);
-                dic.Add(nameof(Lumination), Lumination);
-                dic.Add(nameof(PowerRate), PowerRate);
-                Mock.MQTT.MQTTManager.SendData(DeviceID, dic).GetAwaiter().GetResult();
+                //Humidity = bar2.Value / 10f;
+                //Lumination = bar3.Value / 10f;
+                //PowerRate = bar4.Value / 10f;
+                dic.Add(1, Temperature);
+                //dic.Add(nameof(Humidity), Humidity);
+                //dic.Add(nameof(Lumination), Lumination);
+                //dic.Add(nameof(PowerRate), PowerRate);
+                Mock.MQTT.MQTTManager.SendData(DeviceID, dic);
             }
             catch (Exception)
             {
             }
+            finally {
+                running = false;
+            }
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            running = true;
+            var dic = new Dictionary<long, float>();
+            float Temperature, Humidity, Lumination, PowerRate;
+            Temperature = bar1.Value / 10f;
+            //Humidity = bar2.Value / 10f;
+            //Lumination = bar3.Value / 10f;
+            //PowerRate = bar4.Value / 10f;
+            dic.Add(1, Temperature);
+            //dic.Add(nameof(Humidity), Humidity);
+            //dic.Add(nameof(Lumination), Lumination);
+            //dic.Add(nameof(PowerRate), PowerRate);
+            Mock.MQTT.MQTTManager.SendData(DeviceID, dic);
         }
     }
 }
@@ -113,8 +137,8 @@ namespace Mock.MQTT
     static public class MQTTManager
     {
         const string UserName = "admin";
-        const string UserPass = "admin";
-        const string HostIP = "localhost";
+        const string UserPass = "admin123";
+        const string HostIP = "127.0.0.1";
         const int Port = 1883;
 
         static public MqttClient Client;
@@ -132,7 +156,7 @@ namespace Mock.MQTT
             {
 
                 Server = HostIP,
-                Port = Port
+                Port = Port,
             };
             //设置账号与密码
             options.Credentials = new MqttClientCredentials(UserName, Encoding.Default.GetBytes(UserPass));
@@ -150,15 +174,18 @@ namespace Mock.MQTT
             Client = _mqttClient;
             return _mqttClient;
         }
-        public static async Task<MqttClientPublishResult> SendData(long dvid, Dictionary<string, float> datas)
+        public static async Task<MqttClientPublishResult> SendData(long dvid, Dictionary<long, float> datas)
         {
             await GetClient("a", new byte[] { 1, 2, 3 });
-
-            var send = Newtonsoft.Json.JsonConvert.SerializeObject(datas); ;
+            var s = "";
+            foreach (var item in datas)
+            {
+                s += item.Key + "," + item.Value + ",";
+            }
             var res = await Client.PublishAsync(new MqttApplicationMessage()
             {
                 Topic = "/" + dvid + "/data",
-                Payload = MQTTUtility.MyEncode(System.Text.Encoding.UTF8.GetBytes(send))
+                Payload = MQTTUtility.MyEncode(System.Text.Encoding.UTF8.GetBytes(s))
             });
             return res;
         }
