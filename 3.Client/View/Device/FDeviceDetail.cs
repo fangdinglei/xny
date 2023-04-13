@@ -5,7 +5,6 @@ using GrpcMain.Device;
 using MyClient.Grpc;
 using MyClient.View.AutoControl;
 using MyDBContext.Main;
-using System.Windows.Forms;
 
 namespace MyClient.View.Device
 {

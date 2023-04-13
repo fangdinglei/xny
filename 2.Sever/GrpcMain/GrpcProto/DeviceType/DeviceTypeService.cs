@@ -4,7 +4,6 @@ using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
-using System.Diagnostics;
 using static GrpcMain.DeviceType.DTODefine.Types;
 
 namespace GrpcMain.DeviceType
@@ -15,7 +14,7 @@ namespace GrpcMain.DeviceType
         {
             return new MyDBContext.Main.ThingModel
             {
-                Id=model.Id,
+                Id = model.Id,
                 Abandonted = model.Abandonted,
                 AlertHighValue = model.AlertHighValue,
                 AlertLowValue = model.AlertLowValue,
@@ -162,12 +161,12 @@ namespace GrpcMain.DeviceType
             }
         }
 
-        [MyGrpcMethod( "devicetype:save",NeedDB =true, NeedTransaction=true)]
+        [MyGrpcMethod("devicetype:save", NeedDB = true, NeedTransaction = true)]
         public override async Task<CommonResponse?> UpdateTypeInfo(Request_UpdateTypeInfo request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
             User us = (User)context.UserState["user"];
-            var ct=(MainContext)context.UserState[nameof(MainContext)];
+            var ct = (MainContext)context.UserState[nameof(MainContext)];
             var type = await ct.Device_Types
                 .Where(it => it.Id == request.Info.Id).Include(it => it.ThingModels)
                 .FirstOrDefaultAsync();

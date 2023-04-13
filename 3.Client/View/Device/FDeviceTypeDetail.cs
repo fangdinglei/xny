@@ -1,11 +1,9 @@
 ﻿using FdlWindows.View;
-using GrpcMain.Device;
 using GrpcMain.DeviceType;
 using MyClient.Grpc;
 using MyClient.View.Device;
 using MyDBContext.Main;
 using System.ComponentModel;
-using System.Reflection;
 using TypeInfo = GrpcMain.DeviceType.TypeInfo;
 
 namespace MyClient.View
@@ -30,7 +28,7 @@ namespace MyClient.View
             text_thingmodel_type.SelectedIndex = 0;
             _typeServiceClient = typeServiceClient;
             _localData = localData;
-            thingModels=new BindingList<ThingModel>();
+            thingModels = new BindingList<ThingModel>();
             list_thingmodels.DataSource = thingModels;
         }
 
@@ -69,9 +67,9 @@ namespace MyClient.View
                 thingModels.Clear();
                 typeinfo = new TypeInfo
                 {
-                     Id=0,
-                     Name="创建分组",
-                     Script="",
+                    Id = 0,
+                    Name = "创建分组",
+                    Script = "",
                 };
             }
             else
@@ -186,7 +184,7 @@ namespace MyClient.View
             }
             catch (Exception)
             {
-                MessageBox.Show("请输入合法的数据","错误");
+                MessageBox.Show("请输入合法的数据", "错误");
             }
         }
 
@@ -243,15 +241,15 @@ namespace MyClient.View
 
         private void btn_creatdevice_Click(object sender, EventArgs e)
         {
-            if (long.TryParse(text_id.Text,out var id))
+            if (long.TryParse(text_id.Text, out var id))
             {
-                _viewholder.SwitchTo(nameof(FCreatDevice),false, id);
+                _viewholder.SwitchTo(nameof(FCreatDevice), false, id);
             }
             else
             {
-                MessageBox.Show("请先创建类型","错误");
+                MessageBox.Show("请先创建类型", "错误");
             }
-           
+
         }
     }
 }

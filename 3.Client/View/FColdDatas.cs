@@ -1,5 +1,4 @@
 ﻿using FdlWindows.View;
-using Grpc.Core.Logging;
 using MyClient.Grpc;
 using MyClient.View.Ext;
 using MyUtility;
@@ -207,7 +206,7 @@ namespace MyClient.View
                 });
                 r.ThrowIfNotSuccess();
                 MessageBox.Show("成功", "提示");
-                btn_search_Click(null,null);
+                btn_search_Click(null, null);
             }
             catch (Exception ex)
             {

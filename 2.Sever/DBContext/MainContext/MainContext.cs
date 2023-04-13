@@ -1019,11 +1019,11 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<DeviceColdDataSettings>().HasData(new DeviceColdDataSettings
             {
-                ColdDownTime=10,
+                ColdDownTime = 10,
                 ManagerName = "InFile",
                 TreeId = 2,
                 MinCount = 100,
-                Open=false,
+                Open = false,
             });
 
         }

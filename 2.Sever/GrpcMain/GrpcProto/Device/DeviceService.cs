@@ -23,8 +23,8 @@ namespace GrpcMain.Device
                 CreatorId = us.Id,
                 UserTreeId = us.UserTreeId,
                 DeviceTypeId = dv.DeviceTypeId,
-                LatestData ="{}",
-                LocationStr=dv.LocationStr??"",
+                LatestData = "{}",
+                LocationStr = dv.LocationStr ?? "",
                 Name = dv.Name,
                 Status = 2,
             };
@@ -99,7 +99,7 @@ namespace GrpcMain.Device
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         /// <exception cref="RpcException"></exception>
-        [MyGrpcMethod( "DeletDevice")]
+        [MyGrpcMethod("DeletDevice")]
         public override async Task<CommonResponse> DeletDevice(Request_DeletDevice request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -204,21 +204,21 @@ namespace GrpcMain.Device
         /// <param name="context"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        [MyGrpcMethod( "device:add",NeedDB =true, NeedTransaction=true)]
+        [MyGrpcMethod("device:add", NeedDB = true, NeedTransaction = true)]
         public override async Task<Response_AddDevice> AddDevice(Request_AddDevice request, ServerCallContext context)
         {
             User us = (User)context.UserState["user"];
             var ct = (MainContext)context.UserState[nameof(MainContext)];
-            var type=  ct.Device_Types.Where(it => it.Id == request.Device.DeviceTypeId &&
+            var type = ct.Device_Types.Where(it => it.Id == request.Device.DeviceTypeId &&
             it.UserTreeId == us.UserTreeId).FirstOrDefault();
-            if (type==null)
+            if (type == null)
             {
                 throw new RpcException(new Status(StatusCode.PermissionDenied, "没有该设备类型的权限"));
             }
             var dv = request.Device.AsNewDeviceInDB(us);
             ct.Devices.Add(dv);
             await ct.SaveChangesAsync();
-            var fatherAndSelf=await ct.User_SFs.Where(it => it.User1Id == us.Id && !it.IsFather).Select(it=>it.User2Id).ToListAsync();
+            var fatherAndSelf = await ct.User_SFs.Where(it => it.User1Id == us.Id && !it.IsFather).Select(it => it.User2Id).ToListAsync();
             foreach (var item in fatherAndSelf)
             {
                 ct.User_Devices.Add(new User_Device()

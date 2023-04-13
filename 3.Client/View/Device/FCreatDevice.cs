@@ -33,7 +33,7 @@ namespace MyClient.View.Device
         /// <param name="par"></param>
         public void PrePare(params object[] par)
         {
-            if (par.Length!=1||par[0] is not long)
+            if (par.Length != 1 || par[0] is not long)
             {
                 throw new Exception("创建设备必须传入一个参数");
             }
@@ -54,9 +54,9 @@ namespace MyClient.View.Device
                     Device = new GrpcMain.Device.Device
                     {
                         Name = text_Name.Text,
-                        DeviceTypeId=typeId,
+                        DeviceTypeId = typeId,
                     }
-                }); 
+                });
                 MessageBox.Show("添加成功", "提示");
                 _viewholder.Back();
             }

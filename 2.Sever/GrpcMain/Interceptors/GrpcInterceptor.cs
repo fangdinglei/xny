@@ -2,26 +2,25 @@
 using Grpc.Core.Interceptors;
 using GrpcMain.Attributes;
 using MyDBContext.Main;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Ubiety.Dns.Core;
 
 namespace GrpcMain.Interceptors
 {
-    public class Node<TRequest, TResponse> 
+    public class Node<TRequest, TResponse>
         where TRequest : class
        where TResponse : class
     {
         Func<TRequest, ServerCallContext, Node<TRequest, TResponse>, Task<TResponse>> call;
         public Node<TRequest, TResponse> Next;
-        public Node(Func<TRequest, ServerCallContext,Node<TRequest, TResponse>, Task<TResponse>> call, Node<TRequest, TResponse> next)
+        public Node(Func<TRequest, ServerCallContext, Node<TRequest, TResponse>, Task<TResponse>> call, Node<TRequest, TResponse> next)
         {
             this.call = call;
             this.Next = next;
         }
 
         public Task<TResponse> Run(TRequest request,
-            ServerCallContext context) {
-            return call(request,context,Next);
+            ServerCallContext context)
+        {
+            return call(request, context, Next);
         }
     }
 
@@ -131,17 +130,19 @@ namespace GrpcMain.Interceptors
         {
             Node<TRequest, TResponse> authoritynode = new Node<TRequest, TResponse>(AuthorityWrap, null);
             Node<TRequest, TResponse> dbnode = new Node<TRequest, TResponse>(DBWrap, null);
-            Node<TRequest, TResponse> end = new Node<TRequest, TResponse>((r,c,n) => { 
-               return continuation(r,c);
-            },null);
-            authoritynode.Next = dbnode ;
+            Node<TRequest, TResponse> end = new Node<TRequest, TResponse>((r, c, n) =>
+            {
+                return continuation(r, c);
+            }, null);
+            authoritynode.Next = dbnode;
             dbnode.Next = end;
 
             try
             {
                 return await authoritynode.Run(request, context);
             }
-            catch (RpcException ex) {
+            catch (RpcException ex)
+            {
                 throw;
             }
             catch (Exception ex)
@@ -149,7 +150,7 @@ namespace GrpcMain.Interceptors
                 _Handle.OnError(ex);
                 throw new RpcException(new Status(StatusCode.Internal, "内部异常"));
             }
-        
+
         }
 
     }

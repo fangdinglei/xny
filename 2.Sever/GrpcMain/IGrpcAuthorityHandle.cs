@@ -1,6 +1,5 @@
 ﻿using Grpc.Core;
 using GrpcMain.Attributes;
-using MyDBContext.Main;
 using MyJwtHelper;
 
 namespace GrpcMain
