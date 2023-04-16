@@ -22,8 +22,7 @@ namespace GrpcMain.Extensions
             services.TryAddSingleton<IGrpcCursorUtility, GrpcCursorUtilityImp>();
 
             services.TryAddSingleton<DeviceUtility>();
-            //todo 从此模块移出
-            services.AddSingleton<IDeviceMessageHandle,DeviceMessageManager>();
+         
             services.UseColdData();
             //添加处理器
             services.TryAddSingleton<IGrpcAuthorityHandle, MyGrpcHandle>();
@@ -90,11 +89,6 @@ namespace GrpcMain.Extensions
             //app.MapGrpcService<SystemServiceImp>();
         }
 
-   
-        static public void StartMqtt(this WebApplication app)
-        {
-            IProto proto= app.Services.GetService<IProto>();
-        }
 
         static public bool TryDeserializeObject<T>(this string json, out T? obj) where T : class
         {

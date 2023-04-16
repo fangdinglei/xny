@@ -1,17 +1,16 @@
-﻿using MQTTnet;
-using MQTTnet.Client;
-using System.Text;
-
-namespace DeviceSimulator
+﻿namespace DeviceSimulator
 {
     public partial class FMQTTMock : Form
     {
         long DeviceID = 1;
         bool running = false;
+
+        SynchronizationContext SyncContext = null;
         public FMQTTMock()
         {
             InitializeComponent();
             textBox1.Text = DeviceID + "";
+            SyncContext = SynchronizationContext.Current;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -59,7 +58,8 @@ namespace DeviceSimulator
             catch (Exception)
             {
             }
-            finally {
+            finally
+            {
                 running = false;
             }
 
@@ -80,141 +80,21 @@ namespace DeviceSimulator
             //dic.Add(nameof(PowerRate), PowerRate);
             Mock.MQTT.MQTTManager.SendData(DeviceID, dic);
         }
-    }
-}
 
-
-
-
-
-
-namespace Mock.MQTT
-{
-    static public class MQTTUtility
-    {
-        static short CRC16(byte[] data, int start, int end)
+        private void button3_Click(object sender, EventArgs e)
         {
-            uint CRC = 0xFFFF;
-            int i = 0, j = 0;
-            for (i = start; i < end; i++)
+            _ = Mock.MQTT.MQTTManager.ListenCmdAsync(DeviceID, (s) =>
             {
-                CRC = CRC ^ data[i];
-                for (j = 0; j < 8; j++)
+                SyncContext.Post((s) =>
                 {
-                    if ((CRC & 0x01) != 0)
-                        CRC = ((CRC >> 1) ^ 0xA001);
-                    else
-                        CRC = CRC >> 1;
-                }
-            }
-            return (short)(CRC);
-        }
-        static public byte[] MyEncode(byte[] data)
-        {
-            byte[] res = new byte[2 + data.Length];
-            var crc = CRC16(data, 0, data.Length);
-            res[0] = (byte)(crc & 0xFF);
-            res[1] = (byte)((crc >> 8) & 0xFF);
-            Array.Copy(data, 0, res, 2, data.Length);
-            return res;
-        }
-        static public byte[] MyDecode(byte[] data)
-        {
-            if (data.Length < 2)
-            {
-                throw new Exception("内容长度异常");
-            }
-            byte[] res = new byte[data.Length - 2];
-            var crc = CRC16(data, 2, data.Length);
-            if ((crc & 0xFFFF) != (data[0] & 0xFF | (data[1] & 0xFF) << 8))
-            {
-                throw new Exception("数据无法通过校验");
-            }
-            Array.Copy(data, 2, res, 0, data.Length - 2);
-            return res;
-        }
-    }
-    static public class MQTTManager
-    {
-        const string UserName = "admin";
-        const string UserPass = "admin123";
-        const string HostIP = "127.0.0.1";
-        const int Port = 1883;
-
-        static public MqttClient Client;
-
-        public static async Task<MqttClient> GetClient(string willtopic, byte[] willmessage)
-        {
-            if (Client != null)
-                return Client;
-            var options = new MqttClientOptions();
-
-            options.ClientId = Guid.NewGuid().ToString().Replace("-", "").ToUpper();
-
-            //设置服务器地址与端口
-            options.ChannelOptions = new MqttClientTcpOptions()
-            {
-
-                Server = HostIP,
-                Port = Port,
-            };
-            //设置账号与密码
-            options.Credentials = new MqttClientCredentials(UserName, Encoding.Default.GetBytes(UserPass));
-            options.CleanSession = true;
-
-            options.WillPayload = willmessage;
-            options.WillTopic = willtopic;
-
-            //保持期
-            options.KeepAlivePeriod = TimeSpan.FromSeconds(100);
-
-            //构建客户端对象
-            var _mqttClient = new MqttFactory().CreateMqttClient() as MqttClient;
-            await _mqttClient.ConnectAsync(options);
-            Client = _mqttClient;
-            return _mqttClient;
-        }
-        public static async Task<MqttClientPublishResult> SendData(long dvid, Dictionary<long, float> datas)
-        {
-            await GetClient("a", new byte[] { 1, 2, 3 });
-            var s = "";
-            foreach (var item in datas)
-            {
-                s += item.Key + "," + item.Value + ",";
-            }
-            var res = await Client.PublishAsync(new MqttApplicationMessage()
-            {
-                Topic = "/" + dvid + "/data",
-                Payload = MQTTUtility.MyEncode(System.Text.Encoding.UTF8.GetBytes(s))
+                    listBox1.Items.Insert(0, s);
+                }, s);
             });
-            return res;
         }
-        //public static async Task TestSendCMD(MqttClient client, string proidanddvid, string cmd)
-        //{
-        //    var send = cmd;
-        //    await client.PublishAsync(new MqttApplicationMessage()
-        //    {
-        //        Topic = proidanddvid + "/cmd/get",
-        //        Payload = System.Text.Encoding.UTF8.GetBytes(send)
-        //    });
-        //    await Task.Delay(1000);
-        //    Console.WriteLine("发送数据" + send);
-        //}
-        //public static async Task TestSendStatus(MqttClient client, string proidanddvid, bool online)
-        //{
 
-        //    await client.PublishAsync(new MqttApplicationMessage()
-        //    {
-        //        Topic = $"{proidanddvid}/status/post",
-        //        Payload = MyEncode(System.Text.Encoding.UTF8.GetBytes(
-        //             " {"
-        //              + $"\"status\":{(online ? 3 : 4)},"   // （1-未激活，2-禁用，3-在线，4-离线）
-        //               + "\"isShadow\":\"0\""    // （0-禁用，1-启用）
-        //             + " } "
-        //          ))
-        //    });
-        //    Console.WriteLine("发送状态");
-        //}
-
+        private void button4_Click(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();
+        }
     }
 }

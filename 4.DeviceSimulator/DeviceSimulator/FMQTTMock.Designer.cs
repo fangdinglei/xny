@@ -43,6 +43,9 @@ namespace DeviceSimulator
             this.label2 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.button4 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // bar1
@@ -158,11 +161,43 @@ namespace DeviceSimulator
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(1106, 18);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(137, 50);
+            this.button3.TabIndex = 20;
+            this.button3.Text = "绑定";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 24;
+            this.listBox1.Location = new System.Drawing.Point(920, 18);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(180, 412);
+            this.listBox1.TabIndex = 21;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(1106, 74);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(137, 50);
+            this.button4.TabIndex = 22;
+            this.button4.Text = "清除";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // FMQTTMock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1056, 342);
+            this.ClientSize = new System.Drawing.Size(1295, 449);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox1);
@@ -198,5 +233,8 @@ namespace DeviceSimulator
         private Label label2;
         private System.Windows.Forms.Timer timer1;
         private Button button2;
+        private Button button3;
+        private ListBox listBox1;
+        private Button button4;
     }
 }

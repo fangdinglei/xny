@@ -25,7 +25,7 @@ builder.Services.UseMyEmail();
 builder.Services.UseMQTT();
 
 //启动定时任务
-_=Task.Run(() =>
+_ = Task.Run(() =>
 {
     Thread.Sleep(1000 * 5);
     AutoTaskAttribute.RegisterTask();
@@ -100,7 +100,7 @@ else
 }
 
 app.RegistMyGrpc();
-app.StartMqtt();
+app.Services.StartMQTT();
 //app.UseHttpsRedirection();
 //app.UseStaticFiles();
 
