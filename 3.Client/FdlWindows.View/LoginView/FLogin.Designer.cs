@@ -28,103 +28,101 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.tUName = new System.Windows.Forms.TextBox();
-            this.label = new System.Windows.Forms.Label();
-            this.tPass = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.btLogin = new System.Windows.Forms.Button();
-            this.groupBox5.SuspendLayout();
-            this.SuspendLayout();
+            groupBox5 = new GroupBox();
+            tUName = new TextBox();
+            label = new Label();
+            tPass = new TextBox();
+            label3 = new Label();
+            btLogin = new Button();
+            groupBox5.SuspendLayout();
+            SuspendLayout();
             // 
             // groupBox5
             // 
-            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox5.Controls.Add(this.tUName);
-            this.groupBox5.Controls.Add(this.label);
-            this.groupBox5.Controls.Add(this.tPass);
-            this.groupBox5.Controls.Add(this.label3);
-            this.groupBox5.Controls.Add(this.btLogin);
-            this.groupBox5.Location = new System.Drawing.Point(15, 16);
-            this.groupBox5.Margin = new System.Windows.Forms.Padding(4);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox5.Size = new System.Drawing.Size(488, 477);
-            this.groupBox5.TabIndex = 0;
-            this.groupBox5.TabStop = false;
+            groupBox5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            groupBox5.Controls.Add(tUName);
+            groupBox5.Controls.Add(label);
+            groupBox5.Controls.Add(tPass);
+            groupBox5.Controls.Add(label3);
+            groupBox5.Controls.Add(btLogin);
+            groupBox5.Location = new Point(15, 16);
+            groupBox5.Margin = new Padding(4);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Padding = new Padding(4);
+            groupBox5.Size = new Size(488, 477);
+            groupBox5.TabIndex = 0;
+            groupBox5.TabStop = false;
             // 
             // tUName
             // 
-            this.tUName.Location = new System.Drawing.Point(188, 132);
-            this.tUName.Margin = new System.Windows.Forms.Padding(4);
-            this.tUName.Name = "tUName";
-            this.tUName.Size = new System.Drawing.Size(279, 30);
-            this.tUName.TabIndex = 17;
-            this.tUName.Text = "user2";
+            tUName.Location = new Point(188, 141);
+            tUName.Margin = new Padding(4);
+            tUName.Name = "tUName";
+            tUName.Size = new Size(279, 30);
+            tUName.TabIndex = 17;
+            tUName.Text = "2";
             // 
             // label
             // 
-            this.label.AutoSize = true;
-            this.label.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label.ForeColor = System.Drawing.Color.Black;
-            this.label.Location = new System.Drawing.Point(55, 141);
-            this.label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(76, 21);
-            this.label.TabIndex = 14;
-            this.label.Text = "用户名";
-            this.label.Click += new System.EventHandler(this.label_Click);
+            label.AutoSize = true;
+            label.Font = new Font("宋体", 10.5F, FontStyle.Bold, GraphicsUnit.Point);
+            label.ForeColor = Color.Black;
+            label.Location = new Point(55, 141);
+            label.Margin = new Padding(4, 0, 4, 0);
+            label.Name = "label";
+            label.Size = new Size(78, 21);
+            label.TabIndex = 14;
+            label.Text = "用户Id";
+            label.Click += label_Click;
             // 
             // tPass
             // 
-            this.tPass.Location = new System.Drawing.Point(188, 241);
-            this.tPass.Margin = new System.Windows.Forms.Padding(4);
-            this.tPass.Name = "tPass";
-            this.tPass.PasswordChar = '*';
-            this.tPass.Size = new System.Drawing.Size(279, 30);
-            this.tPass.TabIndex = 0;
-            this.tPass.Text = "123";
+            tPass.Location = new Point(188, 241);
+            tPass.Margin = new Padding(4);
+            tPass.Name = "tPass";
+            tPass.PasswordChar = '*';
+            tPass.Size = new Size(279, 30);
+            tPass.TabIndex = 0;
+            tPass.Text = "123";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(53, 251);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(78, 21);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "密  码";
+            label3.AutoSize = true;
+            label3.Font = new Font("宋体", 10.5F, FontStyle.Bold, GraphicsUnit.Point);
+            label3.ForeColor = Color.Black;
+            label3.Location = new Point(53, 251);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(78, 21);
+            label3.TabIndex = 13;
+            label3.Text = "密  码";
             // 
             // btLogin
             // 
-            this.btLogin.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btLogin.ForeColor = System.Drawing.Color.Black;
-            this.btLogin.Location = new System.Drawing.Point(188, 392);
-            this.btLogin.Margin = new System.Windows.Forms.Padding(4);
-            this.btLogin.Name = "btLogin";
-            this.btLogin.Size = new System.Drawing.Size(110, 45);
-            this.btLogin.TabIndex = 2;
-            this.btLogin.Text = "登录";
-            this.btLogin.UseVisualStyleBackColor = true;
-            this.btLogin.Click += new System.EventHandler(this.btLogin_ClickAsync);
+            btLogin.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            btLogin.ForeColor = Color.Black;
+            btLogin.Location = new Point(188, 392);
+            btLogin.Margin = new Padding(4);
+            btLogin.Name = "btLogin";
+            btLogin.Size = new Size(110, 45);
+            btLogin.TabIndex = 2;
+            btLogin.Text = "登录";
+            btLogin.UseVisualStyleBackColor = true;
+            btLogin.Click += btLogin_ClickAsync;
             // 
             // FLogin
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(517, 516);
-            this.Controls.Add(this.groupBox5);
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "FLogin";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "登录";
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(517, 516);
+            Controls.Add(groupBox5);
+            Margin = new Padding(4);
+            Name = "FLogin";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "登录";
+            groupBox5.ResumeLayout(false);
+            groupBox5.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion

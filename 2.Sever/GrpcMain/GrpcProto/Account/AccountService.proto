@@ -4,8 +4,8 @@ option csharp_namespace = "GrpcMain.Account";
 import "Common/CommonResponse.proto";
 service AccountService {
     //登陆
-    rpc LoginByUserName(DTODefine.Request_LoginByUserName)
-        returns (DTODefine.Response_LoginByUserName);
+    rpc Login(DTODefine.Request_Login)
+        returns (DTODefine.Response_Login);
     //登陆
     rpc LoginByToken(Request_LoginByToken)
         returns (Response_LoginByToken);
@@ -42,11 +42,11 @@ message Response_LoginByToken{
 
 message DTODefine
 {  
-    message Request_LoginByUserName{
-        string UserName=1;
+    message Request_Login{
+        int64 Id=1;
         string PassWord=2;
     }  
-    message Response_LoginByUserName{
+    message Response_Login{
         //空则登陆失败
         optional string Token=1;
         UserInfo User=2;
@@ -81,6 +81,7 @@ message DTODefine
         optional int32 TreeId=8;
         optional int32 Status=9;
         optional string PassWord=10;
+        //指定treedeep==1 添加租户
         optional int32 TreeDeep=11;
         optional int32 MaxSubUser=12;
         optional int32 MaxSubUserDepth=13;

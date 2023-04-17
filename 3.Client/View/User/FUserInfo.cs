@@ -89,6 +89,9 @@ namespace MyClient.View.User
                 tpass.Text = "****";
                 tphone.Text = SelectedUser.Phone;
                 temail.Text = SelectedUser.Email;
+                tmaxdeep.Text = SelectedUser.MaxSubUserDepth + "";
+                tdeep.Text = SelectedUser.TreeDeep + "";
+                tmaxsubuser.Text = SelectedUser.MaxSubUser + "";
                 List<string> obj; var s___baseinfo_authoritys = "";
                 SelectedUser.Authoritys.TryDeserializeObject(out obj);
                 if (obj != null)
@@ -121,6 +124,13 @@ namespace MyClient.View.User
                 return;
             }
             BaseManager._viewHolder.SwitchTo("FSendInternalMail", false, BaseManager.FatherInfo.ID, BaseManager.SelectedUser.ID);
+        }
+
+        private async void btn_adduser_Click(object sender, EventArgs e)
+        {
+            FCreatUser f = new FCreatUser(client);
+            f.ShowDialog();
+            (this.Parent.Parent.Parent as FUser).PrePare();
         }
     }
 }

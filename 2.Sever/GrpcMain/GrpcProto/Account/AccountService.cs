@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using BaseDefines;
+using Grpc.Core;
 using GrpcMain.Attributes;
 using GrpcMain.Common;
 using GrpcMain.Extensions;
@@ -36,18 +37,18 @@ namespace GrpcMain.Account
             return new User
             {
                 Id = user.ID,
-                Authoritys = user.Authoritys,
-                CreatorId = user.Father,
+                Authoritys = user.HasAuthoritys ? user.Authoritys : "[]",
+                CreatorId = user.HasFather ? user.Father : 0,
                 Name = user.UserName,
-                EMail = user.Email,
-                LastLogin = user.LastLogin,
+                EMail = user.HasEmail ? user.Email : "",
+                LastLogin = 0,
                 Pass = user.PassWord,
-                Phone = user.Phone,
+                Phone = user.HasPhone ? user.Phone : "",
                 UserTreeId = user.TreeId,
-                Status = (byte)user.Status,
-                MaxSubUser = user.MaxSubUser,
-                MaxSubUserDepth = user.MaxSubUserDepth,
-                TreeDeep = user.TreeDeep,
+                Status = 0,
+                MaxSubUser = user.HasMaxSubUser ? user.MaxSubUser : 100,
+                MaxSubUserDepth = user.HasMaxSubUserDepth ? user.MaxSubUserDepth : 10,
+                TreeDeep = user.HasTreeDeep ? user.TreeDeep : 1,
             };
         }
 
@@ -68,47 +69,45 @@ namespace GrpcMain.Account
             _timeutility = time;
         }
 
-        [MyGrpcMethod(NeedLogin = false)]
-        public override async Task<Response_LoginByUserName?>
-            LoginByUserName(
-            Request_LoginByUserName request, ServerCallContext context)
+        [MyGrpcMethod(NeedLogin = false, NeedDB = true)]
+        public override async Task<Response_Login>
+            Login(
+            Request_Login request, ServerCallContext context)
         {
+            var ct = (MainContext)context.UserState[nameof(MainContext)];
             User? user;
-            using (MainContext ct = new MainContext())
+            user = await ct.Users.Where(it => it.Id == request.Id
+            && it.Pass == request.PassWord).AsNoTracking().FirstOrDefaultAsync();
+            //登陆失败
+            if (user == null)
             {
-                user = await ct.Users.Where(it => it.Name == request.UserName
-                && it.Pass == request.PassWord).AsNoTracking().FirstOrDefaultAsync();
-                //登陆失败
-                if (user == null)
+                return new Response_Login()
                 {
-                    return new Response_LoginByUserName()
-                    {
-                    };
-                }
-                //登陆成功
-                ct.Add(new MyDBContext.Main.AccountHistory()
-                {
-                    _Type = AccountHistoryType.Login,
-                    Success = true,
-                    Time = _timeutility.GetTicket(),
-                    CreatorId = user.Id,
-                    Data = Newtonsoft.Json.JsonConvert.SerializeObject(
-                       new
-                       {
-                           Success = true,
-                           Ip = context.Peer,
-                       }
-                  ),
-                    UserTreeId = user.UserTreeId
-                });
-                await ct.SaveChangesAsync();
+                };
             }
+            //登陆成功
+            ct.Add(new MyDBContext.Main.AccountHistory()
+            {
+                _Type = AccountHistoryType.Login,
+                Success = true,
+                Time = _timeutility.GetTicket(),
+                CreatorId = user.Id,
+                Data = Newtonsoft.Json.JsonConvert.SerializeObject(
+                   new
+                   {
+                       Success = true,
+                       Ip = context.Peer,
+                   }
+                ),
+                UserTreeId = user.UserTreeId
+            });
+            await ct.SaveChangesAsync();
             var token = _handle.GetToken(
                 new MyJwtHelper.TokenClass
                 {
                     Id = user.Id
                 });
-            return new Response_LoginByUserName()
+            return new Response_Login()
             {
                 Token = token,
                 User = user.AsGrpcObj()
@@ -239,49 +238,70 @@ namespace GrpcMain.Account
                 UserTreeId = usertreeid
             });
         }
+
+
+        [MyGrpcMethod(NeedDB = true, NeedTransaction = true)]
         public override async Task<Response_CreatUser> CreatUser(Request_CreatUser request, ServerCallContext context)
         {
+            var ct = (MainContext)context.UserState[nameof(MainContext)];
             long id = (long)context.UserState["CreatorId"];
-            using (MainContext ct = new MainContext())
+            var me = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
+            if (me == null)
+                throw new Exception("数据库不一致" + id + "应当存在却不存在");
+
+            //最大子用户深度校验
+            var maxdeep = await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new {maxdep= a.MaxSubUserDepth,b.User1Id, b.IsFather })
+                .Where(it => !it.IsFather&&it.User1Id==id).MinAsync(it => it.maxdep);
+            if (maxdeep < me.TreeDeep + 1)
+                throw new RpcException(new Status(StatusCode.PermissionDenied, "最大用户深度为" + me.MaxSubUserDepth + ",该限制可能是父用户对您的限制也可能是父用户受到的限制"));
+            //最大子用户校验 查找父用户和自己 为集合  如果集合中所有用户的子用户数量都小于其受到的限制 则允许插入
+            var __ct = await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new { maxuser = a.MaxSubUser, b.User1Id, selfAndFather = b.User2Id, b.IsFather })
+                .Where(it => !it.IsFather && it.User1Id == id
+                && (ct.User_SFs.Where(sub => sub.User1Id == it.selfAndFather && sub.IsFather).Count() >= it.maxuser)
+                ).Take(1).CountAsync();
+            var canadd = __ct == 0;
+            if (!canadd)
             {
-                var trans = await ct.Database.BeginTransactionAsync();
-                var me = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
-                if (me == null)
-                    throw new Exception("数据库不一致" + me.Id + "应当存在却不存在");
-
-                //最大子用户深度校验
-                var maxdeep = await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new { a, b })
-                    .Where(it => !it.b.IsFather).MaxAsync(it => it.a.MaxSubUserDepth);
-                if (maxdeep < me.TreeDeep + 1)
-                {
-                    throw new RpcException(new Status(StatusCode.PermissionDenied, "最大用户深度为" + maxdeep + ",该限制可能是父用户对您的限制也可能是父用户受到的限制"));
-                }
-                //最大子用户校验 查找父用户和自己 为集合  如果集合中所有用户的子用户数量都小于其受到的限制 则允许插入
-                var __ct = await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new { a, b })
-                    .Where(it => !it.b.IsFather && it.b.User1Id == id
-                    && (ct.User_SFs.Where(sub => sub.User1Id == it.b.User2Id && sub.IsFather).Count() >= it.a.MaxSubUser)
-                    ).Take(1).CountAsync();
-                var canadd = __ct == 0;
-                if (!canadd)
-                {
-                    throw new RpcException(new Status(StatusCode.PermissionDenied, "超出最大用户数量限制,该限制可能是父用户对您的限制也可能是父用户受到的限制"));
-                }
-
-
-                var user = request.User.AsDBObj();
-                user.CreatorId = id;
-                user.UserTreeId = me.UserTreeId;
-                user.TreeDeep = me.TreeDeep + 1;
-                ct.Add(user);
-                await ct.SaveChangesAsync();
-                await CreatUser_AddUserSFAsync(ct, user.Id, id, me.UserTreeId);
-                await ct.SaveChangesAsync();
-                await trans.CommitAsync();
-                return new Response_CreatUser()
-                {
-                    UserId = user.Id
-                };
+                throw new RpcException(new Status(StatusCode.PermissionDenied, "超出最大用户数量限制,该限制可能是父用户对您的限制也可能是父用户受到的限制"));
             }
+
+
+            var user = request.User.AsDBObj();
+            user.CreatorId = id;
+            user.UserTreeId = me.UserTreeId;
+            user.TreeDeep = me.TreeDeep + 1;
+            ct.Add(user);
+            await ct.SaveChangesAsync();
+            await CreatUser_AddUserSFAsync(ct, id, user.Id, me.UserTreeId);
+            await ct.SaveChangesAsync();
+            return new Response_CreatUser()
+            {
+                UserId = user.Id
+            };
+        }
+
+        [MyGrpcMethod(Authoritys = new string[] { nameof(UserAuthorityEnum.AddTopUser) }, NeedDB = true, NeedTransaction = true)]
+        public override async Task<Response_CreatUser> CreatTopUser(Request_CreatUser request, ServerCallContext context)
+        {
+            var ct = (MainContext)context.UserState[nameof(MainContext)];
+            long id = (long)context.UserState["CreatorId"];
+            var trans = await ct.Database.BeginTransactionAsync();
+            var me = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
+            if (me == null)
+                throw new Exception("数据库不一致" + id + "应当存在却不存在");
+
+            var user = request.User.AsDBObj();
+            user.CreatorId = 0;
+            user.UserTreeId = await ct.Users.MaxAsync(it => it.UserTreeId) + 1;
+            user.TreeDeep = 1;
+            ct.Add(user);
+            await ct.SaveChangesAsync();
+            await CreatUser_AddUserSFAsync(ct, user.Id, id, me.UserTreeId);
+            await ct.SaveChangesAsync();
+            return new Response_CreatUser()
+            {
+                UserId = user.Id
+            };
         }
         #endregion
 
@@ -362,10 +382,10 @@ namespace GrpcMain.Account
                 {
                     throw new Exception("不一致:用户应当不空但是为空");
                 }
-                //if (request.UserInfo.HasUserName)
-                //{
-                //    user.Name = request.UserInfo.UserName;
-                //}
+                if (request.UserInfo.HasUserName)
+                {
+                    user.Name = request.UserInfo.UserName;
+                }
                 if (request.UserInfo.HasPhone)
                 {
                     user.Phone = request.UserInfo.Phone;

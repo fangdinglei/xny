@@ -22,15 +22,15 @@ namespace MyClient
                 Title = "智慧农业",
                 CloseCall = () => System.Environment.Exit(0)
             });
-            services.UseFLogin(new FLoginOption(async (context, uname, pass) =>
+            services.UseFLogin(new FLoginOption(async (context, uid, pass) =>
             {
                 var client = context.GetService<AccountService.AccountServiceClient>();
                 try
                 {
-                    var a = await client.LoginByUserNameAsync(new DTODefine.Types.Request_LoginByUserName()
+                    var a = await client.LoginAsync(new DTODefine.Types.Request_Login()
                     {
                         PassWord = pass,
-                        UserName = uname,
+                        Id = uid,
                     });
                     if (a.HasToken)
                     {
@@ -44,7 +44,7 @@ namespace MyClient
                 }
             }, (context, rsp) =>
             {
-                GrpcMain.Account.DTODefine.Types.Response_LoginByUserName a = (DTODefine.Types.Response_LoginByUserName)rsp;
+                GrpcMain.Account.DTODefine.Types.Response_Login a = (DTODefine.Types.Response_Login)rsp;
                 IClientCallContextInterceptor interceptor = context.GetService<IClientCallContextInterceptor>();
                 LocalDataBase db = context.GetService<LocalDataBase>();
                 //注册token
@@ -86,9 +86,5 @@ namespace MyClient
                 return false;
             }
         }
-
-
-
-
     }
 }

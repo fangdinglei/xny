@@ -16,10 +16,14 @@ namespace FdlWindows.View.LoginView
 
         async Task TryLogin()
         {
-            string uname = tUName.Text.Trim();
+            if (!long.TryParse(tUName.Text.Trim(), out var uid))
+            {
+                MessageBox.Show("用户id应当为数字", "提示");
+                return;
+            }
             string pass = tPass.Text.Trim();
             object a;
-            a = await _option.LoginCall(serviceProvider, uname, pass);
+            a = await _option.LoginCall(serviceProvider, uid, pass);
             if (a == null)
             {
                 MessageBox.Show("登陆失败", "提示");

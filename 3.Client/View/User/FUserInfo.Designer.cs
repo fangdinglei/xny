@@ -28,272 +28,284 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btn_sendMail = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.temail = new System.Windows.Forms.TextBox();
-            this.baseinfo_authoritys = new System.Windows.Forms.TextBox();
-            this.btn_delet = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.tphone = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tpass = new System.Windows.Forms.TextBox();
-            this.tuname = new System.Windows.Forms.TextBox();
-            this.btn_passupdate = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tuid = new System.Windows.Forms.TextBox();
-            this.btn_update = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            btn_sendMail = new Button();
+            label6 = new Label();
+            temail = new TextBox();
+            baseinfo_authoritys = new TextBox();
+            btn_delet = new Button();
+            label5 = new Label();
+            label4 = new Label();
+            tphone = new TextBox();
+            label1 = new Label();
+            tpass = new TextBox();
+            tuname = new TextBox();
+            btn_passupdate = new Button();
+            label2 = new Label();
+            label3 = new Label();
+            tuid = new TextBox();
+            btn_update = new Button();
+            label7 = new Label();
+            tdeep = new TextBox();
+            label8 = new Label();
+            tmaxdeep = new TextBox();
+            tmaxsubuser = new TextBox();
+            label9 = new Label();
+            btn_adduser = new Button();
+            SuspendLayout();
             // 
             // btn_sendMail
             // 
-            this.btn_sendMail.Location = new System.Drawing.Point(13, 469);
-            this.btn_sendMail.Margin = new System.Windows.Forms.Padding(4);
-            this.btn_sendMail.Name = "btn_sendMail";
-            this.btn_sendMail.Size = new System.Drawing.Size(114, 49);
-            this.btn_sendMail.TabIndex = 32;
-            this.btn_sendMail.Text = "发送邮件";
-            this.btn_sendMail.UseVisualStyleBackColor = true;
-            this.btn_sendMail.Click += new System.EventHandler(this.btn_sendMail_Click);
+            btn_sendMail.Location = new Point(13, 469);
+            btn_sendMail.Margin = new Padding(4);
+            btn_sendMail.Name = "btn_sendMail";
+            btn_sendMail.Size = new Size(114, 49);
+            btn_sendMail.TabIndex = 32;
+            btn_sendMail.Text = "发送邮件";
+            btn_sendMail.UseVisualStyleBackColor = true;
+            btn_sendMail.Click += btn_sendMail_Click;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 230);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(46, 24);
-            this.label6.TabIndex = 30;
-            this.label6.Text = "邮箱";
+            label6.AutoSize = true;
+            label6.Location = new Point(13, 230);
+            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(46, 24);
+            label6.TabIndex = 30;
+            label6.Text = "邮箱";
             // 
             // temail
             // 
-            this.temail.Location = new System.Drawing.Point(115, 226);
-            this.temail.Margin = new System.Windows.Forms.Padding(4);
-            this.temail.Name = "temail";
-            this.temail.Size = new System.Drawing.Size(242, 30);
-            this.temail.TabIndex = 31;
+            temail.Location = new Point(115, 226);
+            temail.Margin = new Padding(4);
+            temail.Name = "temail";
+            temail.Size = new Size(242, 30);
+            temail.TabIndex = 31;
             // 
             // baseinfo_authoritys
             // 
-            this.baseinfo_authoritys.Location = new System.Drawing.Point(115, 264);
-            this.baseinfo_authoritys.Margin = new System.Windows.Forms.Padding(4);
-            this.baseinfo_authoritys.Multiline = true;
-            this.baseinfo_authoritys.Name = "baseinfo_authoritys";
-            this.baseinfo_authoritys.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.baseinfo_authoritys.Size = new System.Drawing.Size(242, 129);
-            this.baseinfo_authoritys.TabIndex = 29;
+            baseinfo_authoritys.Location = new Point(115, 264);
+            baseinfo_authoritys.Margin = new Padding(4);
+            baseinfo_authoritys.Multiline = true;
+            baseinfo_authoritys.Name = "baseinfo_authoritys";
+            baseinfo_authoritys.ScrollBars = ScrollBars.Vertical;
+            baseinfo_authoritys.Size = new Size(242, 129);
+            baseinfo_authoritys.TabIndex = 29;
             // 
             // btn_delet
             // 
-            this.btn_delet.Location = new System.Drawing.Point(264, 412);
-            this.btn_delet.Margin = new System.Windows.Forms.Padding(4);
-            this.btn_delet.Name = "btn_delet";
-            this.btn_delet.Size = new System.Drawing.Size(114, 49);
-            this.btn_delet.TabIndex = 27;
-            this.btn_delet.Text = "删除用户";
-            this.btn_delet.UseVisualStyleBackColor = true;
+            btn_delet.Location = new Point(264, 412);
+            btn_delet.Margin = new Padding(4);
+            btn_delet.Name = "btn_delet";
+            btn_delet.Size = new Size(114, 49);
+            btn_delet.TabIndex = 27;
+            btn_delet.Text = "删除用户";
+            btn_delet.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 264);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(46, 24);
-            this.label5.TabIndex = 28;
-            this.label5.Text = "权限";
+            label5.AutoSize = true;
+            label5.Location = new Point(13, 264);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(46, 24);
+            label5.TabIndex = 28;
+            label5.Text = "权限";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 192);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(46, 24);
-            this.label4.TabIndex = 23;
-            this.label4.Text = "电话";
+            label4.AutoSize = true;
+            label4.Location = new Point(13, 192);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(46, 24);
+            label4.TabIndex = 23;
+            label4.Text = "电话";
             // 
             // tphone
             // 
-            this.tphone.Location = new System.Drawing.Point(115, 188);
-            this.tphone.Margin = new System.Windows.Forms.Padding(4);
-            this.tphone.Name = "tphone";
-            this.tphone.Size = new System.Drawing.Size(242, 30);
-            this.tphone.TabIndex = 24;
+            tphone.Location = new Point(115, 188);
+            tphone.Margin = new Padding(4);
+            tphone.Name = "tphone";
+            tphone.Size = new Size(242, 30);
+            tphone.TabIndex = 24;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 16);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 24);
-            this.label1.TabIndex = 17;
-            this.label1.Text = "用户名";
+            label1.AutoSize = true;
+            label1.Location = new Point(13, 16);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(64, 24);
+            label1.TabIndex = 17;
+            label1.Text = "用户名";
             // 
             // tpass
             // 
-            this.tpass.Location = new System.Drawing.Point(115, 138);
-            this.tpass.Margin = new System.Windows.Forms.Padding(4);
-            this.tpass.Name = "tpass";
-            this.tpass.ReadOnly = true;
-            this.tpass.Size = new System.Drawing.Size(242, 30);
-            this.tpass.TabIndex = 22;
+            tpass.Location = new Point(115, 138);
+            tpass.Margin = new Padding(4);
+            tpass.Name = "tpass";
+            tpass.ReadOnly = true;
+            tpass.Size = new Size(242, 30);
+            tpass.TabIndex = 22;
             // 
             // tuname
             // 
-            this.tuname.Location = new System.Drawing.Point(115, 16);
-            this.tuname.Margin = new System.Windows.Forms.Padding(4);
-            this.tuname.Name = "tuname";
-            this.tuname.Size = new System.Drawing.Size(242, 30);
-            this.tuname.TabIndex = 18;
+            tuname.Location = new Point(115, 16);
+            tuname.Margin = new Padding(4);
+            tuname.Name = "tuname";
+            tuname.Size = new Size(242, 30);
+            tuname.TabIndex = 18;
             // 
             // btn_passupdate
             // 
-            this.btn_passupdate.Location = new System.Drawing.Point(13, 412);
-            this.btn_passupdate.Margin = new System.Windows.Forms.Padding(4);
-            this.btn_passupdate.Name = "btn_passupdate";
-            this.btn_passupdate.Size = new System.Drawing.Size(114, 49);
-            this.btn_passupdate.TabIndex = 25;
-            this.btn_passupdate.Text = "修改密码";
-            this.btn_passupdate.UseVisualStyleBackColor = true;
+            btn_passupdate.Location = new Point(13, 412);
+            btn_passupdate.Margin = new Padding(4);
+            btn_passupdate.Name = "btn_passupdate";
+            btn_passupdate.Size = new Size(114, 49);
+            btn_passupdate.TabIndex = 25;
+            btn_passupdate.Text = "修改密码";
+            btn_passupdate.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 80);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 24);
-            this.label2.TabIndex = 19;
-            this.label2.Text = "账号";
+            label2.AutoSize = true;
+            label2.Location = new Point(13, 80);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(46, 24);
+            label2.TabIndex = 19;
+            label2.Text = "账号";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 142);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(46, 24);
-            this.label3.TabIndex = 21;
-            this.label3.Text = "密码";
+            label3.AutoSize = true;
+            label3.Location = new Point(13, 142);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(46, 24);
+            label3.TabIndex = 21;
+            label3.Text = "密码";
             // 
             // tuid
             // 
-            this.tuid.Location = new System.Drawing.Point(115, 76);
-            this.tuid.Margin = new System.Windows.Forms.Padding(4);
-            this.tuid.Name = "tuid";
-            this.tuid.ReadOnly = true;
-            this.tuid.Size = new System.Drawing.Size(242, 30);
-            this.tuid.TabIndex = 20;
+            tuid.Location = new Point(115, 76);
+            tuid.Margin = new Padding(4);
+            tuid.Name = "tuid";
+            tuid.ReadOnly = true;
+            tuid.Size = new Size(242, 30);
+            tuid.TabIndex = 20;
             // 
             // btn_update
             // 
-            this.btn_update.Location = new System.Drawing.Point(134, 412);
-            this.btn_update.Margin = new System.Windows.Forms.Padding(4);
-            this.btn_update.Name = "btn_update";
-            this.btn_update.Size = new System.Drawing.Size(122, 49);
-            this.btn_update.TabIndex = 26;
-            this.btn_update.Text = "修改信息";
-            this.btn_update.UseVisualStyleBackColor = true;
+            btn_update.Location = new Point(134, 412);
+            btn_update.Margin = new Padding(4);
+            btn_update.Name = "btn_update";
+            btn_update.Size = new Size(122, 49);
+            btn_update.TabIndex = 26;
+            btn_update.Text = "修改信息";
+            btn_update.UseVisualStyleBackColor = true;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(384, 16);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(82, 24);
-            this.label7.TabIndex = 33;
-            this.label7.Text = "用户深度";
+            label7.AutoSize = true;
+            label7.Location = new Point(384, 16);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(82, 24);
+            label7.TabIndex = 33;
+            label7.Text = "用户深度";
             // 
-            // textBox1
+            // tdeep
             // 
-            this.textBox1.Location = new System.Drawing.Point(384, 44);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(112, 30);
-            this.textBox1.TabIndex = 34;
-            this.textBox1.Text = "1";
+            tdeep.Location = new Point(384, 44);
+            tdeep.Margin = new Padding(4);
+            tdeep.Name = "tdeep";
+            tdeep.Size = new Size(112, 30);
+            tdeep.TabIndex = 34;
+            tdeep.Text = "1";
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(384, 80);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(136, 24);
-            this.label8.TabIndex = 35;
-            this.label8.Text = "最大子用户深度";
+            label8.AutoSize = true;
+            label8.Location = new Point(384, 80);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(136, 24);
+            label8.TabIndex = 35;
+            label8.Text = "最大子用户深度";
             // 
-            // textBox2
+            // tmaxdeep
             // 
-            this.textBox2.Location = new System.Drawing.Point(384, 108);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(112, 30);
-            this.textBox2.TabIndex = 36;
-            this.textBox2.Text = "1";
+            tmaxdeep.Location = new Point(384, 108);
+            tmaxdeep.Margin = new Padding(4);
+            tmaxdeep.Name = "tmaxdeep";
+            tmaxdeep.Size = new Size(112, 30);
+            tmaxdeep.TabIndex = 36;
+            tmaxdeep.Text = "1";
             // 
-            // textBox3
+            // tmaxsubuser
             // 
-            this.textBox3.Location = new System.Drawing.Point(384, 172);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(112, 30);
-            this.textBox3.TabIndex = 37;
-            this.textBox3.Text = "1";
+            tmaxsubuser.Location = new Point(384, 172);
+            tmaxsubuser.Margin = new Padding(4);
+            tmaxsubuser.Name = "tmaxsubuser";
+            tmaxsubuser.Size = new Size(112, 30);
+            tmaxsubuser.TabIndex = 37;
+            tmaxsubuser.Text = "1";
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(382, 144);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(136, 24);
-            this.label9.TabIndex = 38;
-            this.label9.Text = "最大子用户数量";
+            label9.AutoSize = true;
+            label9.Location = new Point(382, 144);
+            label9.Margin = new Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(136, 24);
+            label9.TabIndex = 38;
+            label9.Text = "最大子用户数量";
+            // 
+            // btn_adduser
+            // 
+            btn_adduser.Location = new Point(135, 469);
+            btn_adduser.Margin = new Padding(4);
+            btn_adduser.Name = "btn_adduser";
+            btn_adduser.Size = new Size(122, 49);
+            btn_adduser.TabIndex = 39;
+            btn_adduser.Text = "新增用户";
+            btn_adduser.UseVisualStyleBackColor = true;
+            btn_adduser.Click += btn_adduser_Click;
             // 
             // FUserInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(531, 572);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.btn_sendMail);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.temail);
-            this.Controls.Add(this.baseinfo_authoritys);
-            this.Controls.Add(this.btn_delet);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.tphone);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.tpass);
-            this.Controls.Add(this.tuname);
-            this.Controls.Add(this.btn_passupdate);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.tuid);
-            this.Controls.Add(this.btn_update);
-            this.Name = "FUserInfo";
-            this.Text = "FUserInfo";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(531, 572);
+            Controls.Add(btn_adduser);
+            Controls.Add(label9);
+            Controls.Add(tmaxsubuser);
+            Controls.Add(tmaxdeep);
+            Controls.Add(label8);
+            Controls.Add(tdeep);
+            Controls.Add(label7);
+            Controls.Add(btn_sendMail);
+            Controls.Add(label6);
+            Controls.Add(temail);
+            Controls.Add(baseinfo_authoritys);
+            Controls.Add(btn_delet);
+            Controls.Add(label5);
+            Controls.Add(label4);
+            Controls.Add(tphone);
+            Controls.Add(label1);
+            Controls.Add(tpass);
+            Controls.Add(tuname);
+            Controls.Add(btn_passupdate);
+            Controls.Add(label2);
+            Controls.Add(label3);
+            Controls.Add(tuid);
+            Controls.Add(btn_update);
+            Name = "FUserInfo";
+            Text = "FUserInfo";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -315,10 +327,11 @@
         private TextBox tuid;
         private Button btn_update;
         private Label label7;
-        private TextBox textBox1;
+        private TextBox tdeep;
         private Label label8;
-        private TextBox textBox2;
-        private TextBox textBox3;
+        private TextBox tmaxdeep;
+        private TextBox tmaxsubuser;
         private Label label9;
+        private Button btn_adduser;
     }
 }

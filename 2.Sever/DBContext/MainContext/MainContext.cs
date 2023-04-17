@@ -400,6 +400,8 @@ namespace MyDBContext.Main
                 CreatorId = 0,
                 Authoritys = "[\"device:add\",\"devicetype:save\",\"SystemUser\",\"ColdDataR\",\"ColdDataW\",\"测试权限1\"]",
                 UserTreeId = 1,
+                MaxSubUser=100,
+                MaxSubUserDepth=10,
                 TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
@@ -413,6 +415,8 @@ namespace MyDBContext.Main
                 CreatorId = 0,
                 Authoritys = "[\"device:add\",\"devicetype:save\",\"ColdDataR\",\"ColdDataW\",\"测试权限1\",\"测试权限2\"]",
                 UserTreeId = 2,
+                MaxSubUser = 100,
+                MaxSubUserDepth = 10,
                 TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
@@ -426,6 +430,8 @@ namespace MyDBContext.Main
                 CreatorId = 2,
                 Authoritys = "[]",
                 UserTreeId = 2,
+                MaxSubUser = 100,
+                MaxSubUserDepth = 10,
                 TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
@@ -439,6 +445,8 @@ namespace MyDBContext.Main
                 CreatorId = 2,
                 Authoritys = "[]",
                 UserTreeId = 2,
+                MaxSubUser = 100,
+                MaxSubUserDepth = 10,
                 TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
@@ -452,6 +460,8 @@ namespace MyDBContext.Main
                 CreatorId = 3,
                 Authoritys = "[]",
                 UserTreeId = 2,
+                MaxSubUser = 100,
+                MaxSubUserDepth = 10,
                 TreeDeep = 0,
             });
 
@@ -466,6 +476,8 @@ namespace MyDBContext.Main
                 CreatorId = 0,
                 Authoritys = "[]",
                 UserTreeId = 3,
+                MaxSubUser = 100,
+                MaxSubUserDepth = 10,
                 TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
@@ -479,6 +491,8 @@ namespace MyDBContext.Main
                 CreatorId = 10,
                 Authoritys = "[]",
                 UserTreeId = 3,
+                MaxSubUser = 100,
+                MaxSubUserDepth = 10,
                 TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
@@ -492,6 +506,8 @@ namespace MyDBContext.Main
                 CreatorId = 10,
                 Authoritys = "[]",
                 UserTreeId = 3,
+                MaxSubUser = 100,
+                MaxSubUserDepth = 10,
                 TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
@@ -505,6 +521,8 @@ namespace MyDBContext.Main
                 CreatorId = 11,
                 Authoritys = "[]",
                 UserTreeId = 3,
+                MaxSubUser = 100,
+                MaxSubUserDepth = 10,
                 TreeDeep = 0,
             });
             #endregion
