@@ -6,6 +6,7 @@ using GrpcMain.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using System.Reflection;
 using static GrpcMain.Account.DTODefine.Types;
 
 namespace GrpcMain.Account
@@ -250,8 +251,8 @@ namespace GrpcMain.Account
                 throw new Exception("数据库不一致" + id + "应当存在却不存在");
 
             //最大子用户深度校验
-            var maxdeep = await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new {maxdep= a.MaxSubUserDepth,b.User1Id, b.IsFather })
-                .Where(it => !it.IsFather&&it.User1Id==id).MinAsync(it => it.maxdep);
+            var maxdeep = await ct.Users.Join(ct.User_SFs, it => it.Id, it => it.User1Id, (a, b) => new { maxdep = a.MaxSubUserDepth, b.User1Id, b.IsFather })
+                .Where(it => !it.IsFather && it.User1Id == id).MinAsync(it => it.maxdep);
             if (maxdeep < me.TreeDeep + 1)
                 throw new RpcException(new Status(StatusCode.PermissionDenied, "最大用户深度为" + me.MaxSubUserDepth + ",该限制可能是父用户对您的限制也可能是父用户受到的限制"));
             //最大子用户校验 查找父用户和自己 为集合  如果集合中所有用户的子用户数量都小于其受到的限制 则允许插入
@@ -280,12 +281,23 @@ namespace GrpcMain.Account
             };
         }
 
-        [MyGrpcMethod(Authoritys = new string[] { nameof(UserAuthorityEnum.AddTopUser) }, NeedDB = true, NeedTransaction = true)]
+        private string buildAuthoritys()
+        {
+            var ls = new List<UserAuthorityEnum>();
+            foreach (var v in Enum.GetValues<UserAuthorityEnum>())
+            {
+                if ((int)v == 1)
+                {
+                    ls.Add(v);
+                }
+            }
+            return Newtonsoft.Json.JsonConvert.SerializeObject(ls);
+        }
+        [MyGrpcMethod(Authoritys = new string[] { nameof(UserAuthorityEnum.TopUserAdd) }, NeedDB = true, NeedTransaction = true)]
         public override async Task<Response_CreatUser> CreatTopUser(Request_CreatUser request, ServerCallContext context)
         {
             var ct = (MainContext)context.UserState[nameof(MainContext)];
             long id = (long)context.UserState["CreatorId"];
-            var trans = await ct.Database.BeginTransactionAsync();
             var me = await ct.Users.Where(it => it.Id == id).FirstOrDefaultAsync();
             if (me == null)
                 throw new Exception("数据库不一致" + id + "应当存在却不存在");
@@ -294,9 +306,10 @@ namespace GrpcMain.Account
             user.CreatorId = 0;
             user.UserTreeId = await ct.Users.MaxAsync(it => it.UserTreeId) + 1;
             user.TreeDeep = 1;
+            user.Authoritys = buildAuthoritys();
             ct.Add(user);
             await ct.SaveChangesAsync();
-            await CreatUser_AddUserSFAsync(ct, user.Id, id, me.UserTreeId);
+            await CreatUser_AddUserSFAsync(ct, 0, user.Id, me.UserTreeId);
             await ct.SaveChangesAsync();
             return new Response_CreatUser()
             {

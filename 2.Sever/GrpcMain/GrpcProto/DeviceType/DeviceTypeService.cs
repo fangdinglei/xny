@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using BaseDefines;
+using Grpc.Core;
 using GrpcMain.Attributes;
 using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
@@ -161,7 +162,7 @@ namespace GrpcMain.DeviceType
             }
         }
 
-        [MyGrpcMethod("devicetype:save", NeedDB = true, NeedTransaction = true)]
+        [MyGrpcMethod(nameof(UserAuthorityEnum.DeviceTypeW), NeedDB = true, NeedTransaction = true)]
         public override async Task<CommonResponse?> UpdateTypeInfo(Request_UpdateTypeInfo request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
@@ -216,7 +217,7 @@ namespace GrpcMain.DeviceType
             };
         }
 
-        [MyGrpcMethod("devicetype:save", NeedDB = true, NeedTransaction = true)]
+        [MyGrpcMethod(nameof(UserAuthorityEnum.DeviceTypeAdd), NeedDB = true, NeedTransaction = true)]
         public override async Task<Response_AddTypeInfo> AddTypeInfo(Request_AddTypeInfo request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];

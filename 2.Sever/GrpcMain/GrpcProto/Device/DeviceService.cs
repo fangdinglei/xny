@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using BaseDefines;
+using Grpc.Core;
 using GrpcMain.Attributes;
 using GrpcMain.Common;
 using GrpcMain.MQTT;
@@ -204,7 +205,7 @@ namespace GrpcMain.Device
         /// <param name="context"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        [MyGrpcMethod("device:add", NeedDB = true, NeedTransaction = true)]
+        [MyGrpcMethod(nameof(UserAuthorityEnum.DeviceAdd), NeedDB = true, NeedTransaction = true)]
         public override async Task<Response_AddDevice> AddDevice(Request_AddDevice request, ServerCallContext context)
         {
             User us = (User)context.UserState["user"];

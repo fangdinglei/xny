@@ -1,4 +1,6 @@
 ﻿using FdlWindows.View;
+using GrpcMain.Account;
+using MyClient.View.User;
 
 namespace MyClient.View
 {
@@ -7,11 +9,13 @@ namespace MyClient.View
     {
 
         GrpcMain.System.SystemService.SystemServiceClient _client;
+        AccountService.AccountServiceClient accountServiceClient;
         IViewHolder _viewholder;
-        public FSystemInfo(GrpcMain.System.SystemService.SystemServiceClient client)
+        public FSystemInfo(GrpcMain.System.SystemService.SystemServiceClient client, AccountService.AccountServiceClient accountServiceClient)
         {
             InitializeComponent();
             _client = client;
+            this.accountServiceClient = accountServiceClient;
         }
 
         public Control View => this;
@@ -49,6 +53,22 @@ namespace MyClient.View
         public void SetViewHolder(IViewHolder viewholder)
         {
             _viewholder = viewholder;
+        }
+
+        private async void btnCreatUser_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FCreatUser f = new FCreatUser(accountServiceClient, true);
+                f.ShowDialog();
+
+                var r2 = await _client.GetStaticsAsync(new GrpcMain.System.Request_GetStatics());
+                grid_userstatics.DataSource = r2.Data.ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,"错误");
+            }
         }
     }
 }

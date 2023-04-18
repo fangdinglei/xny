@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using BaseDefines;
+using Grpc.Core;
 using GrpcMain.Attributes;
 using GrpcMain.Common;
 using GrpcMain.DeviceData.Cold;
@@ -120,7 +121,7 @@ namespace GrpcMain.DeviceData
         //    }
         //}
 
-        [MyGrpcMethod("ColdDataW")]
+        [MyGrpcMethod(nameof(UserAuthorityEnum.ColdDataW))]
         public override async Task<CommonResponse> Delet(Request_Delet request, ServerCallContext context)
         {
             try
@@ -155,7 +156,7 @@ namespace GrpcMain.DeviceData
             }
 
         }
-        [MyGrpcMethod("ColdDataR")]
+        [MyGrpcMethod(nameof(UserAuthorityEnum.ColdDataR))]
         public override async Task<Response_GetInfos> GetInfos(Request_GetInfos request, ServerCallContext context)
         {
             //TODO
@@ -209,7 +210,7 @@ namespace GrpcMain.DeviceData
             res.Info.AddRange(resls);
             return res;
         }
-        [MyGrpcMethod("ColdDataW")]
+        [MyGrpcMethod(nameof(UserAuthorityEnum.ColdDataW))]
         public override async Task<Response_GetSetting> GetSetting(Request_GetSetting request, ServerCallContext context)
         {
             User? user = context.UserState["user"] as User;
@@ -242,7 +243,7 @@ namespace GrpcMain.DeviceData
             }
         }
 
-        [MyGrpcMethod("ColdDataW")]
+        [MyGrpcMethod(nameof(UserAuthorityEnum.ColdDataW))]
         public override async Task<CommonResponse> SetSetting(Request_SetSetting request, ServerCallContext context)
         {
             User? user = context.UserState["user"] as User;

@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using BaseDefines;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Org.BouncyCastle.Utilities.Date;
@@ -363,6 +364,25 @@ namespace MyDBContext.Main
 
     public class BaseValueBuilder : IDBValueBuilder
     {
+        string buildAuthorityAdmin()
+        {
+            var ls = new List<UserAuthorityEnum> {
+                UserAuthorityEnum.TopUserAdd,
+            };
+            return Newtonsoft.Json.JsonConvert.SerializeObject(ls);
+        }
+        string buildAuthorityTopUser()
+        {
+            var ls = new List<UserAuthorityEnum> {
+                UserAuthorityEnum.DeviceAdd,
+                UserAuthorityEnum.DeviceTypeW,
+                UserAuthorityEnum.DeviceTypeAdd,
+                UserAuthorityEnum.ColdDataR,
+                UserAuthorityEnum.ColdDataW,
+            };
+            return Newtonsoft.Json.JsonConvert.SerializeObject(ls);
+        }
+
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             var time = new MyUtility.TimeUtility();
@@ -398,10 +418,10 @@ namespace MyDBContext.Main
                 Pass = "123",
                 Phone = "15850798245",
                 CreatorId = 0,
-                Authoritys = "[\"device:add\",\"devicetype:save\",\"SystemUser\",\"ColdDataR\",\"ColdDataW\",\"测试权限1\"]",
+                Authoritys = buildAuthorityAdmin(),
                 UserTreeId = 1,
-                MaxSubUser=100,
-                MaxSubUserDepth=10,
+                MaxSubUser = 100,
+                MaxSubUserDepth = 10,
                 TreeDeep = 0,
             });
             modelBuilder.Entity<User>().HasData(new User()
@@ -413,7 +433,7 @@ namespace MyDBContext.Main
                 Pass = "123",
                 Phone = "15850798245",
                 CreatorId = 0,
-                Authoritys = "[\"device:add\",\"devicetype:save\",\"ColdDataR\",\"ColdDataW\",\"测试权限1\",\"测试权限2\"]",
+                Authoritys = buildAuthorityAdmin(),
                 UserTreeId = 2,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,
