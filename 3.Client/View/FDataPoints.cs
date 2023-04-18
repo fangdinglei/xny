@@ -111,7 +111,7 @@ namespace MyClient.View
                 te = (new DateTime(te.Year, te.Month, te.Day)).AddDays(1);
                 chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs",
                     Newtonsoft.Json.JsonConvert.SerializeObject(ds.Select(it => it.Device.Name).ToList())
-                    , data, _timeUtility.GetTicket(ts) * 1000, _timeUtility.GetTicket(te) * 1000); ;
+                    , data, _timeUtility.GetTicket(ts) * 1000, _timeUtility.GetTicket(te) * 1000); 
             }
             catch (Exception ex)
             {
@@ -137,7 +137,7 @@ namespace MyClient.View
                     Endtime = _timeUtility.GetTicket(de),
                     StreamId = model.Id,
                     Dvid = dev.Device.Id,
-                    ColdData = false,
+                    ColdData = cbUseCold.Checked,
                 });
                 List<object[]> dps = res.Stream.Points.Select(it => new object[] { it.Time * 1000, it.Value }).ToList();
                 obj.Add(new Dictionary<string, object>() {
@@ -205,7 +205,7 @@ namespace MyClient.View
                 Endtime = _timeUtility.GetTicket(de),
                 StreamId = model.Id,
                 Dvid = dev.Device.Id,
-                ColdData = false,
+                ColdData = cbUseCold.Checked,
             });
             Dictionary<long, List<DataPoinet>> dps = new();
             foreach (var item in res.Stream.Points)

@@ -11,9 +11,6 @@ service DeviceDataService {
     //获取设备数据
     rpc GetDataPoints(Request_GetDataPoints)
         returns (Response_GetDataPoints);
-    //获取设备冷数据
-    rpc GetColdDataPoints(Request_GetDataPoints)
-        returns (Response_GetDataPoints);
 
 
 }

@@ -469,6 +469,7 @@ namespace MyClient.View.AutoControl
                 TimeEnd = end,
                 OwnerID = ownerID,
                 Cmd = cmd,
+                Open = true
             };
             re.Week = 0;
             for (int i = 0; i < week.Length; i++)
@@ -493,6 +494,7 @@ namespace MyClient.View.AutoControl
                 TimeEnd = end,
                 OwnerID = ownerID,
                 Cmd = cmd,
+                Open = true
             };
         }
 
@@ -508,6 +510,7 @@ namespace MyClient.View.AutoControl
                 TriggerType = (int)TimeTriggerType.ALL,
                 OwnerID = ownerID,
                 Cmd = cmd,
+                Open = true
             };
         }
 

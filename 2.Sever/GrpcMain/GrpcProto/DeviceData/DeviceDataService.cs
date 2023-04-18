@@ -18,7 +18,8 @@ namespace GrpcMain.DeviceData
         }
 
 
-        public override async Task<Response_GetDataPoints?> GetDataPoints(Request_GetDataPoints request, ServerCallContext context)
+
+        private async Task<Response_GetDataPoints?> GetDataPointsNormal(Request_GetDataPoints request, ServerCallContext context)
         {
             if (request.ColdData)
             {
@@ -75,15 +76,8 @@ namespace GrpcMain.DeviceData
             }
             return res;
         }
-        [MyGrpcMethod("ColdData")]
-        public override async Task<Response_GetDataPoints> GetColdDataPoints(Request_GetDataPoints request, ServerCallContext context)
+        private async Task<Response_GetDataPoints?> GetDataPointsCold(Request_GetDataPoints request, ServerCallContext context)
         {
-            if (!request.ColdData)
-            {
-                context.Status = new Status(StatusCode.PermissionDenied, nameof(request.ColdData) + "=false不应当使用该接口");
-                return null;
-            }
-
             int maxcount = 1000 + 1;
             if (request.HasMaxCount)
                 maxcount = request.MaxCount + 1;
@@ -130,6 +124,17 @@ namespace GrpcMain.DeviceData
             return res;
         }
 
+        public override async Task<Response_GetDataPoints?> GetDataPoints(Request_GetDataPoints request, ServerCallContext context)
+        {
+            if (request.ColdData)
+            {
+                return await GetDataPointsCold(request, context);
+            }
+            else
+            {
+                return await GetDataPointsNormal(request, context);
+            }
+        }
         public override async Task<Response_GetLatestData> GetLatestData(Request_GetLatestData request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];

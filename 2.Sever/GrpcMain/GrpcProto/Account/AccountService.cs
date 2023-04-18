@@ -286,12 +286,12 @@ namespace GrpcMain.Account
             var ls = new List<UserAuthorityEnum>();
             foreach (var v in Enum.GetValues<UserAuthorityEnum>())
             {
-                if ((int)v == 1)
+                if (((int)v & 4) ==1)
                 {
                     ls.Add(v);
                 }
             }
-            return Newtonsoft.Json.JsonConvert.SerializeObject(ls);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(ls.Select(it => it.ToString()));
         }
         [MyGrpcMethod(Authoritys = new string[] { nameof(UserAuthorityEnum.TopUserAdd) }, NeedDB = true, NeedTransaction = true)]
         public override async Task<Response_CreatUser> CreatTopUser(Request_CreatUser request, ServerCallContext context)

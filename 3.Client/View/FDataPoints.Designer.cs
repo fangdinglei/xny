@@ -29,109 +29,121 @@ namespace MyClient.View
         /// </summary>
         private void InitializeComponent()
         {
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.chromiumWebBrowser1 = new CefSharp.WinForms.ChromiumWebBrowser();
-            this.CDevice = new System.Windows.Forms.CheckedListBox();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.CStreamName = new System.Windows.Forms.ComboBox();
-            this.list_Type = new System.Windows.Forms.ListBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            dateTimePicker1 = new DateTimePicker();
+            chromiumWebBrowser1 = new CefSharp.WinForms.ChromiumWebBrowser();
+            CDevice = new CheckedListBox();
+            dateTimePicker2 = new DateTimePicker();
+            CStreamName = new ComboBox();
+            list_Type = new ListBox();
+            button1 = new Button();
+            button2 = new Button();
+            cbUseCold = new CheckBox();
+            SuspendLayout();
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(12, 13);
-            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(194, 30);
-            this.dateTimePicker1.TabIndex = 3;
-            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
+            dateTimePicker1.Location = new Point(12, 13);
+            dateTimePicker1.Margin = new Padding(3, 4, 3, 4);
+            dateTimePicker1.Name = "dateTimePicker1";
+            dateTimePicker1.Size = new Size(194, 30);
+            dateTimePicker1.TabIndex = 3;
+            dateTimePicker1.ValueChanged += dateTimePicker1_ValueChanged;
             // 
             // chromiumWebBrowser1
             // 
-            this.chromiumWebBrowser1.ActivateBrowserOnCreation = false;
-            this.chromiumWebBrowser1.Location = new System.Drawing.Point(412, 69);
-            this.chromiumWebBrowser1.Name = "chromiumWebBrowser1";
-            this.chromiumWebBrowser1.Size = new System.Drawing.Size(873, 735);
-            this.chromiumWebBrowser1.TabIndex = 4;
-            this.chromiumWebBrowser1.Text = "chromiumWebBrowser1";
+            chromiumWebBrowser1.ActivateBrowserOnCreation = false;
+            chromiumWebBrowser1.Location = new Point(412, 69);
+            chromiumWebBrowser1.Name = "chromiumWebBrowser1";
+            chromiumWebBrowser1.Size = new Size(873, 735);
+            chromiumWebBrowser1.TabIndex = 4;
+            chromiumWebBrowser1.Text = "chromiumWebBrowser1";
             // 
             // CDevice
             // 
-            this.CDevice.FormattingEnabled = true;
-            this.CDevice.Location = new System.Drawing.Point(210, 50);
-            this.CDevice.Name = "CDevice";
-            this.CDevice.Size = new System.Drawing.Size(196, 463);
-            this.CDevice.TabIndex = 5;
-            this.CDevice.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CDevice_ItemCheck);
+            CDevice.FormattingEnabled = true;
+            CDevice.Location = new Point(210, 50);
+            CDevice.Name = "CDevice";
+            CDevice.Size = new Size(196, 463);
+            CDevice.TabIndex = 5;
+            CDevice.ItemCheck += CDevice_ItemCheck;
             // 
             // dateTimePicker2
             // 
-            this.dateTimePicker2.Location = new System.Drawing.Point(212, 13);
-            this.dateTimePicker2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(194, 30);
-            this.dateTimePicker2.TabIndex = 7;
-            this.dateTimePicker2.ValueChanged += new System.EventHandler(this.dateTimePicker2_ValueChanged);
+            dateTimePicker2.Location = new Point(212, 13);
+            dateTimePicker2.Margin = new Padding(3, 4, 3, 4);
+            dateTimePicker2.Name = "dateTimePicker2";
+            dateTimePicker2.Size = new Size(194, 30);
+            dateTimePicker2.TabIndex = 7;
+            dateTimePicker2.ValueChanged += dateTimePicker2_ValueChanged;
             // 
             // CStreamName
             // 
-            this.CStreamName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CStreamName.FormattingEnabled = true;
-            this.CStreamName.Location = new System.Drawing.Point(10, 50);
-            this.CStreamName.Name = "CStreamName";
-            this.CStreamName.Size = new System.Drawing.Size(182, 32);
-            this.CStreamName.TabIndex = 8;
+            CStreamName.DropDownStyle = ComboBoxStyle.DropDownList;
+            CStreamName.FormattingEnabled = true;
+            CStreamName.Location = new Point(10, 50);
+            CStreamName.Name = "CStreamName";
+            CStreamName.Size = new Size(182, 32);
+            CStreamName.TabIndex = 8;
             // 
             // list_Type
             // 
-            this.list_Type.FormattingEnabled = true;
-            this.list_Type.ItemHeight = 24;
-            this.list_Type.Location = new System.Drawing.Point(10, 88);
-            this.list_Type.Name = "list_Type";
-            this.list_Type.Size = new System.Drawing.Size(194, 436);
-            this.list_Type.TabIndex = 9;
-            this.list_Type.SelectedIndexChanged += new System.EventHandler(this.list_Type_SelectedIndexChangedAsync);
+            list_Type.FormattingEnabled = true;
+            list_Type.ItemHeight = 24;
+            list_Type.Location = new Point(10, 88);
+            list_Type.Name = "list_Type";
+            list_Type.Size = new Size(194, 436);
+            list_Type.TabIndex = 9;
+            list_Type.SelectedIndexChanged += list_Type_SelectedIndexChangedAsync;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(445, 2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(112, 34);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "查询";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            button1.Location = new Point(445, 2);
+            button1.Name = "button1";
+            button1.Size = new Size(112, 34);
+            button1.TabIndex = 10;
+            button1.Text = "查询";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(563, 2);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(112, 34);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "查询";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            button2.Location = new Point(563, 2);
+            button2.Name = "button2";
+            button2.Size = new Size(112, 34);
+            button2.TabIndex = 11;
+            button2.Text = "查询";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
+            // cbUseCold
+            // 
+            cbUseCold.AutoSize = true;
+            cbUseCold.Location = new Point(681, 2);
+            cbUseCold.Name = "cbUseCold";
+            cbUseCold.Size = new Size(126, 28);
+            cbUseCold.TabIndex = 12;
+            cbUseCold.Text = "查看冷数据";
+            cbUseCold.UseVisualStyleBackColor = true;
             // 
             // FDataPoints
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1754, 1050);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.list_Type);
-            this.Controls.Add(this.CStreamName);
-            this.Controls.Add(this.dateTimePicker2);
-            this.Controls.Add(this.CDevice);
-            this.Controls.Add(this.chromiumWebBrowser1);
-            this.Controls.Add(this.dateTimePicker1);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Name = "FDataPoints";
-            this.Text = "FDataPoints";
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1754, 1050);
+            Controls.Add(cbUseCold);
+            Controls.Add(button2);
+            Controls.Add(button1);
+            Controls.Add(list_Type);
+            Controls.Add(CStreamName);
+            Controls.Add(dateTimePicker2);
+            Controls.Add(CDevice);
+            Controls.Add(chromiumWebBrowser1);
+            Controls.Add(dateTimePicker1);
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "FDataPoints";
+            Text = "FDataPoints";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -143,5 +155,6 @@ namespace MyClient.View
         private ListBox list_Type;
         private Button button1;
         private Button button2;
+        private CheckBox cbUseCold;
     }
 }

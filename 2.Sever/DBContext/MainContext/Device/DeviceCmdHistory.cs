@@ -1,7 +1,10 @@
-﻿namespace MyDBContext.Main
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MyDBContext.Main
 {
     public class DeviceCmdHistory
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long ID { set; get; }
         public long DeviceId { set; get; }
         public string Cmd { set; get; }

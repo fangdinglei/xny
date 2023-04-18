@@ -20,9 +20,9 @@ namespace GrpcMain.Extensions
             services.Configure<MyGrpcHandleCongig>(op => op.JwtKey = jwtkey);
             services.TryAddSingleton<IJwtHelper, JwtHelper>();
             services.TryAddSingleton<IGrpcCursorUtility, GrpcCursorUtilityImp>();
-
+            services.TryAddSingleton<DeviceTimePlanManager>();
             services.TryAddSingleton<DeviceUtility>();
-         
+
             services.UseColdData();
             //添加处理器
             services.TryAddSingleton<IGrpcAuthorityHandle, MyGrpcHandle>();
@@ -89,7 +89,10 @@ namespace GrpcMain.Extensions
             //app.MapGrpcService<SystemServiceImp>();
         }
 
-
+        static public void StartAutoControl(this WebApplication app)
+        {
+            var mgr = app.Services.GetService<DeviceTimePlanManager>();
+        }
         static public bool TryDeserializeObject<T>(this string json, out T? obj) where T : class
         {
 

@@ -90,14 +90,15 @@ namespace Sever.DeviceProto
         {
             try
             {
-                var r = await Client.PublishAsync(new MqttApplicationMessage()
+                var c = await GetClient();
+                var r = await c.PublishAsync(new MqttApplicationMessage()
                 {
                     Topic = $"/{deviceid}/cmd",
                     Payload = cmd
                 });
                 return r.IsSuccess;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }

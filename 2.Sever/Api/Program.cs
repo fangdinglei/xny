@@ -101,6 +101,7 @@ else
 
 app.RegistMyGrpc();
 app.Services.StartMQTT();
+app.StartAutoControl();
 //app.UseHttpsRedirection();
 //app.UseStaticFiles();
 

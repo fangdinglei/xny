@@ -6,6 +6,7 @@ using Org.BouncyCastle.Utilities.Date;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 //Add-Migration [--context MainContext]
 //Remove-Migration 取消最近一次迁移
 //Update-Database [迁移名称  迁移直到(包含)或回退直到(不回退指定的版本) 0表示一开始]
@@ -369,7 +370,7 @@ namespace MyDBContext.Main
             var ls = new List<UserAuthorityEnum> {
                 UserAuthorityEnum.TopUserAdd,
             };
-            return Newtonsoft.Json.JsonConvert.SerializeObject(ls);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(ls.Select(it=>it.ToString()));
         }
         string buildAuthorityTopUser()
         {
@@ -380,7 +381,7 @@ namespace MyDBContext.Main
                 UserAuthorityEnum.ColdDataR,
                 UserAuthorityEnum.ColdDataW,
             };
-            return Newtonsoft.Json.JsonConvert.SerializeObject(ls);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(ls.Select(it => it.ToString()));
         }
 
         public void OnModelCreating(ModelBuilder modelBuilder)
@@ -433,7 +434,7 @@ namespace MyDBContext.Main
                 Pass = "123",
                 Phone = "15850798245",
                 CreatorId = 0,
-                Authoritys = buildAuthorityAdmin(),
+                Authoritys = buildAuthorityTopUser(),
                 UserTreeId = 2,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,

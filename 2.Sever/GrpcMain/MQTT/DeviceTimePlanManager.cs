@@ -19,7 +19,7 @@ namespace GrpcMain.MQTT
             {
                 using var ct = new MainContext();
                 //TODO 性能优化
-                foreach (var dvid in ct.Devices.Select(it => it.Id))
+                foreach (var dvid in ct.Devices.Select(it => it.Id).ToList())
                 {
                     var settings = await ct.Device_AutoControl_Settings_Items.AsNoTracking()
                        .Where(it => it.OwnerID == dvid && it.Open == true)
@@ -34,9 +34,17 @@ namespace GrpcMain.MQTT
                         var cmd = kv.Value.GetCmd(DateTime.Now);
                         if (string.IsNullOrWhiteSpace(cmd))
                             continue;
-                        Task.Run(() =>
+                        await Task.Run(async () =>
                         {
-                            _du.SendCmd(dvid, cmd, DeviceCmdSenderType.System, 0);
+                            try
+                            {
+                                await _du.SendCmd(dvid, cmd, DeviceCmdSenderType.System, 0);
+                            }
+                            catch (Exception ex)
+                            {
+
+                                throw;
+                            }
                         });
                     }
 
@@ -49,10 +57,14 @@ namespace GrpcMain.MQTT
                 {
                     try
                     {
-                        await Task.Delay(1000 * 60 * 5);
+#if AutoControlDebug
+                        await Task.Delay(1000*10);
+#else
+                        await Task.Delay(1000);
+#endif
                         await runc();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
 
                     }
