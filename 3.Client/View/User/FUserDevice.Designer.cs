@@ -28,371 +28,371 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.list_devicegroup = new System.Windows.Forms.ListBox();
-            this.list_devices = new System.Windows.Forms.ListBox();
-            this.check_read_data = new System.Windows.Forms.CheckBox();
-            this.check_control_cmd = new System.Windows.Forms.CheckBox();
-            this.check_write_baseinfo = new System.Windows.Forms.CheckBox();
-            this.check_control_timesetting = new System.Windows.Forms.CheckBox();
-            this.check_read_repair = new System.Windows.Forms.CheckBox();
-            this.check_write_deletdata = new System.Windows.Forms.CheckBox();
-            this.check_read_status = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lay_read = new System.Windows.Forms.TableLayoutPanel();
-            this.check_read_baseinfo = new System.Windows.Forms.CheckBox();
-            this.check_read_timesetting = new System.Windows.Forms.CheckBox();
-            this.check_read_cmd = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lay_write = new System.Windows.Forms.TableLayoutPanel();
-            this.check_write_deletdevice = new System.Windows.Forms.CheckBox();
-            this.check_write_repair = new System.Windows.Forms.CheckBox();
-            this.check_write_type = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.lay_control = new System.Windows.Forms.TableLayoutPanel();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.check_delegate = new System.Windows.Forms.CheckBox();
-            this.btn_sel_read = new System.Windows.Forms.Button();
-            this.btn_sel_rw = new System.Windows.Forms.Button();
-            this.btn_sel_rwc = new System.Windows.Forms.Button();
-            this.btn_submit = new System.Windows.Forms.Button();
-            this.op_panel = new System.Windows.Forms.Panel();
-            this.groupBox1.SuspendLayout();
-            this.lay_read.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.lay_write.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.lay_control.SuspendLayout();
-            this.op_panel.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            list_devicegroup = new ListBox();
+            list_devices = new ListBox();
+            check_read_data = new CheckBox();
+            check_control_cmd = new CheckBox();
+            check_write_baseinfo = new CheckBox();
+            check_control_timesetting = new CheckBox();
+            check_read_repair = new CheckBox();
+            check_write_deletdata = new CheckBox();
+            check_read_status = new CheckBox();
+            groupBox1 = new GroupBox();
+            lay_read = new TableLayoutPanel();
+            check_read_baseinfo = new CheckBox();
+            check_read_timesetting = new CheckBox();
+            check_read_cmd = new CheckBox();
+            groupBox2 = new GroupBox();
+            lay_write = new TableLayoutPanel();
+            check_write_deletdevice = new CheckBox();
+            check_write_repair = new CheckBox();
+            check_write_type = new CheckBox();
+            groupBox3 = new GroupBox();
+            lay_control = new TableLayoutPanel();
+            toolTip1 = new ToolTip(components);
+            check_delegate = new CheckBox();
+            btn_sel_read = new Button();
+            btn_sel_rw = new Button();
+            btn_sel_rwc = new Button();
+            btn_submit = new Button();
+            op_panel = new Panel();
+            groupBox1.SuspendLayout();
+            lay_read.SuspendLayout();
+            groupBox2.SuspendLayout();
+            lay_write.SuspendLayout();
+            groupBox3.SuspendLayout();
+            lay_control.SuspendLayout();
+            op_panel.SuspendLayout();
+            SuspendLayout();
             // 
             // list_devicegroup
             // 
-            this.list_devicegroup.FormattingEnabled = true;
-            this.list_devicegroup.ItemHeight = 24;
-            this.list_devicegroup.Location = new System.Drawing.Point(12, 38);
-            this.list_devicegroup.Name = "list_devicegroup";
-            this.list_devicegroup.Size = new System.Drawing.Size(180, 580);
-            this.list_devicegroup.TabIndex = 0;
-            this.list_devicegroup.SelectedIndexChanged += new System.EventHandler(this.list_devicegroup_SelectedIndexChanged);
+            list_devicegroup.FormattingEnabled = true;
+            list_devicegroup.ItemHeight = 24;
+            list_devicegroup.Location = new Point(12, 38);
+            list_devicegroup.Name = "list_devicegroup";
+            list_devicegroup.Size = new Size(180, 580);
+            list_devicegroup.TabIndex = 0;
+            list_devicegroup.SelectedIndexChanged += list_devicegroup_SelectedIndexChanged;
             // 
             // list_devices
             // 
-            this.list_devices.FormattingEnabled = true;
-            this.list_devices.ItemHeight = 24;
-            this.list_devices.Location = new System.Drawing.Point(198, 38);
-            this.list_devices.Name = "list_devices";
-            this.list_devices.Size = new System.Drawing.Size(180, 580);
-            this.list_devices.TabIndex = 1;
-            this.list_devices.SelectedIndexChanged += new System.EventHandler(this.list_devices_SelectedIndexChanged);
+            list_devices.FormattingEnabled = true;
+            list_devices.ItemHeight = 24;
+            list_devices.Location = new Point(198, 38);
+            list_devices.Name = "list_devices";
+            list_devices.Size = new Size(180, 580);
+            list_devices.TabIndex = 1;
+            list_devices.SelectedIndexChanged += list_devices_SelectedIndexChanged;
             // 
             // check_read_data
             // 
-            this.check_read_data.AutoSize = true;
-            this.check_read_data.Location = new System.Drawing.Point(3, 114);
-            this.check_read_data.Name = "check_read_data";
-            this.check_read_data.Size = new System.Drawing.Size(90, 28);
-            this.check_read_data.TabIndex = 2;
-            this.check_read_data.Text = "读数据";
-            this.check_read_data.UseVisualStyleBackColor = true;
+            check_read_data.AutoSize = true;
+            check_read_data.Location = new Point(3, 114);
+            check_read_data.Name = "check_read_data";
+            check_read_data.Size = new Size(90, 28);
+            check_read_data.TabIndex = 2;
+            check_read_data.Text = "读数据";
+            check_read_data.UseVisualStyleBackColor = true;
             // 
             // check_control_cmd
             // 
-            this.check_control_cmd.AutoSize = true;
-            this.check_control_cmd.Location = new System.Drawing.Point(3, 3);
-            this.check_control_cmd.Name = "check_control_cmd";
-            this.check_control_cmd.Size = new System.Drawing.Size(72, 28);
-            this.check_control_cmd.TabIndex = 3;
-            this.check_control_cmd.Text = "命令";
-            this.check_control_cmd.UseVisualStyleBackColor = true;
+            check_control_cmd.AutoSize = true;
+            check_control_cmd.Location = new Point(3, 3);
+            check_control_cmd.Name = "check_control_cmd";
+            check_control_cmd.Size = new Size(72, 28);
+            check_control_cmd.TabIndex = 3;
+            check_control_cmd.Text = "命令";
+            check_control_cmd.UseVisualStyleBackColor = true;
             // 
             // check_write_baseinfo
             // 
-            this.check_write_baseinfo.AutoSize = true;
-            this.check_write_baseinfo.Location = new System.Drawing.Point(150, 3);
-            this.check_write_baseinfo.Name = "check_write_baseinfo";
-            this.check_write_baseinfo.Size = new System.Drawing.Size(126, 28);
-            this.check_write_baseinfo.TabIndex = 4;
-            this.check_write_baseinfo.Text = "改基础信息";
-            this.check_write_baseinfo.UseVisualStyleBackColor = true;
+            check_write_baseinfo.AutoSize = true;
+            check_write_baseinfo.Location = new Point(150, 3);
+            check_write_baseinfo.Name = "check_write_baseinfo";
+            check_write_baseinfo.Size = new Size(126, 28);
+            check_write_baseinfo.TabIndex = 4;
+            check_write_baseinfo.Text = "改基础信息";
+            check_write_baseinfo.UseVisualStyleBackColor = true;
             // 
             // check_control_timesetting
             // 
-            this.check_control_timesetting.AutoSize = true;
-            this.check_control_timesetting.Location = new System.Drawing.Point(3, 63);
-            this.check_control_timesetting.Name = "check_control_timesetting";
-            this.check_control_timesetting.Size = new System.Drawing.Size(108, 28);
-            this.check_control_timesetting.TabIndex = 5;
-            this.check_control_timesetting.Text = "定时配置";
-            this.check_control_timesetting.UseVisualStyleBackColor = true;
+            check_control_timesetting.AutoSize = true;
+            check_control_timesetting.Location = new Point(3, 63);
+            check_control_timesetting.Name = "check_control_timesetting";
+            check_control_timesetting.Size = new Size(108, 28);
+            check_control_timesetting.TabIndex = 5;
+            check_control_timesetting.Text = "定时配置";
+            check_control_timesetting.UseVisualStyleBackColor = true;
             // 
             // check_read_repair
             // 
-            this.check_read_repair.AutoSize = true;
-            this.check_read_repair.Location = new System.Drawing.Point(150, 3);
-            this.check_read_repair.Name = "check_read_repair";
-            this.check_read_repair.Size = new System.Drawing.Size(126, 28);
-            this.check_read_repair.TabIndex = 6;
-            this.check_read_repair.Text = "读维修记录";
-            this.check_read_repair.UseVisualStyleBackColor = true;
+            check_read_repair.AutoSize = true;
+            check_read_repair.Location = new Point(150, 3);
+            check_read_repair.Name = "check_read_repair";
+            check_read_repair.Size = new Size(126, 28);
+            check_read_repair.TabIndex = 6;
+            check_read_repair.Text = "读维修记录";
+            check_read_repair.UseVisualStyleBackColor = true;
             // 
             // check_write_deletdata
             // 
-            this.check_write_deletdata.AutoSize = true;
-            this.check_write_deletdata.Location = new System.Drawing.Point(3, 3);
-            this.check_write_deletdata.Name = "check_write_deletdata";
-            this.check_write_deletdata.Size = new System.Drawing.Size(90, 28);
-            this.check_write_deletdata.TabIndex = 7;
-            this.check_write_deletdata.Text = "删数据";
-            this.check_write_deletdata.UseVisualStyleBackColor = true;
+            check_write_deletdata.AutoSize = true;
+            check_write_deletdata.Location = new Point(3, 3);
+            check_write_deletdata.Name = "check_write_deletdata";
+            check_write_deletdata.Size = new Size(90, 28);
+            check_write_deletdata.TabIndex = 7;
+            check_write_deletdata.Text = "删数据";
+            check_write_deletdata.UseVisualStyleBackColor = true;
             // 
             // check_read_status
             // 
-            this.check_read_status.AutoSize = true;
-            this.check_read_status.Location = new System.Drawing.Point(3, 77);
-            this.check_read_status.Name = "check_read_status";
-            this.check_read_status.Size = new System.Drawing.Size(90, 28);
-            this.check_read_status.TabIndex = 8;
-            this.check_read_status.Text = "读状态";
-            this.check_read_status.UseVisualStyleBackColor = true;
+            check_read_status.AutoSize = true;
+            check_read_status.Location = new Point(3, 77);
+            check_read_status.Name = "check_read_status";
+            check_read_status.Size = new Size(90, 28);
+            check_read_status.TabIndex = 8;
+            check_read_status.Text = "读状态";
+            check_read_status.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.lay_read);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(300, 180);
-            this.groupBox1.TabIndex = 9;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "读";
+            groupBox1.Controls.Add(lay_read);
+            groupBox1.Location = new Point(3, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(300, 180);
+            groupBox1.TabIndex = 9;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "读";
             // 
             // lay_read
             // 
-            this.lay_read.ColumnCount = 2;
-            this.lay_read.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_read.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_read.Controls.Add(this.check_read_baseinfo, 0, 0);
-            this.lay_read.Controls.Add(this.check_read_timesetting, 1, 1);
-            this.lay_read.Controls.Add(this.check_read_status, 0, 2);
-            this.lay_read.Controls.Add(this.check_read_cmd, 0, 1);
-            this.lay_read.Controls.Add(this.check_read_repair, 1, 0);
-            this.lay_read.Controls.Add(this.check_read_data, 0, 3);
-            this.lay_read.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lay_read.Location = new System.Drawing.Point(3, 26);
-            this.lay_read.Name = "lay_read";
-            this.lay_read.RowCount = 4;
-            this.lay_read.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.lay_read.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.lay_read.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.lay_read.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.lay_read.Size = new System.Drawing.Size(294, 151);
-            this.lay_read.TabIndex = 12;
+            lay_read.ColumnCount = 2;
+            lay_read.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            lay_read.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            lay_read.Controls.Add(check_read_baseinfo, 0, 0);
+            lay_read.Controls.Add(check_read_timesetting, 1, 1);
+            lay_read.Controls.Add(check_read_status, 0, 2);
+            lay_read.Controls.Add(check_read_cmd, 0, 1);
+            lay_read.Controls.Add(check_read_repair, 1, 0);
+            lay_read.Controls.Add(check_read_data, 0, 3);
+            lay_read.Dock = DockStyle.Fill;
+            lay_read.Location = new Point(3, 26);
+            lay_read.Name = "lay_read";
+            lay_read.RowCount = 4;
+            lay_read.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            lay_read.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            lay_read.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            lay_read.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            lay_read.Size = new Size(294, 151);
+            lay_read.TabIndex = 12;
             // 
             // check_read_baseinfo
             // 
-            this.check_read_baseinfo.AutoSize = true;
-            this.check_read_baseinfo.Location = new System.Drawing.Point(3, 3);
-            this.check_read_baseinfo.Name = "check_read_baseinfo";
-            this.check_read_baseinfo.Size = new System.Drawing.Size(126, 28);
-            this.check_read_baseinfo.TabIndex = 9;
-            this.check_read_baseinfo.Text = "读基础信息";
-            this.check_read_baseinfo.UseVisualStyleBackColor = true;
+            check_read_baseinfo.AutoSize = true;
+            check_read_baseinfo.Location = new Point(3, 3);
+            check_read_baseinfo.Name = "check_read_baseinfo";
+            check_read_baseinfo.Size = new Size(126, 28);
+            check_read_baseinfo.TabIndex = 9;
+            check_read_baseinfo.Text = "读基础信息";
+            check_read_baseinfo.UseVisualStyleBackColor = true;
             // 
             // check_read_timesetting
             // 
-            this.check_read_timesetting.AutoSize = true;
-            this.check_read_timesetting.Location = new System.Drawing.Point(150, 40);
-            this.check_read_timesetting.Name = "check_read_timesetting";
-            this.check_read_timesetting.Size = new System.Drawing.Size(126, 28);
-            this.check_read_timesetting.TabIndex = 6;
-            this.check_read_timesetting.Text = "读定时配置";
-            this.check_read_timesetting.UseVisualStyleBackColor = true;
+            check_read_timesetting.AutoSize = true;
+            check_read_timesetting.Location = new Point(150, 40);
+            check_read_timesetting.Name = "check_read_timesetting";
+            check_read_timesetting.Size = new Size(126, 28);
+            check_read_timesetting.TabIndex = 6;
+            check_read_timesetting.Text = "读定时配置";
+            check_read_timesetting.UseVisualStyleBackColor = true;
             // 
             // check_read_cmd
             // 
-            this.check_read_cmd.AutoSize = true;
-            this.check_read_cmd.Location = new System.Drawing.Point(3, 40);
-            this.check_read_cmd.Name = "check_read_cmd";
-            this.check_read_cmd.Size = new System.Drawing.Size(126, 28);
-            this.check_read_cmd.TabIndex = 6;
-            this.check_read_cmd.Text = "读历史命令";
-            this.check_read_cmd.UseVisualStyleBackColor = true;
+            check_read_cmd.AutoSize = true;
+            check_read_cmd.Location = new Point(3, 40);
+            check_read_cmd.Name = "check_read_cmd";
+            check_read_cmd.Size = new Size(126, 28);
+            check_read_cmd.TabIndex = 6;
+            check_read_cmd.Text = "读历史命令";
+            check_read_cmd.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.lay_write);
-            this.groupBox2.Location = new System.Drawing.Point(3, 189);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(300, 150);
-            this.groupBox2.TabIndex = 10;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "写";
+            groupBox2.Controls.Add(lay_write);
+            groupBox2.Location = new Point(3, 189);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(300, 150);
+            groupBox2.TabIndex = 10;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "写";
             // 
             // lay_write
             // 
-            this.lay_write.ColumnCount = 2;
-            this.lay_write.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_write.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_write.Controls.Add(this.check_write_deletdata, 0, 0);
-            this.lay_write.Controls.Add(this.check_write_baseinfo, 1, 0);
-            this.lay_write.Controls.Add(this.check_write_deletdevice, 0, 1);
-            this.lay_write.Controls.Add(this.check_write_repair, 1, 1);
-            this.lay_write.Controls.Add(this.check_write_type, 1, 2);
-            this.lay_write.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lay_write.Location = new System.Drawing.Point(3, 26);
-            this.lay_write.Name = "lay_write";
-            this.lay_write.RowCount = 3;
-            this.lay_write.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_write.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_write.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 49F));
-            this.lay_write.Size = new System.Drawing.Size(294, 121);
-            this.lay_write.TabIndex = 12;
+            lay_write.ColumnCount = 2;
+            lay_write.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            lay_write.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            lay_write.Controls.Add(check_write_deletdata, 0, 0);
+            lay_write.Controls.Add(check_write_baseinfo, 1, 0);
+            lay_write.Controls.Add(check_write_deletdevice, 0, 1);
+            lay_write.Controls.Add(check_write_repair, 1, 1);
+            lay_write.Controls.Add(check_write_type, 1, 2);
+            lay_write.Dock = DockStyle.Fill;
+            lay_write.Location = new Point(3, 26);
+            lay_write.Name = "lay_write";
+            lay_write.RowCount = 3;
+            lay_write.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            lay_write.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            lay_write.RowStyles.Add(new RowStyle(SizeType.Absolute, 49F));
+            lay_write.Size = new Size(294, 121);
+            lay_write.TabIndex = 12;
             // 
             // check_write_deletdevice
             // 
-            this.check_write_deletdevice.AutoSize = true;
-            this.check_write_deletdevice.Location = new System.Drawing.Point(3, 39);
-            this.check_write_deletdevice.Name = "check_write_deletdevice";
-            this.check_write_deletdevice.Size = new System.Drawing.Size(90, 28);
-            this.check_write_deletdevice.TabIndex = 8;
-            this.check_write_deletdevice.Text = "删设备";
-            this.check_write_deletdevice.UseVisualStyleBackColor = true;
+            check_write_deletdevice.AutoSize = true;
+            check_write_deletdevice.Location = new Point(3, 39);
+            check_write_deletdevice.Name = "check_write_deletdevice";
+            check_write_deletdevice.Size = new Size(90, 28);
+            check_write_deletdevice.TabIndex = 8;
+            check_write_deletdevice.Text = "删设备";
+            check_write_deletdevice.UseVisualStyleBackColor = true;
             // 
             // check_write_repair
             // 
-            this.check_write_repair.AutoSize = true;
-            this.check_write_repair.Location = new System.Drawing.Point(150, 39);
-            this.check_write_repair.Name = "check_write_repair";
-            this.check_write_repair.Size = new System.Drawing.Size(126, 28);
-            this.check_write_repair.TabIndex = 7;
-            this.check_write_repair.Text = "改维修记录";
-            this.check_write_repair.UseVisualStyleBackColor = true;
+            check_write_repair.AutoSize = true;
+            check_write_repair.Location = new Point(150, 39);
+            check_write_repair.Name = "check_write_repair";
+            check_write_repair.Size = new Size(126, 28);
+            check_write_repair.TabIndex = 7;
+            check_write_repair.Text = "改维修记录";
+            check_write_repair.UseVisualStyleBackColor = true;
             // 
             // check_write_type
             // 
-            this.check_write_type.AutoSize = true;
-            this.check_write_type.Location = new System.Drawing.Point(150, 75);
-            this.check_write_type.Name = "check_write_type";
-            this.check_write_type.Size = new System.Drawing.Size(126, 28);
-            this.check_write_type.TabIndex = 9;
-            this.check_write_type.Text = "改设备类型";
-            this.check_write_type.UseVisualStyleBackColor = true;
+            check_write_type.AutoSize = true;
+            check_write_type.Location = new Point(150, 75);
+            check_write_type.Name = "check_write_type";
+            check_write_type.Size = new Size(126, 28);
+            check_write_type.TabIndex = 9;
+            check_write_type.Text = "改设备类型";
+            check_write_type.UseVisualStyleBackColor = true;
+            check_write_type.Visible = false;
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.lay_control);
-            this.groupBox3.Location = new System.Drawing.Point(3, 345);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(300, 150);
-            this.groupBox3.TabIndex = 11;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "控制";
+            groupBox3.Controls.Add(lay_control);
+            groupBox3.Location = new Point(3, 345);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(300, 150);
+            groupBox3.TabIndex = 11;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "控制";
             // 
             // lay_control
             // 
-            this.lay_control.ColumnCount = 2;
-            this.lay_control.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_control.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_control.Controls.Add(this.check_control_cmd, 0, 0);
-            this.lay_control.Controls.Add(this.check_control_timesetting, 0, 1);
-            this.lay_control.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lay_control.Location = new System.Drawing.Point(3, 26);
-            this.lay_control.Name = "lay_control";
-            this.lay_control.RowCount = 2;
-            this.lay_control.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_control.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.lay_control.Size = new System.Drawing.Size(294, 121);
-            this.lay_control.TabIndex = 12;
+            lay_control.ColumnCount = 2;
+            lay_control.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            lay_control.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            lay_control.Controls.Add(check_control_cmd, 0, 0);
+            lay_control.Controls.Add(check_control_timesetting, 0, 1);
+            lay_control.Dock = DockStyle.Fill;
+            lay_control.Location = new Point(3, 26);
+            lay_control.Name = "lay_control";
+            lay_control.RowCount = 2;
+            lay_control.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            lay_control.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            lay_control.Size = new Size(294, 121);
+            lay_control.TabIndex = 12;
             // 
             // check_delegate
             // 
-            this.check_delegate.AutoSize = true;
-            this.check_delegate.Location = new System.Drawing.Point(9, 501);
-            this.check_delegate.Name = "check_delegate";
-            this.check_delegate.Size = new System.Drawing.Size(72, 28);
-            this.check_delegate.TabIndex = 9;
-            this.check_delegate.Text = "转授";
-            this.check_delegate.UseVisualStyleBackColor = true;
+            check_delegate.AutoSize = true;
+            check_delegate.Location = new Point(9, 501);
+            check_delegate.Name = "check_delegate";
+            check_delegate.Size = new Size(72, 28);
+            check_delegate.TabIndex = 9;
+            check_delegate.Text = "转授";
+            check_delegate.UseVisualStyleBackColor = true;
             // 
             // btn_sel_read
             // 
-            this.btn_sel_read.Location = new System.Drawing.Point(322, 119);
-            this.btn_sel_read.Name = "btn_sel_read";
-            this.btn_sel_read.Size = new System.Drawing.Size(112, 34);
-            this.btn_sel_read.TabIndex = 13;
-            this.btn_sel_read.Text = "读";
-            this.btn_sel_read.UseVisualStyleBackColor = true;
-            this.btn_sel_read.Click += new System.EventHandler(this.btn_sel_read_Click);
+            btn_sel_read.Location = new Point(322, 119);
+            btn_sel_read.Name = "btn_sel_read";
+            btn_sel_read.Size = new Size(112, 34);
+            btn_sel_read.TabIndex = 13;
+            btn_sel_read.Text = "读";
+            btn_sel_read.UseVisualStyleBackColor = true;
+            btn_sel_read.Click += btn_sel_read_Click;
             // 
             // btn_sel_rw
             // 
-            this.btn_sel_rw.Location = new System.Drawing.Point(322, 158);
-            this.btn_sel_rw.Name = "btn_sel_rw";
-            this.btn_sel_rw.Size = new System.Drawing.Size(112, 34);
-            this.btn_sel_rw.TabIndex = 14;
-            this.btn_sel_rw.Text = "读写";
-            this.btn_sel_rw.UseVisualStyleBackColor = true;
-            this.btn_sel_rw.Click += new System.EventHandler(this.btn_sel_rw_Click);
+            btn_sel_rw.Location = new Point(322, 158);
+            btn_sel_rw.Name = "btn_sel_rw";
+            btn_sel_rw.Size = new Size(112, 34);
+            btn_sel_rw.TabIndex = 14;
+            btn_sel_rw.Text = "读写";
+            btn_sel_rw.UseVisualStyleBackColor = true;
+            btn_sel_rw.Click += btn_sel_rw_Click;
             // 
             // btn_sel_rwc
             // 
-            this.btn_sel_rwc.Location = new System.Drawing.Point(322, 197);
-            this.btn_sel_rwc.Name = "btn_sel_rwc";
-            this.btn_sel_rwc.Size = new System.Drawing.Size(112, 34);
-            this.btn_sel_rwc.TabIndex = 15;
-            this.btn_sel_rwc.Text = "读写控";
-            this.btn_sel_rwc.UseVisualStyleBackColor = true;
-            this.btn_sel_rwc.Click += new System.EventHandler(this.btn_sel_rwc_Click);
+            btn_sel_rwc.Location = new Point(322, 197);
+            btn_sel_rwc.Name = "btn_sel_rwc";
+            btn_sel_rwc.Size = new Size(112, 34);
+            btn_sel_rwc.TabIndex = 15;
+            btn_sel_rwc.Text = "读写控";
+            btn_sel_rwc.UseVisualStyleBackColor = true;
+            btn_sel_rwc.Click += btn_sel_rwc_Click;
             // 
             // btn_submit
             // 
-            this.btn_submit.Location = new System.Drawing.Point(322, 236);
-            this.btn_submit.Name = "btn_submit";
-            this.btn_submit.Size = new System.Drawing.Size(112, 34);
-            this.btn_submit.TabIndex = 16;
-            this.btn_submit.Text = "确定";
-            this.btn_submit.UseVisualStyleBackColor = true;
-            this.btn_submit.Click += new System.EventHandler(this.btn_submit_Click);
+            btn_submit.Location = new Point(322, 236);
+            btn_submit.Name = "btn_submit";
+            btn_submit.Size = new Size(112, 34);
+            btn_submit.TabIndex = 16;
+            btn_submit.Text = "确定";
+            btn_submit.UseVisualStyleBackColor = true;
+            btn_submit.Click += btn_submit_Click;
             // 
             // op_panel
             // 
-            this.op_panel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.op_panel.Controls.Add(this.groupBox1);
-            this.op_panel.Controls.Add(this.check_delegate);
-            this.op_panel.Controls.Add(this.groupBox2);
-            this.op_panel.Controls.Add(this.btn_submit);
-            this.op_panel.Controls.Add(this.groupBox3);
-            this.op_panel.Controls.Add(this.btn_sel_rwc);
-            this.op_panel.Controls.Add(this.btn_sel_rw);
-            this.op_panel.Controls.Add(this.btn_sel_read);
-            this.op_panel.Location = new System.Drawing.Point(384, 38);
-            this.op_panel.Name = "op_panel";
-            this.op_panel.Size = new System.Drawing.Size(468, 568);
-            this.op_panel.TabIndex = 18;
+            op_panel.BackColor = Color.FromArgb(192, 255, 255);
+            op_panel.Controls.Add(groupBox1);
+            op_panel.Controls.Add(check_delegate);
+            op_panel.Controls.Add(groupBox2);
+            op_panel.Controls.Add(btn_submit);
+            op_panel.Controls.Add(groupBox3);
+            op_panel.Controls.Add(btn_sel_rwc);
+            op_panel.Controls.Add(btn_sel_rw);
+            op_panel.Controls.Add(btn_sel_read);
+            op_panel.Location = new Point(384, 38);
+            op_panel.Name = "op_panel";
+            op_panel.Size = new Size(468, 568);
+            op_panel.TabIndex = 18;
             // 
             // FUserDevice
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(925, 639);
-            this.Controls.Add(this.op_panel);
-            this.Controls.Add(this.list_devices);
-            this.Controls.Add(this.list_devicegroup);
-            this.Name = "FUserDevice";
-            this.Text = "FUserDevice";
-            this.groupBox1.ResumeLayout(false);
-            this.lay_read.ResumeLayout(false);
-            this.lay_read.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.lay_write.ResumeLayout(false);
-            this.lay_write.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.lay_control.ResumeLayout(false);
-            this.lay_control.PerformLayout();
-            this.op_panel.ResumeLayout(false);
-            this.op_panel.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(925, 639);
+            Controls.Add(op_panel);
+            Controls.Add(list_devices);
+            Controls.Add(list_devicegroup);
+            Name = "FUserDevice";
+            Text = "FUserDevice";
+            groupBox1.ResumeLayout(false);
+            lay_read.ResumeLayout(false);
+            lay_read.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            lay_write.ResumeLayout(false);
+            lay_write.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            lay_control.ResumeLayout(false);
+            lay_control.PerformLayout();
+            op_panel.ResumeLayout(false);
+            op_panel.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion

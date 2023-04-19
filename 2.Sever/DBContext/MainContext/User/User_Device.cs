@@ -17,6 +17,9 @@ namespace MyDBContext.Main
     [Index(nameof(UserTreeId))]
     public class User_Device
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long Id { get; set; }
+
         public long UserId { get; set; }
         public long DeviceId { get; set; }
         public long User_Device_GroupId { get; set; }
@@ -37,11 +40,5 @@ namespace MyDBContext.Main
         public virtual User User { get; set; }
         public virtual Device Device { get; set; }
         public virtual User_Device_Group User_Device_Group { get; set; }
-        //todo
-
-        static internal void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<User_Device>().HasKey(it => new { it.UserId, it.DeviceId });
-        }
     }
 }

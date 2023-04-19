@@ -226,19 +226,19 @@ namespace MyClient.View.User
                 req.UserDevice.UserId = SelectedUser.ID;
                 #region 设置权限
                 req.UserDevice.Authority = 0;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Read_BaseInfo;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Read_Repair;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Read_Cmd;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Read_TimeSetting;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Read_Status;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Read_Data;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Write_DeletData;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Write_DeletDevice;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Write_BaseInfo;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Write_Repair;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Control_Cmd;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Control_TimeSetting;
-                req.UserDevice.Authority |= (int)UserDeviceAuthority.Delegate;
+                req.UserDevice.Authority |= !check_read_baseinfo.Checked ? 0 : (int)UserDeviceAuthority.Read_BaseInfo;
+                req.UserDevice.Authority |= !check_read_repair.Checked ? 0 : (int)UserDeviceAuthority.Read_Repair;
+                req.UserDevice.Authority |= !check_read_cmd.Checked ? 0 : (int)UserDeviceAuthority.Read_Cmd;
+                req.UserDevice.Authority |= !check_read_timesetting.Checked ? 0 : (int)UserDeviceAuthority.Read_TimeSetting;
+                req.UserDevice.Authority |= !check_read_status.Checked ? 0 : (int)UserDeviceAuthority.Read_Status;
+                req.UserDevice.Authority |= !check_read_data.Checked ? 0 : (int)UserDeviceAuthority.Read_Data;
+                req.UserDevice.Authority |= !check_write_deletdata.Checked ? 0 : (int)UserDeviceAuthority.Write_DeletData;
+                req.UserDevice.Authority |= !check_write_deletdevice.Checked ? 0 : (int)UserDeviceAuthority.Write_DeletDevice;
+                req.UserDevice.Authority |= !check_write_baseinfo.Checked ? 0 : (int)UserDeviceAuthority.Write_BaseInfo;
+                req.UserDevice.Authority |= !check_write_repair.Checked ? 0 : (int)UserDeviceAuthority.Write_Repair;
+                req.UserDevice.Authority |= !check_control_cmd.Checked ? 0 : (int)UserDeviceAuthority.Control_Cmd;
+                req.UserDevice.Authority |= !check_control_timesetting.Checked ? 0 : (int)UserDeviceAuthority.Control_TimeSetting;
+                req.UserDevice.Authority |= !check_delegate.Checked ? 0 : (int)UserDeviceAuthority.Delegate;
                 #endregion
                 var rsp = userDeviceServiceClient.UpdateUserDeviceAuthority(req);
                 rsp.ThrowIfNotSuccess();

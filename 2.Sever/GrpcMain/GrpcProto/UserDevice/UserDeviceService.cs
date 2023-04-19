@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using GrpcMain.Attributes;
 using GrpcMain.Common;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
@@ -53,131 +54,117 @@ namespace GrpcMain.UserDevice
             _timeutility = time;
             _cursorUtility = cursorUtility;
         }
-
+        [MyGrpcMethod(NeedLogin = false, NeedDB = true)]
         public override async Task<CommonResponse?> UpdateUserDeviceAuthority(Request_UpdateUserDeviceAuthority request, ServerCallContext context)
         {
             long id = (long)context.UserState["CreatorId"];
+            var ct = (MainContext)context.UserState[nameof(MainContext)];
 
-            using (MainContext ct = new MainContext())
+            if (await id.IsDirectFatherAsync(ct, request.UserDevice.UserId) == false)
+
             {
-                if (await id.IsDirectFatherAsync(ct, request.UserDevice.UserId) == false)
+                return new CommonResponse()
+                {
+                    Success = false,
+                    Message = "指定了无效的接收用户",
+                };
+            }
+            //TODO 优化
+            var uds = await ct.Devices.Join(ct.User_Devices, it => it.Id, it => it.DeviceId, (dv, udv) => new { dv, udv })
+                .Where(it => it.udv.UserId == id && request.Dvids.Contains(it.dv.Id)).ToListAsync();
+            if (uds.Count != request.Dvids.Count)
+            {
+                return new CommonResponse()
+                {
+                    Success = false,
+                    Message = "参数错误或者使用非法的设备ID或不是子用户ID",
+                };
+            }
 
+            //确定所有设备可以权限转授
+            foreach (var item in uds)
+            {
+                if (request.UserDevice.Authority == 0
+                    || (item.udv._Authority.HasFlag(UserDeviceAuthority.Delegate)) && (item.udv.Authority & request.UserDevice.Authority) == request.UserDevice.Authority)
+                {
+
+                }
+                else
                 {
                     return new CommonResponse()
                     {
                         Success = false,
-                        Message = "指定了无效的接收用户",
+                        Message = $"设备{item.dv.Id}权限不足或不能转授",
                     };
                 }
-                //TODO 优化
-                var uds = await ct.Devices.Join(ct.User_Devices, it => it.Id, it => it.DeviceId, (dv, udv) => new { dv, udv })
-                    .Where(it => it.udv.UserId == id && request.Dvids.Contains(it.dv.Id)).ToListAsync();
-                if (uds.Count != request.Dvids.Count)
+            }
+
+
+            if (request.UserDevice.Authority == 0)
+            {//删除权限
+             //删除自己和子用户的相关权限
+                var subuserAndSelf = await ct.User_SFs.Where(itx =>
+                   itx.User2Id == request.UserDevice.UserId
+                   && !itx.IsFather
+                ).Select(it => it.User2Id).ToListAsync();
+                await ct.DeleteRangeAsync<MyDBContext.Main.User_Device>(it =>
+                    request.Dvids.Contains(it.DeviceId) &&
+                    subuserAndSelf.Contains(it.UserId)
+                );
+            }
+            else
+            {//修改权限
+             //被修改者已有的权限
+                Dictionary<long, MyDBContext.Main.User_Device> dic2 =
+                    (await ct.User_Devices.Where(it => request.Dvids.Contains(it.DeviceId) && it.UserId == request.UserDevice.UserId)
+                    .AsNoTracking().ToDictionaryAsync(it => it.DeviceId));
+
+
+                request.UserDevice.UserDeviceGroup = 0;
+                var inputud = request.UserDevice.Clone();
+                var subusers= await ct.User_SFs.Where(itx =>
+                    itx.User1Id == request.UserDevice.UserId
+                    && itx.IsFather
+                ).Select(it => it.User2Id).ToListAsync();
+
+                var newauthority = request.UserDevice.Authority;
+                //子用户降级权限
+                if ((newauthority & (int)UserDeviceAuthority.Delegate) == 0)
                 {
-                    return new CommonResponse()
-                    {
-                        Success = false,
-                        Message = "参数错误或者使用非法的设备ID或不是子用户ID",
-                    };
-                }
+                    //当撤销转授 删除其子用户权限
 
-                //确定所有设备可以权限转授
-                foreach (var item in uds)
-                {
-                    if (!item.udv._Authority.HasFlag(UserDeviceAuthority.Delegate))
-                    {
-                        return new CommonResponse()
-                        {
-                            Success = false,
-                            Message = $"设备{item.dv.Id}的权限不能被转授",
-                        };
-                    }
-                }
-
-
-                if (request.UserDevice.Authority == 0)
-                {//删除权限
                     await ct.DeleteRangeAsync<MyDBContext.Main.User_Device>(it =>
                         request.Dvids.Contains(it.DeviceId) &&
-                        ct.User_SFs.Where(itx =>
-                            itx.User1Id == request.UserDevice.UserId &&
-                            itx.User2Id == it.UserId && (itx.IsFather || itx.IsSelf)
-                        ).Select(it => it.User2Id).Contains(it.UserId)
+                        subusers.Contains(it.UserId)
                     );
                 }
                 else
-                {//修改权限
-                    //请求的用户的已有权限  用于拦截对子用户添加其他未拥有的权限
-                    Dictionary<long, MyDBContext.Main.User_Device> dic = new();
-                    (await ct.User_Devices.Where(it => request.Dvids.Contains(it.DeviceId) && it.UserId == id)
-                        .AsNoTracking().ToListAsync()).ForEach(it =>
-                        {
-                            dic.Add(it.DeviceId, it);
-                        });
-                    //被修改者已有的权限
-                    Dictionary<long, MyDBContext.Main.User_Device> dic2 = new();
-                    (await ct.User_Devices.Where(it => request.Dvids.Contains(it.DeviceId) && it.UserId == request.UserDevice.UserId)
-                        .ToListAsync()).ForEach(it =>
-                        {
-                            dic2.Add(it.DeviceId, it);
-                        });
-
-
-                    request.UserDevice.UserDeviceGroup = 0;
-                    var inputud = request.UserDevice.Clone();
-                    foreach (var item in request.Dvids)
-                    {
-
-                        //请求者的此记录
-                        MyDBContext.Main.User_Device ud;
-
-                        if (!dic.TryGetValue(item, out ud))
-                        {
-                            return new CommonResponse()
-                            {
-                                Success = false,
-                                Message = "没有设备:" + item + " 的权限",
-                            };
-                        }
-                        var newauthority = request.UserDevice.Authority;
-                        if ((newauthority & ud.Authority) != newauthority)
-                        {
-                            newauthority = newauthority & ud.Authority;
-                        }
-
-                        //TODO 重新处理逻辑
-                        //子用户降级权限
-                        await ct.BatchUpdate<MyDBContext.Main.User_Device>().
-                        Set(
-                            it => it.Authority,
-                            it => (it.Authority & newauthority)
-                        ).Where(
-                             it =>
-                            request.Dvids.Contains(it.DeviceId) &&
-                            ct.User_SFs.Where(itx =>
-                                itx.User1Id == request.UserDevice.UserId &&
-                                itx.User2Id == it.UserId && itx.IsFather
-                            ).Select(it => it.User2Id).Contains(it.UserId)
-                        )
-                        .ExecuteAsync();
-                        //此用户修改权限
-                        await ct.BatchUpdate<MyDBContext.Main.User_Device>().
-                        Set(
-                            it => it.Authority,
-                            it => (newauthority)
-                        ).Where(
-                             it =>
-                            request.Dvids.Contains(it.DeviceId) &&
-                            it.UserId == request.UserDevice.UserId
-                        )
-                        .ExecuteAsync();
-
-                    }
+                { //修改其子用户权限
+                    await ct.BatchUpdate<MyDBContext.Main.User_Device>().
+                    Set(
+                      it => it.Authority,
+                      it => (it.Authority & newauthority)
+                    ).Where(it =>
+                        request.Dvids.Contains(it.DeviceId)
+                        && subusers.Contains(it.UserId)
+                    )
+                    .ExecuteAsync();
                 }
-
-                await ct.SaveChangesAsync();
+                //此用户修改权限
+                await ct.BatchUpdate<MyDBContext.Main.User_Device>().
+                Set(
+                    it => it.Authority,
+                    it => (newauthority)
+                ).Where(
+                     it =>
+                    request.Dvids.Contains(it.DeviceId) &&
+                    it.UserId == request.UserDevice.UserId
+                )
+                .ExecuteAsync();
 
             }
+            await ct.SaveChangesAsync();
+
             return new CommonResponse() { Success = true };
         }
         public override async Task<CommonResponse> AddUserDevice(Request_AddUserDevice request, ServerCallContext context)

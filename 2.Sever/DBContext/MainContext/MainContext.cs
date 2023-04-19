@@ -345,13 +345,12 @@ namespace MyDBContext.Main
             //optionsBuilder.UseMySql(s, ServerVersion.AutoDetect(s));
             optionsBuilder.UseSqlite(_connection);
             optionsBuilder.UseBatchEF_Sqlite();
-            //optionsBuilder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel .Information).EnableSensitiveDataLogging().EnableDetailedErrors();
+            optionsBuilder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information).EnableSensitiveDataLogging().EnableDetailedErrors();
         }
         [DebuggerStepThrough]
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            User_Device.OnModelCreating(modelBuilder);
             User_SF.OnModelCreating(modelBuilder);
             new BaseValueBuilder().OnModelCreating(modelBuilder);
             new ColdDataBuilder().OnModelCreating(modelBuilder);
@@ -370,7 +369,7 @@ namespace MyDBContext.Main
             var ls = new List<UserAuthorityEnum> {
                 UserAuthorityEnum.TopUserAdd,
             };
-            return Newtonsoft.Json.JsonConvert.SerializeObject(ls.Select(it=>it.ToString()));
+            return Newtonsoft.Json.JsonConvert.SerializeObject(ls.Select(it => it.ToString()));
         }
         string buildAuthorityTopUser()
         {
@@ -844,6 +843,7 @@ namespace MyDBContext.Main
             modelBuilder.Entity<User_Device>().HasData(
                 new User_Device()
                 {
+                    Id = 1,
                     UserId = 2,
                     DeviceId = 1,
                     _Authority = UserDeviceAuthority.Every,
@@ -852,6 +852,7 @@ namespace MyDBContext.Main
                 }
                 , new User_Device()
                 {
+                    Id = 2,
                     UserId = 2,
                     DeviceId = 2,
                     _Authority = UserDeviceAuthority.Every,
@@ -860,6 +861,7 @@ namespace MyDBContext.Main
                 }
                 , new User_Device()
                 {
+                    Id = 3,
                     UserId = 2,
                     DeviceId = 3,
                     _Authority = UserDeviceAuthority.Every,
@@ -868,6 +870,7 @@ namespace MyDBContext.Main
                 }
                 , new User_Device()
                 {
+                    Id = 4,
                     UserId = 3,
                     DeviceId = 1,
                     _Authority = UserDeviceAuthority.Every,
@@ -876,6 +879,7 @@ namespace MyDBContext.Main
                 }
                 , new User_Device()
                 {
+                    Id = 5,
                     UserId = 3,
                     DeviceId = 2,
                     _Authority = UserDeviceAuthority.Every,
@@ -884,6 +888,7 @@ namespace MyDBContext.Main
                 }
                 , new User_Device()
                 {
+                    Id = 6,
                     UserId = 4,
                     DeviceId = 1,
                     _Authority = UserDeviceAuthority.Every,
@@ -1043,14 +1048,14 @@ namespace MyDBContext.Main
         {
             var time = new MyUtility.TimeUtility();
             int t = 10000;
-            for (int i = t+ 1; i <= t+1000; i++)
+            for (int i = t + 1; i <= t + 1000; i++)
             {
                 modelBuilder.Entity<Device_DataPoint>().HasData(
                 new Device_DataPoint
                 {
                     DeviceId = 1,
                     StreamId = 1,
-                    Time = time.GetTicket((new DateTime(2023, 1, 1)).AddHours(i-t)),
+                    Time = time.GetTicket((new DateTime(2023, 1, 1)).AddHours(i - t)),
                     Id = i,
                     Value = Random.Shared.Next(0, 100)
                 });

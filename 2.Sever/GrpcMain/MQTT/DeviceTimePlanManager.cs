@@ -60,7 +60,7 @@ namespace GrpcMain.MQTT
 #if AutoControlDebug
                         await Task.Delay(1000*10);
 #else
-                        await Task.Delay(1000);
+                        await Task.Delay(1000*60*5);
 #endif
                         await runc();
                     }
