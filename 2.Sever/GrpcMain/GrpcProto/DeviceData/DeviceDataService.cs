@@ -21,12 +21,6 @@ namespace GrpcMain.DeviceData
 
         private async Task<Response_GetDataPoints?> GetDataPointsNormal(Request_GetDataPoints request, ServerCallContext context)
         {
-            if (request.ColdData)
-            {
-                context.Status = new Status(StatusCode.PermissionDenied, nameof(request.ColdData) + "=true不应当使用该接口");
-                return null;
-            }
-
             int maxcount = 1000 + 1;
             if (request.HasMaxCount)
                 maxcount = request.MaxCount + 1;

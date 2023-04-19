@@ -1042,6 +1042,20 @@ namespace MyDBContext.Main
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             var time = new MyUtility.TimeUtility();
+            int t = 10000;
+            for (int i = t+ 1; i <= t+1000; i++)
+            {
+                modelBuilder.Entity<Device_DataPoint>().HasData(
+                new Device_DataPoint
+                {
+                    DeviceId = 1,
+                    StreamId = 1,
+                    Time = time.GetTicket((new DateTime(2023, 1, 1)).AddHours(i-t)),
+                    Id = i,
+                    Value = Random.Shared.Next(0, 100)
+                });
+            }
+
             modelBuilder.Entity<Device_DataPoint_Cold>().HasData(new Device_DataPoint_Cold
             {
                 Count = 1,

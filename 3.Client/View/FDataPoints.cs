@@ -104,14 +104,14 @@ namespace MyClient.View
             }
             try
             {
-                string data = await GetDataStr_1(thingModels[CStreamName.SelectedIndex], ds);
+                (string data, var s, var e) = await GetDataStr_1(thingModels[CStreamName.SelectedIndex], ds);
                 var ts = dateTimePicker1.Value;
                 ts = new DateTime(ts.Year, ts.Month, ts.Day);
                 var te = dateTimePicker2.Value;
                 te = (new DateTime(te.Year, te.Month, te.Day)).AddDays(1);
                 chromiumWebBrowser1.ExecuteScriptAsync("showdata_fromcs",
                     Newtonsoft.Json.JsonConvert.SerializeObject(ds.Select(it => it.Device.Name).ToList())
-                    , data, _timeUtility.GetTicket(ts) * 1000, _timeUtility.GetTicket(te) * 1000); 
+                    , data, s, e);
             }
             catch (Exception ex)
             {
@@ -122,12 +122,13 @@ namespace MyClient.View
 
         }
 
-        async Task<string> GetDataStr_1(ThingModel model, List<DeviceWithUserDeviceInfo> devinfo)
+        async Task<(string, long, long)> GetDataStr_1(ThingModel model, List<DeviceWithUserDeviceInfo> devinfo)
         {
             DateTime ds = dateTimePicker1.Value, de = dateTimePicker2.Value;
             ds = new DateTime(ds.Year, ds.Month, ds.Day);
             de = new DateTime(de.Year, de.Month, de.Day).AddDays(1);
-
+            long timeStampStart = long.MaxValue;
+            long timeStampEnd = int.MinValue;
             List<Dictionary<string, object>> obj = new List<Dictionary<string, object>>();
             foreach (var dev in devinfo)
             {
@@ -140,12 +141,17 @@ namespace MyClient.View
                     ColdData = cbUseCold.Checked,
                 });
                 List<object[]> dps = res.Stream.Points.Select(it => new object[] { it.Time * 1000, it.Value }).ToList();
+                dps.ForEach(it =>
+                {
+                    timeStampStart = Math.Min(timeStampStart, (long)(it[0]));
+                    timeStampEnd = Math.Max(timeStampEnd, (long)(it[0]));
+                });
                 obj.Add(new Dictionary<string, object>() {
                     { "Name",dev.Device.Name},
                     { "Data", dps },
                 });
             }
-            return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+            return (Newtonsoft.Json.JsonConvert.SerializeObject(obj), timeStampStart, timeStampEnd);
         }
 
         async void RefreshChart_2()
