@@ -24,12 +24,7 @@ builder.Services.UseMyGrpc("2432114474");
 builder.Services.UseMyEmail();
 builder.Services.UseMQTT();
 
-//启动定时任务
-_ = Task.Run(() =>
-{
-    Thread.Sleep(1000 * 5);
-    AutoTaskAttribute.RegisterTask();
-});
+
 
 #region 禁用模型校验
 
@@ -101,7 +96,6 @@ else
 
 app.RegistMyGrpc();
 app.Services.StartMQTT();
-app.StartAutoControl();
 //app.UseHttpsRedirection();
 //app.UseStaticFiles();
 
@@ -114,6 +108,12 @@ app.Urls.Add("https://localhost:8089");
 #else
  app.Urls.Add("http://*:8089");
 #endif
+//启动定时任务
+_ = Task.Run(() =>
+{
+    Thread.Sleep(1000 * 5);
+    AutoTaskAttribute.RegisterTask(app.Services.GetService);
+});
 app.Run();
 
 

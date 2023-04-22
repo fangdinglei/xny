@@ -342,9 +342,10 @@ namespace MyDBContext.Main
             }
             base.OnConfiguring(optionsBuilder);
             string s = "server=fdlmaindb.mysql.rds.aliyuncs.com;database=dbbs;user id=fangdinglei;password=FdlMainDB@;port=3306;sslmode=None";
-            //optionsBuilder.UseMySql(s, ServerVersion.AutoDetect(s));
-            optionsBuilder.UseSqlite(_connection);
-            optionsBuilder.UseBatchEF_Sqlite();
+            optionsBuilder.UseMySql(s, ServerVersion.AutoDetect(s));
+            optionsBuilder.UseBatchEF_MySQLPomelo();
+            //optionsBuilder.UseSqlite(_connection);
+            //optionsBuilder.UseBatchEF_Sqlite();
             optionsBuilder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information).EnableSensitiveDataLogging().EnableDetailedErrors();
         }
         [DebuggerStepThrough]
@@ -1047,34 +1048,36 @@ namespace MyDBContext.Main
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             var time = new MyUtility.TimeUtility();
-            int t = 10000;
-            for (int i = t + 1; i <= t + 1000; i++)
+            int b = 100;
+            int w = b * b;
+            int t = w*10;
+            for (int i = 100 + 1; i <= 100 + w; i++)
             {
                 modelBuilder.Entity<Device_DataPoint>().HasData(
                 new Device_DataPoint
                 {
                     DeviceId = 1,
                     StreamId = 1,
-                    Time = time.GetTicket((new DateTime(2023, 1, 1)).AddHours(i - t)),
+                    Time = time.GetTicket((new DateTime(2023, 1, 1)).AddSeconds(-i)),
                     Id = i,
                     Value = Random.Shared.Next(0, 100)
                 });
             }
 
-            modelBuilder.Entity<Device_DataPoint_Cold>().HasData(new Device_DataPoint_Cold
-            {
-                Count = 1,
-                CreatTime = time.GetTicket(),
-                DeviceId = 1,
-                StreamId = 1,
-                EndTime = time.GetTicket(),
-                StartTime = time.GetTicket(DateTime.Now.AddDays(-2)),
-                Id = 1,
-                ManagerName = "InFile",
-                Pars = "",
-                status = 0,
-                TreeId = 2,
-            });
+            //modelBuilder.Entity<Device_DataPoint_Cold>().HasData(new Device_DataPoint_Cold
+            //{
+            //    Count = 1,
+            //    CreatTime = time.GetTicket(),
+            //    DeviceId = 1,
+            //    StreamId = 1,
+            //    EndTime = time.GetTicket(),
+            //    StartTime = time.GetTicket(DateTime.Now.AddDays(-2)),
+            //    Id = 1,
+            //    ManagerName = "InFile",
+            //    Pars = "",
+            //    status = 0,
+            //    TreeId = 2,
+            //});
             modelBuilder.Entity<DeviceColdDataSettings>().HasData(new DeviceColdDataSettings
             {
                 ColdDownTime = 10,

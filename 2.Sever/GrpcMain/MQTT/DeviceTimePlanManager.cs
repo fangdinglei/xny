@@ -1,21 +1,33 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using Sever.DeviceProto;
+using TimerMvcWeb.Filters;
 
 namespace GrpcMain.MQTT
 {
     /// <summary>
     /// 设备定时控制管理器 负责检查和发送命令
     /// </summary>
+    [AutoTask(Name = "DeviceTimePlanManager", OnTimeCall = "Run", IntervalSeconds = 1000*60*5)]
     public class DeviceTimePlanManager
     {
-        IProto _proto;
-        DeviceUtility _du;
+        static IProto _proto;
+        static DeviceUtility _du;
 
-        public DeviceTimePlanManager(IProto proto, DeviceUtility du)
+        public static void InitTimePlan(IProto _proto, DeviceUtility _du)
         {
-            _proto = proto; _du = du;
-            var runc = async () =>
+            DeviceTimePlanManager._proto = _proto;
+            DeviceTimePlanManager._du = _du;
+        }
+        volatile static bool running = false;
+        public static async void Run()
+        {
+            if (running)
+            {
+                return;
+            }
+            running = true;
+            try
             {
                 using var ct = new MainContext();
                 //TODO 性能优化
@@ -50,28 +62,16 @@ namespace GrpcMain.MQTT
 
                 }
 
-            };
-            Task.Run(async () =>
+            }
+            catch (Exception)
             {
-                while (true)
-                {
-                    try
-                    {
-#if AutoControlDebug
-                        await Task.Delay(1000*10);
-#else
-                        await Task.Delay(1000*60*5);
-#endif
-                        await runc();
-                    }
-                    catch (Exception ex)
-                    {
 
-                    }
-                }
-
-
-            });
+                throw;
+            }
+            finally
+            {
+                running = false;
+            }
         }
     }
 }

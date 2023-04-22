@@ -10,7 +10,7 @@ namespace Sever.ColdData
     /// <summary>
     /// 用于管理自动
     /// </summary>
-    [AutoTask(Name = "ColdDataManager", OnTimeCall = "Run", IntervalSeconds = 1)]
+    [AutoTask(Name = "ColdDataManager", OnTimeCall = "Run", IntervalSeconds = 1000*60*60*24)]
     public class ColdDataManager
     {
         static ITimeUtility tu = new TimeUtility();
@@ -59,7 +59,7 @@ namespace Sever.ColdData
                     using BinaryWriter binaryWriter = new BinaryWriter(ms);
                     foreach (var point in ls)
                     {
-                        binaryWriter.Write((int)(point.Time - cold.CreatTime));
+                        binaryWriter.Write((int)(point.Time - cold.StartTime));
                         binaryWriter.Write(point.Value);
                     }
 
@@ -75,7 +75,7 @@ namespace Sever.ColdData
                     await ct.Database.CommitTransactionAsync();
                     cursor1 = ls.Last().Time;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await ct.Database.RollbackTransactionAsync();
                     return;

@@ -30,9 +30,12 @@ namespace Sever.ColdData.Imp
                         throw new Exception("冷数据损坏");
                     using (BinaryReader br = new BinaryReader(new MemoryStream(bytes)))
                     {
-                        var time = cd.StartTime + br.ReadUInt32();
-                        var data = br.ReadSingle();
-                        res.Add((time, data));
+                        for (int i = 0; i < cd.Count; i++)
+                        {
+                            var time = cd.StartTime + br.ReadUInt32();
+                            var data = br.ReadSingle();
+                            res.Add((time, data));
+                        }
                     }
                 }
             }
@@ -104,7 +107,7 @@ namespace Sever.ColdData.Imp
             }
             catch (Exception)
             {
-                throw new Exception("删除失败");
+                throw new Exception("保存失败");
             }
         }
 

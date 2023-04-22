@@ -37,9 +37,9 @@ namespace TimerMvcWeb.Filters
         /// <summary>
         /// Global.asax.cs 中调用
         /// </summary>
-        public static void RegisterTask()
+        public static void RegisterTask(Func<Type, object> getService)
         {
-            StartAutoTask();
+            StartAutoTask(getService);
             foreach (var a in OnLoad)
             {
                 a.Invoke();
@@ -61,7 +61,7 @@ namespace TimerMvcWeb.Filters
         /// <summary>
         /// 反射获取自动任务信息
         /// </summary>
-        private static void StartAutoTask()
+        private static void StartAutoTask(Func<Type, object> getService)
         {
             AppDomain.CurrentDomain.GetAssemblies().ToList().ForEach((asms) =>
             {
@@ -76,7 +76,7 @@ namespace TimerMvcWeb.Filters
                         {
                             if (att == null)
                                 continue;
-                            RegisterTask(att, t);
+                            RegisterTask(att, t, getService);
                         }
                     }
                     catch (Exception ex)
@@ -94,9 +94,9 @@ namespace TimerMvcWeb.Filters
         /// </summary>
         /// <param name="att"></param>
         /// <param name="t"></param>
-        static void RegisterTask(AutoTaskAttribute att, Type t)
+        static void RegisterTask(AutoTaskAttribute att, Type t, Func<Type, object> getService)
         {
-            MethodInfo method_onload = null, method_time = null, method_exit = null;
+            MethodInfo? method_onload = null, method_time = null, method_exit = null;
             if (string.IsNullOrWhiteSpace(att.Name))
             {
                 throw new Exception("Name不能是空");
@@ -176,7 +176,15 @@ namespace TimerMvcWeb.Filters
                     }
                 });
             }
-
+            if ((method_onload = t.GetMethod("InitTimePlan")) != null)
+            {
+                var obj = new List<object>();
+                foreach (var par in method_onload.GetParameters())
+                {
+                    obj.Add(getService(par.ParameterType));
+                }
+                method_onload.Invoke(null,obj.ToArray());
+            }
 
         }
     }
