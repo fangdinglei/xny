@@ -39,7 +39,7 @@ namespace Sever.ColdData.Imp
                     }
                 }
             }
-            return res;
+            return res.Where(it=>it.Item1>=starttime&&it.Item1<endtime).ToList();
         }
 
         public Task<bool> DoCombine(long id1, long id2)

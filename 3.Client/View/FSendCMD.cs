@@ -76,11 +76,22 @@ namespace MyClient.View
                     });
                     MessageBox.Show("不具有设备:\r\n" + str.Trim(',') + "\r\n的命令权限,已忽略", "提示");
                 }
-
+                if (dvs.Count - notoklist.Count<=0)
+                {
+                    return;
+                }
                 req.Cmd = tcmd.Text;
                 var rsp = deviceServiceClient.SendCMD(req);
                 rsp.ThrowIfNotSuccess();
-                MessageBox.Show("发送成功", "提示");
+                if (dvs.Count == 1 && notoklist.Count > 0)
+                {
+                    MessageBox.Show("发送失败", "提示");
+                    return;
+                }
+                else {
+                    MessageBox.Show($"共 {dvs.Count} 成功{dvs.Count-notoklist.Count}", "提示");
+                    return;
+                }
             }
             catch (Exception ex)
             {

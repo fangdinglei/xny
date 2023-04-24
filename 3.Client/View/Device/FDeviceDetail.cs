@@ -66,6 +66,10 @@ DeviceService.DeviceServiceClient deviceServiceClient)
                 {
                     Dvids = { device.Id }
                 });
+                if (res1.LatestData.Count==0|| string.IsNullOrWhiteSpace(res1.LatestData[0]))
+                {
+                    return new List<Dictionary<string, object>>();
+                }
                 var dt = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<long, float>>(res1.LatestData[0]);
                 var ls = new List<Dictionary<string, object>>();
                 foreach (var kv in dt)

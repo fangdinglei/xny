@@ -874,7 +874,7 @@ namespace MyDBContext.Main
                     Id = 4,
                     UserId = 3,
                     DeviceId = 1,
-                    _Authority = UserDeviceAuthority.Every,
+                    _Authority = UserDeviceAuthority.Read_BaseInfo,
                     User_Device_GroupId = 2,
                     UserTreeId = 2,
                 }
@@ -883,7 +883,7 @@ namespace MyDBContext.Main
                     Id = 5,
                     UserId = 3,
                     DeviceId = 2,
-                    _Authority = UserDeviceAuthority.Every,
+                    _Authority = UserDeviceAuthority.Read_BaseInfo,
                     User_Device_GroupId = 0,
                     UserTreeId = 2,
                 }
@@ -1050,17 +1050,17 @@ namespace MyDBContext.Main
             var time = new MyUtility.TimeUtility();
             int b = 100;
             int w = b * b;
-            int t = w*10;
-            for (int i = 100 + 1; i <= 100 + w; i++)
+            int t = w;
+            for (int i = 100 + 1; i <= 100 + t; i++)
             {
                 modelBuilder.Entity<Device_DataPoint>().HasData(
                 new Device_DataPoint
                 {
                     DeviceId = 1,
                     StreamId = 1,
-                    Time = time.GetTicket((new DateTime(2023, 1, 1)).AddSeconds(-i)),
+                    Time = time.GetTicket((new DateTime(2023, 1, 1)).AddSeconds(Random.Shared.Next(-3600*24*365*4,0))),
                     Id = i,
-                    Value = Random.Shared.Next(0, 100)
+                    Value = Random.Shared.NextSingle()
                 });
             }
 
