@@ -66,7 +66,7 @@ DeviceService.DeviceServiceClient deviceServiceClient)
                 {
                     Dvids = { device.Id }
                 });
-                if (res1.LatestData.Count==0|| string.IsNullOrWhiteSpace(res1.LatestData[0]))
+                if (res1.LatestData.Count == 0 || string.IsNullOrWhiteSpace(res1.LatestData[0]))
                 {
                     return new List<Dictionary<string, object>>();
                 }
@@ -203,6 +203,11 @@ DeviceService.DeviceServiceClient deviceServiceClient)
             var tb = new List<ValueTuple<long, string>>();
             tb.Add((device.Id, device.Name));
             _viewholder.SwitchTo(nameof(FAutoControl), false, tb);
+        }
+
+        private void btnCmdHistory_Click(object sender, EventArgs e)
+        {
+            _viewholder.SwitchTo(nameof(FDeviceCmdHistory), false, device.Id);
         }
     }
 }

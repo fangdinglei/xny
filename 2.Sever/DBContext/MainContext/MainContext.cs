@@ -324,9 +324,9 @@ namespace MyDBContext.Main
         /// </summary>
         public DbSet<KeyValue> KeyValues { get; set; }
         /// <summary>
-        /// 设备命令历史信息
+        /// 设备历史信息
         /// </summary>
-        public DbSet<DeviceCmdHistory> DeviceCmdHistorys { get; set; }
+        public DbSet<DeviceHistory> DeviceHistorys { get; set; }
 
 
         static SqliteConnection? _connection;
@@ -353,8 +353,8 @@ namespace MyDBContext.Main
         {
             base.OnModelCreating(modelBuilder);
             User_SF.OnModelCreating(modelBuilder);
-            new BaseValueBuilder().OnModelCreating(modelBuilder);
-            new ColdDataBuilder().OnModelCreating(modelBuilder);
+            //new BaseValueBuilder().OnModelCreating(modelBuilder);
+            //new ColdDataBuilder().OnModelCreating(modelBuilder);
             //modelBuilder.Entity<User>().HasMany(it => it.Devices).WithMany(it => it.Creator).
             //    UsingEntity<User_Device>( 
             //    it=> it.HasOne(it => it.Device).WithMany(it=>it.User_Devices),

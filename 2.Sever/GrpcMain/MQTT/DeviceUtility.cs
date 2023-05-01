@@ -28,8 +28,8 @@ namespace GrpcMain.MQTT
         public async Task<bool> SendCmd(long deviceid, string cmd, DeviceCmdSenderType sendertype, long senderid)
         {
             using var ct = new MainContext();
-            var record = new DeviceCmdHistory(deviceid, cmd, sendertype, senderid, _tu.GetTicket(DateTime.Now));
-            ct.DeviceCmdHistorys.Add(record);
+            var record = new DeviceHistory(deviceid, cmd, sendertype, senderid, _tu.GetTicket(DateTime.Now));
+            ct.DeviceHistorys.Add(record);
             await ct.SaveChangesAsync();
             var suc = await _proto.SendCmd(deviceid.ToString(), DeviceMessageManager.MyEncode(UTF8Encoding.UTF8.GetBytes(cmd)));
             if (suc)

@@ -11,7 +11,6 @@ service DeviceHistoryService {
 
     rpc DeletHistorys(Request_DeletHistorys)
         returns (CommonResponse);
-
 }
 
 
@@ -19,12 +18,13 @@ message DeviceHistory{
     int64 Id=1;
     int32 Type=2;
     int64 Time=3;
-    int64 UserId=5;
-    string Data=6;
+    int64 DeviceId=5;
+    bool Success=6;
+    string Data=7;
 }
 message Request_GetHistory{
     //日志的产生者
-    optional int64 UserId=1;
+    optional int64 DeviceId=1;
     optional int64 StartTime=2;
     optional int64 EndTime=3;
     //50 100 200 400 800 默认400
@@ -32,7 +32,8 @@ message Request_GetHistory{
     int32 Type=5;
 }
 message Response_GetHistory{
-    repeated DeviceHistory Historys=1;
+    CommonResponse status=1;
+    repeated DeviceHistory Historys=2;
 }
 
 message Request_DeletHistory{
@@ -43,7 +44,7 @@ message Request_DeletHistorys{
     int64 StartTime=1;
     int64 EndTime=2;
     //日志产生的用户
-    int64 UserId=3;
+    int64 DeviceId=3;
     //日志类型
     int32 Type=4;
 }   

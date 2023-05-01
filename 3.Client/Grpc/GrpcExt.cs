@@ -10,6 +10,7 @@ using GrpcMain.Device.AutoControl;
 using GrpcMain.DeviceData;
 using GrpcMain.DeviceData.Cold;
 using GrpcMain.DeviceType;
+using GrpcMain.History;
 using GrpcMain.InternalMail;
 using GrpcMain.System;
 using GrpcMain.UserDevice;
@@ -59,6 +60,7 @@ namespace MyClient.Grpc
             serviceCollection.TryAddSingleton<ColdDataService.ColdDataServiceClient>();
             serviceCollection.TryAddSingleton<DeviceAutoControlService.DeviceAutoControlServiceClient>();
             serviceCollection.TryAddSingleton<AuditService.AuditServiceClient>();
+            serviceCollection.TryAddSingleton<DeviceHistoryService.DeviceHistoryServiceClient>();
         }
     }
 }

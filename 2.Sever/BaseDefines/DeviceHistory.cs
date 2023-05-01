@@ -10,9 +10,10 @@
 
 namespace MyDBContext.Main
 {
-    public enum DeviceHistory
+    public enum DeviceHistoryType:byte
     {
-        Unknown,
+        Unknown=0,
+        Command=1,
     }
 }
 
