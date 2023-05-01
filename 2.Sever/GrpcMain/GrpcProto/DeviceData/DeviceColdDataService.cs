@@ -164,29 +164,29 @@ namespace GrpcMain.DeviceData
             User? user = context.UserState["user"] as User;
             if (user == null)
                 throw new RpcException(new Status(StatusCode.PermissionDenied, "拒绝访问"));
-            IQueryable<Device_DataPoint_Cold> q = ct.Device_DataPoint_Colds.Where(it => it.TreeId == user.UserTreeId);
+            long? dvid = null;
+            if (request.HasDeviceId)
+            {
+                dvid = request.DeviceId;
+            }
+            long? streamId = null;
+            if (request.HasStreamId)
+            {
+                streamId = request.StreamId;
+            }
+            long? startTime = null;
+            long? endTime = null;
             if (request.HasStarttime)
             {
-                q = q.Where(it => it.EndTime > request.Starttime);
+                startTime= request.Starttime;
             }
             if (request.HasEndtime)
             {
-                q = q.Where(it => it.StartTime <= request.Endtime);
+                endTime = request.Endtime;
             }
-            if (request.HasDeviceId)
-            {
-                q = q.Where(it => it.DeviceId == request.DeviceId);
-            }
-            if (request.HasStreamId)
-            {
-                q = q.Where(it => it.StreamId == request.StreamId);
-            }
-            q = q.AsNoTracking();
-
-
             //变换格式和获取其他信息
             var resls = new List<ColdDataInfo>();
-            foreach (var it in await q.ToListAsync())
+            foreach (var it in await _deviceColdDataHandle.GetDataInfo(dvid, streamId, startTime, endTime, 0, 1000, (_) => { }))
             {
                 var dev = await ct.Devices.Where(it2 => it2.Id == it.DeviceId).AsNoTracking().FirstOrDefaultAsync();
                 var model = await ct.ThingModels.Where(it2 => it2.Id == it.StreamId).AsNoTracking().FirstOrDefaultAsync();

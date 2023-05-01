@@ -93,7 +93,7 @@ namespace Sever.ColdData.Imp
                     setcursor(cds.Last().Id);
                 else
                     setcursor(0);
-                cds.ForEach(it => mgr.DoGetStatus(it));
+                cds.ForEach(async it =>it.status= (byte)await mgr.DoGetStatus(it));
                 return cds;
             }
         }
