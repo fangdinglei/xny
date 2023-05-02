@@ -18,7 +18,7 @@ namespace Sever.ColdData
         /// <param name="colddata"></param>
         /// <returns></returns>
         /// <exception cref="Exception"/>
-        Task<byte[]> DoLoad(Device_DataPoint_Cold colddata, Dictionary<string, object>? pars = null);
+        Task<byte[]?> DoLoad(Device_DataPoint_Cold colddata, Dictionary<string, object>? pars = null);
         /// <summary>
         /// 删除数据
         /// </summary>

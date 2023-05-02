@@ -37,7 +37,7 @@ namespace Sever.ColdData.Imp
 
         }
 
-        public async Task<byte[]> DoLoad(Device_DataPoint_Cold colddata, Dictionary<string, object>? pars)
+        public async Task<byte[]?> DoLoad(Device_DataPoint_Cold colddata, Dictionary<string, object>? pars)
         {
             var bytes = await mgrs[colddata.ManagerName].Load(colddata);
             return bytes;

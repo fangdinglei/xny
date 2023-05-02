@@ -84,7 +84,7 @@ namespace MyClient.View
             var mail = _mails[list_mails.SelectedIndex];
             text_context.Text = mail.Context;
             text_baseinfo.Text = $"发件人{mail.SenderId} 收件人{mail.ReceiverId} 发件时间{_timeUtility.GetDateTime(mail.Time).ToString()} {(mail.Readed ? "已读" : "未读")}";
-            btn_deletmail.Enabled = btn_outteremail.Enabled = mail.SenderId != _localData.User.ID;
+            btn_deletmail.Enabled = btn_outteremail.Enabled = mail.SenderId == _localData.User.ID;
             Task.Run(() =>
             {
                 try

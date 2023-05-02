@@ -23,9 +23,10 @@ namespace Sever.ColdData.Imp
                     setcursor(0);
                 foreach (var cd in cds)
                 {
-                    byte[] bytes = await mgr.DoLoad(cd);
+                    byte[]? bytes = await mgr.DoLoad(cd);
                     if (bytes == null)
-                        throw new Exception("冷数据加载失败");
+                        //throw new Exception("冷数据加载失败");
+                        continue;
                     if (bytes.Length != 8 * cd.Count)
                         throw new Exception("冷数据损坏");
                     using (BinaryReader br = new BinaryReader(new MemoryStream(bytes)))

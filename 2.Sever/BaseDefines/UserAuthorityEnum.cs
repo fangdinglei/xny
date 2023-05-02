@@ -10,6 +10,7 @@ namespace BaseDefines
     {
         //管理员权限  xxxx00
         TopUserAdd = 1 << 4,
+        SystemInfoRead = 2 << 4,
         //普通用户权限 xxxx01
         DeviceAdd = 1 << 4 + 1,
         DeviceTypeW = 2 << 4 + 1,

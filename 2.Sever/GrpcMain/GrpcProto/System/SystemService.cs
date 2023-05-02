@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using BaseDefines;
+using Grpc.Core;
 using GrpcMain.Attributes;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
@@ -8,7 +9,7 @@ namespace GrpcMain.System
 {
     public class SystemServiceImp : SystemService.SystemServiceBase
     {
-        [MyGrpcMethod("SystemUser")]
+        [MyGrpcMethod(nameof(UserAuthorityEnum.SystemInfoRead))]
         public override async Task<Response_GetSystemBaseInfo> GetSystemBaseInfo(Request_GetSystemBaseInfo request, ServerCallContext context)
         {
             Response_GetSystemBaseInfo res = new Response_GetSystemBaseInfo();
@@ -45,7 +46,7 @@ namespace GrpcMain.System
             });
         }
 
-        [MyGrpcMethod("SystemUser")]
+        [MyGrpcMethod(nameof(UserAuthorityEnum.SystemInfoRead))]
         public override async Task<Response_GetStatics> GetStatics(Request_GetStatics request, ServerCallContext context)
         {
             List<UserStatics> ls = new List<UserStatics>();
@@ -57,9 +58,10 @@ namespace GrpcMain.System
                     var us = new UserStatics();
                     us.TreeId = item;
                     us.TotalDevice = await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
-                    us.TotalDeviceType = await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
+                    us.TotalDeviceType = await ct.Device_Types.Where(it => it.UserTreeId == item).CountAsync();
                     us.TotalDataPoint = await ct.Devices.Where(it => it.UserTreeId == item).Select(it => it.Id).Join(
                             ct.Device_DataPoints, it => it, it => it.DeviceId, (a, b) => b).CountAsync();
+                    us.TotalColdData=await ct.Device_DataPoint_Colds.Where(it=>it.TreeId==item).CountAsync();
                     us.SubUserCount = await ct.Users.Where(it => it.UserTreeId == item).CountAsync() - 1;
                     ls.Add(us);
                 }

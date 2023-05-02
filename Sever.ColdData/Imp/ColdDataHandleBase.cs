@@ -20,7 +20,7 @@ namespace Sever.ColdData.Imp
         /// <param name="colddata"></param>
         /// <returns>null if not success</returns>
         /// <exception cref="Exception"/>
-        public abstract Task<byte[]> Load(Device_DataPoint_Cold colddata);
+        public abstract Task<byte[]?> Load(Device_DataPoint_Cold colddata);
 
         /// <summary>
         /// 删除数据
