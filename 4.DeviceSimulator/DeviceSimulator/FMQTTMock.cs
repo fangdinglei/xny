@@ -71,11 +71,11 @@
             var dic = new Dictionary<long, float>();
             float Temperature, Humidity, Lumination, PowerRate;
             Temperature = bar1.Value / 10f;
-            //Humidity = bar2.Value / 10f;
+            Humidity = bar2.Value / 10f;
             //Lumination = bar3.Value / 10f;
             //PowerRate = bar4.Value / 10f;
             dic.Add(1, Temperature);
-            //dic.Add(nameof(Humidity), Humidity);
+            dic.Add(2, Humidity);
             //dic.Add(nameof(Lumination), Lumination);
             //dic.Add(nameof(PowerRate), PowerRate);
             Mock.MQTT.MQTTManager.SendData(DeviceID, dic);

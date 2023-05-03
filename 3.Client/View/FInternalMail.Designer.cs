@@ -28,89 +28,89 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btn_deletmail = new System.Windows.Forms.Button();
-            this.btn_outteremail = new System.Windows.Forms.Button();
-            this.list_mails = new System.Windows.Forms.ListBox();
-            this.text_context = new System.Windows.Forms.TextBox();
-            this.pageController1 = new FdlWindows.View.PageController();
-            this.text_baseinfo = new System.Windows.Forms.TextBox();
-            this.SuspendLayout();
+            btn_deletmail = new Button();
+            btn_outteremail = new Button();
+            list_mails = new ListBox();
+            text_context = new TextBox();
+            pageController1 = new FdlWindows.View.PageController();
+            text_baseinfo = new TextBox();
+            SuspendLayout();
             // 
             // btn_deletmail
             // 
-            this.btn_deletmail.Location = new System.Drawing.Point(1030, 84);
-            this.btn_deletmail.Name = "btn_deletmail";
-            this.btn_deletmail.Size = new System.Drawing.Size(137, 69);
-            this.btn_deletmail.TabIndex = 20;
-            this.btn_deletmail.Text = "删除此邮件";
-            this.btn_deletmail.UseVisualStyleBackColor = true;
-            this.btn_deletmail.Click += new System.EventHandler(this.btn_deletmail_Click);
+            btn_deletmail.Location = new Point(1030, 84);
+            btn_deletmail.Name = "btn_deletmail";
+            btn_deletmail.Size = new Size(137, 69);
+            btn_deletmail.TabIndex = 20;
+            btn_deletmail.Text = "删除此邮件";
+            btn_deletmail.UseVisualStyleBackColor = true;
+            btn_deletmail.Visible = false;
+            btn_deletmail.Click += btn_deletmail_Click;
             // 
             // btn_outteremail
             // 
-            this.btn_outteremail.Location = new System.Drawing.Point(1030, 9);
-            this.btn_outteremail.Name = "btn_outteremail";
-            this.btn_outteremail.Size = new System.Drawing.Size(137, 69);
-            this.btn_outteremail.TabIndex = 17;
-            this.btn_outteremail.Text = "站外邮件推送";
-            this.btn_outteremail.UseVisualStyleBackColor = true;
-            this.btn_outteremail.Click += new System.EventHandler(this.btn_outteremail_Click);
+            btn_outteremail.Location = new Point(1030, 9);
+            btn_outteremail.Name = "btn_outteremail";
+            btn_outteremail.Size = new Size(137, 69);
+            btn_outteremail.TabIndex = 17;
+            btn_outteremail.Text = "站外邮件推送";
+            btn_outteremail.UseVisualStyleBackColor = true;
+            btn_outteremail.Click += btn_outteremail_Click;
             // 
             // list_mails
             // 
-            this.list_mails.FormattingEnabled = true;
-            this.list_mails.ItemHeight = 24;
-            this.list_mails.Location = new System.Drawing.Point(10, 13);
-            this.list_mails.Margin = new System.Windows.Forms.Padding(4);
-            this.list_mails.Name = "list_mails";
-            this.list_mails.Size = new System.Drawing.Size(237, 604);
-            this.list_mails.TabIndex = 19;
-            this.list_mails.SelectedIndexChanged += new System.EventHandler(this.list_mails_SelectedIndexChanged);
+            list_mails.FormattingEnabled = true;
+            list_mails.ItemHeight = 24;
+            list_mails.Location = new Point(10, 13);
+            list_mails.Margin = new Padding(4);
+            list_mails.Name = "list_mails";
+            list_mails.Size = new Size(237, 604);
+            list_mails.TabIndex = 19;
+            list_mails.SelectedIndexChanged += list_mails_SelectedIndexChanged;
             // 
             // text_context
             // 
-            this.text_context.Location = new System.Drawing.Point(254, 60);
-            this.text_context.Multiline = true;
-            this.text_context.Name = "text_context";
-            this.text_context.Size = new System.Drawing.Size(770, 605);
-            this.text_context.TabIndex = 18;
+            text_context.Location = new Point(254, 60);
+            text_context.Multiline = true;
+            text_context.Name = "text_context";
+            text_context.Size = new Size(770, 605);
+            text_context.TabIndex = 18;
             // 
             // pageController1
             // 
-            this.pageController1.BackColor = System.Drawing.Color.Lime;
-            this.pageController1.Location = new System.Drawing.Point(10, 626);
-            this.pageController1.Name = "pageController1";
-            this.pageController1.Page = 1;
-            this.pageController1.PageSize = 1;
-            this.pageController1.RecordCount = 0;
-            this.pageController1.Size = new System.Drawing.Size(237, 39);
-            this.pageController1.TabIndex = 21;
-            this.pageController1.OnPageChanged += new System.Action(this.pageController1_OnPageChanged);
+            pageController1.BackColor = Color.Lime;
+            pageController1.Location = new Point(10, 626);
+            pageController1.Name = "pageController1";
+            pageController1.Page = 1;
+            pageController1.PageSize = 1;
+            pageController1.RecordCount = 0;
+            pageController1.Size = new Size(237, 39);
+            pageController1.TabIndex = 21;
+            pageController1.OnPageChanged += pageController1_OnPageChanged;
             // 
             // text_baseinfo
             // 
-            this.text_baseinfo.Location = new System.Drawing.Point(254, 12);
-            this.text_baseinfo.Name = "text_baseinfo";
-            this.text_baseinfo.ReadOnly = true;
-            this.text_baseinfo.Size = new System.Drawing.Size(554, 30);
-            this.text_baseinfo.TabIndex = 22;
+            text_baseinfo.Location = new Point(254, 12);
+            text_baseinfo.Name = "text_baseinfo";
+            text_baseinfo.ReadOnly = true;
+            text_baseinfo.Size = new Size(554, 30);
+            text_baseinfo.TabIndex = 22;
             // 
             // FInternalMail
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1340, 706);
-            this.Controls.Add(this.text_baseinfo);
-            this.Controls.Add(this.pageController1);
-            this.Controls.Add(this.btn_deletmail);
-            this.Controls.Add(this.btn_outteremail);
-            this.Controls.Add(this.list_mails);
-            this.Controls.Add(this.text_context);
-            this.Name = "FInternalMail";
-            this.Text = "FInternalMail";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1340, 706);
+            Controls.Add(text_baseinfo);
+            Controls.Add(pageController1);
+            Controls.Add(btn_deletmail);
+            Controls.Add(btn_outteremail);
+            Controls.Add(list_mails);
+            Controls.Add(text_context);
+            Name = "FInternalMail";
+            Text = "FInternalMail";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
