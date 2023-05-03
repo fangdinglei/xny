@@ -8,6 +8,7 @@
 //dotnet ef -h
 //
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyDBContext.Main
 {
@@ -17,6 +18,8 @@ namespace MyDBContext.Main
     [Index(nameof(UserTreeId))]
     public class User_SF
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long Id { get; set; }
         public long User1Id { get; set; }
         public long User2Id { get; set; }
         public bool IsFather { get; set; }
@@ -24,12 +27,6 @@ namespace MyDBContext.Main
         public int UserTreeId { get; set; }
         public virtual User User1 { get; set; }
         public virtual User User2 { get; set; }
-
-        internal static void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<User_SF>().HasKey(it => new { it.User1Id, it.User2Id });
-            //modelBuilder.Entity<User_SF>().HasIndex(it => new { it.SonId, it.FatherId });
-        }
     }
 
 }

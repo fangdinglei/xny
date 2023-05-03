@@ -67,7 +67,7 @@ namespace MyClient.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message,"错误");
+                MessageBox.Show(ex.Message, "错误");
             }
         }
     }

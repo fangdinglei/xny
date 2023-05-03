@@ -32,8 +32,6 @@
             tmaxsubuser = new TextBox();
             tmaxdeep = new TextBox();
             label8 = new Label();
-            tdeep = new TextBox();
-            label7 = new Label();
             label6 = new Label();
             temail = new TextBox();
             label4 = new Label();
@@ -49,7 +47,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(391, 150);
+            label9.Location = new Point(373, 114);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
             label9.Size = new Size(136, 24);
@@ -58,7 +56,7 @@
             // 
             // tmaxsubuser
             // 
-            tmaxsubuser.Location = new Point(393, 178);
+            tmaxsubuser.Location = new Point(375, 142);
             tmaxsubuser.Margin = new Padding(4);
             tmaxsubuser.Name = "tmaxsubuser";
             tmaxsubuser.Size = new Size(112, 30);
@@ -67,7 +65,7 @@
             // 
             // tmaxdeep
             // 
-            tmaxdeep.Location = new Point(393, 114);
+            tmaxdeep.Location = new Point(375, 78);
             tmaxdeep.Margin = new Padding(4);
             tmaxdeep.Name = "tmaxdeep";
             tmaxdeep.Size = new Size(112, 30);
@@ -77,31 +75,12 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(393, 86);
+            label8.Location = new Point(375, 50);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
             label8.Size = new Size(136, 24);
             label8.TabIndex = 51;
             label8.Text = "最大子用户深度";
-            // 
-            // tdeep
-            // 
-            tdeep.Location = new Point(393, 50);
-            tdeep.Margin = new Padding(4);
-            tdeep.Name = "tdeep";
-            tdeep.Size = new Size(112, 30);
-            tdeep.TabIndex = 50;
-            tdeep.Text = "1";
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(393, 22);
-            label7.Margin = new Padding(4, 0, 4, 0);
-            label7.Name = "label7";
-            label7.Size = new Size(82, 24);
-            label7.TabIndex = 49;
-            label7.Text = "用户深度";
             // 
             // label6
             // 
@@ -206,8 +185,6 @@
             Controls.Add(tmaxsubuser);
             Controls.Add(tmaxdeep);
             Controls.Add(label8);
-            Controls.Add(tdeep);
-            Controls.Add(label7);
             Controls.Add(label6);
             Controls.Add(temail);
             Controls.Add(label4);
@@ -228,8 +205,6 @@
         private TextBox tmaxsubuser;
         private TextBox tmaxdeep;
         private Label label8;
-        private TextBox tdeep;
-        private Label label7;
         private Label label6;
         private TextBox temail;
         private Label label4;

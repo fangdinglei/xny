@@ -1,5 +1,7 @@
 ﻿using GrpcMain.Account;
+using MyClient.Grpc;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography;
 using static GrpcMain.Account.DTODefine.Types;
 
 namespace MyClient.View.User
@@ -131,6 +133,61 @@ namespace MyClient.View.User
             FCreatUser f = new FCreatUser(client);
             f.ShowDialog();
             (this.Parent.Parent.Parent as FUser).PrePare();
+        }
+
+        private void btn_passupdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (BaseManager.Self)
+                {
+                    InputBox.GetString("", "请输入原有的密码", out var pass);
+                    InputBox.GetString("", "请输入新的密码", out var passNew);
+                    var rsp = client.ChangePassWord(new Request_ChangePassWord
+                    {
+                        New = passNew,
+                        Old = pass,
+                    });
+                    rsp.ThrowIfNotSuccess();
+                }
+                else
+                {
+                    InputBox.GetString("", "请输入新的密码", out var pass);
+                    var rsp = client.ChangePassWord(new Request_ChangePassWord
+                    {
+                        Uid = SelectedUser.ID,
+                        New = pass
+                    });
+                    rsp.ThrowIfNotSuccess();
+                }
+                MessageBox.Show("成功", "提示");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("错误 " + ex.Message, "错误");
+            }
+        }
+
+        private void btn_delet_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (BaseManager.Self)
+                {
+                    MessageBox.Show("不能删除自己", "提示");
+                    return;
+                }
+                var rsp = client.DeletUser(new Request_DeletUser { 
+                     UserId = SelectedUser.ID,
+                });
+                rsp.ThrowIfNotSuccess();
+                MessageBox.Show("成功", "提示");
+                BaseManager.ReloadHandle();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("错误 " + ex.Message, "错误");
+            }
         }
     }
 }

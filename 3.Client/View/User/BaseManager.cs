@@ -29,6 +29,8 @@ namespace MyClient.View.User
         public Action<BaseManager> RefreshHandle;
         public Action<BaseManager> SetUserInfoHandle;
 
+        public Action ReloadHandle;
+
         private void TabControl1_SelectedIndexChanged(object? sender, EventArgs e)
         {
             RefreshHandle?.Invoke(this);

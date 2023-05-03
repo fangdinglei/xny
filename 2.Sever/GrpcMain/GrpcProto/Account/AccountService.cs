@@ -6,6 +6,7 @@ using GrpcMain.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using MyUtility;
+using System.Linq;
 using System.Reflection;
 using static GrpcMain.Account.DTODefine.Types;
 
@@ -139,9 +140,22 @@ namespace GrpcMain.Account
                 {
                     throw new RpcException(new Status(StatusCode.PermissionDenied, "没有该子用户"));
                 }
-                throw new Exception("维护中");
-                //ct.Remove(sf.Son);
-                await ct.SaveChangesAsync();
+                try
+                {
+                    var sons = await ct.User_SFs.Where(it => it.User2Id == request.UserId && !it.IsFather).Select(it => it.User1Id).ToListAsync();
+                    await ct.User_SFs.DeleteRangeAsync(ct, it => sons.Contains(it.User1Id) || sons.Contains(it.User2Id));
+                    await ct.User_Devices.DeleteRangeAsync(ct, it => sons.Contains(it.UserId));
+                    await ct.User_Device_Groups.DeleteRangeAsync(ct, it => sons.Contains(it.CreatorId));
+                    await ct.AccountHistorys.DeleteRangeAsync(ct, it => sons.Contains(it.CreatorId));
+                    await ct.Users.DeleteRangeAsync(ct, it => sons.Contains(it.Id));
+                    await ct.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+        
             }
             return new CommonResponse()
             {
@@ -158,8 +172,7 @@ namespace GrpcMain.Account
             {
                 throw new RpcException(new Status(StatusCode.PermissionDenied, "无该子用户的所有权"));
             }
-            var user = await ct.Users.Where(it => it.Id == request.Uid
-             && it.Pass == request.New).FirstOrDefaultAsync();
+            var user = await ct.Users.Where(it => it.Id == request.Uid).FirstOrDefaultAsync();
             if (user == null)
             {
                 throw new Exception("用户应当存在而不存在");
@@ -195,7 +208,7 @@ namespace GrpcMain.Account
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
-                if (request.HasUid)
+                if (request.HasUid&&request.Uid!=id)
                 {//改子用户
                     return await ChangePassWord_SubUserAsync(request, ct, id);
                 }
@@ -286,7 +299,7 @@ namespace GrpcMain.Account
             var ls = new List<UserAuthorityEnum>();
             foreach (var v in Enum.GetValues<UserAuthorityEnum>())
             {
-                if (((int)v & 4) ==1)
+                if (((int)v & 15) ==1)
                 {
                     ls.Add(v);
                 }

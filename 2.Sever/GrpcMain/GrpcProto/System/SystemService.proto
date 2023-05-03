@@ -16,13 +16,14 @@ service SystemService {
 
 
 message UserStatics{
-    int32 TreeId=1;
-    int32 SubUserCount=2;
-    int32 TotalDevice=3;
-    int32 TotalDeviceType=4;
-    int32 TotalDataPoint=5;
+    int64 TopUserId=1;
+    int32 TreeId=2;
+    int32 SubUserCount=3;
+    int32 TotalDevice=4;
+    int32 TotalDeviceType=5;
+    int32 TotalDataPoint=6;
     //MB
-    int32 TotalColdData=6;
+    int32 TotalColdData=7;
 }
 message Request_GetStatics{
 

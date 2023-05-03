@@ -352,7 +352,6 @@ namespace MyDBContext.Main
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            User_SF.OnModelCreating(modelBuilder);
             //new BaseValueBuilder().OnModelCreating(modelBuilder);
             //new ColdDataBuilder().OnModelCreating(modelBuilder);
             //modelBuilder.Entity<User>().HasMany(it => it.Devices).WithMany(it => it.Creator).
@@ -423,7 +422,7 @@ namespace MyDBContext.Main
                 UserTreeId = 1,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,
-                TreeDeep = 0,
+                TreeDeep = 1,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -438,7 +437,7 @@ namespace MyDBContext.Main
                 UserTreeId = 2,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,
-                TreeDeep = 0,
+                TreeDeep = 1,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -453,7 +452,7 @@ namespace MyDBContext.Main
                 UserTreeId = 2,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,
-                TreeDeep = 0,
+                TreeDeep = 2,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -468,7 +467,7 @@ namespace MyDBContext.Main
                 UserTreeId = 2,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,
-                TreeDeep = 0,
+                TreeDeep = 2,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -483,7 +482,7 @@ namespace MyDBContext.Main
                 UserTreeId = 2,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,
-                TreeDeep = 0,
+                TreeDeep = 3,
             });
 
             modelBuilder.Entity<User>().HasData(new User()
@@ -499,7 +498,7 @@ namespace MyDBContext.Main
                 UserTreeId = 3,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,
-                TreeDeep = 0,
+                TreeDeep = 1,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -514,7 +513,7 @@ namespace MyDBContext.Main
                 UserTreeId = 3,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,
-                TreeDeep = 0,
+                TreeDeep = 2,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -529,7 +528,7 @@ namespace MyDBContext.Main
                 UserTreeId = 3,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,
-                TreeDeep = 0,
+                TreeDeep = 2,
             });
             modelBuilder.Entity<User>().HasData(new User()
             {
@@ -544,7 +543,7 @@ namespace MyDBContext.Main
                 UserTreeId = 3,
                 MaxSubUser = 100,
                 MaxSubUserDepth = 10,
-                TreeDeep = 0,
+                TreeDeep = 3,
             });
             #endregion
 

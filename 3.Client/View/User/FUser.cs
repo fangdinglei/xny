@@ -46,6 +46,10 @@ namespace MyClient.View.User
             for (int i = 0; i < Managers.Length; i++)
             {
                 var item = Managers[i];
+                item.ReloadHandle = ()=> {
+                    _viewholder.Back();
+                    _viewholder.SwitchTo(nameof(FUser),true);
+                };
                 item.Init(tabControl1, i, list_user, () => _userInfos);
                 (item.View as Form).TopLevel = false;
                 (item.View as Form).FormBorderStyle = FormBorderStyle.None;

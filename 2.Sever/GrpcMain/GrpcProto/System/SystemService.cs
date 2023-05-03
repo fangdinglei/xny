@@ -52,17 +52,20 @@ namespace GrpcMain.System
             List<UserStatics> ls = new List<UserStatics>();
             using (MainContext ct = new MainContext())
             {
-                var trees = await ct.Users.Select(it => it.UserTreeId).Distinct().ToListAsync();
-                foreach (var item in trees)
+                var topusers = await ct.Users.Where(it => it.TreeDeep==1)
+                    .AsNoTracking().ToListAsync();
+                foreach (var item in topusers)
                 {
                     var us = new UserStatics();
-                    us.TreeId = item;
-                    us.TotalDevice = await ct.Devices.Where(it => it.UserTreeId == item).CountAsync();
-                    us.TotalDeviceType = await ct.Device_Types.Where(it => it.UserTreeId == item).CountAsync();
-                    us.TotalDataPoint = await ct.Devices.Where(it => it.UserTreeId == item).Select(it => it.Id).Join(
+                    var treeId= item.UserTreeId;
+                    us.TopUserId= item.Id;
+                    us.TreeId = treeId;
+                    us.TotalDevice = await ct.Devices.Where(it => it.UserTreeId == treeId).CountAsync();
+                    us.TotalDeviceType = await ct.Device_Types.Where(it => it.UserTreeId == treeId).CountAsync();
+                    us.TotalDataPoint = await ct.Devices.Where(it => it.UserTreeId == treeId).Select(it => it.Id).Join(
                             ct.Device_DataPoints, it => it, it => it.DeviceId, (a, b) => b).CountAsync();
-                    us.TotalColdData=await ct.Device_DataPoint_Colds.Where(it=>it.TreeId==item).CountAsync();
-                    us.SubUserCount = await ct.Users.Where(it => it.UserTreeId == item).CountAsync() - 1;
+                    us.TotalColdData=await ct.Device_DataPoint_Colds.Where(it=>it.TreeId== treeId).CountAsync();
+                    us.SubUserCount = await ct.Users.Where(it => it.UserTreeId == treeId).CountAsync() - 1;
                     ls.Add(us);
                 }
             }

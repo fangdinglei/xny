@@ -16,7 +16,7 @@ namespace MyClient.View.User
     {
         AccountService.AccountServiceClient client;
         bool creatTopUser;
-        public FCreatUser(AccountService.AccountServiceClient client,bool creatTopUser=false)
+        public FCreatUser(AccountService.AccountServiceClient client, bool creatTopUser = false)
         {
             InitializeComponent();
             this.client = client;

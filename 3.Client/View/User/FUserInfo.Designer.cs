@@ -101,6 +101,7 @@
             btn_delet.TabIndex = 27;
             btn_delet.Text = "删除用户";
             btn_delet.UseVisualStyleBackColor = true;
+            btn_delet.Click += btn_delet_Click;
             // 
             // label5
             // 
@@ -166,6 +167,7 @@
             btn_passupdate.TabIndex = 25;
             btn_passupdate.Text = "修改密码";
             btn_passupdate.UseVisualStyleBackColor = true;
+            btn_passupdate.Click += btn_passupdate_Click;
             // 
             // label2
             // 

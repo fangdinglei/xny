@@ -41,12 +41,13 @@
             text_pagesize = new TextBox();
             label7 = new Label();
             grid_userstatics = new DataGridView();
+            btnCreatUser = new Button();
             col_id = new DataGridViewTextBoxColumn();
             col_subuser = new DataGridViewTextBoxColumn();
             col_totaldevice = new DataGridViewTextBoxColumn();
             col_devicetype = new DataGridViewTextBoxColumn();
             col_datapoints = new DataGridViewTextBoxColumn();
-            btnCreatUser = new Button();
+            col_topuser = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)grid_userstatics).BeginInit();
             SuspendLayout();
             // 
@@ -157,7 +158,7 @@
             grid_userstatics.AllowUserToAddRows = false;
             grid_userstatics.AllowUserToDeleteRows = false;
             grid_userstatics.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grid_userstatics.Columns.AddRange(new DataGridViewColumn[] { col_id, col_subuser, col_totaldevice, col_devicetype, col_datapoints });
+            grid_userstatics.Columns.AddRange(new DataGridViewColumn[] { col_id, col_subuser, col_totaldevice, col_devicetype, col_datapoints, col_topuser });
             grid_userstatics.Location = new Point(258, 18);
             grid_userstatics.Name = "grid_userstatics";
             grid_userstatics.ReadOnly = true;
@@ -165,6 +166,16 @@
             grid_userstatics.RowTemplate.Height = 32;
             grid_userstatics.Size = new Size(1047, 647);
             grid_userstatics.TabIndex = 19;
+            // 
+            // btnCreatUser
+            // 
+            btnCreatUser.Location = new Point(59, 267);
+            btnCreatUser.Name = "btnCreatUser";
+            btnCreatUser.Size = new Size(112, 34);
+            btnCreatUser.TabIndex = 20;
+            btnCreatUser.Text = "创建租户";
+            btnCreatUser.UseVisualStyleBackColor = true;
+            btnCreatUser.Click += btnCreatUser_Click;
             // 
             // col_id
             // 
@@ -212,15 +223,14 @@
             col_datapoints.Name = "col_datapoints";
             col_datapoints.ReadOnly = true;
             // 
-            // btnCreatUser
+            // col_topuser
             // 
-            btnCreatUser.Location = new Point(59, 267);
-            btnCreatUser.Name = "btnCreatUser";
-            btnCreatUser.Size = new Size(112, 34);
-            btnCreatUser.TabIndex = 20;
-            btnCreatUser.Text = "创建租户";
-            btnCreatUser.UseVisualStyleBackColor = true;
-            btnCreatUser.Click += btnCreatUser_Click;
+            col_topuser.DataPropertyName = "TopUserId";
+            col_topuser.HeaderText = "顶级用户";
+            col_topuser.MinimumWidth = 8;
+            col_topuser.Name = "col_topuser";
+            col_topuser.ReadOnly = true;
+            col_topuser.Width = 150;
             // 
             // FSystemInfo
             // 
@@ -263,11 +273,12 @@
         private TextBox text_pagesize;
         private Label label7;
         private DataGridView grid_userstatics;
+        private Button btnCreatUser;
         private DataGridViewTextBoxColumn col_id;
         private DataGridViewTextBoxColumn col_subuser;
         private DataGridViewTextBoxColumn col_totaldevice;
         private DataGridViewTextBoxColumn col_devicetype;
         private DataGridViewTextBoxColumn col_datapoints;
-        private Button btnCreatUser;
+        private DataGridViewTextBoxColumn col_topuser;
     }
 }
