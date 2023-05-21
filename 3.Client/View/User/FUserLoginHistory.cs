@@ -122,6 +122,7 @@ namespace MyClient.View.User
                         Id = _histories[list.SelectedIndex].Value.Id
                     });
                     rsp.ThrowIfNotSuccess();
+                    OnSearch(group_loginhistory_maxcount, group_loginhistory_usetimes);
                 }
                 else
                 {

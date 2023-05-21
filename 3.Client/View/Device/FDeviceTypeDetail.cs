@@ -13,7 +13,7 @@ namespace MyClient.View
     {
 
         DeviceTypeService.DeviceTypeServiceClient _typeServiceClient;
-        Action<TypeInfo>? OnCreatCall;
+        Action<TypeInfo>? OnUpdateCall;
         IViewHolder _viewholder;
         bool isCreat;
         TypeInfo typeinfo;
@@ -31,14 +31,6 @@ namespace MyClient.View
             thingModels = new BindingList<ThingModel>();
             list_thingmodels.DataSource = thingModels;
         }
-
-
-
-
-
-
-
-
 
 
 
@@ -62,7 +54,7 @@ namespace MyClient.View
             isCreat = (bool)par[0];
             if (isCreat)
             {
-                OnCreatCall = (Action<TypeInfo>)par[1];
+                OnUpdateCall = (Action<TypeInfo>)par[1];
                 text_id.Text = "创建";
                 thingModels.Clear();
                 typeinfo = new TypeInfo
@@ -74,6 +66,10 @@ namespace MyClient.View
             }
             else
             {
+                if (par.Length >= 3)
+                {
+                    OnUpdateCall = (Action<TypeInfo>)par[2];
+                }
                 var typeid = (long)par[1];
                 this.ShowLoading(
                     async () =>
@@ -98,7 +94,7 @@ namespace MyClient.View
                         list_thingmodels.DisplayMember = "Name";
                     });
             }
-
+          
         }
         private void list_thingmodels_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -202,15 +198,17 @@ namespace MyClient.View
                         Info = typeinfo,
                     });
                     res.Status.ThrowIfNotSuccess();
-                    OnCreatCall?.Invoke(typeinfo);
+                    OnUpdateCall?.Invoke(typeinfo);
                 }
                 else
                 {
+                    typeinfo.Name = text_name.Text;
                     var res = _typeServiceClient.UpdateTypeInfo(new DTODefine.Types.Request_UpdateTypeInfo
                     {
                         Info = typeinfo
                     });
                     res.ThrowIfNotSuccess();
+                    OnUpdateCall?.Invoke(typeinfo);
                 }
                 MessageBox.Show("提交成功", "提示");
             }

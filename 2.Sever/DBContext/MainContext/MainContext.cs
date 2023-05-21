@@ -342,18 +342,18 @@ namespace MyDBContext.Main
             }
             base.OnConfiguring(optionsBuilder);
             string s = "server=fdlmaindb.mysql.rds.aliyuncs.com;database=dbbs;user id=fangdinglei;password=FdlMainDB@;port=3306;sslmode=None";
-            optionsBuilder.UseMySql(s, ServerVersion.AutoDetect(s));
-            optionsBuilder.UseBatchEF_MySQLPomelo();
-            //optionsBuilder.UseSqlite(_connection);
-            //optionsBuilder.UseBatchEF_Sqlite();
+            //optionsBuilder.UseMySql(s, ServerVersion.AutoDetect(s));
+            //optionsBuilder.UseBatchEF_MySQLPomelo();
+            optionsBuilder.UseSqlite(_connection);
+            optionsBuilder.UseBatchEF_Sqlite();
             optionsBuilder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information).EnableSensitiveDataLogging().EnableDetailedErrors();
         }
         [DebuggerStepThrough]
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            //new BaseValueBuilder().OnModelCreating(modelBuilder);
-            //new ColdDataBuilder().OnModelCreating(modelBuilder);
+            new BaseValueBuilder().OnModelCreating(modelBuilder);
+            new ColdDataBuilder().OnModelCreating(modelBuilder);
             //modelBuilder.Entity<User>().HasMany(it => it.Devices).WithMany(it => it.Creator).
             //    UsingEntity<User_Device>( 
             //    it=> it.HasOne(it => it.Device).WithMany(it=>it.User_Devices),
@@ -366,9 +366,14 @@ namespace MyDBContext.Main
     {
         string buildAuthorityAdmin()
         {
-            var ls = new List<UserAuthorityEnum> {
-                UserAuthorityEnum.TopUserAdd,
-            };
+            var ls = new List<UserAuthorityEnum>();
+            foreach (var v in Enum.GetValues<UserAuthorityEnum>())
+            {
+                if (((int)v & 15) == 0)
+                {
+                    ls.Add(v);
+                }
+            }
             return Newtonsoft.Json.JsonConvert.SerializeObject(ls.Select(it => it.ToString()));
         }
         string buildAuthorityTopUser()
@@ -550,6 +555,7 @@ namespace MyDBContext.Main
             #region 关系映射
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id=1,
                 IsFather = false,
                 IsSelf = true,
                 User1Id = 1,
@@ -560,6 +566,7 @@ namespace MyDBContext.Main
 
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 2,
                 IsFather = false,
                 IsSelf = true,
                 User1Id = 2,
@@ -568,6 +575,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 3,
                 IsFather = true,
                 IsSelf = false,
                 User1Id = 2,
@@ -576,6 +584,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 4,
                 IsFather = false,
                 IsSelf = false,
                 User1Id = 3,
@@ -584,6 +593,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 5,
                 IsFather = true,
                 IsSelf = false,
                 User1Id = 2,
@@ -592,6 +602,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 6,
                 IsFather = false,
                 IsSelf = false,
                 User1Id = 4,
@@ -600,6 +611,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 7,
                 IsFather = true,
                 IsSelf = false,
                 User1Id = 2,
@@ -608,6 +620,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 8,
                 IsFather = false,
                 IsSelf = false,
                 User1Id = 5,
@@ -616,6 +629,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 9,
                 IsFather = true,
                 IsSelf = false,
                 User1Id = 3,
@@ -624,6 +638,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 10,
                 IsFather = false,
                 IsSelf = false,
                 User1Id = 5,
@@ -632,6 +647,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 11,
                 IsFather = false,
                 IsSelf = true,
                 User1Id = 3,
@@ -640,6 +656,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 12,
                 IsFather = false,
                 IsSelf = true,
                 User1Id = 4,
@@ -648,6 +665,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 13,
                 IsFather = false,
                 IsSelf = true,
                 User1Id = 5,
@@ -658,6 +676,7 @@ namespace MyDBContext.Main
 
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 21,
                 IsFather = false,
                 IsSelf = true,
                 User1Id = 10,
@@ -666,6 +685,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 22,
                 IsFather = true,
                 IsSelf = false,
                 User1Id = 10,
@@ -674,6 +694,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 23,
                 IsFather = false,
                 IsSelf = false,
                 User1Id = 11,
@@ -682,6 +703,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 24,
                 IsFather = true,
                 IsSelf = false,
                 User1Id = 10,
@@ -690,6 +712,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 25,
                 IsFather = false,
                 IsSelf = false,
                 User1Id = 12,
@@ -698,6 +721,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 26,
                 IsFather = true,
                 IsSelf = false,
                 User1Id = 10,
@@ -706,6 +730,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 27,
                 IsFather = false,
                 IsSelf = false,
                 User1Id = 13,
@@ -714,6 +739,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 28,
                 IsFather = true,
                 IsSelf = false,
                 User1Id = 11,
@@ -722,6 +748,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 29,
                 IsFather = false,
                 IsSelf = false,
                 User1Id = 13,
@@ -730,6 +757,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 30,
                 IsFather = false,
                 IsSelf = true,
                 User1Id = 11,
@@ -738,6 +766,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 31,
                 IsFather = false,
                 IsSelf = true,
                 User1Id = 12,
@@ -746,6 +775,7 @@ namespace MyDBContext.Main
             });
             modelBuilder.Entity<User_SF>().HasData(new User_SF()
             {
+                Id = 32,
                 IsFather = false,
                 IsSelf = true,
                 User1Id = 13,

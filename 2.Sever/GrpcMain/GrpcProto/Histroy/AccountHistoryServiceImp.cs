@@ -73,14 +73,6 @@ namespace GrpcMain.AccountHistory
             long id = (long)context.UserState["CreatorId"];
             using (MainContext ct = new MainContext())
             {
-                if (request.Id == id)
-                {
-                    return new CommonResponse()
-                    {
-                        Message = "无法删除自己的日志",
-                        Success = false,
-                    };
-                }
                 var history = await ct.AccountHistorys.Where(it => it.Id == request.Id).FirstOrDefaultAsync();
                 if (history == null)
                 {

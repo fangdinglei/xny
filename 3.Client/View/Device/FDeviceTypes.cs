@@ -73,7 +73,11 @@ namespace MyClient.View.Device
             if (list_types.SelectedIndex < 0)
                 return;
             _deviceTypeDetail.Visible = true;
-            _deviceTypeDetail.PrePare(false, _types[list_types.SelectedIndex].Value.Id);
+            _deviceTypeDetail.PrePare(false, 
+                _types[list_types.SelectedIndex].Value.Id, (TypeInfo it) =>
+                {
+                    PrePare();
+                });
         }
 
         private void btn_creat_Click(object sender, EventArgs e)
