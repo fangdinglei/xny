@@ -242,6 +242,10 @@ namespace MyDBContext.Main
         ///   周信息 1位代表1天  低位为周日
         /// </summary>
         public byte Week { get; set; }
+        /// <summary>
+        /// 时区 为实际值+12
+        /// </summary>
+        public byte TimeZone { get; set; }
         public string Cmd { get; set; }
         ///// <summary>
         ///// 存储的值

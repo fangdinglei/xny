@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GrpcMain.Device.AutoControl;
+using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
 using Sever.DeviceProto;
 using TimerMvcWeb.Filters;
@@ -38,12 +39,12 @@ namespace GrpcMain.MQTT
                        .OrderBy(it => it.Name)
                        .ThenBy(it => it.Order).ToListAsync();
                     var names = settings.Select(it => it.Name).Distinct().ToList();
-                    var dic = new Dictionary<string, List<Device_AutoControl_Settings_Item>>();
-                    names.ForEach(it => dic[it] = new List<Device_AutoControl_Settings_Item>());
-                    settings.ForEach(it => dic[it.Name].Add(it));
+                    var dic = new Dictionary<string, List<DeviceAutoControlSetting>>();
+                    names.ForEach(it => dic[it] = new List<DeviceAutoControlSetting>());
+                    settings.ForEach(it => dic[it.Name].Add(it.AsGrpc()));
                     foreach (var kv in dic)
                     {
-                        var cmd = kv.Value.GetCmd(DateTime.Now);
+                        var cmd = kv.Value.GetCmd(DateTime.UtcNow);
                         if (string.IsNullOrWhiteSpace(cmd))
                             continue;
                         await Task.Run(async () =>

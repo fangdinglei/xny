@@ -237,7 +237,9 @@ namespace MyClient.View.AutoControl
                     case TimeTriggerType.ALL:
                         return "总是";
                     case TimeTriggerType.Once:
-                        return tu.GetDateTime(v.TimeStart).ToString() + " - " + tu.GetDateTime(v.TimeEnd).ToString();
+                        var st = tu.GetDateTime(v.TimeStart + tu.GetTicket(new DateTime(1970, 1, 1)));
+                        var ed = tu.GetDateTime(v.TimeEnd + tu.GetTicket(new DateTime(1970, 1, 1)));
+                        return st.ToString() + " - " + ed.ToString();
                     case TimeTriggerType.EveryWeek:
                         s = tu.GetDateTime(tu.GetTicket(DateTime.Now.Date) + v.TimeStart).ToString("HH-mm-ss") + " - "
                         + tu.GetDateTime(tu.GetTicket(DateTime.Now.Date) + v.TimeEnd).ToString("HH-mm-ss");
@@ -256,15 +258,23 @@ namespace MyClient.View.AutoControl
                         return "异常";
                 }
             };
+            Func<DeviceAutoControlSetting, string> timeZoneToString = (v) =>
+            {
+                if ((TimeTriggerType)v.TriggerType == TimeTriggerType.Once || (TimeTriggerType)v.TriggerType == TimeTriggerType.EveryWeek)
+                {
+                    return "时区:"+v.TimeZone;
+                }
+                return "";
+            };
 
-
-            var ls = new List<string>();
+           var ls = new List<string>();
             foreach (var it in list)
             {
                 string s = "";
                 s += $"任务事件:{it.Cmd}\t";
                 s += $"触发方式:{tiggertostring((TimeTriggerType)it.TriggerType)}\t";
-                s += $"触发时间:{tigtimetostring(it)}";
+                s += $"触发时间:{tigtimetostring(it)}\t";
+                s += timeZoneToString(it);
                 ls.Add(s);
             }
             datalist.DataSource = ls;
@@ -395,7 +405,7 @@ namespace MyClient.View.AutoControl
             var sel = list_names.SelectedIndex;
             if (sel < 0 || sel > names.Count - 1)
                 return;
-            var cmd = groupedsettings[list_names.SelectedItem as string].GetCmd(DateTime.Now);
+            var cmd = groupedsettings[list_names.SelectedItem as string].GetCmd(DateTime.UtcNow);
             MessageBox.Show(string.IsNullOrWhiteSpace(cmd) ? "无" : cmd);
         }
 
@@ -459,7 +469,7 @@ namespace MyClient.View.AutoControl
         ///  </summary>
         ///  <param name="week">[周日,周一,...]是否生效</param>
         static public DeviceAutoControlSetting Creat
-            (string name, long ownerID, string cmd, long start, long end, bool[] week)
+            (string name, long ownerID, string cmd, long start, long end, bool[] week, int timeZone)
         {
             var re = new DeviceAutoControlSetting()
             {
@@ -469,6 +479,7 @@ namespace MyClient.View.AutoControl
                 TimeEnd = end,
                 OwnerID = ownerID,
                 Cmd = cmd,
+                TimeZone=timeZone,
                 Open = true
             };
             re.Week = 0;
@@ -484,7 +495,7 @@ namespace MyClient.View.AutoControl
         /// 创建一个时间任务
         /// </summary>
         static public DeviceAutoControlSetting Creat
-            (string name, long ownerID, string cmd, long start, long end)
+            (string name, long ownerID, string cmd, long start, long end,int timeZone)
         {
             return new DeviceAutoControlSetting()
             {
@@ -494,7 +505,8 @@ namespace MyClient.View.AutoControl
                 TimeEnd = end,
                 OwnerID = ownerID,
                 Cmd = cmd,
-                Open = true
+                Open = true,
+                TimeZone=timeZone,
             };
         }
 
@@ -517,31 +529,34 @@ namespace MyClient.View.AutoControl
         /// <summary>
         /// 给定时间是否在此时间内
         /// </summary>
-        /// <param name="time"></param>
+        /// <param name="utcTime"></param>
         /// <returns></returns>
-        static public bool IsTimeIn(this DeviceAutoControlSetting item, DateTime time)
+        static public bool IsTimeIn(this DeviceAutoControlSetting item, DateTime utcTime)
         {
+          
             switch ((TimeTriggerType)item.TriggerType)
             {
                 case TimeTriggerType.ALL:
                     return true;
                 case TimeTriggerType.Once:
-                    return (time.Ticks >= item.TimeStart) && (time.Ticks <= item.TimeEnd);
+                    var tic = tu.GetTicket(utcTime.AddHours(item.TimeZone))-tu.GetTicket(new DateTime(1970,1,1));
+                    return (tic >= item.TimeStart) && (tic <= item.TimeEnd);
                 case TimeTriggerType.EveryWeek:
-                    //time = time.AddHours(8);
-                    long t = tu.GetTicket(time) - tu.GetTicket(time.Date);
-                    return (t >= item.TimeStart) && (t <= item.TimeEnd) && (item.Week & (1 << (int)time.DayOfWeek)) > 0;
+                    utcTime = utcTime.AddHours(item.TimeZone);
+                    var week = (int)utcTime.DayOfWeek;
+                    long t = tu.GetTicket(utcTime) - tu.GetTicket(utcTime.Date);
+                    return (t >= item.TimeStart) && (t <= item.TimeEnd) && (item.Week & (1 << week)) > 0;
                 default:
                     return false;
             }
         }
 
-        static public string? GetCmd(this List<DeviceAutoControlSetting> item, DateTime time)
+        static public string? GetCmd(this List<DeviceAutoControlSetting> item, DateTime timeUtc)
         {
             item = item.OrderBy(it => it.Order).ToList();
             for (int i = item.Count - 1; i >= 0; i--)
             {
-                if (item[i].IsTimeIn(time))
+                if (item[i].IsTimeIn(timeUtc))
                 {
                     return item[i].Cmd;
                 }

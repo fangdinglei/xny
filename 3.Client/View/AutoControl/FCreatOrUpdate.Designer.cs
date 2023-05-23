@@ -29,264 +29,280 @@ namespace MyClient.View.AutoControl
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.g1panel = new System.Windows.Forms.Panel();
-            this.g1_week = new System.Windows.Forms.CheckedListBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.g1_starttimepicker = new System.Windows.Forms.DateTimePicker();
-            this.g1_endtimepicker = new System.Windows.Forms.DateTimePicker();
-            this.g2panel = new System.Windows.Forms.Panel();
-            this.label6 = new System.Windows.Forms.Label();
-            this.g2_endtimepicker = new System.Windows.Forms.DateTimePicker();
-            this.g2_enddatepicker = new System.Windows.Forms.DateTimePicker();
-            this.label5 = new System.Windows.Forms.Label();
-            this.g2_starttimepicker = new System.Windows.Forms.DateTimePicker();
-            this.g2_startdatepicker = new System.Windows.Forms.DateTimePicker();
-            this.bok = new System.Windows.Forms.Button();
-            this.bcancel = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.t_cmd = new System.Windows.Forms.TextBox();
-            this.g1panel.SuspendLayout();
-            this.g2panel.SuspendLayout();
-            this.SuspendLayout();
+            comboBox1 = new ComboBox();
+            g1panel = new Panel();
+            g1_week = new CheckedListBox();
+            label8 = new Label();
+            label7 = new Label();
+            g1_starttimepicker = new DateTimePicker();
+            g1_endtimepicker = new DateTimePicker();
+            g2panel = new Panel();
+            label6 = new Label();
+            g2_endtimepicker = new DateTimePicker();
+            g2_enddatepicker = new DateTimePicker();
+            label5 = new Label();
+            g2_starttimepicker = new DateTimePicker();
+            g2_startdatepicker = new DateTimePicker();
+            bok = new Button();
+            bcancel = new Button();
+            label2 = new Label();
+            label3 = new Label();
+            t_cmd = new TextBox();
+            label1 = new Label();
+            cbTimeZone = new ComboBox();
+            g1panel.SuspendLayout();
+            g2panel.SuspendLayout();
+            SuspendLayout();
             // 
             // comboBox1
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "总 是",
-            "时间段",
-            "周定时"});
-            this.comboBox1.Location = new System.Drawing.Point(21, 109);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(156, 38);
-            this.comboBox1.TabIndex = 2;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.Font = new Font("宋体", 15F, FontStyle.Regular, GraphicsUnit.Point);
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Items.AddRange(new object[] { "总 是", "时间段", "周定时" });
+            comboBox1.Location = new Point(21, 109);
+            comboBox1.Margin = new Padding(4);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(156, 38);
+            comboBox1.TabIndex = 2;
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
             // g1panel
             // 
-            this.g1panel.Controls.Add(this.g1_week);
-            this.g1panel.Controls.Add(this.label8);
-            this.g1panel.Controls.Add(this.label7);
-            this.g1panel.Controls.Add(this.g1_starttimepicker);
-            this.g1panel.Controls.Add(this.g1_endtimepicker);
-            this.g1panel.Location = new System.Drawing.Point(202, 77);
-            this.g1panel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.g1panel.Name = "g1panel";
-            this.g1panel.Size = new System.Drawing.Size(815, 504);
-            this.g1panel.TabIndex = 4;
+            g1panel.Controls.Add(g1_week);
+            g1panel.Controls.Add(label8);
+            g1panel.Controls.Add(label7);
+            g1panel.Controls.Add(g1_starttimepicker);
+            g1panel.Controls.Add(g1_endtimepicker);
+            g1panel.Location = new Point(202, 77);
+            g1panel.Margin = new Padding(4);
+            g1panel.Name = "g1panel";
+            g1panel.Size = new Size(815, 504);
+            g1panel.TabIndex = 4;
             // 
             // g1_week
             // 
-            this.g1_week.FormattingEnabled = true;
-            this.g1_week.Items.AddRange(new object[] {
-            "星期日",
-            "星期一",
-            "星期二",
-            "星期三",
-            "星期四",
-            "星期五",
-            "星期六"});
-            this.g1_week.Location = new System.Drawing.Point(490, 89);
-            this.g1_week.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.g1_week.Name = "g1_week";
-            this.g1_week.Size = new System.Drawing.Size(297, 220);
-            this.g1_week.TabIndex = 20;
+            g1_week.FormattingEnabled = true;
+            g1_week.Items.AddRange(new object[] { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" });
+            g1_week.Location = new Point(490, 89);
+            g1_week.Margin = new Padding(4);
+            g1_week.Name = "g1_week";
+            g1_week.Size = new Size(297, 220);
+            g1_week.TabIndex = 20;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(86, 161);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(82, 24);
-            this.label8.TabIndex = 19;
-            this.label8.Text = "开始时间";
+            label8.AutoSize = true;
+            label8.Location = new Point(86, 161);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(82, 24);
+            label8.TabIndex = 19;
+            label8.Text = "开始时间";
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(86, 239);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(82, 24);
-            this.label7.TabIndex = 21;
-            this.label7.Text = "结束时间";
+            label7.AutoSize = true;
+            label7.Location = new Point(86, 239);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(82, 24);
+            label7.TabIndex = 21;
+            label7.Text = "结束时间";
             // 
             // g1_starttimepicker
             // 
-            this.g1_starttimepicker.CustomFormat = "yyyy-MM-dd HH:mm:ss";
-            this.g1_starttimepicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.g1_starttimepicker.Location = new System.Drawing.Point(89, 189);
-            this.g1_starttimepicker.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.g1_starttimepicker.Name = "g1_starttimepicker";
-            this.g1_starttimepicker.ShowUpDown = true;
-            this.g1_starttimepicker.Size = new System.Drawing.Size(244, 30);
-            this.g1_starttimepicker.TabIndex = 18;
+            g1_starttimepicker.CustomFormat = "yyyy-MM-dd HH:mm:ss";
+            g1_starttimepicker.Format = DateTimePickerFormat.Time;
+            g1_starttimepicker.Location = new Point(89, 189);
+            g1_starttimepicker.Margin = new Padding(4);
+            g1_starttimepicker.Name = "g1_starttimepicker";
+            g1_starttimepicker.ShowUpDown = true;
+            g1_starttimepicker.Size = new Size(244, 30);
+            g1_starttimepicker.TabIndex = 18;
             // 
             // g1_endtimepicker
             // 
-            this.g1_endtimepicker.CustomFormat = "yyyy-MM-dd HH:mm:ss";
-            this.g1_endtimepicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.g1_endtimepicker.Location = new System.Drawing.Point(89, 267);
-            this.g1_endtimepicker.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.g1_endtimepicker.Name = "g1_endtimepicker";
-            this.g1_endtimepicker.ShowUpDown = true;
-            this.g1_endtimepicker.Size = new System.Drawing.Size(244, 30);
-            this.g1_endtimepicker.TabIndex = 20;
+            g1_endtimepicker.CustomFormat = "yyyy-MM-dd HH:mm:ss";
+            g1_endtimepicker.Format = DateTimePickerFormat.Time;
+            g1_endtimepicker.Location = new Point(89, 267);
+            g1_endtimepicker.Margin = new Padding(4);
+            g1_endtimepicker.Name = "g1_endtimepicker";
+            g1_endtimepicker.ShowUpDown = true;
+            g1_endtimepicker.Size = new Size(244, 30);
+            g1_endtimepicker.TabIndex = 20;
             // 
             // g2panel
             // 
-            this.g2panel.Controls.Add(this.label6);
-            this.g2panel.Controls.Add(this.g2_endtimepicker);
-            this.g2panel.Controls.Add(this.g2_enddatepicker);
-            this.g2panel.Controls.Add(this.label5);
-            this.g2panel.Controls.Add(this.g2_starttimepicker);
-            this.g2panel.Controls.Add(this.g2_startdatepicker);
-            this.g2panel.Location = new System.Drawing.Point(202, 77);
-            this.g2panel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.g2panel.Name = "g2panel";
-            this.g2panel.Size = new System.Drawing.Size(815, 504);
-            this.g2panel.TabIndex = 22;
+            g2panel.Controls.Add(label6);
+            g2panel.Controls.Add(g2_endtimepicker);
+            g2panel.Controls.Add(g2_enddatepicker);
+            g2panel.Controls.Add(label5);
+            g2panel.Controls.Add(g2_starttimepicker);
+            g2panel.Controls.Add(g2_startdatepicker);
+            g2panel.Location = new Point(202, 77);
+            g2panel.Margin = new Padding(4);
+            g2panel.Name = "g2panel";
+            g2panel.Size = new Size(815, 504);
+            g2panel.TabIndex = 22;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(39, 216);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(82, 24);
-            this.label6.TabIndex = 23;
-            this.label6.Text = "结束时间";
+            label6.AutoSize = true;
+            label6.Location = new Point(39, 216);
+            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(82, 24);
+            label6.TabIndex = 23;
+            label6.Text = "结束时间";
             // 
             // g2_endtimepicker
             // 
-            this.g2_endtimepicker.CustomFormat = "yyyy-MM-dd HH:mm:ss";
-            this.g2_endtimepicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.g2_endtimepicker.Location = new System.Drawing.Point(308, 244);
-            this.g2_endtimepicker.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.g2_endtimepicker.Name = "g2_endtimepicker";
-            this.g2_endtimepicker.ShowUpDown = true;
-            this.g2_endtimepicker.Size = new System.Drawing.Size(244, 30);
-            this.g2_endtimepicker.TabIndex = 22;
+            g2_endtimepicker.CustomFormat = "yyyy-MM-dd HH:mm:ss";
+            g2_endtimepicker.Format = DateTimePickerFormat.Time;
+            g2_endtimepicker.Location = new Point(308, 244);
+            g2_endtimepicker.Margin = new Padding(4);
+            g2_endtimepicker.Name = "g2_endtimepicker";
+            g2_endtimepicker.ShowUpDown = true;
+            g2_endtimepicker.Size = new Size(244, 30);
+            g2_endtimepicker.TabIndex = 22;
             // 
             // g2_enddatepicker
             // 
-            this.g2_enddatepicker.Location = new System.Drawing.Point(43, 244);
-            this.g2_enddatepicker.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.g2_enddatepicker.Name = "g2_enddatepicker";
-            this.g2_enddatepicker.Size = new System.Drawing.Size(244, 30);
-            this.g2_enddatepicker.TabIndex = 21;
+            g2_enddatepicker.Location = new Point(43, 244);
+            g2_enddatepicker.Margin = new Padding(4);
+            g2_enddatepicker.Name = "g2_enddatepicker";
+            g2_enddatepicker.Size = new Size(244, 30);
+            g2_enddatepicker.TabIndex = 21;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(39, 139);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(82, 24);
-            this.label5.TabIndex = 20;
-            this.label5.Text = "开始时间";
+            label5.AutoSize = true;
+            label5.Location = new Point(39, 139);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(82, 24);
+            label5.TabIndex = 20;
+            label5.Text = "开始时间";
             // 
             // g2_starttimepicker
             // 
-            this.g2_starttimepicker.CustomFormat = "yyyy-MM-dd HH:mm:ss";
-            this.g2_starttimepicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.g2_starttimepicker.Location = new System.Drawing.Point(308, 167);
-            this.g2_starttimepicker.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.g2_starttimepicker.Name = "g2_starttimepicker";
-            this.g2_starttimepicker.ShowUpDown = true;
-            this.g2_starttimepicker.Size = new System.Drawing.Size(244, 30);
-            this.g2_starttimepicker.TabIndex = 19;
+            g2_starttimepicker.CustomFormat = "yyyy-MM-dd HH:mm:ss";
+            g2_starttimepicker.Format = DateTimePickerFormat.Time;
+            g2_starttimepicker.Location = new Point(308, 167);
+            g2_starttimepicker.Margin = new Padding(4);
+            g2_starttimepicker.Name = "g2_starttimepicker";
+            g2_starttimepicker.ShowUpDown = true;
+            g2_starttimepicker.Size = new Size(244, 30);
+            g2_starttimepicker.TabIndex = 19;
             // 
             // g2_startdatepicker
             // 
-            this.g2_startdatepicker.Location = new System.Drawing.Point(43, 167);
-            this.g2_startdatepicker.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.g2_startdatepicker.Name = "g2_startdatepicker";
-            this.g2_startdatepicker.Size = new System.Drawing.Size(244, 30);
-            this.g2_startdatepicker.TabIndex = 18;
+            g2_startdatepicker.Location = new Point(43, 167);
+            g2_startdatepicker.Margin = new Padding(4);
+            g2_startdatepicker.Name = "g2_startdatepicker";
+            g2_startdatepicker.Size = new Size(244, 30);
+            g2_startdatepicker.TabIndex = 18;
             // 
             // bok
             // 
-            this.bok.Location = new System.Drawing.Point(202, 639);
-            this.bok.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.bok.Name = "bok";
-            this.bok.Size = new System.Drawing.Size(172, 69);
-            this.bok.TabIndex = 11;
-            this.bok.Text = "确定";
-            this.bok.UseVisualStyleBackColor = true;
-            this.bok.Click += new System.EventHandler(this.bok_Click);
+            bok.Location = new Point(202, 639);
+            bok.Margin = new Padding(4);
+            bok.Name = "bok";
+            bok.Size = new Size(172, 69);
+            bok.TabIndex = 11;
+            bok.Text = "确定";
+            bok.UseVisualStyleBackColor = true;
+            bok.Click += bok_Click;
             // 
             // bcancel
             // 
-            this.bcancel.Location = new System.Drawing.Point(433, 639);
-            this.bcancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.bcancel.Name = "bcancel";
-            this.bcancel.Size = new System.Drawing.Size(172, 69);
-            this.bcancel.TabIndex = 12;
-            this.bcancel.Text = "取消";
-            this.bcancel.UseVisualStyleBackColor = true;
-            this.bcancel.Click += new System.EventHandler(this.bcancel_Click);
+            bcancel.Location = new Point(433, 639);
+            bcancel.Margin = new Padding(4);
+            bcancel.Name = "bcancel";
+            bcancel.Size = new Size(172, 69);
+            bcancel.TabIndex = 12;
+            bcancel.Text = "取消";
+            bcancel.UseVisualStyleBackColor = true;
+            bcancel.Click += bcancel_Click;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(15, 65);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(133, 30);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "触发条件";
+            label2.AutoSize = true;
+            label2.Font = new Font("宋体", 15F, FontStyle.Regular, GraphicsUnit.Point);
+            label2.Location = new Point(15, 65);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(133, 30);
+            label2.TabIndex = 13;
+            label2.Text = "触发条件";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(15, 161);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(133, 30);
-            this.label3.TabIndex = 20;
-            this.label3.Text = "任务事件";
+            label3.AutoSize = true;
+            label3.Font = new Font("宋体", 15F, FontStyle.Regular, GraphicsUnit.Point);
+            label3.Location = new Point(15, 161);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(133, 30);
+            label3.TabIndex = 20;
+            label3.Text = "任务事件";
             // 
             // t_cmd
             // 
-            this.t_cmd.Location = new System.Drawing.Point(15, 194);
-            this.t_cmd.Name = "t_cmd";
-            this.t_cmd.Size = new System.Drawing.Size(162, 30);
-            this.t_cmd.TabIndex = 23;
+            t_cmd.Location = new Point(15, 194);
+            t_cmd.Name = "t_cmd";
+            t_cmd.Size = new Size(162, 30);
+            t_cmd.TabIndex = 23;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("宋体", 15F, FontStyle.Regular, GraphicsUnit.Point);
+            label1.Location = new Point(21, 249);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(73, 30);
+            label1.TabIndex = 25;
+            label1.Text = "时区";
+            // 
+            // cbTimeZone
+            // 
+            cbTimeZone.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbTimeZone.Font = new Font("宋体", 15F, FontStyle.Regular, GraphicsUnit.Point);
+            cbTimeZone.FormattingEnabled = true;
+            cbTimeZone.Items.AddRange(new object[] { "-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" });
+            cbTimeZone.Location = new Point(15, 283);
+            cbTimeZone.Margin = new Padding(4);
+            cbTimeZone.Name = "cbTimeZone";
+            cbTimeZone.Size = new Size(156, 38);
+            cbTimeZone.TabIndex = 24;
             // 
             // FCreatOrUpdate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1271, 828);
-            this.Controls.Add(this.t_cmd);
-            this.Controls.Add(this.g2panel);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.bcancel);
-            this.Controls.Add(this.bok);
-            this.Controls.Add(this.g1panel);
-            this.Controls.Add(this.comboBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.Name = "FCreatOrUpdate";
-            this.Text = "FCreatOrUpdate";
-            this.g1panel.ResumeLayout(false);
-            this.g1panel.PerformLayout();
-            this.g2panel.ResumeLayout(false);
-            this.g2panel.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1271, 828);
+            Controls.Add(label1);
+            Controls.Add(cbTimeZone);
+            Controls.Add(t_cmd);
+            Controls.Add(g2panel);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(bcancel);
+            Controls.Add(bok);
+            Controls.Add(g1panel);
+            Controls.Add(comboBox1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Margin = new Padding(4);
+            Name = "FCreatOrUpdate";
+            Text = "FCreatOrUpdate";
+            g1panel.ResumeLayout(false);
+            g1panel.PerformLayout();
+            g2panel.ResumeLayout(false);
+            g2panel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -309,5 +325,7 @@ namespace MyClient.View.AutoControl
         private System.Windows.Forms.DateTimePicker g2_starttimepicker;
         private System.Windows.Forms.DateTimePicker g2_startdatepicker;
         private TextBox t_cmd;
+        private Label label1;
+        private ComboBox cbTimeZone;
     }
 }

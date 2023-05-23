@@ -14,6 +14,7 @@ namespace MyClient.View.AutoControl
         public FCreatOrUpdate()
         {
             InitializeComponent();
+            cbTimeZone.SelectedIndex = 12 + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).Hours;
         }
         /// <summary>
         /// 创建一个任务
@@ -36,6 +37,7 @@ namespace MyClient.View.AutoControl
             Org = org;
             comboBox1.SelectedIndex = org.TriggerType;
             t_cmd.Text = org.Cmd;
+            cbTimeZone.SelectedIndex = org.TimeZone + 12;
             switch ((TimeTriggerType)org.TriggerType)
             {
                 case TimeTriggerType.ALL:
@@ -127,7 +129,11 @@ namespace MyClient.View.AutoControl
                     MessageBox.Show("结束时间不能在开始时间之前", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                sh = DeviceAutoControlUtility.Creat("", 0, v, tu.GetTicket(datestart), tu.GetTicket(dateend));
+                var rootTime = tu.GetTicket(new DateTime(1970, 1, 1));
+                sh = DeviceAutoControlUtility.Creat("", 0, v,
+                    tu.GetTicket(datestart) - rootTime,
+                    tu.GetTicket(dateend) - rootTime,
+                    int.Parse(cbTimeZone.SelectedItem.ToString()));
             }
             else if ((string)comboBox1.SelectedItem == "周定时")
             {
@@ -162,7 +168,7 @@ namespace MyClient.View.AutoControl
                     MessageBox.Show("请选择至少一天", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                sh = DeviceAutoControlUtility.Creat("", 0, v, tu.GetTicket(datestart) - tu.GetTicket(datestart.Date), tu.GetTicket(dateend) - tu.GetTicket(dateend.Date), week);
+                sh = DeviceAutoControlUtility.Creat("", 0, v, tu.GetTicket(datestart) - tu.GetTicket(datestart.Date), tu.GetTicket(dateend) - tu.GetTicket(dateend.Date), week, int.Parse(cbTimeZone.SelectedItem.ToString()));
             }
             else
             {

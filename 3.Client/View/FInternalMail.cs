@@ -91,7 +91,7 @@ namespace MyClient.View
                 {
                     _client.SetMailReaded(new Request_SetMailReaded()
                     {
-                        MailId = mail.SenderId,
+                        MailId = mail.Id,
                     });
                     mail.Readed = true;
                 }

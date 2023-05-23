@@ -17,18 +17,19 @@ message DeviceAutoControlSetting{
     bool Open=1;
     //排序
     int32 Order=2;
-    //
+    //名称（分组）
     string Name=3;
     //
     //int64 DeviceId=4;
-    int32  TriggerType=6;
+    int32 TriggerType=6;
     int64 TimeStart=7;
     int64 TimeEnd=8;
     //关联的设备id
     int64 OwnerID=9;
     //   周信息 1位代表1天  低位为周日
     int32 Week=10; 
-    string Cmd=11;
+    int32 TimeZone=11;
+    string Cmd=12;
 }
 //设置自动控制配置
 message Request_SetDeviceSetting{
