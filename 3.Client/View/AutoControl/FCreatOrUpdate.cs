@@ -115,7 +115,7 @@ namespace MyClient.View.AutoControl
                     g2_startdatepicker.Value.Day,
                     g2_starttimepicker.Value.Hour,
                     g2_starttimepicker.Value.Minute,
-                    g2_starttimepicker.Value.Second
+                    g2_starttimepicker.Value.Second, DateTimeKind.Utc
                     );
                 var dateend = new DateTime(
                 g2_enddatepicker.Value.Year,
@@ -123,16 +123,15 @@ namespace MyClient.View.AutoControl
                 g2_enddatepicker.Value.Day,
                 g2_endtimepicker.Value.Hour,
                 g2_endtimepicker.Value.Minute,
-                g2_endtimepicker.Value.Second);
+                g2_endtimepicker.Value.Second, DateTimeKind.Utc);
                 if (datestart >= dateend)
                 {
                     MessageBox.Show("结束时间不能在开始时间之前", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                var rootTime = tu.GetTicket(new DateTime(1970, 1, 1));
                 sh = DeviceAutoControlUtility.Creat("", 0, v,
-                    tu.GetTicket(datestart) - rootTime,
-                    tu.GetTicket(dateend) - rootTime,
+                    tu.GetTicket(datestart),
+                    tu.GetTicket(dateend),
                     int.Parse(cbTimeZone.SelectedItem.ToString()));
             }
             else if ((string)comboBox1.SelectedItem == "周定时")
@@ -168,7 +167,7 @@ namespace MyClient.View.AutoControl
                     MessageBox.Show("请选择至少一天", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                sh = DeviceAutoControlUtility.Creat("", 0, v, tu.GetTicket(datestart) - tu.GetTicket(datestart.Date), tu.GetTicket(dateend) - tu.GetTicket(dateend.Date), week, int.Parse(cbTimeZone.SelectedItem.ToString()));
+                sh = DeviceAutoControlUtility.Creat("", 0, v, tu.GetTickDiffer(datestart, datestart.Date), tu.GetTickDiffer(dateend, dateend.Date), week, int.Parse(cbTimeZone.SelectedItem.ToString()));
             }
             else
             {

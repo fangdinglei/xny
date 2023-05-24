@@ -84,12 +84,12 @@ namespace GrpcMain.MQTT
                 case TimeTriggerType.ALL:
                     return true;
                 case TimeTriggerType.Once:
-                    var tic = tu.GetTicket(utcTime.AddHours(item.TimeZone)) - tu.GetTicket(new DateTime(1970, 1, 1));
+                    var tic = tu.GetTicket(utcTime.AddHours(item.TimeZone));
                     return (tic >= item.TimeStart) && (tic <= item.TimeEnd);
                 case TimeTriggerType.EveryWeek:
                     utcTime = utcTime.AddHours(item.TimeZone);
                     var week = (int)utcTime.DayOfWeek;
-                    long t = tu.GetTicket(utcTime) - tu.GetTicket(utcTime.Date);
+                    long t = tu.GetTickDiffer(utcTime, utcTime.Date);
                     return (t >= item.TimeStart) && (t <= item.TimeEnd) && (item.Week & (1 << week)) > 0;
                 default:
                     return false;

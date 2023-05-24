@@ -16,7 +16,30 @@
         /// </summary>
         /// <returns></returns>
         public long GetTicket();
-        public DateTime GetDateTime(long dt);
+
+        /// <summary>
+        /// 获取时间 
+        /// </summary>
+        /// <param name="dt">时间戳/1000</param>
+        /// <param name="local">是否使用本地时间，否则使用utc时间</param>
+        /// <returns></returns>
+        public DateTime GetDateTime(long dt, bool local = true);
+
+        /// <summary>
+        /// 获取两个时间的时间戳差值，此方法不考虑kind
+        /// </summary>
+        /// <param name="date1"></param>
+        /// <param name="date2"></param>
+        /// <returns></returns>
+        public long GetTickDiffer(DateTime date1, DateTime date2);
+
+        /// <summary>
+        /// 获取时间基址 当前为utc时间的1970.1.1 受到不同时区的影响
+        /// </summary>
+        /// <param name="local">是否使用本地时间，否则返回一个kind为utc的时间</param>
+        /// <returns></returns>
+        public DateTime GetDateRoot(bool local = true);
+
     }
 
     public class RandomUtility : IRandomUtility
@@ -98,27 +121,34 @@
         /// <param name="dt"></param>
         /// <returns></returns>
         public long GetTicket(DateTime dt)
-        {                                                                                                                 //此方法可用
-            DateTime startTime = TimeZoneInfo.ConvertTime(new System.DateTime(1970, 1, 1), TimeZoneInfo.Utc, TimeZoneInfo.Local);  // 当地时区
+        {
+            DateTime startTime = GetDateRoot(dt.Kind != DateTimeKind.Utc);  // 当地时区
             var timeStamp = (long)(dt - startTime).TotalSeconds; // 相差秒数
             return timeStamp;
         }
-        /// <summary>
-        /// 获取时间 
-        /// </summary>
-        /// <param name="dt">时间戳/1000</param>
-        /// <returns></returns>
-        public DateTime GetDateTime(long dt)
+
+        public DateTime GetDateTime(long dt, bool local = true)
         {                                                                                                                 //此方法可用
-            DateTime startTime = TimeZoneInfo.ConvertTime(new System.DateTime(1970, 1, 1), TimeZoneInfo.Utc, TimeZoneInfo.Local);  // 当地时区 
-            return new DateTime(startTime.Ticks + dt * 10000 * 1000);
+            DateTime startTime = GetDateRoot(local);  // 当地时区 
+            return new DateTime(startTime.Ticks + dt * 10000 * 1000, local? DateTimeKind.Local: DateTimeKind.Utc );
         }
 
         public long GetTicket()
         {
             return GetTicket(DateTime.Now);
         }
-    }
 
+        public long GetTickDiffer(DateTime date1, DateTime date2)
+        {
+            return (long)(date1 - date2).TotalSeconds;
+        }
+
+        public DateTime GetDateRoot(bool local = true)
+        {
+            if (local)
+                return TimeZoneInfo.ConvertTime(new System.DateTime(1970, 1, 1), TimeZoneInfo.Utc, TimeZoneInfo.Local);
+            return new System.DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        }
+    }
 
 }

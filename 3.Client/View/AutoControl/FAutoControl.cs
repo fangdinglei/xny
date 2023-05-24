@@ -237,8 +237,8 @@ namespace MyClient.View.AutoControl
                     case TimeTriggerType.ALL:
                         return "总是";
                     case TimeTriggerType.Once:
-                        var st = tu.GetDateTime(v.TimeStart + tu.GetTicket(new DateTime(1970, 1, 1)));
-                        var ed = tu.GetDateTime(v.TimeEnd + tu.GetTicket(new DateTime(1970, 1, 1)));
+                        var st = tu.GetDateTime(v.TimeStart,false);
+                        var ed = tu.GetDateTime(v.TimeEnd, false);
                         return st.ToString() + " - " + ed.ToString();
                     case TimeTriggerType.EveryWeek:
                         s = tu.GetDateTime(tu.GetTicket(DateTime.Now.Date) + v.TimeStart).ToString("HH-mm-ss") + " - "
@@ -539,12 +539,12 @@ namespace MyClient.View.AutoControl
                 case TimeTriggerType.ALL:
                     return true;
                 case TimeTriggerType.Once:
-                    var tic = tu.GetTicket(utcTime.AddHours(item.TimeZone))-tu.GetTicket(new DateTime(1970,1,1));
+                    var tic = tu.GetTicket(utcTime.AddHours(item.TimeZone));
                     return (tic >= item.TimeStart) && (tic <= item.TimeEnd);
                 case TimeTriggerType.EveryWeek:
                     utcTime = utcTime.AddHours(item.TimeZone);
                     var week = (int)utcTime.DayOfWeek;
-                    long t = tu.GetTicket(utcTime) - tu.GetTicket(utcTime.Date);
+                    long t = tu.GetTickDiffer(utcTime,utcTime.Date);
                     return (t >= item.TimeStart) && (t <= item.TimeEnd) && (item.Week & (1 << week)) > 0;
                 default:
                     return false;
