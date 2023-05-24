@@ -43,10 +43,10 @@ namespace MyClient.View.AutoControl
                 case TimeTriggerType.ALL:
                     break;
                 case TimeTriggerType.Once:
-                    g2_startdatepicker.Value = tu.GetDateTime(org.TimeStart);
-                    g2_starttimepicker.Value = tu.GetDateTime(org.TimeStart);
-                    g2_enddatepicker.Value = tu.GetDateTime(org.TimeEnd);
-                    g2_endtimepicker.Value = tu.GetDateTime(org.TimeEnd);
+                    g2_startdatepicker.Value = tu.GetDateTime(org.TimeStart,false);
+                    g2_starttimepicker.Value = tu.GetDateTime(org.TimeStart, false);
+                    g2_enddatepicker.Value = tu.GetDateTime(org.TimeEnd, false);
+                    g2_endtimepicker.Value = tu.GetDateTime(org.TimeEnd, false);
                     break;
                 case TimeTriggerType.EveryWeek:
                     g1_starttimepicker.Value = tu.GetDateTime(tu.GetTicket(DateTime.Now.Date) + org.TimeStart);
