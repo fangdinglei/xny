@@ -31,7 +31,7 @@ namespace GrpcMain.History
                     throw new Exception("需要指定设备ID");
                 }
                 var ud=await  ct.User_Devices.Where(it => it.UserId == id && it.DeviceId == request.DeviceId).AsNoTracking().FirstOrDefaultAsync();
-                if (ud == null)
+                if (ud == null || (ud.Authority &(int)UserDeviceAuthority.Read_Cmd) == 0)
                 {
                     throw new RpcException(new Status( StatusCode.PermissionDenied,"权限不足"));
                 }

@@ -24,7 +24,7 @@ namespace GrpcMain.Device.AutoControl
                 TimeEnd = item.TimeEnd,
                 TimeStart = item.TimeStart,
                 TriggerType = item.TriggerType,
-                TimeZone= (int)item.TimeZone + 12,
+                TimeZone= (int)item.TimeZone - 12,
                 Week = item.Week,
             };
         }

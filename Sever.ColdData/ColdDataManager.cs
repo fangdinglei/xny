@@ -10,7 +10,7 @@ namespace Sever.ColdData
     /// <summary>
     /// 用于管理自动
     /// </summary>
-    [AutoTask(Name = "ColdDataManager", OnTimeCall = "Run", IntervalSeconds = 1000*60*24)]
+    [AutoTask(Name = "ColdDataManager", OnTimeCall = "Run", IntervalSeconds = 60*24)]
     public class ColdDataManager
     {
         static ITimeUtility tu = new TimeUtility();

@@ -9,7 +9,7 @@ namespace GrpcMain.MQTT
     /// <summary>
     /// 设备定时控制管理器 负责检查和发送命令
     /// </summary>
-    [AutoTask(Name = "DeviceTimePlanManager", OnTimeCall = "Run", IntervalSeconds = 1000*60*5)]
+    [AutoTask(Name = "DeviceTimePlanManager", OnTimeCall = "Run", IntervalSeconds = 60*5)]
     public class DeviceTimePlanManager
     {
         static IProto _proto;
