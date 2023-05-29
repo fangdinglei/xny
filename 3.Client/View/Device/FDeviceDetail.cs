@@ -5,6 +5,7 @@ using GrpcMain.Device;
 using MyClient.Grpc;
 using MyClient.View.AutoControl;
 using MyDBContext.Main;
+using System.Collections.Generic;
 
 namespace MyClient.View.Device
 {
@@ -12,6 +13,7 @@ namespace MyClient.View.Device
     [System.Runtime.InteropServices.ComVisibleAttribute(true)]//标记对com可见
     public partial class FDeviceDetail : Form, IView
     {
+        record LastData(long thingModelId, long time, float value, long alertSeconds);
 
 
         GrpcMain.Device.Device device;
@@ -70,11 +72,21 @@ DeviceService.DeviceServiceClient deviceServiceClient)
                 {
                     return new List<Dictionary<string, object>>();
                 }
-                var dt = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<long, float>>(res1.LatestData[0]);
-                var ls = new List<Dictionary<string, object>>();
-                foreach (var kv in dt)
+                List<LastData> dt;
+                try
                 {
-                    var thingmodel = typeinfo.ThingModels.FirstOrDefault(it => it.Id == kv.Key);
+                    dt = Newtonsoft.Json.JsonConvert.DeserializeObject<List<LastData>>(res1.LatestData[0]);
+                }
+                catch (Exception)
+                {
+                    dt = new List<LastData>();
+                }
+
+
+                var ls = new List<Dictionary<string, object>>();
+                foreach (var lastData in dt)
+                {
+                    var thingmodel = typeinfo.ThingModels.FirstOrDefault(it => it.Id == lastData.thingModelId);
                     if (thingmodel == null)
                         continue;
                     //Name,Unit,MinValue,MaxValue ,AlertLowValue,AlertHighValue,Value,ValueType
@@ -82,7 +94,7 @@ DeviceService.DeviceServiceClient deviceServiceClient)
                     {"Name",thingmodel.Name },{"Unit",thingmodel.Unit } ,
                      {"MinValue",thingmodel.MinValue },{"MaxValue",thingmodel.MaxValue } ,
                       {"AlertLowValue",thingmodel.AlertLowValue },{"AlertHighValue",thingmodel.AlertHighValue } ,
-                       {"Value",kv.Value },{"ValueType",thingmodel.ValueType.ToString() } ,
+                       {"Value",lastData.value },{"ValueType",thingmodel.ValueType.ToString() } ,
                 };
                     ls.Add(data);
                 }
@@ -111,6 +123,15 @@ DeviceService.DeviceServiceClient deviceServiceClient)
             {
                 text_id.Text = device.Id + "";
                 text_name.Text = device.Name;
+                if (device.HasAlertEmail)
+                {
+                    text_AlertEmail.Text = device.AlertEmail;
+                }
+                else
+                {
+                    text_AlertEmail.Text = "";
+                }
+                
                 text_status.Text = device.Status switch
                 { //1未激活 2离线 3在线 4};
                     1 => "未激活",
@@ -163,6 +184,7 @@ DeviceService.DeviceServiceClient deviceServiceClient)
             {
                 var dv = device.Clone();
                 dv.Name = text_name.Text;
+                dv.AlertEmail = text_AlertEmail.Text;
                 var res = _deviceServiceClient.UpdateDeviceBaseInfo(new Request_UpdateDeviceBaseInfo
                 {
                     Device = dv,

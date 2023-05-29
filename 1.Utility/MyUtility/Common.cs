@@ -40,6 +40,7 @@
         /// <returns></returns>
         public DateTime GetDateRoot(bool local = true);
 
+        public long TicketToSeconds(long ticket);
     }
 
     public class RandomUtility : IRandomUtility
@@ -148,6 +149,11 @@
             if (local)
                 return TimeZoneInfo.ConvertTime(new System.DateTime(1970, 1, 1), TimeZoneInfo.Utc, TimeZoneInfo.Local);
             return new System.DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        }
+
+        public long TicketToSeconds(long ticket)
+        {
+            return ticket;
         }
     }
 

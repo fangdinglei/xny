@@ -42,7 +42,8 @@ message Device{
     optional string LatestData=4;
     optional int32 Status=5;
     optional string LocationStr=6;
- 
+    optional bool Alerting=7;
+    optional string AlertEmail=8;
 }
 
 message Request_SendCMD{

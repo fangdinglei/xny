@@ -22,6 +22,11 @@ namespace MyDBContext.Main
         public float AlertLowValue { get; set; }
         public float AlertHighValue { get; set; }
 
+        /// <summary>
+        /// 处于异常值多久（分钟）触发预警
+        /// </summary>
+        public int AlertTime { get; set; }
+
         public bool Abandonted { get; set; }
 
         [NotMapped]

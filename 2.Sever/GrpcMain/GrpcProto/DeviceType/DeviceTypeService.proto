@@ -27,7 +27,7 @@ message Response_AddTypeInfo{
     CommonResponse Status=1;
 }
 
-message  ThingModel{
+message ThingModel{
     int64 Id=1;
     string Name=2;
     int32 ValueType=3;
@@ -38,6 +38,7 @@ message  ThingModel{
     bool Abandonted=8;
     float AlertLowValue=9;
     float AlertHighValue=10;
+    int32 AlertTime=11;
 }   
 
 message TypeInfo{

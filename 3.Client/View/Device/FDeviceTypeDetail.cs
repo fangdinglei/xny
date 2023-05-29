@@ -94,7 +94,7 @@ namespace MyClient.View
                         list_thingmodels.DisplayMember = "Name";
                     });
             }
-          
+
         }
         private void list_thingmodels_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -124,6 +124,7 @@ namespace MyClient.View
             text_alterlow.Text = thingModel.AlertLowValue + "";
             text_alterlow.Text = thingModel.AlertLowValue + "";
             text_alterhigh.Text = thingModel.AlertHighValue + "";
+            text_alertTime.Text = thingModel.AlertTime+"";
             text_thingmodel_remark.Text = thingModel.Remark;
             check_thingmodel_abandonted.Checked = thingModel.Abandonted;
         }
@@ -152,6 +153,7 @@ namespace MyClient.View
             thingModel.Abandonted = check_thingmodel_abandonted.Checked;
             thingModel.AlertLowValue = float.Parse(text_alterlow.Text);
             thingModel.AlertHighValue = float.Parse(text_alterhigh.Text);
+            thingModel.AlertTime = int.Parse(text_alertTime.Text);
             thingModels[list_thingmodels.SelectedIndex] = thingModel;
 
         }
@@ -176,6 +178,7 @@ namespace MyClient.View
                 thingModel.Abandonted = check_thingmodel_abandonted.Checked;
                 thingModel.AlertLowValue = float.Parse(text_alterlow.Text);
                 thingModel.AlertHighValue = float.Parse(text_alterhigh.Text);
+                thingModel.AlertTime = int.Parse(text_alertTime.Text);
                 thingModels.Add(thingModel);
             }
             catch (Exception)

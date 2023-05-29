@@ -1,16 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyDBContext.Main;
+using MyEmailUtility;
 using MyUtility;
+using Newtonsoft.Json;
 using System.Text;
 
 namespace Sever.DeviceProto
 {
     public class DeviceMessageManager : IDeviceMessageHandle
     {
+        record LastData(long thingModelId, long time, float value, long alertSeconds);
         ITimeUtility tu;
-        public DeviceMessageManager(ITimeUtility tu)
+        IMyEmailUtility emailUtility;
+        public DeviceMessageManager(ITimeUtility tu, IMyEmailUtility emailUtility)
         {
             this.tu = tu;
+            this.emailUtility = emailUtility;
         }
         public void OnMsg(string topic, byte[] data)
         {
@@ -54,27 +59,67 @@ namespace Sever.DeviceProto
                         if (type == null)
                             return;
                         var thingmodels = await ct.ThingModels.Where(it => it.DeviceTypeId == type.Id).AsNoTracking().ToDictionaryAsync(it => it.Id, it => it);
-                        string lateststr = "{";
+
+                        List<LastData> lastDatas;
+                        try
+                        {
+                            lastDatas = JsonConvert.DeserializeObject<List<LastData>>(dv.LatestData);
+                            if (lastDatas == null)
+                                lastDatas = new List<LastData>();
+                        }
+                        catch (Exception)
+                        {
+                            lastDatas = new List<LastData>();
+                        }
+
                         //检查并插入
+                        var nowTime = tu.GetTicket(DateTime.Now);
+                        var isFirstAlerting = !dv.Alerting;
+                        dv.Alerting = false;
                         foreach (var item in ls)
                         {
-                            if (!thingmodels.ContainsKey(item.Item1))
+                            if (!thingmodels.TryGetValue(item.Item1, out var thingModel))
                                 continue;
-                            lateststr += item.Item1 + ":" + item.Item2 + ",";
+                            LastData? lastData, newData;
+                            lastData = lastDatas.Find(it => it.thingModelId == item.Item1);
+
+                            var alertingSecond =
+                                (lastData != null && (item.Item2 < thingModel.AlertLowValue || item.Item2 > thingModel.AlertHighValue))
+                                ? tu.TicketToSeconds(nowTime - lastData.time) / 60 / 60 / 24 > 0
+                                    ? nowTime - lastData.time
+                                    : lastData.alertSeconds + (nowTime - lastData.time)
+                                : -1;
+
+                            lastDatas.RemoveAll(lsitem => lastData != null && lsitem.thingModelId == lastData.thingModelId);
+                            lastDatas.Add(new LastData(item.Item1, nowTime, item.Item2,
+                                alertingSecond
+                                ));
+                            dv.Alerting = dv.Alerting || alertingSecond >= 0 && (alertingSecond / 60) >= thingModel.AlertTime;
                             ct.Add(new Device_DataPoint()
                             {
                                 DeviceId = dvid,
                                 StreamId = thingmodels[item.Item1].Id,
-                                Time = tu.GetTicket(DateTime.Now),
+                                Time = nowTime,
                                 Value = item.Item2,
                             });
                         }
-                        lateststr = lateststr.Trim(',') + "}";
-                        dv.LatestData = lateststr;
+                        dv.LatestData = JsonConvert.SerializeObject(lastDatas);
                         //批量提交 新数据和修改最新数据
                         await ct.SaveChangesAsync();
-                    }
 
+                        if (dv.Alerting && isFirstAlerting && !string.IsNullOrEmpty(dv.AlertEmail))
+                        {
+                            try
+                            {
+                                _ = emailUtility.Send(dv.AlertEmail, "警告", $"设备：{dv.Name} 所处的环境数据超出预设范围");
+                            }
+                            catch (Exception)
+                            {
+
+                                throw;
+                            }
+                        }
+                    }
                 }
             });
         }

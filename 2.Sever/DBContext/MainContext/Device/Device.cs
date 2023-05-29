@@ -8,7 +8,9 @@
 //dotnet ef -h
 //
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MyDBContext.Main
 {
@@ -29,6 +31,18 @@ namespace MyDBContext.Main
         public int Status { get; set; }
         public string LatestData { get; set; }
         public string LocationStr { get; set; }
+
+        /// <summary>
+        /// 是否启用邮件预警
+        /// </summary>
+        [DefaultValue("")]
+        [NotNull]
+        public string AlertEmail { get; set; } = "";
+        /// <summary>
+        /// 是否正在预警
+        /// </summary>
+        public bool Alerting { get; set; }
+
 
         public long DeviceTypeId { get; set; }
         public virtual Device_Type DeviceType { get; set; }

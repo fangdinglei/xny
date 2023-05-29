@@ -114,7 +114,8 @@ namespace MyClient.View
                     //或 是默认分组和设备分组信息不存在 防止出现不一致导致无法访问设备
                     var c3 = c2 ||
                         idx == 0 && groups.Find(it => it.Id == device.UserDevice.UserDeviceGroup) == null;
-                    if (!c3)
+                    var alertSelector = !cbAlert.Checked || cbAlert.Checked && device.Device.Alerting;
+                    if (!c3 ||!alertSelector)
                         continue;
                     currentshow.Add(device);
                 }
@@ -140,7 +141,7 @@ namespace MyClient.View
                     {
                         dr["Type"] = "未知类型";
                     }
-                    dr["OP1"] = "详情";
+                    dr["OP1"] = "详情" + (device.Device.Alerting ? "*" : "");
                     dr["OP2"] = "更多功能";
                     dt.Rows.Add(dr);
                 }
@@ -206,6 +207,7 @@ namespace MyClient.View
 
         private void list_Group_SelectedIndexChanged(object sender, EventArgs e)
         {
+            cbAlert.Checked = false;
             RefreshDeviceInTab();
         }
 
@@ -349,6 +351,11 @@ namespace MyClient.View
         private void btn_creatdevice_Click(object sender, EventArgs e)
         {
             ViewHolder.SwitchTo("FCreatDevice", false);
+        }
+
+        private void cbAlert_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshDeviceInTab();
         }
     }
 }

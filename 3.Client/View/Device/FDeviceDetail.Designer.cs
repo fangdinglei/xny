@@ -45,6 +45,8 @@
             btn_repair = new Button();
             btn_timesetting = new Button();
             btnCmdHistory = new Button();
+            text_AlertEmail = new TextBox();
+            label5 = new Label();
             SuspendLayout();
             // 
             // label1
@@ -99,7 +101,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(12, 120);
+            label4.Location = new Point(12, 156);
             label4.Name = "label4";
             label4.Size = new Size(82, 24);
             label4.TabIndex = 7;
@@ -107,14 +109,14 @@
             // 
             // text_type
             // 
-            text_type.Location = new Point(112, 120);
+            text_type.Location = new Point(112, 156);
             text_type.Name = "text_type";
             text_type.Size = new Size(150, 30);
             text_type.TabIndex = 8;
             // 
             // btn_sendcmd
             // 
-            btn_sendcmd.Location = new Point(12, 235);
+            btn_sendcmd.Location = new Point(12, 281);
             btn_sendcmd.Name = "btn_sendcmd";
             btn_sendcmd.Size = new Size(112, 34);
             btn_sendcmd.TabIndex = 9;
@@ -124,7 +126,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(130, 315);
+            button2.Location = new Point(130, 361);
             button2.Name = "button2";
             button2.Size = new Size(112, 34);
             button2.TabIndex = 10;
@@ -133,7 +135,7 @@
             // 
             // btn_typeinfo
             // 
-            btn_typeinfo.Location = new Point(130, 235);
+            btn_typeinfo.Location = new Point(130, 281);
             btn_typeinfo.Name = "btn_typeinfo";
             btn_typeinfo.Size = new Size(112, 34);
             btn_typeinfo.TabIndex = 11;
@@ -143,7 +145,7 @@
             // 
             // btn_deletdevice
             // 
-            btn_deletdevice.Location = new Point(130, 275);
+            btn_deletdevice.Location = new Point(130, 321);
             btn_deletdevice.Name = "btn_deletdevice";
             btn_deletdevice.Size = new Size(112, 34);
             btn_deletdevice.TabIndex = 12;
@@ -153,7 +155,7 @@
             // 
             // btn_commit
             // 
-            btn_commit.Location = new Point(53, 167);
+            btn_commit.Location = new Point(55, 203);
             btn_commit.Name = "btn_commit";
             btn_commit.Size = new Size(112, 34);
             btn_commit.TabIndex = 13;
@@ -172,7 +174,7 @@
             // 
             // btn_repair
             // 
-            btn_repair.Location = new Point(12, 275);
+            btn_repair.Location = new Point(12, 321);
             btn_repair.Name = "btn_repair";
             btn_repair.Size = new Size(112, 34);
             btn_repair.TabIndex = 15;
@@ -182,7 +184,7 @@
             // 
             // btn_timesetting
             // 
-            btn_timesetting.Location = new Point(12, 315);
+            btn_timesetting.Location = new Point(12, 361);
             btn_timesetting.Name = "btn_timesetting";
             btn_timesetting.Size = new Size(112, 34);
             btn_timesetting.TabIndex = 16;
@@ -192,7 +194,7 @@
             // 
             // btnCmdHistory
             // 
-            btnCmdHistory.Location = new Point(12, 355);
+            btnCmdHistory.Location = new Point(12, 401);
             btnCmdHistory.Name = "btnCmdHistory";
             btnCmdHistory.Size = new Size(230, 34);
             btnCmdHistory.TabIndex = 17;
@@ -200,11 +202,29 @@
             btnCmdHistory.UseVisualStyleBackColor = true;
             btnCmdHistory.Click += btnCmdHistory_Click;
             // 
+            // text_AlertEmail
+            // 
+            text_AlertEmail.Location = new Point(112, 120);
+            text_AlertEmail.Name = "text_AlertEmail";
+            text_AlertEmail.Size = new Size(150, 30);
+            text_AlertEmail.TabIndex = 19;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(12, 123);
+            label5.Name = "label5";
+            label5.Size = new Size(82, 24);
+            label5.TabIndex = 18;
+            label5.Text = "预警邮箱";
+            // 
             // FDeviceDetail
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1273, 671);
+            Controls.Add(text_AlertEmail);
+            Controls.Add(label5);
             Controls.Add(btnCmdHistory);
             Controls.Add(btn_timesetting);
             Controls.Add(btn_repair);
@@ -247,5 +267,7 @@
         private Button btn_repair;
         private Button btn_timesetting;
         private Button btnCmdHistory;
+        private TextBox text_AlertEmail;
+        private Label label5;
     }
 }

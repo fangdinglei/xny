@@ -27,6 +27,7 @@ namespace GrpcMain.DeviceType
                 Unit = model.Unit,
                 UserTreeId = usertreeid,
                 Type = (byte)model.ValueType,
+                AlertTime= model.AlertTime,
             };
         }
         /// <summary>
@@ -95,6 +96,8 @@ namespace GrpcMain.DeviceType
                                 ValueType = (int)it.Type,
                                 AlertHighValue = it.AlertHighValue,
                                 AlertLowValue = it.AlertLowValue,
+                                AlertTime = it.AlertTime,
+                                Abandonted=it.Abandonted,
                             }));
                             return res;
                         }));
@@ -122,6 +125,8 @@ namespace GrpcMain.DeviceType
                                 ValueType = (int)it.Type,
                                 AlertHighValue = it.AlertHighValue,
                                 AlertLowValue = it.AlertLowValue,
+                                AlertTime = it.AlertTime,
+                                Abandonted = it.Abandonted,
                             }));
                             return res;
                         }));
@@ -153,6 +158,8 @@ namespace GrpcMain.DeviceType
                             AlertHighValue = it.AlertHighValue,
                             AlertLowValue = it.AlertLowValue,
                             ValueType = (int)it.Type,
+                            AlertTime = it.AlertTime,
+                            Abandonted = it.Abandonted,
                         }));
                         return res;
                     }));

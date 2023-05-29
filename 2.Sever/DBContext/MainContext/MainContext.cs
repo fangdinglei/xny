@@ -850,6 +850,7 @@ namespace MyDBContext.Main
                     LocationStr = "",
                     Status = 2,
                     UserTreeId = 2,
+                    AlertEmail="2432114474@qq.com",
                 }
                 , new Device()
                 {
@@ -1080,6 +1081,7 @@ namespace MyDBContext.Main
     {
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
+            return;
             var time = new MyUtility.TimeUtility();
             int b = 100;
             int w = b * b;

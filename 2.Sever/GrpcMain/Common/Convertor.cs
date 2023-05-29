@@ -18,6 +18,8 @@ namespace GrpcMain.Common
                 Name = value.Name,
                 Status = authority.HasFlag(UserDeviceAuthority.Read_Status) ?
                     value.Status : 0,
+                Alerting=value.Alerting,
+                AlertEmail = value.AlertEmail,
             };
         }
 

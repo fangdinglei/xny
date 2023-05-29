@@ -29,240 +29,248 @@ namespace MyClient.View
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.CCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.CID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.COP = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.COP2 = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.brefresh = new System.Windows.Forms.Button();
-            this.CB_ShowOnline = new System.Windows.Forms.CheckBox();
-            this.CB_ShowNotOnline = new System.Windows.Forms.CheckBox();
-            this.list_Group = new System.Windows.Forms.ListBox();
-            this.btn_groupmgr = new System.Windows.Forms.Button();
-            this.b_sendcmd = new System.Windows.Forms.Button();
-            this.bgroupmove = new System.Windows.Forms.Button();
-            this.bselectall = new System.Windows.Forms.Button();
-            this.bsetting = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.SuspendLayout();
+            dataGridView1 = new DataGridView();
+            CCheck = new DataGridViewCheckBoxColumn();
+            CID = new DataGridViewTextBoxColumn();
+            CName = new DataGridViewTextBoxColumn();
+            CStatus = new DataGridViewTextBoxColumn();
+            CType = new DataGridViewTextBoxColumn();
+            COP = new DataGridViewButtonColumn();
+            COP2 = new DataGridViewButtonColumn();
+            brefresh = new Button();
+            CB_ShowOnline = new CheckBox();
+            CB_ShowNotOnline = new CheckBox();
+            list_Group = new ListBox();
+            btn_groupmgr = new Button();
+            b_sendcmd = new Button();
+            bgroupmove = new Button();
+            bselectall = new Button();
+            bsetting = new Button();
+            cbAlert = new CheckBox();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            SuspendLayout();
             // 
             // dataGridView1
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.CCheck,
-            this.CID,
-            this.CName,
-            this.CStatus,
-            this.CType,
-            this.COP,
-            this.COP2});
-            this.dataGridView1.Location = new System.Drawing.Point(246, 12);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.RowHeadersWidth = 62;
-            this.dataGridView1.RowTemplate.Height = 30;
-            this.dataGridView1.Size = new System.Drawing.Size(1128, 967);
-            this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToDeleteRows = false;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { CCheck, CID, CName, CStatus, CType, COP, COP2 });
+            dataGridView1.Location = new Point(246, 12);
+            dataGridView1.Margin = new Padding(4);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersVisible = false;
+            dataGridView1.RowHeadersWidth = 62;
+            dataGridView1.RowTemplate.Height = 30;
+            dataGridView1.Size = new Size(1128, 967);
+            dataGridView1.TabIndex = 0;
+            dataGridView1.CellClick += dataGridView1_CellClick;
             // 
             // CCheck
             // 
-            this.CCheck.HeaderText = "选中";
-            this.CCheck.MinimumWidth = 50;
-            this.CCheck.Name = "CCheck";
-            this.CCheck.Width = 50;
+            CCheck.HeaderText = "选中";
+            CCheck.MinimumWidth = 50;
+            CCheck.Name = "CCheck";
+            CCheck.Width = 50;
             // 
             // CID
             // 
-            this.CID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.CID.DataPropertyName = "ID";
-            this.CID.HeaderText = "ID";
-            this.CID.MinimumWidth = 8;
-            this.CID.Name = "CID";
-            this.CID.ReadOnly = true;
+            CID.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            CID.DataPropertyName = "ID";
+            CID.HeaderText = "ID";
+            CID.MinimumWidth = 8;
+            CID.Name = "CID";
+            CID.ReadOnly = true;
             // 
             // CName
             // 
-            this.CName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.CName.DataPropertyName = "Name";
-            this.CName.HeaderText = "名称";
-            this.CName.MinimumWidth = 8;
-            this.CName.Name = "CName";
-            this.CName.ReadOnly = true;
+            CName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            CName.DataPropertyName = "Name";
+            CName.HeaderText = "名称";
+            CName.MinimumWidth = 8;
+            CName.Name = "CName";
+            CName.ReadOnly = true;
             // 
             // CStatus
             // 
-            this.CStatus.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.CStatus.DataPropertyName = "Status";
-            this.CStatus.HeaderText = "状态";
-            this.CStatus.MinimumWidth = 8;
-            this.CStatus.Name = "CStatus";
-            this.CStatus.ReadOnly = true;
+            CStatus.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            CStatus.DataPropertyName = "Status";
+            CStatus.HeaderText = "状态";
+            CStatus.MinimumWidth = 8;
+            CStatus.Name = "CStatus";
+            CStatus.ReadOnly = true;
             // 
             // CType
             // 
-            this.CType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.CType.DataPropertyName = "Type";
-            this.CType.HeaderText = "类型";
-            this.CType.MinimumWidth = 8;
-            this.CType.Name = "CType";
-            this.CType.ReadOnly = true;
+            CType.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            CType.DataPropertyName = "Type";
+            CType.HeaderText = "类型";
+            CType.MinimumWidth = 8;
+            CType.Name = "CType";
+            CType.ReadOnly = true;
             // 
             // COP
             // 
-            this.COP.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.COP.DataPropertyName = "OP1";
-            this.COP.HeaderText = "操作";
-            this.COP.MinimumWidth = 8;
-            this.COP.Name = "COP";
-            this.COP.ReadOnly = true;
+            COP.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            COP.DataPropertyName = "OP1";
+            COP.HeaderText = "操作";
+            COP.MinimumWidth = 8;
+            COP.Name = "COP";
+            COP.ReadOnly = true;
             // 
             // COP2
             // 
-            this.COP2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.COP2.DataPropertyName = "OP2";
-            this.COP2.HeaderText = "操作";
-            this.COP2.MinimumWidth = 8;
-            this.COP2.Name = "COP2";
-            this.COP2.ReadOnly = true;
+            COP2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            COP2.DataPropertyName = "OP2";
+            COP2.HeaderText = "操作";
+            COP2.MinimumWidth = 8;
+            COP2.Name = "COP2";
+            COP2.ReadOnly = true;
             // 
             // brefresh
             // 
-            this.brefresh.Location = new System.Drawing.Point(1381, 125);
-            this.brefresh.Margin = new System.Windows.Forms.Padding(4);
-            this.brefresh.Name = "brefresh";
-            this.brefresh.Size = new System.Drawing.Size(186, 68);
-            this.brefresh.TabIndex = 1;
-            this.brefresh.Text = "刷新";
-            this.brefresh.UseVisualStyleBackColor = true;
-            this.brefresh.Click += new System.EventHandler(this.brefresh_Click);
+            brefresh.Location = new Point(1381, 125);
+            brefresh.Margin = new Padding(4);
+            brefresh.Name = "brefresh";
+            brefresh.Size = new Size(186, 68);
+            brefresh.TabIndex = 1;
+            brefresh.Text = "刷新";
+            brefresh.UseVisualStyleBackColor = true;
+            brefresh.Click += brefresh_Click;
             // 
             // CB_ShowOnline
             // 
-            this.CB_ShowOnline.AutoSize = true;
-            this.CB_ShowOnline.Checked = true;
-            this.CB_ShowOnline.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CB_ShowOnline.Location = new System.Drawing.Point(1409, 17);
-            this.CB_ShowOnline.Margin = new System.Windows.Forms.Padding(4);
-            this.CB_ShowOnline.Name = "CB_ShowOnline";
-            this.CB_ShowOnline.Size = new System.Drawing.Size(108, 28);
-            this.CB_ShowOnline.TabIndex = 2;
-            this.CB_ShowOnline.Text = "显示在线";
-            this.CB_ShowOnline.UseVisualStyleBackColor = true;
-            this.CB_ShowOnline.CheckedChanged += new System.EventHandler(this.CB_ShowOnline_CheckedChanged);
+            CB_ShowOnline.AutoSize = true;
+            CB_ShowOnline.Checked = true;
+            CB_ShowOnline.CheckState = CheckState.Checked;
+            CB_ShowOnline.Location = new Point(1420, 581);
+            CB_ShowOnline.Margin = new Padding(4);
+            CB_ShowOnline.Name = "CB_ShowOnline";
+            CB_ShowOnline.Size = new Size(108, 28);
+            CB_ShowOnline.TabIndex = 2;
+            CB_ShowOnline.Text = "显示在线";
+            CB_ShowOnline.UseVisualStyleBackColor = true;
+            CB_ShowOnline.Visible = false;
+            CB_ShowOnline.CheckedChanged += CB_ShowOnline_CheckedChanged;
             // 
             // CB_ShowNotOnline
             // 
-            this.CB_ShowNotOnline.AutoSize = true;
-            this.CB_ShowNotOnline.Checked = true;
-            this.CB_ShowNotOnline.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CB_ShowNotOnline.Location = new System.Drawing.Point(1409, 55);
-            this.CB_ShowNotOnline.Margin = new System.Windows.Forms.Padding(4);
-            this.CB_ShowNotOnline.Name = "CB_ShowNotOnline";
-            this.CB_ShowNotOnline.Size = new System.Drawing.Size(108, 28);
-            this.CB_ShowNotOnline.TabIndex = 3;
-            this.CB_ShowNotOnline.Text = "显示离线";
-            this.CB_ShowNotOnline.UseVisualStyleBackColor = true;
-            this.CB_ShowNotOnline.CheckedChanged += new System.EventHandler(this.CB_ShowNotOnline_CheckedChanged);
+            CB_ShowNotOnline.AutoSize = true;
+            CB_ShowNotOnline.Checked = true;
+            CB_ShowNotOnline.CheckState = CheckState.Checked;
+            CB_ShowNotOnline.Location = new Point(1420, 619);
+            CB_ShowNotOnline.Margin = new Padding(4);
+            CB_ShowNotOnline.Name = "CB_ShowNotOnline";
+            CB_ShowNotOnline.Size = new Size(108, 28);
+            CB_ShowNotOnline.TabIndex = 3;
+            CB_ShowNotOnline.Text = "显示离线";
+            CB_ShowNotOnline.UseVisualStyleBackColor = true;
+            CB_ShowNotOnline.Visible = false;
+            CB_ShowNotOnline.CheckedChanged += CB_ShowNotOnline_CheckedChanged;
             // 
             // list_Group
             // 
-            this.list_Group.AllowDrop = true;
-            this.list_Group.FormattingEnabled = true;
-            this.list_Group.ItemHeight = 24;
-            this.list_Group.Location = new System.Drawing.Point(15, 13);
-            this.list_Group.Margin = new System.Windows.Forms.Padding(4);
-            this.list_Group.Name = "list_Group";
-            this.list_Group.Size = new System.Drawing.Size(223, 964);
-            this.list_Group.TabIndex = 4;
-            this.list_Group.SelectedIndexChanged += new System.EventHandler(this.list_Group_SelectedIndexChanged);
-            this.list_Group.DragDrop += new System.Windows.Forms.DragEventHandler(this.list_Group_DragDrop);
-            this.list_Group.DragEnter += new System.Windows.Forms.DragEventHandler(this.list_Group_DragEnter);
+            list_Group.AllowDrop = true;
+            list_Group.FormattingEnabled = true;
+            list_Group.ItemHeight = 24;
+            list_Group.Location = new Point(15, 13);
+            list_Group.Margin = new Padding(4);
+            list_Group.Name = "list_Group";
+            list_Group.Size = new Size(223, 964);
+            list_Group.TabIndex = 4;
+            list_Group.SelectedIndexChanged += list_Group_SelectedIndexChanged;
+            list_Group.DragDrop += list_Group_DragDrop;
+            list_Group.DragEnter += list_Group_DragEnter;
             // 
             // btn_groupmgr
             // 
-            this.btn_groupmgr.Location = new System.Drawing.Point(1381, 277);
-            this.btn_groupmgr.Margin = new System.Windows.Forms.Padding(4);
-            this.btn_groupmgr.Name = "btn_groupmgr";
-            this.btn_groupmgr.Size = new System.Drawing.Size(186, 68);
-            this.btn_groupmgr.TabIndex = 5;
-            this.btn_groupmgr.Text = "分组";
-            this.btn_groupmgr.UseVisualStyleBackColor = true;
-            this.btn_groupmgr.Click += new System.EventHandler(this.btn_groupmgr_Click);
+            btn_groupmgr.Location = new Point(1381, 277);
+            btn_groupmgr.Margin = new Padding(4);
+            btn_groupmgr.Name = "btn_groupmgr";
+            btn_groupmgr.Size = new Size(186, 68);
+            btn_groupmgr.TabIndex = 5;
+            btn_groupmgr.Text = "分组";
+            btn_groupmgr.UseVisualStyleBackColor = true;
+            btn_groupmgr.Click += btn_groupmgr_Click;
             // 
             // b_sendcmd
             // 
-            this.b_sendcmd.Location = new System.Drawing.Point(1381, 353);
-            this.b_sendcmd.Margin = new System.Windows.Forms.Padding(4);
-            this.b_sendcmd.Name = "b_sendcmd";
-            this.b_sendcmd.Size = new System.Drawing.Size(186, 68);
-            this.b_sendcmd.TabIndex = 6;
-            this.b_sendcmd.Text = "发送命令";
-            this.b_sendcmd.UseVisualStyleBackColor = true;
-            this.b_sendcmd.Click += new System.EventHandler(this.b_sendcmd_Click);
+            b_sendcmd.Location = new Point(1381, 353);
+            b_sendcmd.Margin = new Padding(4);
+            b_sendcmd.Name = "b_sendcmd";
+            b_sendcmd.Size = new Size(186, 68);
+            b_sendcmd.TabIndex = 6;
+            b_sendcmd.Text = "发送命令";
+            b_sendcmd.UseVisualStyleBackColor = true;
+            b_sendcmd.Click += b_sendcmd_Click;
             // 
             // bgroupmove
             // 
-            this.bgroupmove.Location = new System.Drawing.Point(1381, 429);
-            this.bgroupmove.Margin = new System.Windows.Forms.Padding(4);
-            this.bgroupmove.Name = "bgroupmove";
-            this.bgroupmove.Size = new System.Drawing.Size(186, 68);
-            this.bgroupmove.TabIndex = 7;
-            this.bgroupmove.Text = "移动分组";
-            this.bgroupmove.UseVisualStyleBackColor = true;
-            this.bgroupmove.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bgroupmove_MouseDown);
+            bgroupmove.Location = new Point(1381, 429);
+            bgroupmove.Margin = new Padding(4);
+            bgroupmove.Name = "bgroupmove";
+            bgroupmove.Size = new Size(186, 68);
+            bgroupmove.TabIndex = 7;
+            bgroupmove.Text = "移动分组";
+            bgroupmove.UseVisualStyleBackColor = true;
+            bgroupmove.MouseDown += bgroupmove_MouseDown;
             // 
             // bselectall
             // 
-            this.bselectall.Location = new System.Drawing.Point(1381, 201);
-            this.bselectall.Margin = new System.Windows.Forms.Padding(4);
-            this.bselectall.Name = "bselectall";
-            this.bselectall.Size = new System.Drawing.Size(186, 68);
-            this.bselectall.TabIndex = 8;
-            this.bselectall.Text = "全选";
-            this.bselectall.UseVisualStyleBackColor = true;
-            this.bselectall.Click += new System.EventHandler(this.bselectall_Click);
+            bselectall.Location = new Point(1381, 201);
+            bselectall.Margin = new Padding(4);
+            bselectall.Name = "bselectall";
+            bselectall.Size = new Size(186, 68);
+            bselectall.TabIndex = 8;
+            bselectall.Text = "全选";
+            bselectall.UseVisualStyleBackColor = true;
+            bselectall.Click += bselectall_Click;
             // 
             // bsetting
             // 
-            this.bsetting.Location = new System.Drawing.Point(1381, 505);
-            this.bsetting.Margin = new System.Windows.Forms.Padding(4);
-            this.bsetting.Name = "bsetting";
-            this.bsetting.Size = new System.Drawing.Size(186, 68);
-            this.bsetting.TabIndex = 9;
-            this.bsetting.Text = "定时配置";
-            this.bsetting.UseVisualStyleBackColor = true;
-            this.bsetting.Click += new System.EventHandler(this.bsetting_Click);
+            bsetting.Location = new Point(1381, 505);
+            bsetting.Margin = new Padding(4);
+            bsetting.Name = "bsetting";
+            bsetting.Size = new Size(186, 68);
+            bsetting.TabIndex = 9;
+            bsetting.Text = "定时配置";
+            bsetting.UseVisualStyleBackColor = true;
+            bsetting.Click += bsetting_Click;
+            // 
+            // cbAlert
+            // 
+            cbAlert.AutoSize = true;
+            cbAlert.Location = new Point(1382, 51);
+            cbAlert.Margin = new Padding(4);
+            cbAlert.Name = "cbAlert";
+            cbAlert.Size = new Size(126, 28);
+            cbAlert.TabIndex = 10;
+            cbAlert.Text = "仅显示异常";
+            cbAlert.UseVisualStyleBackColor = true;
+            cbAlert.CheckedChanged += cbAlert_CheckedChanged;
             // 
             // FAccessibleDevice
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1611, 1005);
-            this.Controls.Add(this.bsetting);
-            this.Controls.Add(this.bselectall);
-            this.Controls.Add(this.bgroupmove);
-            this.Controls.Add(this.b_sendcmd);
-            this.Controls.Add(this.btn_groupmgr);
-            this.Controls.Add(this.list_Group);
-            this.Controls.Add(this.CB_ShowNotOnline);
-            this.Controls.Add(this.CB_ShowOnline);
-            this.Controls.Add(this.brefresh);
-            this.Controls.Add(this.dataGridView1);
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "FAccessibleDevice";
-            this.Text = "FAccessibleDevice";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1611, 1005);
+            Controls.Add(cbAlert);
+            Controls.Add(bsetting);
+            Controls.Add(bselectall);
+            Controls.Add(bgroupmove);
+            Controls.Add(b_sendcmd);
+            Controls.Add(btn_groupmgr);
+            Controls.Add(list_Group);
+            Controls.Add(CB_ShowNotOnline);
+            Controls.Add(CB_ShowOnline);
+            Controls.Add(brefresh);
+            Controls.Add(dataGridView1);
+            Margin = new Padding(4);
+            Name = "FAccessibleDevice";
+            Text = "FAccessibleDevice";
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -284,5 +292,6 @@ namespace MyClient.View
         private System.Windows.Forms.DataGridViewButtonColumn COP;
         private System.Windows.Forms.DataGridViewButtonColumn COP2;
         private System.Windows.Forms.Button bsetting;
+        private CheckBox cbAlert;
     }
 }

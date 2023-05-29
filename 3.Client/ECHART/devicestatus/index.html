@@ -51,7 +51,7 @@
                     center: ['50%', '80%'],
                     data: [{
                         value: data.Value,
-                        name: data.Name
+                        name:  data.Name
                     }],
                     splitNumber: 5, //大刻度数量
                     startAngle: 180,
@@ -122,7 +122,8 @@
                     title: {//标题
                         offsetCenter: ['0', '-120%'],
                         fontSize: 15,
-                        color: "#fff",
+                        color:  data.Value < data.AlertLowValue || data.Value > data.AlertHighValue ?
+                            "#f00" : "#fff",
                         show: true
                     },
                     detail: {//标题下方

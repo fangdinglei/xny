@@ -27,6 +27,7 @@ namespace GrpcMain.Device
                 LatestData = "{}",
                 LocationStr = dv.LocationStr ?? "",
                 Name = dv.Name,
+                AlertEmail= dv.HasAlertEmail? dv.AlertEmail:"",
                 Status = 2,
             };
         }
@@ -192,6 +193,10 @@ namespace GrpcMain.Device
                 if (request.Device.HasName)
                 {
                     dv.Name = request.Device.Name;
+                }
+                if (request.Device.HasAlertEmail)
+                {
+                    dv.AlertEmail = request.Device.AlertEmail;
                 }
                 await ct.SaveChangesAsync();
             }

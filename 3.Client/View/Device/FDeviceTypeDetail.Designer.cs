@@ -28,320 +28,335 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.text_id = new System.Windows.Forms.TextBox();
-            this.text_name = new System.Windows.Forms.TextBox();
-            this.list_thingmodels = new System.Windows.Forms.ListBox();
-            this.btn_submit = new System.Windows.Forms.Button();
-            this.text_thingmodel_name = new System.Windows.Forms.TextBox();
-            this.text_thingmodel_id = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.text_thingmodel_remark = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.text_thingmodel_min = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.text_thingmodel_max = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.btn_thingmodel_creat = new System.Windows.Forms.Button();
-            this.text_thingmodel_unit = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.check_thingmodel_abandonted = new System.Windows.Forms.CheckBox();
-            this.btn_thingmodel_update = new System.Windows.Forms.Button();
-            this.text_thingmodel_type = new System.Windows.Forms.ComboBox();
-            this.text_alterhigh = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.text_alterlow = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.btn_creatdevice = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            label1 = new Label();
+            label2 = new Label();
+            text_id = new TextBox();
+            text_name = new TextBox();
+            list_thingmodels = new ListBox();
+            btn_submit = new Button();
+            text_thingmodel_name = new TextBox();
+            text_thingmodel_id = new TextBox();
+            label3 = new Label();
+            label4 = new Label();
+            label5 = new Label();
+            text_thingmodel_remark = new TextBox();
+            label6 = new Label();
+            text_thingmodel_min = new TextBox();
+            label7 = new Label();
+            text_thingmodel_max = new TextBox();
+            label8 = new Label();
+            btn_thingmodel_creat = new Button();
+            text_thingmodel_unit = new TextBox();
+            label9 = new Label();
+            check_thingmodel_abandonted = new CheckBox();
+            btn_thingmodel_update = new Button();
+            text_thingmodel_type = new ComboBox();
+            text_alterhigh = new TextBox();
+            label10 = new Label();
+            text_alterlow = new TextBox();
+            label11 = new Label();
+            btn_creatdevice = new Button();
+            text_alertTime = new TextBox();
+            label12 = new Label();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 56);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 24);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "名称";
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 56);
+            label1.Name = "label1";
+            label1.Size = new Size(46, 24);
+            label1.TabIndex = 0;
+            label1.Text = "名称";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 15);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 24);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "ID";
+            label2.AutoSize = true;
+            label2.Location = new Point(12, 15);
+            label2.Name = "label2";
+            label2.Size = new Size(29, 24);
+            label2.TabIndex = 1;
+            label2.Text = "ID";
             // 
             // text_id
             // 
-            this.text_id.Location = new System.Drawing.Point(71, 12);
-            this.text_id.Name = "text_id";
-            this.text_id.ReadOnly = true;
-            this.text_id.Size = new System.Drawing.Size(150, 30);
-            this.text_id.TabIndex = 2;
+            text_id.Location = new Point(71, 12);
+            text_id.Name = "text_id";
+            text_id.ReadOnly = true;
+            text_id.Size = new Size(150, 30);
+            text_id.TabIndex = 2;
             // 
             // text_name
             // 
-            this.text_name.Location = new System.Drawing.Point(71, 53);
-            this.text_name.Name = "text_name";
-            this.text_name.Size = new System.Drawing.Size(150, 30);
-            this.text_name.TabIndex = 3;
+            text_name.Location = new Point(71, 53);
+            text_name.Name = "text_name";
+            text_name.Size = new Size(150, 30);
+            text_name.TabIndex = 3;
             // 
             // list_thingmodels
             // 
-            this.list_thingmodels.FormattingEnabled = true;
-            this.list_thingmodels.ItemHeight = 24;
-            this.list_thingmodels.Location = new System.Drawing.Point(12, 97);
-            this.list_thingmodels.Name = "list_thingmodels";
-            this.list_thingmodels.Size = new System.Drawing.Size(306, 388);
-            this.list_thingmodels.TabIndex = 4;
-            this.list_thingmodels.SelectedIndexChanged += new System.EventHandler(this.list_thingmodels_SelectedIndexChanged);
+            list_thingmodels.FormattingEnabled = true;
+            list_thingmodels.ItemHeight = 24;
+            list_thingmodels.Location = new Point(12, 97);
+            list_thingmodels.Name = "list_thingmodels";
+            list_thingmodels.Size = new Size(306, 388);
+            list_thingmodels.TabIndex = 4;
+            list_thingmodels.SelectedIndexChanged += list_thingmodels_SelectedIndexChanged;
             // 
             // btn_submit
             // 
-            this.btn_submit.Location = new System.Drawing.Point(241, 15);
-            this.btn_submit.Name = "btn_submit";
-            this.btn_submit.Size = new System.Drawing.Size(129, 34);
-            this.btn_submit.TabIndex = 5;
-            this.btn_submit.Text = "确定";
-            this.btn_submit.UseVisualStyleBackColor = true;
-            this.btn_submit.Click += new System.EventHandler(this.btn_submit_Click);
+            btn_submit.Location = new Point(241, 15);
+            btn_submit.Name = "btn_submit";
+            btn_submit.Size = new Size(129, 34);
+            btn_submit.TabIndex = 5;
+            btn_submit.Text = "确定";
+            btn_submit.UseVisualStyleBackColor = true;
+            btn_submit.Click += btn_submit_Click;
             // 
             // text_thingmodel_name
             // 
-            this.text_thingmodel_name.Location = new System.Drawing.Point(400, 129);
-            this.text_thingmodel_name.Name = "text_thingmodel_name";
-            this.text_thingmodel_name.Size = new System.Drawing.Size(150, 30);
-            this.text_thingmodel_name.TabIndex = 9;
+            text_thingmodel_name.Location = new Point(458, 123);
+            text_thingmodel_name.Name = "text_thingmodel_name";
+            text_thingmodel_name.Size = new Size(150, 30);
+            text_thingmodel_name.TabIndex = 9;
             // 
             // text_thingmodel_id
             // 
-            this.text_thingmodel_id.Location = new System.Drawing.Point(400, 88);
-            this.text_thingmodel_id.Name = "text_thingmodel_id";
-            this.text_thingmodel_id.ReadOnly = true;
-            this.text_thingmodel_id.Size = new System.Drawing.Size(150, 30);
-            this.text_thingmodel_id.TabIndex = 8;
+            text_thingmodel_id.Location = new Point(458, 88);
+            text_thingmodel_id.Name = "text_thingmodel_id";
+            text_thingmodel_id.ReadOnly = true;
+            text_thingmodel_id.Size = new Size(150, 30);
+            text_thingmodel_id.TabIndex = 8;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(324, 88);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 24);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "ID";
+            label3.AutoSize = true;
+            label3.Location = new Point(324, 88);
+            label3.Name = "label3";
+            label3.Size = new Size(29, 24);
+            label3.TabIndex = 7;
+            label3.Text = "ID";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(324, 129);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(46, 24);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "名称";
+            label4.AutoSize = true;
+            label4.Location = new Point(324, 124);
+            label4.Name = "label4";
+            label4.Size = new Size(46, 24);
+            label4.TabIndex = 6;
+            label4.Text = "名称";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(324, 165);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(46, 24);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "类型";
+            label5.AutoSize = true;
+            label5.Location = new Point(324, 160);
+            label5.Name = "label5";
+            label5.Size = new Size(46, 24);
+            label5.TabIndex = 10;
+            label5.Text = "类型";
             // 
             // text_thingmodel_remark
             // 
-            this.text_thingmodel_remark.Location = new System.Drawing.Point(400, 237);
-            this.text_thingmodel_remark.Name = "text_thingmodel_remark";
-            this.text_thingmodel_remark.Size = new System.Drawing.Size(150, 30);
-            this.text_thingmodel_remark.TabIndex = 13;
+            text_thingmodel_remark.Location = new Point(458, 230);
+            text_thingmodel_remark.Name = "text_thingmodel_remark";
+            text_thingmodel_remark.Size = new Size(150, 30);
+            text_thingmodel_remark.TabIndex = 13;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(324, 237);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(46, 24);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "备注";
+            label6.AutoSize = true;
+            label6.Location = new Point(324, 232);
+            label6.Name = "label6";
+            label6.Size = new Size(46, 24);
+            label6.TabIndex = 12;
+            label6.Text = "备注";
             // 
             // text_thingmodel_min
             // 
-            this.text_thingmodel_min.Location = new System.Drawing.Point(400, 273);
-            this.text_thingmodel_min.Name = "text_thingmodel_min";
-            this.text_thingmodel_min.Size = new System.Drawing.Size(150, 30);
-            this.text_thingmodel_min.TabIndex = 15;
+            text_thingmodel_min.Location = new Point(458, 265);
+            text_thingmodel_min.Name = "text_thingmodel_min";
+            text_thingmodel_min.Size = new Size(150, 30);
+            text_thingmodel_min.TabIndex = 15;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(324, 273);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(64, 24);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "最小值";
+            label7.AutoSize = true;
+            label7.Location = new Point(324, 268);
+            label7.Name = "label7";
+            label7.Size = new Size(64, 24);
+            label7.TabIndex = 14;
+            label7.Text = "最小值";
             // 
             // text_thingmodel_max
             // 
-            this.text_thingmodel_max.Location = new System.Drawing.Point(400, 309);
-            this.text_thingmodel_max.Name = "text_thingmodel_max";
-            this.text_thingmodel_max.Size = new System.Drawing.Size(150, 30);
-            this.text_thingmodel_max.TabIndex = 17;
+            text_thingmodel_max.Location = new Point(458, 300);
+            text_thingmodel_max.Name = "text_thingmodel_max";
+            text_thingmodel_max.Size = new Size(150, 30);
+            text_thingmodel_max.TabIndex = 17;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(324, 309);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(64, 24);
-            this.label8.TabIndex = 16;
-            this.label8.Text = "最大值";
+            label8.AutoSize = true;
+            label8.Location = new Point(324, 304);
+            label8.Name = "label8";
+            label8.Size = new Size(64, 24);
+            label8.TabIndex = 16;
+            label8.Text = "最大值";
             // 
             // btn_thingmodel_creat
             // 
-            this.btn_thingmodel_creat.Location = new System.Drawing.Point(400, 452);
-            this.btn_thingmodel_creat.Name = "btn_thingmodel_creat";
-            this.btn_thingmodel_creat.Size = new System.Drawing.Size(150, 34);
-            this.btn_thingmodel_creat.TabIndex = 18;
-            this.btn_thingmodel_creat.Text = "新建";
-            this.btn_thingmodel_creat.UseVisualStyleBackColor = true;
-            this.btn_thingmodel_creat.Click += new System.EventHandler(this.btn_thingmodel_creat_Click);
+            btn_thingmodel_creat.Location = new Point(400, 491);
+            btn_thingmodel_creat.Name = "btn_thingmodel_creat";
+            btn_thingmodel_creat.Size = new Size(150, 34);
+            btn_thingmodel_creat.TabIndex = 18;
+            btn_thingmodel_creat.Text = "新建";
+            btn_thingmodel_creat.UseVisualStyleBackColor = true;
+            btn_thingmodel_creat.Click += btn_thingmodel_creat_Click;
             // 
             // text_thingmodel_unit
             // 
-            this.text_thingmodel_unit.Location = new System.Drawing.Point(400, 201);
-            this.text_thingmodel_unit.Name = "text_thingmodel_unit";
-            this.text_thingmodel_unit.Size = new System.Drawing.Size(150, 30);
-            this.text_thingmodel_unit.TabIndex = 20;
+            text_thingmodel_unit.Location = new Point(458, 195);
+            text_thingmodel_unit.Name = "text_thingmodel_unit";
+            text_thingmodel_unit.Size = new Size(150, 30);
+            text_thingmodel_unit.TabIndex = 20;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(324, 201);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(46, 24);
-            this.label9.TabIndex = 19;
-            this.label9.Text = "单位";
+            label9.AutoSize = true;
+            label9.Location = new Point(324, 196);
+            label9.Name = "label9";
+            label9.Size = new Size(46, 24);
+            label9.TabIndex = 19;
+            label9.Text = "单位";
             // 
             // check_thingmodel_abandonted
             // 
-            this.check_thingmodel_abandonted.AutoSize = true;
-            this.check_thingmodel_abandonted.Location = new System.Drawing.Point(322, 412);
-            this.check_thingmodel_abandonted.Name = "check_thingmodel_abandonted";
-            this.check_thingmodel_abandonted.Size = new System.Drawing.Size(72, 28);
-            this.check_thingmodel_abandonted.TabIndex = 21;
-            this.check_thingmodel_abandonted.Text = "弃用";
-            this.check_thingmodel_abandonted.UseVisualStyleBackColor = true;
+            check_thingmodel_abandonted.AutoSize = true;
+            check_thingmodel_abandonted.Location = new Point(322, 451);
+            check_thingmodel_abandonted.Name = "check_thingmodel_abandonted";
+            check_thingmodel_abandonted.Size = new Size(72, 28);
+            check_thingmodel_abandonted.TabIndex = 21;
+            check_thingmodel_abandonted.Text = "弃用";
+            check_thingmodel_abandonted.UseVisualStyleBackColor = true;
             // 
             // btn_thingmodel_update
             // 
-            this.btn_thingmodel_update.Location = new System.Drawing.Point(400, 412);
-            this.btn_thingmodel_update.Name = "btn_thingmodel_update";
-            this.btn_thingmodel_update.Size = new System.Drawing.Size(150, 34);
-            this.btn_thingmodel_update.TabIndex = 22;
-            this.btn_thingmodel_update.Text = "修改";
-            this.btn_thingmodel_update.UseVisualStyleBackColor = true;
-            this.btn_thingmodel_update.Click += new System.EventHandler(this.btn_thingmodel_update_Click);
+            btn_thingmodel_update.Location = new Point(400, 451);
+            btn_thingmodel_update.Name = "btn_thingmodel_update";
+            btn_thingmodel_update.Size = new Size(150, 34);
+            btn_thingmodel_update.TabIndex = 22;
+            btn_thingmodel_update.Text = "修改";
+            btn_thingmodel_update.UseVisualStyleBackColor = true;
+            btn_thingmodel_update.Click += btn_thingmodel_update_Click;
             // 
             // text_thingmodel_type
             // 
-            this.text_thingmodel_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.text_thingmodel_type.FormattingEnabled = true;
-            this.text_thingmodel_type.Items.AddRange(new object[] {
-            "None",
-            "Int",
-            "Float",
-            "Bool"});
-            this.text_thingmodel_type.Location = new System.Drawing.Point(400, 165);
-            this.text_thingmodel_type.Name = "text_thingmodel_type";
-            this.text_thingmodel_type.Size = new System.Drawing.Size(150, 32);
-            this.text_thingmodel_type.TabIndex = 23;
-            this.text_thingmodel_type.SelectedIndexChanged += new System.EventHandler(this.text_thingmodel_type_SelectedIndexChanged);
+            text_thingmodel_type.DropDownStyle = ComboBoxStyle.DropDownList;
+            text_thingmodel_type.FormattingEnabled = true;
+            text_thingmodel_type.Items.AddRange(new object[] { "None", "Int", "Float", "Bool" });
+            text_thingmodel_type.Location = new Point(458, 158);
+            text_thingmodel_type.Name = "text_thingmodel_type";
+            text_thingmodel_type.Size = new Size(150, 32);
+            text_thingmodel_type.TabIndex = 23;
+            text_thingmodel_type.SelectedIndexChanged += text_thingmodel_type_SelectedIndexChanged;
             // 
             // text_alterhigh
             // 
-            this.text_alterhigh.Location = new System.Drawing.Point(400, 381);
-            this.text_alterhigh.Name = "text_alterhigh";
-            this.text_alterhigh.Size = new System.Drawing.Size(150, 30);
-            this.text_alterhigh.TabIndex = 27;
+            text_alterhigh.Location = new Point(458, 370);
+            text_alterhigh.Name = "text_alterhigh";
+            text_alterhigh.Size = new Size(150, 30);
+            text_alterhigh.TabIndex = 27;
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(324, 381);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(64, 24);
-            this.label10.TabIndex = 26;
-            this.label10.Text = "预警高";
+            label10.AutoSize = true;
+            label10.Location = new Point(324, 373);
+            label10.Name = "label10";
+            label10.Size = new Size(64, 24);
+            label10.TabIndex = 26;
+            label10.Text = "预警高";
             // 
             // text_alterlow
             // 
-            this.text_alterlow.Location = new System.Drawing.Point(400, 345);
-            this.text_alterlow.Name = "text_alterlow";
-            this.text_alterlow.Size = new System.Drawing.Size(150, 30);
-            this.text_alterlow.TabIndex = 25;
+            text_alterlow.Location = new Point(458, 335);
+            text_alterlow.Name = "text_alterlow";
+            text_alterlow.Size = new Size(150, 30);
+            text_alterlow.TabIndex = 25;
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(324, 345);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(64, 24);
-            this.label11.TabIndex = 24;
-            this.label11.Text = "预警低";
+            label11.AutoSize = true;
+            label11.Location = new Point(324, 340);
+            label11.Name = "label11";
+            label11.Size = new Size(64, 24);
+            label11.TabIndex = 24;
+            label11.Text = "预警低";
             // 
             // btn_creatdevice
             // 
-            this.btn_creatdevice.Location = new System.Drawing.Point(400, 15);
-            this.btn_creatdevice.Name = "btn_creatdevice";
-            this.btn_creatdevice.Size = new System.Drawing.Size(129, 34);
-            this.btn_creatdevice.TabIndex = 28;
-            this.btn_creatdevice.Text = "创建设备";
-            this.btn_creatdevice.UseVisualStyleBackColor = true;
-            this.btn_creatdevice.Click += new System.EventHandler(this.btn_creatdevice_Click);
+            btn_creatdevice.Location = new Point(400, 15);
+            btn_creatdevice.Name = "btn_creatdevice";
+            btn_creatdevice.Size = new Size(129, 34);
+            btn_creatdevice.TabIndex = 28;
+            btn_creatdevice.Text = "创建设备";
+            btn_creatdevice.UseVisualStyleBackColor = true;
+            btn_creatdevice.Click += btn_creatdevice_Click;
+            // 
+            // text_alertTime
+            // 
+            text_alertTime.Location = new Point(458, 406);
+            text_alertTime.Name = "text_alertTime";
+            text_alertTime.Size = new Size(150, 30);
+            text_alertTime.TabIndex = 30;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(324, 409);
+            label12.Name = "label12";
+            label12.Size = new Size(130, 24);
+            label12.TabIndex = 29;
+            label12.Text = "预警时间(分钟)";
             // 
             // FDeviceTypeDetail
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(605, 507);
-            this.Controls.Add(this.btn_creatdevice);
-            this.Controls.Add(this.text_alterhigh);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.text_alterlow);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.text_thingmodel_type);
-            this.Controls.Add(this.btn_thingmodel_update);
-            this.Controls.Add(this.check_thingmodel_abandonted);
-            this.Controls.Add(this.text_thingmodel_unit);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.btn_thingmodel_creat);
-            this.Controls.Add(this.text_thingmodel_max);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.text_thingmodel_min);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.text_thingmodel_remark);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.text_thingmodel_name);
-            this.Controls.Add(this.text_thingmodel_id);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.btn_submit);
-            this.Controls.Add(this.list_thingmodels);
-            this.Controls.Add(this.text_name);
-            this.Controls.Add(this.text_id);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Name = "FDeviceTypeDetail";
-            this.Text = "FDeviceType";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(623, 557);
+            Controls.Add(text_alertTime);
+            Controls.Add(label12);
+            Controls.Add(btn_creatdevice);
+            Controls.Add(text_alterhigh);
+            Controls.Add(label10);
+            Controls.Add(text_alterlow);
+            Controls.Add(label11);
+            Controls.Add(text_thingmodel_type);
+            Controls.Add(btn_thingmodel_update);
+            Controls.Add(check_thingmodel_abandonted);
+            Controls.Add(text_thingmodel_unit);
+            Controls.Add(label9);
+            Controls.Add(btn_thingmodel_creat);
+            Controls.Add(text_thingmodel_max);
+            Controls.Add(label8);
+            Controls.Add(text_thingmodel_min);
+            Controls.Add(label7);
+            Controls.Add(text_thingmodel_remark);
+            Controls.Add(label6);
+            Controls.Add(label5);
+            Controls.Add(text_thingmodel_name);
+            Controls.Add(text_thingmodel_id);
+            Controls.Add(label3);
+            Controls.Add(label4);
+            Controls.Add(btn_submit);
+            Controls.Add(list_thingmodels);
+            Controls.Add(text_name);
+            Controls.Add(text_id);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Name = "FDeviceTypeDetail";
+            Text = "FDeviceType";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -374,5 +389,7 @@
         private TextBox text_alterlow;
         private Label label11;
         private Button btn_creatdevice;
+        private TextBox text_alertTime;
+        private Label label12;
     }
 }
