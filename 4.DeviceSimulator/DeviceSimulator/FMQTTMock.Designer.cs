@@ -46,6 +46,9 @@ namespace DeviceSimulator
             button3 = new Button();
             listBox1 = new ListBox();
             button4 = new Button();
+            text_id1 = new TextBox();
+            text_id2 = new TextBox();
+            textBox4 = new TextBox();
             SuspendLayout();
             // 
             // bar1
@@ -93,6 +96,7 @@ namespace DeviceSimulator
             label9.Size = new Size(46, 24);
             label9.TabIndex = 11;
             label9.Text = "光照";
+            label9.Visible = false;
             // 
             // bar4
             // 
@@ -101,6 +105,7 @@ namespace DeviceSimulator
             bar4.Name = "bar4";
             bar4.Size = new Size(676, 30);
             bar4.TabIndex = 10;
+            bar4.Visible = false;
             // 
             // label12
             // 
@@ -111,6 +116,7 @@ namespace DeviceSimulator
             label12.Size = new Size(46, 24);
             label12.TabIndex = 15;
             label12.Text = "电量";
+            label12.Visible = false;
             // 
             // bar3
             // 
@@ -119,6 +125,7 @@ namespace DeviceSimulator
             bar3.Name = "bar3";
             bar3.Size = new Size(676, 30);
             bar3.TabIndex = 14;
+            bar3.Visible = false;
             // 
             // button1
             // 
@@ -190,11 +197,38 @@ namespace DeviceSimulator
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
+            // text_id1
+            // 
+            text_id1.Location = new Point(76, 82);
+            text_id1.Name = "text_id1";
+            text_id1.Size = new Size(94, 30);
+            text_id1.TabIndex = 23;
+            text_id1.Text = "1";
+            // 
+            // text_id2
+            // 
+            text_id2.Location = new Point(76, 137);
+            text_id2.Name = "text_id2";
+            text_id2.Size = new Size(94, 30);
+            text_id2.TabIndex = 24;
+            text_id2.Text = "2";
+            // 
+            // textBox4
+            // 
+            textBox4.Location = new Point(76, 195);
+            textBox4.Name = "textBox4";
+            textBox4.Size = new Size(94, 30);
+            textBox4.TabIndex = 25;
+            textBox4.Visible = false;
+            // 
             // FMQTTMock
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1295, 449);
+            Controls.Add(textBox4);
+            Controls.Add(text_id2);
+            Controls.Add(text_id1);
             Controls.Add(button4);
             Controls.Add(listBox1);
             Controls.Add(button3);
@@ -235,5 +269,8 @@ namespace DeviceSimulator
         private Button button3;
         private ListBox listBox1;
         private Button button4;
+        private TextBox text_id1;
+        private TextBox text_id2;
+        private TextBox textBox4;
     }
 }

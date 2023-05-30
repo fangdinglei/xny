@@ -42,17 +42,18 @@
             }
             try
             {
+                if (!long.TryParse(textBox1.Text, out DeviceID))
+                {
+                    MessageBox.Show("请输入数字设备ID");
+                    return;
+                }
                 running = true;
                 var dic = new Dictionary<long, float>();
                 float Temperature, Humidity, Lumination, PowerRate;
                 Temperature = bar1.Value / 10f;
-                //Humidity = bar2.Value / 10f;
-                //Lumination = bar3.Value / 10f;
-                //PowerRate = bar4.Value / 10f;
-                dic.Add(1, Temperature);
-                //dic.Add(nameof(Humidity), Humidity);
-                //dic.Add(nameof(Lumination), Lumination);
-                //dic.Add(nameof(PowerRate), PowerRate);
+                Humidity = bar2.Value / 10f;
+                dic.Add(int.Parse(text_id1.Text), Temperature);
+                dic.Add(int.Parse(text_id2.Text), Humidity);
                 Mock.MQTT.MQTTManager.SendData(DeviceID, dic);
             }
             catch (Exception)
@@ -67,18 +68,24 @@
 
         private void button2_Click(object sender, EventArgs e)
         {
-            running = true;
-            var dic = new Dictionary<long, float>();
-            float Temperature, Humidity, Lumination, PowerRate;
-            Temperature = bar1.Value / 10f;
-            Humidity = bar2.Value / 10f;
-            //Lumination = bar3.Value / 10f;
-            //PowerRate = bar4.Value / 10f;
-            dic.Add(1, Temperature);
-            dic.Add(2, Humidity);
-            //dic.Add(nameof(Lumination), Lumination);
-            //dic.Add(nameof(PowerRate), PowerRate);
-            Mock.MQTT.MQTTManager.SendData(DeviceID, dic);
+            try
+            {
+                if (!long.TryParse(textBox1.Text, out DeviceID))
+                {
+                    MessageBox.Show("请输入数字设备ID");
+                    return;
+                }
+                var dic = new Dictionary<long, float>();
+                float Temperature, Humidity, Lumination, PowerRate;
+                Temperature = bar1.Value / 10f;
+                Humidity = bar2.Value / 10f;
+                dic.Add(int.Parse(text_id1.Text), Temperature);
+                dic.Add(int.Parse(text_id2.Text), Humidity);
+                Mock.MQTT.MQTTManager.SendData(DeviceID, dic);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
